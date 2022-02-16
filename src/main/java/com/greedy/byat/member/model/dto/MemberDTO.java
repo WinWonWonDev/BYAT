@@ -8,4 +8,15 @@ package com.greedy.byat.member.model.dto;
 //@ToString 
 public class MemberDTO {
 
+	private int no;
+	private String permit;
+	private String id;
+	private String pwd;
+	private String name;
+	private String phone;
+	private String email;
+	private String absenceYN;
+	private String initPwdYN;
+	
+	
 }
