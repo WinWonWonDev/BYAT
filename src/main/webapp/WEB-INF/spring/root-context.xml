@@ -1,8 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@14.7.50.117:1521:xe" />
+		<property name="username" value="C##BYAT" />
+		<property name="password" value="BYAT" />
+		<property name="defaultAutoCommit" value="false" />
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+		
+	<!-- 이부분 저희 url에 따라서 추가되어야할 것 같은데 일단 확실한 것만 추가해 두었습니다. !!  -->	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" read-only="true" rollback-for="Exception" />
+			<tx:method name="regist*" rollback-for="Exception" propagation="REQUIRED" isolation="READ_COMMITTED"/>
+			<tx:method name="modify*" rollback-for="Exception" propagation="REQUIRED" isolation="READ_COMMITTED" />
+			<tx:method name="remove*" rollback-for="Exception" propagation="REQUIRED" isolation="READ_COMMITTED" />
+		</tx:attributes>
+	</tx:advice>	
+		
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="serviceMethod" expression="execution(* com.greedy.byat..*ServiceImpl.*(..))" />
+		<aop:advisor id="transactionAdvisor" pointcut-ref="serviceMethod" advice-ref="txAdvice" />
+	</aop:config>
+		
+	
+		
+	<!-- 			  
+					  com.greedy.byat.permit?.model.dao, 
+					  com.greedy.byat.role.model.dao
+					  헷갈리는 부분 모아둔 곳                                                          -->
+	<mybatis-spring:scan 
+		base-package="com.greedy.byat.member.model.dao, 
+					  com.greedy.byat.project.model.dao,
+					  com.greedy.byat.sprint.model.dao,
+					  com.greedy.byat.management.model.dao,
+ 					  com.greedy.byat.task.model.dao,
+					  com.greedy.byat.mytask.model.dao,
+					  com.greedy.byat.retrospect.model.dao,
+					  com.greedy.byat.notice.model.dao,
+					  com.greedy.byat.calendar.model.dao,
+					  com.greedy.byat.backlog.model.dao,
+					  com.greedy.byat.issue.model.dao,
+					  com.greedy.byat.meetinglog.model.dao,
+					  com.greedy.byat.profile.model.dao,
+					  com.greedy.byat.history.model.dao"/>
+		
+		
+		
 		
 </beans>

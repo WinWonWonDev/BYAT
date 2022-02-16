@@ -3,35 +3,27 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
-	<!-- pom.xml의 구조 project { 프로젝트 정보 + properties + dependencies + build } -->
 
-	<!-- 프로젝트 정보 -->
-	<modelVersion>4.0.0</modelVersion>      <!-- Maven 2버전부터 쭉 4.0.0 -->
-	<groupId>com.greedy</groupId>         <!-- 최초 패키지의 1레벨, 2레벨 -->
+	<modelVersion>4.0.0</modelVersion>     
+	<groupId>com.greedy</groupId>        
 	<artifactId>byat</artifactId>
 	<name>BYAT-project</name>
-	<packaging>war</packaging>            <!-- 배포를 위한 프로젝트 패키징 방식 -->
+	<packaging>war</packaging>            
 	<version>1.0</version>
 
-	<!-- properties -->
-	<!-- 이거 버전 꼭 확인해서 자바버전부터 다 바꾸자 -->
 	<properties>
-		<java-version>11</java-version>              		 <!-- 자바 버전 -->
+		<java-version>11</java-version>              		
 		<org.springframework-version>5.3.14</org.springframework-version>
-		<org.aspectj-version>1.9.6</org.aspectj-version>   <!-- aop관련 aspectj 버전 -->
-		<org.slf4j-version>1.7.30</org.slf4j-version>      <!-- logging관련 slf4j 버전 -->
+		<org.aspectj-version>1.9.6</org.aspectj-version>   
+		<org.slf4j-version>1.7.30</org.slf4j-version>      
 	</properties>
 
-	<!-- dependencies -->
-	<!-- 다운 받고자 하는 라이브러리들의 dependency태그들을 추가하는 곳(라이브러리 추가) -->
 	<dependencies>
-		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${org.springframework-version}</version>
 			<exclusions>
-				<!-- Exclude Commons Logging in favor of SLF4j -->
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
@@ -44,14 +36,12 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
-		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${org.aspectj-version}</version>
 		</dependency>
 
-		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -72,7 +62,7 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>                  <!-- 롬복(Lombok) 사용 시 버전 변경 -->
+			<version>1.2.17</version>                 
 			<exclusions>
 				<exclusion>
 					<groupId>javax.mail</groupId>
@@ -94,19 +84,16 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- @Inject -->
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
 
-		<!-- Servlet -->
-		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>   <!-- artifactId가 바뀌었으니 조심하자!(mvnrepository에서 확인하기) -->
-			<version>3.1.0</version>               <!-- servlet 3버전대로 변경 -->
+			<artifactId>javax.servlet-api</artifactId>   
+			<version>3.1.0</version>              
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -121,31 +108,25 @@
 			<version>1.2</version>
 		</dependency>
 
-		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>                     <!-- junit 버전 usage 많은 걸로 변경 -->
+			<version>4.12</version>                   
 			<scope>test</scope>
 		</dependency>
 		
-		<!-- 롬복 설정 -->
 		<dependency>
 		    <groupId>org.projectlombok</groupId>
 		    <artifactId>lombok</artifactId>
 		    <version>1.18.12</version>
 		</dependency>
 		
-		<!-- Log4j 보안 취약점 개선을 위한 log4j-core dependency -->
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
 		    <artifactId>log4j-core</artifactId>
 		    <version>2.17.1</version>
 		</dependency>
 
-		<!-- 마이바티스를 통한 DB와 연동하기 위한 dependency -->
-		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
@@ -176,7 +157,6 @@
 			<version>1.4</version>
 		</dependency>
 
-		<!-- aop를 퐐용하기 위한 dependency -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
@@ -189,47 +169,36 @@
 			<version>1.9.2</version>
 		</dependency>
 
-		<!-- BCrypt 암호화를 위한 dependency -->
-		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
 			<version>5.6.1</version>
 		</dependency>
 
-		<!-- 파일업로드를 하기 위한 dependency -->
-		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.4</version>
 		</dependency>
 
-		<!-- 썸네일 이미지(이미지 축소)를 위한 dependency -->
-		<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
 		<dependency>
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
 			<version>0.4.8</version>
 		</dependency>
 
-		<!-- gson을 사용하기 위한 dependency (이 comprehensive 프로젝트에서는 사용하지 않음) -->
-		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.8.5</version>
 		</dependency>
 
-		<!-- jackson을 사용하기 위한 dependency -->
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -237,8 +206,6 @@
 		</dependency>
 
 
-		<!-- jsonView을 사용하기 위한 dependency (이 comprehensive 프로젝트에서는 사용하지 않음) -->
-		<!-- https://mvnrepository.com/artifact/net.sf.json-lib/json-lib-ext-spring -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib-ext-spring</artifactId>
@@ -247,7 +214,6 @@
 
 	</dependencies>
 
-	<!-- build -->
 	<build>
 		<plugins>
 			<plugin>

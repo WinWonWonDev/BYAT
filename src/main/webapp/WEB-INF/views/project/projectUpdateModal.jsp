@@ -1,9 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 
 <style>
@@ -181,20 +181,20 @@
   		<div class="modal_content">
 	  		<form action="" method="post">
 				<div class="modal_head">
-					<h3>га╥на╖ф╝ ╩С╪╪</h3>
+					<h3>М■└К║°Л═²М┼╦ Л┐│Л└╦</h3>
 		    	</div>
 	      		<div class="modal_content-box">
 	      			<div style="height:30px;"></div>
-	      			<div class="projectTitleTag">га╥на╖ф╝ ╦М</div>
+	      			<div class="projectTitleTag">М■└К║°Л═²М┼╦ К╙┘</div>
 	      			<input type="text" class="projectModalTitle" name="projectModalTitle" placeholder="Project-001">
-	      			<div class="projectStartDayTag">га╥на╖ф╝ ╫цюшюоюз</div>
-	      			<div class="projectEndDayTag">га╥на╖ф╝ а╬╥Аюоюз</div>
+	      			<div class="projectStartDayTag">М■└К║°Л═²М┼╦ Л▀°Л·▒Л²╪Л·░</div>
+	      			<div class="projectEndDayTag">М■└К║°Л═²М┼╦ Л╒┘Кё▄Л²╪Л·░</div>
 	       			<br clear="both">
 	       			<input type='date' class="start-day" name='projectStartDay'/>
 	       			<input type='date' class="end-day" name='projectEndDay'/>
-	       			<div class="projectDescriptionTag">га╥на╖ф╝ ╩С╪╪ ╪Ё╦М</div>
-	      			<textarea class="projectDescription" id="projectDescription" rows="13" cols="100" placeholder="╩С╪╪Ё╩©Кю╩ ют╥бгьаж╪╪©Д"></textarea>
-	      			<div class="prjectCodeMessage">га╥на╖ф╝  дз╣Е╢б юз╣©ю╦╥н ╩Щ╪╨╣к╢о╢ы.</div>
+	       			<div class="projectDescriptionTag">М■└К║°Л═²М┼╦ Л┐│Л└╦ Л└╓К╙┘</div>
+	      			<textarea class="projectDescription" id="projectDescription" rows="13" cols="100" placeholder="Л┐│Л└╦К┌╢Л ╘Л²└ Л·┘К═╔М∙╢Лё╪Л└╦Л ■"></textarea>
+	      			<div class="prjectCodeMessage">М■└К║°Л═²М┼╦  Л╫■К⌠°К┼■ Л·░К▐≥Л°╪К║° Л┐²Л└╠К░╘К▀┬К▀╓.</div>
 	      		</div>
 	      		<div class="modal_button">
 		        	<button type="button" id="projectUpdateBtn">Ok</button>
