@@ -8,8 +8,8 @@
 	<!-- 프로젝트 정보 -->
 	<modelVersion>4.0.0</modelVersion>      <!-- Maven 2버전부터 쭉 4.0.0 -->
 	<groupId>com.greedy</groupId>         <!-- 최초 패키지의 1레벨, 2레벨 -->
-	<artifactId>spring</artifactId>
-	<name>chap99-comprehensive-lecture-source</name>
+	<artifactId>byat</artifactId>
+	<name>BYAT-project</name>
 	<packaging>war</packaging>            <!-- 배포를 위한 프로젝트 패키징 방식 -->
 	<version>1.0</version>
 
