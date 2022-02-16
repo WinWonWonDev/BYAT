@@ -129,6 +129,13 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<!-- 롬복 설정 -->
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		    <version>1.18.12</version>
+		</dependency>
+		
 		<!-- Log4j 보안 취약점 개선을 위한 log4j-core dependency -->
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
