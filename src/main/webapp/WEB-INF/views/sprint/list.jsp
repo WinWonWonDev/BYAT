@@ -633,13 +633,14 @@
 			<h2 class="sprint-head">Sprint</h2>
 			<div class="sprint-box">
 			
-				<!-- c:foreach아니면 jsp로 -->
-				<div class="sprint-item" align="center">
-					<h4 class="sprint-item-title">크크크킄크큭</h4>
-					<input type="button" class="sprint-update-modal-open" id="sprint-update-open-btn" value="조회  / 수정">
-					<input type="button" class="sprint-delete-modal-open" id="sprint-delete-open-btn" value="삭제">
-				</div>
-				
+				<c:forEach items="${ sprintList }" var="sprint">
+					<div class="sprint-item" align="center">
+						<h4 class="sprint-item-title">${ sprint.title }</h4>
+						<input type="hidden" value="${ sprint.code }">
+						<input type="button" class="sprint-update-modal-open" id="sprint-update-open-btn" value="조회  / 수정">
+						<input type="button" class="sprint-delete-modal-open" id="sprint-delete-open-btn" value="삭제">
+					</div>
+				</c:forEach>
 				
 				
 				
@@ -824,12 +825,12 @@
    		<div class="modal_content">
    			<form action="" method="post">
 			<div class="modal_head">
-				<h3>Sprint-{}</h3>
+				<h3>스프린트 생성</h3>
 	    	</div>
        		<div class="modal_content-box">
        			<input type="text" class="title" name="sprintTitle" placeholder="Sprint Title">
-       			<input type="text" class="sprint-code" name="sprintCode" value="" disabled="disabled">
-				<h3>스프린트 코드는 자동으로 생성됩니다.</h3>       		
+       			<input type="text" class="sprint-code" name="sprintManager">
+				<button id="selectProjectMembers">검색</button>     		
 				<h5>시작일</h5>
 				<h5>종료일</h5>
        			<br clear="both" style="height: 5px;">
@@ -1007,6 +1008,10 @@
     	} else{
     		document.getElementById("task-status").style.background="#3988FF";
     	}
+    }
+    
+    document.getElementById("selectProjectMembers").onclick = function() {
+    	location.href = "/sprint/searchmanager";
     }
 </script>
 </body>
