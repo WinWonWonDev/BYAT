@@ -8,6 +8,7 @@
  		<id property="no" column="MEMBER_NO"/>
  		<result property="permit" column="MEMBER_PERMIT"/>
  		<result property="id" column="MEMBER_ID"/>
+ 		<result property="name" column="MEMBER_NAME"/>
  		<result property="pwd" column="MEMBER_PWD"/>
  		<result property="phone" column="MEMBER_PHONE"/>
  		<result property="email" column="MEMBER_EMAIL"/>
@@ -36,7 +37,6 @@
  		 WHERE A.ABSENCE_YN = 'N'
  		   AND A.INIT_PWD_YN = 'N'
  		   AND A.MEMBER_ID = #{ id }
- 		   AND A.MEMBER_PWD = #{ pwd }
  	
  	</select>
  
@@ -53,7 +53,6 @@
  		 WHERE A.ABSENCE_YN = 'N'
  		   AND A.INIT_PWD_YN = 'Y'
  		   AND A.MEMBER_ID = #{ id }
- 		   AND A.MEMBER_PWD = #{ pwd }
  	</select>
  	
  </mapper>

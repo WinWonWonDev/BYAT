@@ -37,11 +37,11 @@ public class MemberController {
 	
 	@PostMapping("/login")
 	public String loginMember(@ModelAttribute MemberDTO member, Model model
-			, HttpServletRequest request, RedirectAttributes rttr, HttpSession session) throws LoginFailedException {
+			, RedirectAttributes rttr) throws LoginFailedException {
 		
 		System.out.println("넘버들오냐 ? : "  + member);
+		
 		/* 초기 계정인 경우 */
-		//넘어온 멤버의 phone && 이메일이 null이면 초기계정일 거니까 
 		if(("Y").equals(member.getInitPwdYN())) {
 			
 			model.addAttribute("loginMember", memberService.initLogin(member));
@@ -53,13 +53,16 @@ public class MemberController {
 			/* 초기 계정이 아닌 경우 */
 			model.addAttribute("loginMember", memberService.login(member));
 			
-//		     HttpSession session2 =  request.getSession();
-//	        MemberDTO memberSession = (MemberDTO) session.getAttribute("loginMember");
-		        
-	        	
-	        	rttr.addFlashAttribute("message","로그인 성공!");
-	        	return "redirect:/home";
-	        }
+			System.out.println(model.getAttribute("loginMember"));
+			
+			System.out.println("얘도널 : " + memberService.login(member));
+			
+        	rttr.addFlashAttribute("message","로그인 성공!");
+        	
+        	
+        	return "redirect:/home";
+	        
+		}
 			
 			
 	
