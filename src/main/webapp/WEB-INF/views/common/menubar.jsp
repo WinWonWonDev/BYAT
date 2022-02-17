@@ -216,32 +216,32 @@
 <body>
 	<nav class="navbar navbar-expand-custom navbar-mainbg">
 		<div class="logoIcon">
-			<input type="button" class="homeButtonImg" onclick="location.href='${ pageContext.servletContext.contextPath }/main/main.jsp'" >
+			<input type="button" class="homeButtonImg" onclick="location.href='${ pageContext.servletContext.contextPath }/home'" >
 		</div>
        
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
             	<div class="hori-selector"><div class="left"></div><div class="right"></div></div>
                 <li class="nav-item active">
-                    <a class="nav-link" href="javascript:void(0);">Home</a>
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/home">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);">Project</a>
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/project/list">Project</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);">My Task</a>
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/mytask/list">My Task</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);">Calendar</a>
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/calendar/list">Calendar</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);">History</a>
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/history/list">History</a>
                 </li>
-                <%-- <c:if test="관리자만"> --%>
+                <c:if test="${ sessionScope.loginMember.permit eq 'ADMIN' }"> 
 	                <li class="nav-item">
-	                    <a class="nav-link" href="javascript:void(0);">Management</a>
+	                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/management/list">Management</a>
 	                </li>                
-                <%-- </c:if> --%>
+                </c:if> 
             </ul>
             <input type="button" class="noticeButtonImg" onclick="noticeDisplay();">
 			<div class="note-num">3</div>

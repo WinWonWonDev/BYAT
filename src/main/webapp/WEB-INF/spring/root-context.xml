@@ -97,7 +97,8 @@
 					  com.greedy.byat.profile.model.dao,
 					  com.greedy.byat.history.model.dao" />
 
-
-
+	<!-- 여기다 bean으로 설정해주니까 됩니다.  -->
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
 
 </beans>

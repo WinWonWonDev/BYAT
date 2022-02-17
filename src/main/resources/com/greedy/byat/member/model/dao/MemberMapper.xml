@@ -3,6 +3,57 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.member.model.dao.MemberMapper">
+ 	
+ 	<resultMap id="memberResultMap" type="MemberDTO">
+ 		<id property="no" column="MEMBER_NO"/>
+ 		<result property="permit" column="MEMBER_PERMIT"/>
+ 		<result property="id" column="MEMBER_ID"/>
+ 		<result property="pwd" column="MEMBER_PWD"/>
+ 		<result property="phone" column="MEMBER_PHONE"/>
+ 		<result property="email" column="MEMBER_EMAIL"/>
+ 	</resultMap>
+ 	
+ 	
+ 	<select id="selectEncryptedPwd" resultType="java.lang.String">
+ 		SELECT
+ 		       A.MEMBER_PWD
+ 		  FROM TBL_MEMBER A
+ 		 WHERE A.ABSENCE_YN = 'N'
+ 		   AND A.MEMBER_ID = #{ id }
+ 	
+ 	</select>
  
+ 	<select id="login" resultMap="memberResultMap">
+ 		SELECT
+ 		       A.MEMBER_NO
+ 		     , A.MEMBER_PERMIT
+ 		     , A.MEMBER_ID
+ 		     , A.MEMBER_PWD
+ 		     , A.MEMBER_NAME
+ 		     , A.MEMBER_PHONE
+ 		     , A.MEMBER_EMAIL
+ 		  FROM TBL_MEMBER A
+ 		 WHERE A.ABSENCE_YN = 'N'
+ 		   AND A.INIT_PWD_YN = 'N'
+ 		   AND A.MEMBER_ID = #{ id }
+ 		   AND A.MEMBER_PWD = #{ pwd }
+ 	
+ 	</select>
+ 
+ 	<select id="initLogin" resultMap="memberResultMap">
+ 		SELECT
+ 		       A.MEMBER_NO
+ 		     , A.MEMBER_PERMIT
+ 		     , A.MEMBER_ID
+ 		     , A.MEMBER_PWD
+ 		     , A.MEMBER_NAME
+ 		     , A.MEMBER_PHONE
+ 		     , A.MEMBER_EMAIL
+ 		  FROM TBL_MEMBER A
+ 		 WHERE A.ABSENCE_YN = 'N'
+ 		   AND A.INIT_PWD_YN = 'Y'
+ 		   AND A.MEMBER_ID = #{ id }
+ 		   AND A.MEMBER_PWD = #{ pwd }
+ 	</select>
  	
  </mapper>

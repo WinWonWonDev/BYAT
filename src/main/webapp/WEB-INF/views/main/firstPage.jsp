@@ -88,7 +88,7 @@
 	</div>
    
 	<div id="loginButton" align="center">
-		<input type="button" class="img-button" onclick="location.href='${ pageContext.servletContext.contextPath }/movelogin'">
+		<input type="button" class="img-button" onclick="location.href='${ pageContext.servletContext.contextPath }/member/login'">
 	</div>
 
 </body>

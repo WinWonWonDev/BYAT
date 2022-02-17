@@ -15,13 +15,13 @@ public class MainController {
 	
 	@RequestMapping("main")
 	public void main() {}
-
-	@RequestMapping("movelogin")
-	public String moveLoginPage() {
+	
+	@RequestMapping("home")
+	public String home() {
 		
-		
-		return "/member/login";
+		return "/main/main";
 	}
+	
 	
 }
 
