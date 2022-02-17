@@ -88,7 +88,7 @@ public class AuthenticationFilter implements Filter {
 		List<String> allPermitList = new ArrayList<>();
 		
 		
-//		adminPermitList.add("/management/list");
+		adminPermitList.add("/management/list");
 //		adminPermitList.add("/management/regist");
 //		adminPermitList.add("/management/searchmemberInfo");
 //		adminPermitList.add("/management/removedList");
@@ -99,15 +99,16 @@ public class AuthenticationFilter implements Filter {
 //		adminPermitList.add("/management/restore");
 //		
 //		memberPermitList.add("/main/initialInputInfo");
-//		memberPermitList.add("/project/list");
+		memberPermitList.add("/project/list");
+		memberPermitList.add("/sprint/list");
+		memberPermitList.add("/mytask/list");
+		memberPermitList.add("/history/list");
+		memberPermitList.add("/calendar/list");
 //		memberPermitList.add("/project/regist");
 //		memberPermitList.add("/project/registmember");
 //		memberPermitList.add("/project/modify");
 //		//보류
-//		memberPermitList.add("/member/logout");
-//		memberPermitList.add("/member/logout");
-//		memberPermitList.add("/member/logout");
-//		memberPermitList.add("/member/logout");
+		memberPermitList.add("/member/logout");
 //		memberPermitList.add("/notice/list");
 //		memberPermitList.add("/notice/detail");
 //		memberPermitList.add("/board/list");
@@ -120,8 +121,8 @@ public class AuthenticationFilter implements Filter {
 //		memberPermitList.add("/thumbnail/regist");
 //		memberPermitList.add("/thumbnail/detail");
 //		memberPermitList.add("/board/delete");
-//		
-//
+		
+
 		allPermitList.add("/member/login");
 		allPermitList.add("/member/passwordfind");
 //		allPermitList.add("/member/emailDuplicationCheck");
