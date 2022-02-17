@@ -49,8 +49,8 @@
 		<span class="imtext" align="center">Better Than your Agile Tool<br>
 											You could use our Comfortable function</span>
 	</div>
-	<c:if test="초기로그인일경우">
-		<%@ include file="../member/firstLoginModal.jsp" %>
+	<c:if test="${ sessionScope.loginMember.initPwdYN eq 'Y' }">
+		<jsp:include page="../member/firstLoginModal.jsp">
 	</c:if>
 	
 </body>

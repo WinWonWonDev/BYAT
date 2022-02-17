@@ -39,26 +39,23 @@ public class MemberController {
 	public String loginMember(@ModelAttribute MemberDTO member, Model model
 			, RedirectAttributes rttr) throws LoginFailedException {
 		
-		System.out.println("넘버들오냐 ? : "  + member);
-		
 		/* 초기 계정인 경우 */
-		if(("Y").equals(member.getInitPwdYN())) {
+		if(member.getInitPwdYN() == null) {
 			
 			model.addAttribute("loginMember", memberService.initLogin(member));
 			
-			return "redirect:/member/firstLoginSettingModal";
+			rttr.addFlashAttribute("message","로그인 성공!");
+
+			System.out.println(memberService.initLogin(member));
+			
+			return "redirect:/home";
 			
 		} else {
 		
 			/* 초기 계정이 아닌 경우 */
 			model.addAttribute("loginMember", memberService.login(member));
 			
-			System.out.println(model.getAttribute("loginMember"));
-			
-			System.out.println("얘도널 : " + memberService.login(member));
-			
         	rttr.addFlashAttribute("message","로그인 성공!");
-        	
         	
         	return "redirect:/home";
 	        
