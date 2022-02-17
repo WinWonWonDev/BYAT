@@ -211,6 +211,17 @@
 		border:none;
 	}
 	
+	.user-name {
+	
+		position:absolute;
+		top: 20%;
+		left: 100%;	
+		height:30px;
+		width:100px;
+		font-size:1.5em;
+	}
+	
+	
 </style>
 </head>
 <body>
@@ -247,7 +258,7 @@
 			<div class="note-num">3</div>
 			<div class="profile-area" onclick="location.href='        '">
 			<div class="user-name">
-				<h1><!-- 로그인한 유저 이름 --></h1>
+				${ sessionScope.loginMember.name }
 			</div>
 			<div class="user-image">
 		   		<img src=""><!-- 로그인한 유저 사진 -->
