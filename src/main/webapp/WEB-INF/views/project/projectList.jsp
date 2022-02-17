@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../common/menubar.jsp" %>
-<%@ include file="../common/subMenu.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -296,12 +295,13 @@
 	.projectRealManager {
 		background-color:red;
 		color:white;
-		height:40px;
-		width:40px;
+		height:60px;
+		width:60px;
 		text-align:center;
-		border-radius:20px;
+		border-radius:30px;
 		display:table-cell;
 		vertical-align:middle;
+		left:50px;
 	}
 	
 	.projectEditBtn {
@@ -363,7 +363,7 @@
 		<div class="projectListHeadName" style="font-weight:bold">전체 프로젝트 목록</div>
 		<button id="createProject">새 프로젝트 생성</button>			
 		<div class="projectListBox">
-	      		<table class="projectTable">
+	      		<table class="projectTable" id="projectTable">
 					<tr>
 						<th id="manageProjectTd">프로젝트 관리</th>
 						<th id="projectParticipantsTd">참여자</th>
@@ -374,7 +374,7 @@
 						<th id="projectManager">담당자</th>
 						<th id="projectSetting">설정</th>
 					</tr>
-					<tr>
+					<!-- <tr>
 						<td>영화 예매 프로그램</td>
 						<td id="projectRealMemberList">
 							<div id="projectRealMember1">인근</div>
@@ -395,7 +395,30 @@
 							</div>
 						</td>
 						<td><input type="button" class="projectEditBtn" onclick="proBoxOpenDisplay()"></td>
+					</tr> -->
+					<c:forEach items="${ projectList }" var="project">
+					<tr>
+						<td id="projectTitle"><c:out value="${ project.title }" />
+							<input type="hidden" value="${ project.code }" name="projectCode" id="projectCode">
+						</td>
+						<%-- <td><c:out value="${ project.members.name }" /></td> --%>
+						<td></td>
+						<td><input type="button" class="projectAddMemberBtn"></td>
+						<td><c:out value="${ project.startDate }" /></td>
+						<td><c:out value="${ project.endDate }" /></td>
+						<td>
+							<div class="projectRealProgress">
+								<c:out value="${ project.progress }" />
+							</div>
+						</td>
+						<td style="padding-left:20px;">
+							<div class="projectRealManager">
+								<c:out value="${ project.writer }" />							
+							</div>
+						</td>
+						<td><input type="button" class="projectEditBtn" onclick="proBoxOpenDisplay()"></td>
 					</tr>
+				</c:forEach>
 	      		</table>
 		</div>
 	</div>
@@ -452,6 +475,18 @@
 		   } else {
 			   proBox.style.display = 'none';
 		   }
+		}
+		
+		if(document.querySelectorAll("#projectTable td")) {
+			const $tds = document.querySelectorAll("#projectTitle");
+			const $code = document.querySelectorAll("#projectCode");
+			for(let i = 0; i < $tds.length; i++) {
+				
+				$tds[i].onclick = function() {
+					
+					location.href = "${ pageContext.servletContext.contextPath }/sprint/list?code=" + $code[i].value;
+				}
+			}
 		}
 		
 		
