@@ -56,13 +56,9 @@ public class MemberController {
 //		     HttpSession session2 =  request.getSession();
 //	        MemberDTO memberSession = (MemberDTO) session.getAttribute("loginMember");
 		        
-	        if(model.getAttribute("loginMemeber") != null) {
 	        	
 	        	rttr.addFlashAttribute("message","로그인 성공!");
 	        	return "redirect:/home";
-	        } else {
-	        	rttr.addFlashAttribute("message", "세션엄슴;");
-	        	return "redirect:/member/login";
 	        }
 			
 			
@@ -70,4 +66,3 @@ public class MemberController {
 			
 		}
 	}
-}
