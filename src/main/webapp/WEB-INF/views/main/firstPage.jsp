@@ -88,15 +88,8 @@
 	</div>
    
 	<div id="loginButton" align="center">
-		<input type="button" class="img-button" onclick="ddd()">
+		<input type="button" class="img-button" onclick="location.href='${ pageContext.servletContext.contextPath }/movelogin'">
 	</div>
-	<script>
-		function ddd(){
-			location.href="../WEB-INF/views/member/login.jsp";
-		}
-		
-	
-      
-	</script>
+
 </body>
 </html>

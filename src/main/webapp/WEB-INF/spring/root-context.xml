@@ -25,9 +25,9 @@
 		<property name="driverClassName"
 			value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url"
-			value="jdbc:oracle:thin:@14.7.50.117:1521:xe" />
+			value="jdbc:oracle:thin:@oracle.team-greedy.com:1521:xe" />
 		<property name="username" value="C##BYAT" />
-		<property name="password" value="BYAT" />
+		<property name="password" value="SPRING" />
 		<property name="defaultAutoCommit" value="false" />
 	</bean>
 
