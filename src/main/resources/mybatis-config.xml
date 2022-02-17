@@ -5,7 +5,20 @@
   <configuration>
 
 	<typeAliases>
-			 <typeAlias alias="MemberDTO" type="com.greedy.byat.member.model.dto.MemberDTO"/>
+		<typeAlias alias="MemberDTO" type="com.greedy.byat.member.model.dto.MemberDTO"/>
+		<typeAlias alias="ProjectDTO" type="com.greedy.byat.project.model.dto.ProjectDTO"/>
+		<typeAlias alias="BacklogDTO" type="com.greedy.byat.backlog.model.dto.BacklogDTO"/>
+		<typeAlias alias="CalendarDTO" type="com.greedy.byat.calendar.model.dto.CalendarDTO"/>
+		<typeAlias alias="HistoryDTO" type="com.greedy.byat.history.model.dto.HistoryDTO"/>
+		<typeAlias alias="IssueDTO" type="com.greedy.byat.issue.model.dto.IssueDTO"/>
+		<typeAlias alias="ManagementDTO" type="com.greedy.byat.management.model.dto.ManagementDTO"/>
+		<typeAlias alias="MeetinglogDTO" type="com.greedy.byat.meetinglog.model.dto.MeetinglogDTO"/>
+		<typeAlias alias="MyTaskDTO" type="com.greedy.byat.mytask.model.dto.MyTaskDTO"/>
+		<typeAlias alias="NoticeDTO" type="com.greedy.byat.notice.model.dto.NoticeDTO"/>
+		<typeAlias alias="ProfileDTO" type="com.greedy.byat.profile.model.dto.ProfileDTO"/>
+		<typeAlias alias="RetrospectDTO" type="com.greedy.byat.retrospect.model.dto.RetrospectDTO"/>
+		<typeAlias alias="SprintDTO" type="com.greedy.byat.sprint.model.dto.SprintDTO"/>
+		<typeAlias alias="TaskDTO" type="com.greedy.byat.task.model.dto.TaskDTO"/>
 	</typeAliases>
   
   
