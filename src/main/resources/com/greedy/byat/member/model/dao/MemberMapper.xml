@@ -8,10 +8,12 @@
  		<id property="no" column="MEMBER_NO"/>
  		<result property="permit" column="MEMBER_PERMIT"/>
  		<result property="id" column="MEMBER_ID"/>
- 		<result property="name" column="MEMBER_NAME"/>
  		<result property="pwd" column="MEMBER_PWD"/>
+ 		<result property="name" column="MEMBER_NAME"/>
  		<result property="phone" column="MEMBER_PHONE"/>
  		<result property="email" column="MEMBER_EMAIL"/>
+ 		<result property="absenceYN" column="ABSENCE_YN"/>
+ 		<result property="initPwdYN" column="INIT_PWD_YN"/>
  	</resultMap>
  	
  	
@@ -33,6 +35,8 @@
  		     , A.MEMBER_NAME
  		     , A.MEMBER_PHONE
  		     , A.MEMBER_EMAIL
+ 		     , A.ABSENCE_YN
+ 		     , A.INIT_PWD_YN
  		  FROM TBL_MEMBER A
  		 WHERE A.ABSENCE_YN = 'N'
  		   AND A.INIT_PWD_YN = 'N'
@@ -49,10 +53,18 @@
  		     , A.MEMBER_NAME
  		     , A.MEMBER_PHONE
  		     , A.MEMBER_EMAIL
+	      	 , A.ABSENCE_YN
+ 		     , A.INIT_PWD_YN
  		  FROM TBL_MEMBER A
  		 WHERE A.ABSENCE_YN = 'N'
  		   AND A.INIT_PWD_YN = 'Y'
  		   AND A.MEMBER_ID = #{ id }
  	</select>
  	
+	<select id="selectInitPasswordYN" resultType="java.lang.String">
+		SELECT
+		       A.INIT_PWD_YN
+		  FROM TBL_MEMBER A
+		 WHERE A.MEMBER_ID = #{ id }
+	</select> 	
  </mapper>

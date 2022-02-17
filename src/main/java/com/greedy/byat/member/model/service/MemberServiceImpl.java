@@ -47,6 +47,12 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.initLogin(member);
 	}
 
+	@Override
+	public String selectMember(MemberDTO member) {
+		
+		return mapper.selectInitPasswordYN(member);
+	}
+
 
 
 
