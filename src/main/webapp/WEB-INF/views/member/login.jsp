@@ -109,7 +109,7 @@ html, body {
 			<h1>LOGIN</h1>
 		</div>
 
-		<c:if test="${ empty sessionScope.loginMember }">
+		<%--  <c:if test="${ empty sessionScope.loginMember }">  --%>
 			<!-- 로그인이 필요한 경우 -->
 			<form id="loginForm"
 				action="${ pageContext.servletContext.contextPath }/member/login"
@@ -158,7 +158,7 @@ html, body {
 					<input type="button" class="btn btn-yg" value="cancel" id="cancel">
 				</div>
 			</form>
-		</c:if>
+		<%--  </c:if> --%> 
 
 
 	</div>

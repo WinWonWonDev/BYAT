@@ -12,4 +12,6 @@ public interface MemberMapper {
 
 	String selectInitPasswordYN(MemberDTO member);
 
+	String emailduplicationCheck(int id);
+
 }

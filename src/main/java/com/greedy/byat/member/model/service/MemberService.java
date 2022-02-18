@@ -11,5 +11,7 @@ public interface MemberService {
 
 	String selectMember(MemberDTO member);
 
+	boolean emailduplicationCheck(int id);
+
 
 }
