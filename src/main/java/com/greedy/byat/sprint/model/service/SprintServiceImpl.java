@@ -26,6 +26,15 @@ public class SprintServiceImpl implements SprintService {
 		return sprintList;
 	}
 
+	@Override
+	public int registSprint(int projectCode, SprintDTO sprint) {
+		
+		
+		
+		
+		return 0;
+	}
+
 	
 
 

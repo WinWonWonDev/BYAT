@@ -41,5 +41,6 @@
  		FROM TBL_SPRINT A
  		JOIN TBL_PROJECT B ON(A.PROJECT_CODE = B.PROJECT_CODE)
  	   WHERE B.PROJECT_CODE = #{ no }
+ 	     AND A.SPRINT_DELETE_STATUS = 'N'
  	</select>
  </mapper>

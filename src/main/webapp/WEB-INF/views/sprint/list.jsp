@@ -823,20 +823,20 @@
 	<div id="sprint-create-modal">
    
    		<div class="modal_content">
-   			<form action="" method="post">
+   			<form action="${ pageContext.servletContext.contextPath }/sprint/regist" method="post">
 			<div class="modal_head">
 				<h3>스프린트 생성</h3>
 	    	</div>
        		<div class="modal_content-box">
-       			<input type="text" class="title" name="sprintTitle" placeholder="Sprint Title">
-       			<input type="text" class="sprint-code" name="sprintManager">
+       			<input type="text" class="title" name="title" placeholder="Sprint Title">
+       			<input type="text" class="sprint-code" name="manager">
 				<button id="selectProjectMembers">검색</button>     		
 				<h5>시작일</h5>
 				<h5>종료일</h5>
        			<br clear="both" style="height: 5px;">
-       			<input type='date' class="start-day" id="sprint-startday" name='sprintStartday'/>
-       			<input type='date' class="end-day" id="sprint-endday" name='sprintEndday'/>
-       			<textarea class="description" id="sprintDescription" rows="13" cols="51" placeholder="sprint Detail Description"></textarea>
+       			<input type='date' class="start-day" id="sprint-startday" name='startDate'/>
+       			<input type='date' class="end-day" id="sprint-endday" name='endDate'/>
+       			<textarea class="description" id="sprintDescription" name='body' rows="13" cols="51" placeholder="sprint Detail Description"></textarea>
        		</div>
        		<div class="modal_button">
 	        	<button type="button" id="sprint-create">Ok</button>

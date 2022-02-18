@@ -8,4 +8,6 @@ public interface SprintService {
 
 	List<SprintDTO> selectSprintList(int projectNo);
 
+	int registSprint(int projectCode, SprintDTO sprint);
+
 }

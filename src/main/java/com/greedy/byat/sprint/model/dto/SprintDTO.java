@@ -2,6 +2,7 @@ package com.greedy.byat.sprint.model.dto;
 
 import java.util.List;
 
+import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class SprintDTO {
 	private String progress;
 	private String body;
 	private int version;
+	private String deleteStatus;
+	private String writer;
+	private MemberDTO writerMember;
 	private List<TaskDTO> taskList;
-	
+	private int projectCode;
 }
