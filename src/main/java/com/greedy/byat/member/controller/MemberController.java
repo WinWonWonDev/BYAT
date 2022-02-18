@@ -40,14 +40,12 @@ public class MemberController {
 			, RedirectAttributes rttr) throws LoginFailedException {
 		
 		/* 초기 계정인 경우 */
-		if(member.getInitPwdYN() == null) {
+		if(memberService.selectMember(member).equals("Y")) {
 			
 			model.addAttribute("loginMember", memberService.initLogin(member));
 			
 			rttr.addFlashAttribute("message","로그인 성공!");
 
-			System.out.println(memberService.initLogin(member));
-			
 			return "redirect:/home";
 			
 		} else {

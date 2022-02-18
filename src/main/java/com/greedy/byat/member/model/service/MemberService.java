@@ -9,5 +9,7 @@ public interface MemberService {
 
 	MemberDTO login(MemberDTO member) throws LoginFailedException;
 
+	String selectMember(MemberDTO member);
+
 
 }
