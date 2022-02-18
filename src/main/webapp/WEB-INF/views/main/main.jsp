@@ -50,7 +50,7 @@
 											You could use our Comfortable function</span>
 	</div>
 	<c:if test="${ sessionScope.loginMember.initPwdYN eq 'Y' }">
-		<jsp:include page="../member/firstLoginModal.jsp">
+		<%@ include file="../member/firstLoginModal.jsp" %>
 	</c:if>
 	
 </body>

@@ -10,4 +10,6 @@ public interface MemberMapper {
 
 	MemberDTO initLogin(MemberDTO member);
 
+	String selectInitPasswordYN(MemberDTO member);
+
 }
