@@ -7,6 +7,7 @@
 	<typeAliases>
 		<typeAlias alias="MemberDTO" type="com.greedy.byat.member.model.dto.MemberDTO"/>
 		<typeAlias alias="ProjectDTO" type="com.greedy.byat.project.model.dto.ProjectDTO"/>
+		<typeAlias alias="ProjectMembersDTO" type="com.greedy.byat.project.model.dto.ProjectMembersDTO"/>
 		<typeAlias alias="BacklogDTO" type="com.greedy.byat.backlog.model.dto.BacklogDTO"/>
 		<typeAlias alias="CalendarDTO" type="com.greedy.byat.calendar.model.dto.CalendarDTO"/>
 		<typeAlias alias="HistoryDTO" type="com.greedy.byat.history.model.dto.HistoryDTO"/>
