@@ -12,4 +12,12 @@ public interface ProjectMapper {
 
 	List<ProjectMembersDTO> selectProjectMembers(int code);
 
+	int registProject(ProjectDTO project);
+
+	int registProjectMembers(ProjectMembersDTO projectMembers);
+
+	int registProjectMemberRole(int no);
+
+	int removeProject(int code);
+
 }

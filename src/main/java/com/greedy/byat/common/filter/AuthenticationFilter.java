@@ -87,45 +87,39 @@ public class AuthenticationFilter implements Filter {
 		List<String> memberPermitList = new ArrayList<>();
 		List<String> allPermitList = new ArrayList<>();
 		
-		
 		adminPermitList.add("/management/list");
-//		adminPermitList.add("/management/regist");
-//		adminPermitList.add("/management/searchmemberInfo");
-//		adminPermitList.add("/management/removedList");
-//		adminPermitList.add("/management/searchdeletedmemberInfo");
-//		adminPermitList.add("/management/modify");
-//		adminPermitList.add("/management/detail");
-//		adminPermitList.add("/management/remove");
-//		adminPermitList.add("/management/restore");
-//		
-//		memberPermitList.add("/main/initialInputInfo");
-		memberPermitList.add("/project/list");
-		memberPermitList.add("/sprint/list");
-		memberPermitList.add("/mytask/list");
-		memberPermitList.add("/history/list");
-		memberPermitList.add("/calendar/list");
-//		memberPermitList.add("/project/regist");
-//		memberPermitList.add("/project/registmember");
-//		memberPermitList.add("/project/modify");
-//		//보류
-		memberPermitList.add("/member/logout");
-//		memberPermitList.add("/notice/list");
-//		memberPermitList.add("/notice/detail");
-//		memberPermitList.add("/board/list");
-//		memberPermitList.add("/board/regist");
-//		memberPermitList.add("/board/detail");
-//		memberPermitList.add("/board/update");
-//		memberPermitList.add("/board/registReply");
-//		memberPermitList.add("/board/removeReply");
-//		memberPermitList.add("/thumbnail/list");
-//		memberPermitList.add("/thumbnail/regist");
-//		memberPermitList.add("/thumbnail/detail");
-//		memberPermitList.add("/board/delete");
-		
+		adminPermitList.add("/management/regist");
+		adminPermitList.add("/management/modify");
+		adminPermitList.add("/management/remove");
 
-		allPermitList.add("/member/login");
+		
+		
+		memberPermitList.add("/project/list");
+		memberPermitList.add("/project/regist");
+		memberPermitList.add("/project/remove");
+		
+		memberPermitList.add("/sprint/list");
+		memberPermitList.add("/sprint/regist");
+		memberPermitList.add("/sprint/remove");
+		memberPermitList.add("/sprint/modify");
+
+		memberPermitList.add("/mytask/list");
+		memberPermitList.add("/mytask/regist");
+		memberPermitList.add("/mytask/remove");
+		memberPermitList.add("/mytask/modify");
+		
+		memberPermitList.add("/history/list");
+		
+		memberPermitList.add("/calendar/list");
+		memberPermitList.add("/calendar/regist");
+		memberPermitList.add("/calendar/remove");
+		memberPermitList.add("/calendar/modify");
+		
+		memberPermitList.add("/member/logout");
+		
+		
+	    allPermitList.add("/member/login");
 		allPermitList.add("/member/passwordfind");
-//		allPermitList.add("/member/emailDuplicationCheck");
 		
 		permitURIList.put("adminPermitList", adminPermitList);
 		permitURIList.put("memberPermitList", memberPermitList);
