@@ -15,18 +15,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString 
-public class ProjectDTO {
+public class ProjectMembersDTO {
 
 	private int code;
-	private String title;
-	private java.sql.Date startDate;
-	private java.sql.Date endDate;
-	private String progress;
-	private String body;
-	private int version;
-	private String deleteStatus;
-	private String writer;
-	private MemberDTO writerMember;
-	private List<ProjectMembersDTO> projectMembers;
+	private int no;
+	private String participationYn;
+	private String name;
+	private String roleName;
 	
 }
