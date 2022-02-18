@@ -28,6 +28,14 @@
  		<result property="email" column="MEMBER_EMAIL"/>
  	</resultMap>
  	
+ 	<resultMap id ="projectMembersResultMap" type="ProjectMembersDTO">
+ 		<id property="code" column="PROJECT_CODE"/>
+ 		<id property="no" column="MEMBER_NO"/>
+ 		<result property="participationYn" column="PROJECT_PARTICIPATION_YN"/>
+ 		<result property="name" column="MEMBER_NAME"/>
+ 		<result property="roleName" column="ROLE_NAME"/>
+ 	</resultMap>
+ 	
  	<select id="selectProjectList" resultMap="projectResultMap">
  		SELECT
 			   A.PROJECT_CODE
@@ -41,7 +49,22 @@
 			 , A.PROJECT_WRITER
 		  FROM TBL_PROJECT A
 		  JOIN TBL_MEMBER B ON(A.PROJECT_WRITER = B.MEMBER_NAME)
-		 WHERE B.MEMBER_NO = #{ no }
+		  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
+		 WHERE C.MEMBER_NO = #{ no }
+ 	</select>
+ 	
+ 	<select id="selectProjectMembers" resultMap="projectMembersResultMap">
+		SELECT
+		       A.PROJECT_CODE 
+		     , A.MEMBER_NO
+		     , A.PROJECT_PARTICIPATION_YN
+		     , B.MEMBER_NAME
+		     , C.ROLE_NAME
+		  FROM TBL_PROJECT_MEMBERS A
+		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
+		  JOIN TBL_ROLE C ON(A.PROJECT_CODE = C.PROJECT_CODE)
+		 WHERE A.PROJECT_CODE = #{ code }
+		   AND B.MEMBER_NO = C.MEMBER_NO
  	</select>
  	
  </mapper>

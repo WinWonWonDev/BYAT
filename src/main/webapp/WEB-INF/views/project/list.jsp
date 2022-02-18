@@ -295,10 +295,10 @@
 	.projectRealManager {
 		background-color:red;
 		color:white;
-		height:60px;
-		width:60px;
+		height:40px;
+		width:40px;
 		text-align:center;
-		border-radius:30px;
+		border-radius:20px;
 		display:table-cell;
 		vertical-align:middle;
 		left:50px;
@@ -312,17 +312,14 @@
         cursor:pointer;
 	}
 	
-	#projectRealMember1 {
-		background-color:green;
-		z-index:3;
-	}
 	#projectRealMember2 {
-		background-color:rgb(255,223,186);
-		z-index:2;
+		background-color:yellowgreen;
 	}
 	#projectRealMember3 {
+		background-color:rgb(255,223,186);
+	}
+	#projectRealMember1 {
 		background-color:red;
-		z-index:1;
 	}
 	
 	#projectRealMemberList>div {
@@ -333,10 +330,11 @@
 		border-radius:20px;
 		display:table-cell;
 		vertical-align:middle;
+		transform: translateY(35%);
 	}
 	
 	#projectRealMemberList {
-		padding-left:200px;
+		float:right;
 	}
 	
  	#projectMenuBox {
@@ -374,44 +372,51 @@
 						<th id="projectManager">담당자</th>
 						<th id="projectSetting">설정</th>
 					</tr>
-					<!-- <tr>
-						<td>영화 예매 프로그램</td>
-						<td id="projectRealMemberList">
-							<div id="projectRealMember1">인근</div>
-							<div id="projectRealMember2">수빈</div>
-							<div id="projectRealMember3">상범</div>
-						</td>
-						<td><input type="button" class="projectAddMemberBtn"></td>
-						<td>2022-02-01</td>
-						<td>2022-05-10</td>
-						<td style="padding-left:15px;">
-							<div class="projectRealProgress">
-								진행중
-							</div>
-						</td>
-						<td style="padding-left:30px;">
-							<div class="projectRealManager">
-								상범
-							</div>
-						</td>
-						<td><input type="button" class="projectEditBtn" onclick="proBoxOpenDisplay()"></td>
-					</tr> -->
 					<c:forEach items="${ projectList }" var="project">
 					<tr>
 						<td id="projectTitle"><c:out value="${ project.title }" />
 							<input type="hidden" value="${ project.code }" name="projectCode" id="projectCode">
 						</td>
-						<%-- <td><c:out value="${ project.members.name }" /></td> --%>
-						<td></td>
+						<td id="projectRealMemberList">
+							<c:forEach items="${ project.projectMembers }" var="member">
+								<c:if test="${ member.roleName eq 'PM' }">
+									<div id="projectRealMember1">
+										<c:out value="${ member.name }" />															
+									</div>									
+								</c:if>
+								<c:if test="${ member.roleName eq '부PM' }">
+									<div id="projectRealMember2">
+										<c:out value="${ member.name }" />															
+									</div>
+								</c:if>
+								<c:if test="${ member.roleName eq '일반멤버' }">
+									<div id="projectRealMember3">
+										<c:out value="${ member.name }" />															
+									</div>
+								</c:if>
+							</c:forEach>
+						</td>
 						<td><input type="button" class="projectAddMemberBtn"></td>
 						<td><c:out value="${ project.startDate }" /></td>
 						<td><c:out value="${ project.endDate }" /></td>
-						<td>
-							<div class="projectRealProgress">
-								<c:out value="${ project.progress }" />
-							</div>
+						<td style="padding-left:15px;">
+							<c:if test="${ project.progress eq '진행중' }">
+								<div class="projectRealProgress">
+									<c:out value="${ project.progress }" />
+								</div>								
+							</c:if>
+							<c:if test="${ project.progress eq '완료' }">
+								<div class="projectRealProgress" style="background-color:rgb(41, 60, 117)">
+									<c:out value="${ project.progress }" />
+								</div>		
+							</c:if>
+							<c:if test="${ project.progress eq '미진행' }">
+								<div class="projectRealProgress" style="background-color:rgb(196, 196, 196)">
+									<c:out value="${ project.progress }" />
+								</div>		
+							</c:if>
 						</td>
-						<td style="padding-left:20px;">
+						<td style="padding-left:30px;">
 							<div class="projectRealManager">
 								<c:out value="${ project.writer }" />							
 							</div>
@@ -488,7 +493,6 @@
 				}
 			}
 		}
-		
 		
 	</script>
 
