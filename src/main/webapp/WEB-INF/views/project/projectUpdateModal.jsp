@@ -176,7 +176,7 @@
 
 </head>
 <body>
-		<div id="projectUpdateModal">
+	<div id="projectUpdateModal">
   
   		<div class="modal_content">
 	  		<form action="" method="post">
