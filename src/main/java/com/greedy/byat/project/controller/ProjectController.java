@@ -1,5 +1,6 @@
 package com.greedy.byat.project.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
+import com.greedy.byat.project.model.dto.ProjectMembersDTO;
 import com.greedy.byat.project.model.service.ProjectService;
 
 @Controller
@@ -33,10 +35,23 @@ public class ProjectController {
 		
 		List<ProjectDTO> projectList = projectService.selectProjectList(member);
 		
+		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
+		
+		String name = "";
+		
+		for(int i = 0; i < projectList.size(); i++) {
+			
+			projectList.get(i).setWriter(projectList.get(i).getWriter().substring(1, 3));
+			
+			projectMembers = projectService.selectProjectMembers(projectList.get(i).getCode());
+			
+			projectList.get(i).setProjectMembers(projectMembers);
+		}
+		
 		System.out.println(projectList);
 		
 		mv.addObject("projectList", projectList);
-		mv.setViewName("/project/projectList");
+		mv.setViewName("/project/list");
 		
 		return mv;
 	}
