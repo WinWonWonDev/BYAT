@@ -4,5 +4,73 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.mytask.model.dao.MyTaskMapper">
  
+ 	<resultMap id="projectResultMap" type="ProjectDTO" >
+		<id property="code" column="PROJECT_CODE"/>
+		<result property="title" column="PROJECT_TITLE"/>
+		<result property="staDtDate" column="PROJECT_STARTDATE"/>
+		<result property="endDate" column="PROJECT_endDATE"/>
+		<result property="progress" column="PROJECT_PROGRESS"/>
+		<result property="boby" column="PROJECT_BODY"/>
+		<result property="version" column="PROJECT_VERSION"/>
+		<result property="deleteStatus" column="PROJECT_DELETESTATUS"/>
+		<result property="writer" column="PROJECT_WRITER"/>
+		
+		<association property="writerMember" resultMap="memberResultMap"/>
+	</resultMap>
+	
+	<resultMap id ="projectMembersResultMap" type="ProjectMembersDTO">
+ 		<id property="code" column="PROJECT_CODE"/>
+ 		<id property="no" column="MEMBER_NO"/>
+ 		<result property="participationYn" column="PROJECT_PARTICIPATION_YN"/>
+ 		<result property="name" column="MEMBER_NAME"/>
+ 		<result property="roleName" column="ROLE_NAME"/>
+ 	</resultMap>
+ 	
+ 	
+ 	<resultMap id="projectResultMap" type="ProjectDTO">
+ 		<id property="code" column="PROJECT_CODE"/>
+ 		<result property="title" column="PROJECT_TITLE"/>
+ 		<result property="startDate" column="PROJECT_START_DATE"/>
+ 		<result property="endDate" column="PROJECT_END_DATE"/>
+ 		<result property="progress" column="PROJECT_PROGRESS"/>
+ 		<result property="body" column="PROJECT_BODY"/>
+ 		<result property="version" column="PROJECT_VERSION"/>
+ 		<result property="deleteStatus" column="PROJECT_DELETE_STATUS"/>
+ 		<result property="writer" column="PROJECT_WRITER"/>
+ 		
+ 		<association property="writerMember" resultMap="memberResultMap"/>
+ 	</resultMap>
+ 	
+ 	
+ 	<select id="selectProjectList" resultMap="projectResultMap">
+ 		SELECT
+			   A.PROJECT_CODE
+			 , A.PROJECT_TITLE
+			 , A.PROJECT_START_DATE
+			 , A.PROJECT_END_DATE
+			 , A.PROJECT_PROGRESS
+			 , A.PROJECT_BODY
+			 , A.PROJECT_VERSION
+			 , A.PROJECT_DELETE_STATUS
+			 , A.PROJECT_WRITER
+		  FROM TBL_PROJECT A
+		  JOIN TBL_MEMBER B ON(A.PROJECT_WRITER = B.MEMBER_NAME)
+		  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
+		 WHERE C.MEMBER_NO = #{ no }
+ 	</select>
+ 	
+ 	<select id="selectProjectMembers" resultMap="projectMembersResultMap">
+		SELECT
+		       A.PROJECT_CODE 
+		     , A.MEMBER_NO
+		     , A.PROJECT_PARTICIPATION_YN
+		     , B.MEMBER_NAME
+		     , C.ROLE_NAME
+		  FROM TBL_PROJECT_MEMBERS A
+		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
+		  JOIN TBL_ROLE C ON(A.PROJECT_CODE = C.PROJECT_CODE)
+		 WHERE A.PROJECT_CODE = #{ code }
+		   AND B.MEMBER_NO = C.MEMBER_NO
+ 	</select>
  	
  </mapper>
