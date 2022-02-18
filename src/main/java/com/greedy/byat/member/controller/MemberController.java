@@ -1,6 +1,5 @@
 package com.greedy.byat.member.controller;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,25 +64,39 @@ public class MemberController {
 
 	}
 	
-//	@GetMapping("/emailduplicationCheck")
-//	@ResponseBody
-//	public String emailduplicationCheck(@RequestParam(required = false)String emailAddress, HttpServletRequest request, Model model) {
-//		
-//		String result = "사용 가능한 이메일입니다!";
-//		
-//		int id = Integer.parseInt(request.getParameter("id"));
-//		
-//		if("".equals(emailAddress)) {
-//			result = "이메일을 입력해주세요!";
-//		} else if(memberService.emailduplicationCheck(id)){
-//			result = "중복된 이메일입니다! 다른 이메일을 입력해주세요!";
-//		}
-//		
-//		model.addAttribute(result);
-//		
-//		return result;
-//
-//
-//	}
+	@PostMapping("/emailduplicationCheck")
+	@ResponseBody
+	public String emailduplicationCheck(@RequestParam(required = false)String emailAddress, HttpServletRequest request, Model model) {
+		
+		String result = "사용 가능한 이메일입니다!";
+		
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		if("".equals(emailAddress)) {
+			result = "이메일을 입력해주세요!";
+		} else if(memberService.emailduplicationCheck(id)){
+			result = "중복된 이메일입니다! 다른 이메일을 입력해주세요!";
+		}
+		
+		model.addAttribute(result);
+		
+		return result;
+	}
 
+	@PostMapping("/modifyPassword")
+	public String modifyPassword(@ModelAttribute MemberDTO member, Model model, RedirectAttributes rttr) {
+		
+		String id = member.getId();
+		System.out.println("나오냐 id : " + id);
+		
+		int result = memberService.modifyPassword(id); 
+		
+		rttr.addFlashAttribute("message", "비밀번호가 성공적으로 변경되었습니다!");
+		//model.addAllAttributes(result);
+		
+		return "redirect:/login";
+	}
+	
+	
+	
 }

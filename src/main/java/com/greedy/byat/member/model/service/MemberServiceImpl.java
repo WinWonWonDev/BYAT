@@ -61,6 +61,14 @@ public class MemberServiceImpl implements MemberService {
 		return result != null? true: false;
 	}
 
+	@Override
+	public int modifyPassword(String id) {
+
+		//int matchid = mapper.matchPassword;
+		
+		return 0;
+	}
+
 
 
 

@@ -13,5 +13,7 @@ public interface MemberService {
 
 	boolean emailduplicationCheck(int id);
 
+	int modifyPassword(String id);
+
 
 }

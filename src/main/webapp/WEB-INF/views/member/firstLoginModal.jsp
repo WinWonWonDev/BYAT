@@ -105,8 +105,7 @@
 	margin-top: -20px;
 }
 
-<!--
-settingmodal 쪽 css -->#modal2 {
+#modal2 {
 	display: none;
 	position: relative;
 	width: 100%;
@@ -269,7 +268,7 @@ h5 {
 			</div>
 			<div class="modal_content-box2">
 				<input type="email" class="emailAddress" id="emailAddress" placeholder="Email" required> 
-				<input type="button" id="emailDuplicatieButton" value="중복확인" onclick="location.href='${ pageContext.servletContext.contextPath }/member/emailduplicationCheck'">
+				<input type="button" id="emailDuplicatieButton" value="중복확인" onclick="emailDuplicatieButton()">
 				<input type="button" id="AuthenticationNumber" value="인증번호보내기">
 				<input type="text" class="phoneNumber" placeholder="Phone" required>
 				<input type="password" class="newPassword" placeholder="newPassword" required> 
@@ -299,7 +298,28 @@ h5 {
     	
     }
     
-    
 </script>
+<!-- 중복확인 용 script 일단 보류 
+ <script type="text/javascript">
+			$("#emailDuplicatieButton").on('click', function() {
+				var form = { email : "${ sessionScope.loginMember.email }"}
+			$.ajax({
+				type:"POST",
+				url:"/member/emailduplicationCheck",
+				contentType:"application/json; charset=UTF-8",
+				data: form,
+				success: function(data) {
+					console.log(data);
+				},
+				error: function(e) {
+					console.log(e);
+				}
+			});
+		});
+	
+
+
+</script> -->
+
 </body>
 </html>
