@@ -407,7 +407,131 @@
 		position:absolute;
 		right:65%;
 	}
- 			
+	
+	#delete_modal {
+		display: none;
+		position:relative;
+		width:100%;
+		height:100%;
+		z-index:1;
+	}
+	
+	#delete_modal h2 {
+		margin:0;
+	}
+	#delete_modal button {
+		display:inline-block;
+		width:100px;
+		margin-left:calc(100% - 100px - 10px);
+	}
+	
+	#delete_modal .delete_modal_content {
+		width:700px;
+		height:300px;
+		margin:100px auto;
+		/* padding:20px 10px; */
+		background:#fff;
+		border:2px solid #666;
+	}
+	
+	.delete_modal_head {
+		width:100.1%;
+		height:35px;
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		font-size:20px;
+		float:right;
+	}
+	
+	#delete_modal_close_btn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:80px;
+		height:50px;
+		position:absolute;
+		right:30%;
+		top:20%;
+	}
+	
+	#delete_modal_ok_btn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:80px;
+		height:50px;
+		position:absolute;
+		right:55%;
+		top:20%;
+	}
+	
+	.delete_modal_content_message {
+		width:100%;
+		height:50%;
+		float:right;
+		font-size:30px;
+		text-align:center;
+	}
+	
+	.delete_modal_button {
+		width:100%;
+		height:30%;
+		float:right;
+		position:relative;
+	}
+	
+	#regist_project_members_modal {
+		display: none;
+		position:relative;
+		width:100%;
+		height:100%;
+		z-index:1;
+	}
+	
+	#regist_project_members_modal .regist_project_members_modal_content {
+		width:550px;
+		height:450px;
+		margin:20px auto;
+		background:#3B60D0;
+		border:1px solid black;
+		border-radius:40px;
+		margin-top:7%;
+	}
+	
+	.regist_project_members_modal_head {
+		height:35px;
+		color:white;
+		text-align:center;
+		font-size:30px;
+		padding-top:20px;
+	}
+	
+	.regist_project_members_modal_content-box {
+		width:90%;
+		height:75%;
+		font-size:40px;
+		text-align:center;
+		background: white;
+		border-radius: 25px;
+		margin-left: 32px;
+		margin-top:3%;
+	}
+	
+	.regist_project_members_modal_content button {
+		
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:110px;
+		height:30px;
+		position:absolute;
+		margin-top:5px;
+	}
+	
 </style>
 <script>
    const message = '${ requestScope.message }';
@@ -520,31 +644,33 @@
 	<div id="projectUpdateModal">
   
   		<div class="modal_content">
-	  		<form action="" method="post">
+	  		<form action="${ pageContext.servletContext.contextPath }/project/modify" method="post">
 				<div class="modal_head">
 					<h3>프로젝트 상세</h3>
 		    	</div>
 	      		<div class="modal_content-box">
+		  			<input type="hidden" name="code" id="projectUpdateCode">
 	      			<div style="height:30px;"></div>
 	      			<div class="projectTitleTag">프로젝트 명</div>
-	      			<input type="text" class="projectModalTitle" name="title" placeholder="Project-001">
+	      			<input type="text" class="projectModalTitle" id="projectUpdateModalTitle" name="title" required>
 	      			<div class="projectStartDayTag">프로젝트 시작일자</div>
 	      			<div class="projectEndDayTag">프로젝트 종료일자</div>
 	       			<br clear="both">
-	       			<input type='date' class="start-day" name='startDate'/>
-	       			<input type='date' class="end-day" name='endDate'/>
+	       			<input type='date' class="start-day" name='startDate' id="updateStartDate" required/>
+	       			<input type='date' class="end-day" name='endDate' id="updateEndDate" required/>
 	       			<div class="projectDescriptionTag">프로젝트 상세 설명</div>
-	      			<textarea class="projectDescription" id="projectDescription" name="body" rows="13" cols="100" placeholder="상세내용을 입력해주세요"></textarea>
+	      			<textarea class="projectDescription" id="projectUpdateDescription" name="body" rows="13" cols="100" required></textarea>
 	      			<div class="prjectCodeMessage">프로젝트  코드는 자동으로 생성됩니다.</div>
 	      		</div>
 	      		<div class="modal_button">
-		        	<button type="button" id="projectUpdateBtn">Ok</button>
+		        	<button type="submit" id="projectUpdateBtn">Ok</button>
 		        	<button type="button" id="projectUpdateModalCloseBtn">Cancel</button>
 	      		</div>
 			</form>
    		</div>
    		<div class="modal_layer"></div>
 	</div>
+	
 	<div id="projectMenuBox" class="projectMenuBox" style="display:none"> 
 		<div id="projectMenuTitles">
 			<div id="updateAndSelectProject">조회/수정</div>
@@ -552,7 +678,54 @@
 		</div>
 	</div>
 	
+	<div id="delete_modal">
+   
+	    <div class="delete_modal_content">
+		    <div class="delete_modal_head">
+		    	Alert Message
+		    </div>
+	       	<div class="delete_modal_content_message">
+	  	   		<br>삭제한 프로젝트는 <font style="color:red;">복구</font>하실 수 없습니다. <br>정말 삭제하시겠습니까?
+	       	</div>
+	       	<div class="delete_modal_button">
+		        <button type="button" id="delete_modal_ok_btn">Ok</button>
+		        <button type="button" id="delete_modal_close_btn">Cancel</button>
+	       	</div>
+	       
+	    </div>
+	   
+	    <div class="modal_layer"></div>
+	</div>
+	
+	<div id="regist_project_members_modal">
+		
+		<div class="regist_project_members_modal_content">
+			<div class="regist_project_members_modal_head">
+				프로젝트 팀원 추가
+			</div>
+			<div class="regist_project_members_modal_content-box">
+				<div class="searchMembers" style="font-size:23px; text-align:left; margin-left:20px; padding-top:15px;">
+					팀원 검색
+				</div>
+				<div class="searchMembersBox">
+					<input type="text" id="searchMembers" maxlength="10" style="background-color:rgb(242,242,242); height:30px; border-radius:10px;" size="65">
+				</div>
+				<div class="addMembers" style="font-size:23px; text-align:left; margin-left:20px; padding-top:30px;">
+					팀원 추가
+				</div>
+				<div class="addMembersBox" style="background-color:rgb(242,242,242); height:140px; border-radius:10px; width:94%; border:1px solid black; margin-left:16px; margin-top:15px;">
+					
+				</div>
+			</div>
+				<button type="button" id="registMembersOkBtn" style="margin-left:100px;">OK</button>
+				<button type="button" id="registMembersCancelBtn" style="margin-left:350px;">Cancel</button>
+		</div>
+		
+		
+	</div>
+	
 	<script>
+	
 		document.getElementById("createProject").onclick = function() {
 	        document.getElementById("projectCreateModal").style.display="block";
 	    }
@@ -573,6 +746,7 @@
 			const $tds = document.querySelectorAll("#projectTitle");
 			const $code = document.querySelectorAll("#projectCode");
 			const $projectEditBtn = document.querySelectorAll(".projectEditBtn");
+			const $projectAddMemberBtn = document.querySelectorAll(".projectAddMemberBtn");
 			let proBox = document.getElementById("projectMenuBox");
 			
 			for(let i = 0; i < $tds.length; i++) {
@@ -584,7 +758,17 @@
 			}
 		
 			for(let i = 0; i < $projectEditBtn.length; i++) {
-			
+
+				$projectAddMemberBtn[i].onclick = function() {
+					
+					if(i == 0) {
+						
+						document.getElementById("regist_project_members_modal").style.display="block";
+						
+					}
+					
+				}
+
 				proBox.style.left = '1345px';
 				
 				$projectEditBtn[i].onclick = function() {
@@ -592,53 +776,305 @@
 					if(i === 0) {
 						
 						proBox.style.top = '300px';
+						
 						document.getElementById("deleteProject").onclick = function() {
 							
-							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+							document.getElementById("delete_modal").style.display="block";
+							proBox.style.display = 'none';
+							
+							document.getElementById("delete_modal_close_btn").onclick = function() {
+						        document.getElementById("delete_modal").style.display="none";
+						    }
+							
+							document.getElementById("delete_modal_ok_btn").onclick = function() {
+								
+								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
+							}
+
 						}
+						
+						$('#updateAndSelectProject').click(function() {
+							proBox.style.display = 'none';
+							$.ajax({
+								url: "/byat/project/detail",
+								type: 'get',
+								data: { code : $code[i].value },
+								success: function(data, status, xhr) {
+									
+									const project = JSON.parse(data.projectDetail);
+									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
+									const $updateStartDate = $("#updateStartDate");
+									const $updateEndDate = $("#updateEndDate");
+									const $projectUpdateDescription = $("#projectUpdateDescription");
+									const $projectUpdateCode = $("#projectUpdateCode");
+									
+									projectUpdateModalTitle.value = project.title;
+									projectUpdateDescription.value = project.body;
+									updateStartDate.value = project.startDate;
+									updateEndDate.value = project.endDate;
+									projectUpdateCode.value = project.code;
+									
+								},
+								error: function(xhr, status, error) {
+									console.log(xhr);
+								}
+							});
+						});
+						
 					} else if(i === 1) {
 						
 						proBox.style.top = '370px';
+						
 						document.getElementById("deleteProject").onclick = function() {
 							
-							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+							document.getElementById("delete_modal").style.display="block";
+							proBox.style.display = 'none';
+							
+							document.getElementById("delete_modal_close_btn").onclick = function() {
+						        document.getElementById("delete_modal").style.display="none";
+						    }
+							
+							document.getElementById("delete_modal_ok_btn").onclick = function() {
+								
+								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
+							}
+
 						}
+						
+						$('#updateAndSelectProject').click(function() {
+							proBox.style.display = 'none';
+							$.ajax({
+								url: "/byat/project/detail",
+								type: 'get',
+								data: { code : $code[i].value },
+								success: function(data, status, xhr) {
+									
+									const project = JSON.parse(data.projectDetail);
+									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
+									const $updateStartDate = $("#updateStartDate");
+									const $updateEndDate = $("#updateEndDate");
+									const $projectUpdateDescription = $("#projectUpdateDescription");
+									const $projectUpdateCode = $("#projectUpdateCode");
+									
+									projectUpdateModalTitle.value = project.title;
+									projectUpdateDescription.value = project.body;
+									updateStartDate.value = project.startDate;
+									updateEndDate.value = project.endDate;
+									projectUpdateCode.value = project.code;
+									
+								},
+								error: function(xhr, status, error) {
+									console.log(xhr);
+								}
+							});
+						});
+						
 					} else if(i === 2) {
 						
 						proBox.style.top = '440px';
+
 						document.getElementById("deleteProject").onclick = function() {
 							
-							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+							document.getElementById("delete_modal").style.display="block";
+							proBox.style.display = 'none';
+							
+							document.getElementById("delete_modal_close_btn").onclick = function() {
+						        document.getElementById("delete_modal").style.display="none";
+						    }
+							
+							document.getElementById("delete_modal_ok_btn").onclick = function() {
+								
+								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
+							}
+
 						}
+						
+						$('#updateAndSelectProject').click(function() {
+							proBox.style.display = 'none';
+							$.ajax({
+								url: "/byat/project/detail",
+								type: 'get',
+								data: { code : $code[i].value },
+								success: function(data, status, xhr) {
+									
+									const project = JSON.parse(data.projectDetail);
+									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
+									const $updateStartDate = $("#updateStartDate");
+									const $updateEndDate = $("#updateEndDate");
+									const $projectUpdateDescription = $("#projectUpdateDescription");
+									const $projectUpdateCode = $("#projectUpdateCode");
+									
+									projectUpdateModalTitle.value = project.title;
+									projectUpdateDescription.value = project.body;
+									updateStartDate.value = project.startDate;
+									updateEndDate.value = project.endDate;
+									projectUpdateCode.value = project.code;
+									
+								},
+								error: function(xhr, status, error) {
+									console.log(xhr);
+								}
+							});
+						});
+						
+						
 					} else if(i === 3) {
 						
 						proBox.style.top = '510px';
+
 						document.getElementById("deleteProject").onclick = function() {
 							
-							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+							document.getElementById("delete_modal").style.display="block";
+							proBox.style.display = 'none';
+							
+							document.getElementById("delete_modal_close_btn").onclick = function() {
+						        document.getElementById("delete_modal").style.display="none";
+						    }
+							
+							document.getElementById("delete_modal_ok_btn").onclick = function() {
+								
+								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
+							}
+
 						}
-					} else {
+						
+						$('#updateAndSelectProject').click(function() {
+							proBox.style.display = 'none';
+							$.ajax({
+								url: "/byat/project/detail",
+								type: 'get',
+								data: { code : $code[i].value },
+								success: function(data, status, xhr) {
+									
+									const project = JSON.parse(data.projectDetail);
+									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
+									const $updateStartDate = $("#updateStartDate");
+									const $updateEndDate = $("#updateEndDate");
+									const $projectUpdateDescription = $("#projectUpdateDescription");
+									const $projectUpdateCode = $("#projectUpdateCode");
+									
+									projectUpdateModalTitle.value = project.title;
+									projectUpdateDescription.value = project.body;
+									updateStartDate.value = project.startDate;
+									updateEndDate.value = project.endDate;
+									projectUpdateCode.value = project.code;
+									
+								},
+								error: function(xhr, status, error) {
+									console.log(xhr);
+								}
+							});
+						});
+						
+					} else if(i == 4) {
 						
 						proBox.style.top = '580px';
+
 						document.getElementById("deleteProject").onclick = function() {
 							
-							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+							document.getElementById("delete_modal").style.display="block";
+							proBox.style.display = 'none';
+							
+							document.getElementById("delete_modal_close_btn").onclick = function() {
+						        document.getElementById("delete_modal").style.display="none";
+						    }
+							
+							document.getElementById("delete_modal_ok_btn").onclick = function() {
+								
+								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
+							}
+
 						}
+						
+						$('#updateAndSelectProject').click(function() {
+							proBox.style.display = 'none';
+							$.ajax({
+								url: "/byat/project/detail",
+								type: 'get',
+								data: { code : $code[i].value },
+								success: function(data, status, xhr) {
+									
+									const project = JSON.parse(data.projectDetail);
+									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
+									const $updateStartDate = $("#updateStartDate");
+									const $updateEndDate = $("#updateEndDate");
+									const $projectUpdateDescription = $("#projectUpdateDescription");
+									const $projectUpdateCode = $("#projectUpdateCode");
+									
+									projectUpdateModalTitle.value = project.title;
+									projectUpdateDescription.value = project.body;
+									updateStartDate.value = project.startDate;
+									updateEndDate.value = project.endDate;
+									projectUpdateCode.value = project.code;
+									
+								},
+								error: function(xhr, status, error) {
+									console.log(xhr);
+								}
+							});
+						});
+						
+					} else {
+						
+						proBox.style.top = '650px';
+
+						document.getElementById("deleteProject").onclick = function() {
+							
+							document.getElementById("delete_modal").style.display="block";
+							proBox.style.display = 'none';
+							
+							document.getElementById("delete_modal_close_btn").onclick = function() {
+						        document.getElementById("delete_modal").style.display="none";
+						    }
+							
+							document.getElementById("delete_modal_ok_btn").onclick = function() {
+								
+								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
+							}
+
+						}
+						
+						$('#updateAndSelectProject').click(function() {
+							proBox.style.display = 'none';
+							$.ajax({
+								url: "/byat/project/detail",
+								type: 'get',
+								data: { code : $code[i].value },
+								success: function(data, status, xhr) {
+									
+									const project = JSON.parse(data.projectDetail);
+									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
+									const $updateStartDate = $("#updateStartDate");
+									const $updateEndDate = $("#updateEndDate");
+									const $projectUpdateDescription = $("#projectUpdateDescription");
+									const $projectUpdateCode = $("#projectUpdateCode");
+									
+									projectUpdateModalTitle.value = project.title;
+									projectUpdateDescription.value = project.body;
+									updateStartDate.value = project.startDate;
+									updateEndDate.value = project.endDate;
+									projectUpdateCode.value = project.code;
+									
+								},
+								error: function(xhr, status, error) {
+									console.log(xhr);
+								}
+							});
+						});
+						
 					}
 					
 					if(proBox.style.display =='none') {
-						   proBox.style.display = 'block';
+						proBox.style.display = 'block';
 					} else {
-					 proBox.style.display = 'none';
+						proBox.style.display = 'none';
 					}
 					
 				}
 
 			}
 			
-			
 		}
-		
 	</script>
 
 </body>

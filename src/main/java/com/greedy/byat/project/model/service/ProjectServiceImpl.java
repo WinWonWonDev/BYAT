@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
 import com.greedy.byat.member.model.dto.MemberDTO;
@@ -107,6 +108,25 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		if(!(result > 0)) {
 			throw new ProjectRemoveException("프로젝트 삭제 실패");
+		}
+		
+	}
+
+	@Override
+	public ProjectDTO selectProjectDetail(int code) {
+		
+		ProjectDTO projectDetail = mapper.selectProjectDetail(code);
+		
+		return projectDetail;
+	}
+
+	@Override
+	public void modifyProject(ProjectDTO project) throws ProjectModifyException {
+		
+		int result = mapper.modifyProject(project);
+		
+		if(!(result > 0)) {
+			throw new ProjectModifyException("프로젝트 수정 실패");
 		}
 		
 	}

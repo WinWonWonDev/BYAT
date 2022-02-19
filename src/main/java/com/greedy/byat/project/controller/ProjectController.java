@@ -1,9 +1,11 @@
 package com.greedy.byat.project.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
 import com.greedy.byat.member.model.dto.MemberDTO;
@@ -85,6 +91,41 @@ public class ProjectController {
 		projectService.removeProject(code);
 		
 		rttr.addFlashAttribute("message", "프로젝트 삭제 성공!");
+		
+		return "redirect:/project/list";
+	}
+	
+	@GetMapping("/detail")
+	public ModelAndView selectProjectDetail(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int code = Integer.parseInt(request.getParameter("code"));
+		
+		ProjectDTO projectDetail = projectService.selectProjectDetail(code);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+		
+		mv.addObject("projectDetail", objectMapper.writeValueAsString(projectDetail));
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	@PostMapping("/modify")
+	public String modifyProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectModifyException {
+
+		int code = Integer.parseInt(request.getParameter("code"));
+		
+		project.setCode(code);
+		
+		System.out.println(project);
+		
+		projectService.modifyProject(project);
+		
+		rttr.addFlashAttribute("message", "프로젝트 수정 성공!");
 		
 		return "redirect:/project/list";
 	}
