@@ -1,5 +1,7 @@
 package com.greedy.byat.member.model.service;
 
+import java.util.HashMap;
+
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public MemberDTO login(MemberDTO member) throws LoginFailedException {
-
+		
 		if(!passwordEncoder.matches(member.getPwd(),
 				mapper.selectEncryptedPwd(member))) {
 
@@ -75,7 +77,13 @@ public class MemberServiceImpl implements MemberService {
 		
 		String email = mapper.selectEmailById(id);
 
-		int result = mapper.insertverification(randomVerificationNum);
+		int no = mapper.selectMemberNo(id); 
+		
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("no", no);
+		map.put("verification", randomVerificationNum);
+		
+		int result = mapper.insertverification(map);
 		
 		if(email != null && result > 0) {
 			String subject = "BYAT 비밀번호 찾기용 인증번호 이메일입니다.";
@@ -100,6 +108,31 @@ public class MemberServiceImpl implements MemberService {
 		} else {
 			throw new NotexistEmailException("입력하신 아이디가 존재하지 않습니다.");
 		}
+		
+		return result;
+	}
+
+	@Override
+	public int matchVerificationNumber(String inputVerificationNum) {
+		
+		int result = 0;
+		
+		String mathchVerification = mapper.mathchVerificationNumber(inputVerificationNum);
+		
+		if(mathchVerification != null) { 
+			
+			result = mapper.updateVerficiation(inputVerificationNum);
+		}
+	
+		return result;
+		
+	}
+
+	@Override
+	public int modifyMemberPwd(String firstPwd, String confirmPwd) {
+
+		//암호화된 비밀번호로 저장이 되게 어떻게 할 것인가? encryp여기서 해주고 저장해야되나? 일단 ㄱㄷ
+		int result = mapper.updateMemberPwd(firstPwd);
 		
 		return result;
 	}

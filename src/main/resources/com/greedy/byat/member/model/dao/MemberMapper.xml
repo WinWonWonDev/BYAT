@@ -84,7 +84,15 @@
 		   AND A.MEMBER_ID = #{ id } 
 	</select>
 	
-	<insert id="insertverification" parameterType="_int">
+	<select id="selectMemberNo" resultType="_int">
+		SELECT
+		       A.MEMBER_NO
+		  FROM TBL_MEMBER A
+		 WHERE A.ABSENCE_YN = 'N'
+		   AND A.MEMBER_ID = #{ id }
+	</select>
+	
+	<insert id="insertverification" parameterType="hashmap">
 		INSERT 
 		  INTO TBL_VERIFICATION A 
 		( 
@@ -99,35 +107,30 @@
 		VALUES
 		(
 		   SEQ_VERIFICATION_NUM_CODE.NEXTVAL
-		 , 34214
+		 , #{ verification }
 		 , '멤버비밀번호찾기'
 		 , SYSDATE
-		 , SYSDATE
+		 , NULL
 		 , 'N'
-		 , 14
+		 , #{ no }
 		)
-		
-		<!-- INSERT 
-		  INTO TBL_VERIFICATION A 
-		( 
-		   A.VERIFICATION_NUM_CODE
-		 , A.VERIFICATION_NUM_KEY
-		 , A.VERIFICATION_NUM_TYPE
-		 , A.VERIFICATION_NUM_CREATED_DATE
-		 , A.VERIFICATION_NUM_USED_DATE
-		 , A.VERIFICATION_NUM_DESTRUCTION_YN
-		 , A.MEMBER_NO
-		)
-		VALUES
-		(
-		   SEQ_VERIFICATION_NUM_CODE.NEXTVAL
-		 , 34214
-		 , '멤버비밀번호찾기'
-		 , SYSDATE
-		 , SYSDATE
-		 , 'N'
-		 , 14
-		) -->
 	</insert>
+	
+	<select id="mathchVerificationNumber" resultType="java.lang.String">
+		SELECT
+			   A.VERIFICATION_NUM_KEY
+	      FROM TBL_VERIFICATION A
+	     WHERE VERIFICATION_NUM_DESTRUCTION_YN = 'N'
+	       <!-- AND A.MEMBER_NO = #{ no } -->
+	       AND A.VERIFICATION_NUM_KEY = #{ inputVerificationNum }
+	</select>
+	
+	<update id="updateVerficiation" parameterType="java.lang.String">
+		UPDATE
+		       TBL_VERIFICATION A
+		   SET A.VERIFICATION_NUM_USED_DATE = (SELECT SYSDATE FROM DUAL)
+		     , A.VERIFICATION_NUM_DESTRUCTION_YN = 'Y'
+		 WHERE A.VERIFICATION_NUM_KEY = #{ inputVerificationNum }
+	</update>
 	
  </mapper>

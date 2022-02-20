@@ -16,5 +16,9 @@ public interface MemberService {
 
 	int selectEmailById(String id) throws NotexistEmailException;
 
+	int matchVerificationNumber(String inputVerificationNum);
+
+	int modifyMemberPwd(String firstPwd, String confirmPwd);
+
 
 }

@@ -1,5 +1,7 @@
 package com.greedy.byat.member.model.dao;
 
+import java.util.HashMap;
+
 import com.greedy.byat.member.model.dto.MemberDTO;
 
 public interface MemberMapper {
@@ -16,6 +18,14 @@ public interface MemberMapper {
 
 	String selectEmailById(String id);
 
-	int insertverification(int randomVerificationNum);
+	String mathchVerificationNumber(String inputVerificationNum);
+
+	int selectMemberNo(String id);
+
+	int insertverification(HashMap<String, Integer> map);
+
+	int updateVerficiation(String inputVerificationNum);
+
+	int updateMemberPwd(String firstPwd);
 
 }

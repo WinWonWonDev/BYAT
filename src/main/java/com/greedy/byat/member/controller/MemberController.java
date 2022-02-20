@@ -1,7 +1,6 @@
 package com.greedy.byat.member.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -91,8 +90,6 @@ public class MemberController {
 	@ResponseBody
 	public String selectemail(String inputId, @ModelAttribute MemberDTO member, HttpServletResponse response, Model model, HttpServletRequest request, RedirectAttributes rttr) throws NotexistEmailException, IOException {
 		
-		System.out.println("나오냐 id : " + inputId);
-		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
 				.setPrettyPrinting()
@@ -104,6 +101,43 @@ public class MemberController {
 		return gson.toJson(memberService.selectEmailById(inputId));
 		
 	}
+	
+	@PostMapping(value="checkverification", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public int matchVerificationNumber(String inputVerificationNum, RedirectAttributes rttr) {
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+
+		int result = memberService.matchVerificationNumber(inputVerificationNum);
+		
+		return result;
+		
+	}
+	
+	@PostMapping("/modifypassword")
+	public String modifyMemberPwd(HttpServletRequest request, RedirectAttributes rttr) {
+		
+		String firstPwd = request.getParameter("inputPassword");
+		String confirmPwd = request.getParameter("confirmPassword");
+		
+		if(firstPwd.equals(confirmPwd)) {
+			int result = memberService.modifyMemberPwd(firstPwd, confirmPwd);
+			
+		} else {
+			rttr.addFlashAttribute("비밀번호가 일치하지 않습니다!");
+		}
+		
+		
+		return "redirect:/member/login";
+	}
+ 	
+	
 	
 	
 	
