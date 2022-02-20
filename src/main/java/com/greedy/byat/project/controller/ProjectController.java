@@ -48,6 +48,8 @@ public class ProjectController {
 		
 		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
 		
+		List<Integer> PmMemberNumber = new ArrayList<>();
+		
 		String name = "";
 		
 		for(int i = 0; i < projectList.size(); i++) {
@@ -57,11 +59,21 @@ public class ProjectController {
 			projectMembers = projectService.selectProjectMembers(projectList.get(i).getCode());
 			
 			projectList.get(i).setProjectMembers(projectMembers);
+		
+			for(int j = 0; j < projectMembers.size(); j++) {
+				
+				if("PM".equals(projectMembers.get(j).getRoleName())) {
+					
+					PmMemberNumber.add(projectMembers.get(j).getNo());
+				}
+			}
+			
 		}
 		
 		System.out.println(projectList);
 		
 		mv.addObject("projectList", projectList);
+		mv.addObject("PmMemberNumber", PmMemberNumber);
 		mv.setViewName("/project/list");
 		
 		return mv;
@@ -103,6 +115,22 @@ public class ProjectController {
 		int code = Integer.parseInt(request.getParameter("code"));
 		
 		ProjectDTO projectDetail = projectService.selectProjectDetail(code);
+		
+		/*projectDetail.setProjectMembers(projectService.selectProjectMembers(code));*/
+		
+		List<ProjectMembersDTO> projectMembers = projectService.selectProjectMembers(code);
+		
+		List<ProjectMembersDTO> projectPm = new ArrayList<>();
+		
+		for(int i = 0; i < projectMembers.size(); i++) {
+			if("PM".equals(projectMembers.get(i).getRoleName())) {
+				projectPm.add(projectMembers.get(i));
+			}
+		}
+		
+		projectDetail.setProjectMembers(projectPm);
+		
+		System.out.println(projectDetail);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		

@@ -7,6 +7,9 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <style>
 	html {
 		width: 100%;
@@ -260,13 +263,13 @@
 		margin-left:9%;
 	}
 
-	.projectTable:nth-child(2n+3) {
+	/* .projectTable:nth-child(2n+3) {
 		margin-top:10px;
 	}
 	
 	.projectTable:nth-child(2n) {
 		margin-top:10px;
-	}
+	} */
 	
 	td {
 		font-size:18px;
@@ -544,7 +547,10 @@
 <body style="overflow:hidden;">
 	<div id="whiteBoard">
 		<div class="projectListHeadName" style="font-weight:bold">전체 프로젝트 목록</div>
-		<button id="createProject">새 프로젝트 생성</button>			
+		<c:if test="${ (sessionScope.loginMember.permit eq 'PM') or (sessionScope.loginMember.permit eq 'ADMIN')}">
+			<button id="createProject">새 프로젝트 생성</button>					
+		</c:if>
+			<button id="createProject" style="display:none;"></button>
 		<div class="projectListBox">
 	      		<table class="projectTable" id="projectTable">
 					<tr>
@@ -557,7 +563,7 @@
 						<th id="projectManager">담당자</th>
 						<th id="projectSetting">설정</th>
 					</tr>
-					<c:forEach items="${ projectList }" var="project">
+					<c:forEach items="${ projectList }" var="project" varStatus="status">
 					<tr>
 						<td id="projectTitle" style="cursor:pointer;"><c:out value="${ project.title }" />
 							<input type="hidden" value="${ project.code }" name="projectCode" id="projectCode">
@@ -574,14 +580,17 @@
 										<c:out value="${ member.name }" />															
 									</div>
 								</c:if>
-								<c:if test="${ member.roleName eq '일반멤버' }">
+								<c:if test="${ member.roleName eq '일반 멤버' }">
 									<div id="projectRealMember3">
 										<c:out value="${ member.name }" />															
 									</div>
 								</c:if>
 							</c:forEach>
 						</td>
-						<td><input type="button" class="projectAddMemberBtn"></td>
+						<td>
+							
+							<input type="button" class="projectAddMemberBtn">
+						</td>
 						<td><c:out value="${ project.startDate }" /></td>
 						<td><c:out value="${ project.endDate }" /></td>
 						<td style="padding-left:15px;">
@@ -606,8 +615,19 @@
 								<c:out value="${ project.writer }" />							
 							</div>
 						</td>
-						<td><input type="button" class="projectEditBtn"></td>
+						<td>
+							<input type="button" class="projectEditBtn" id="projectEditBtn">
+						</td>
 					</tr>
+					<div id="projectMenuBox" class="projectMenuBox" style="display:none"> 
+						<div id="projectMenuTitles">
+							<div id="updateAndSelectProject">조회/수정</div>
+							<c:if test="${ (sessionScope.loginMember.no eq PmMemberNumber[status.index]) or (sessionScope.loginMember.permit eq 'ADMIN')}">
+								<div id="deleteProject">삭제하기</div>			
+							</c:if>
+							<div id="deleteProject" style="display:none;"></div>
+						</div>
+					</div>
 				</c:forEach>
 	      		</table>
 		</div>
@@ -652,7 +672,7 @@
 		  			<input type="hidden" name="code" id="projectUpdateCode">
 	      			<div style="height:30px;"></div>
 	      			<div class="projectTitleTag">프로젝트 명</div>
-	      			<input type="text" class="projectModalTitle" id="projectUpdateModalTitle" name="title" required>
+   					<input type="text" class="projectModalTitle" id="projectUpdateModalTitle" name="title" required>
 	      			<div class="projectStartDayTag">프로젝트 시작일자</div>
 	      			<div class="projectEndDayTag">프로젝트 종료일자</div>
 	       			<br clear="both">
@@ -669,13 +689,6 @@
 			</form>
    		</div>
    		<div class="modal_layer"></div>
-	</div>
-	
-	<div id="projectMenuBox" class="projectMenuBox" style="display:none"> 
-		<div id="projectMenuTitles">
-			<div id="updateAndSelectProject">조회/수정</div>
-			<div id="deleteProject">삭제하기</div>
-		</div>
 	</div>
 	
 	<div id="delete_modal">
@@ -726,6 +739,12 @@
 	
 	<script>
 	
+		/* let projectWriter = [];
+	
+		<c:forEach items="${projectList}" var="project">
+			projectWriter.push("${project.writer}");
+		</c:forEach> */
+		
 		document.getElementById("createProject").onclick = function() {
 	        document.getElementById("projectCreateModal").style.display="block";
 	    }
@@ -734,20 +753,30 @@
 	        document.getElementById("projectCreateModal").style.display="none";
 	    }
 
-		document.getElementById("updateAndSelectProject").onclick = function() {
+		/* document.getElementById("updateAndSelectProject").onclick = function() {
 	        document.getElementById("projectUpdateModal").style.display="block";
-	    }
+	    } */
 
 		document.getElementById("projectUpdateModalCloseBtn").onclick = function() {
 	        document.getElementById("projectUpdateModal").style.display="none";
+			
+			document.getElementById("projectUpdateModalTitle").value = "";
+			document.getElementById("updateStartDate").value = "";
+			document.getElementById("updateEndDate").value = "";
+			document.getElementById("projectUpdateDescription").value = "";
+			document.getElementById("projectUpdateCode").value = "";
+			
 	    }
 		
 		if(document.querySelectorAll("#projectTable td")) {
 			const $tds = document.querySelectorAll("#projectTitle");
 			const $code = document.querySelectorAll("#projectCode");
-			const $projectEditBtn = document.querySelectorAll(".projectEditBtn");
+			const $projectEditBtn = document.querySelectorAll("#projectEditBtn");
 			const $projectAddMemberBtn = document.querySelectorAll(".projectAddMemberBtn");
-			let proBox = document.getElementById("projectMenuBox");
+			const $proBox = document.querySelectorAll("#projectMenuBox");
+			const $updateAndSelectProject = document.querySelectorAll("#updateAndSelectProject");
+			const $deleteProject = document.querySelectorAll("#deleteProject");
+			console.log($updateAndSelectProject);
 			
 			for(let i = 0; i < $tds.length; i++) {
 				
@@ -755,326 +784,231 @@
 					
 					location.href = "${ pageContext.servletContext.contextPath }/sprint/list?code=" + $code[i].value;
 				}
-			}
-		
-			for(let i = 0; i < $projectEditBtn.length; i++) {
-
-				$projectAddMemberBtn[i].onclick = function() {
-					
-					if(i == 0) {
-						
-						document.getElementById("regist_project_members_modal").style.display="block";
-						
-					}
-					
-				}
-
-				proBox.style.left = '1345px';
 				
-				$projectEditBtn[i].onclick = function() {
-					
-					if(i === 0) {
-						
-						proBox.style.top = '300px';
-						
-						document.getElementById("deleteProject").onclick = function() {
-							
-							document.getElementById("delete_modal").style.display="block";
-							proBox.style.display = 'none';
-							
-							document.getElementById("delete_modal_close_btn").onclick = function() {
-						        document.getElementById("delete_modal").style.display="none";
-						    }
-							
-							document.getElementById("delete_modal_ok_btn").onclick = function() {
-								
-								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
-							}
-
-						}
-						
-						$('#updateAndSelectProject').click(function() {
-							proBox.style.display = 'none';
-							$.ajax({
-								url: "/byat/project/detail",
-								type: 'get',
-								data: { code : $code[i].value },
-								success: function(data, status, xhr) {
-									
-									const project = JSON.parse(data.projectDetail);
-									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
-									const $updateStartDate = $("#updateStartDate");
-									const $updateEndDate = $("#updateEndDate");
-									const $projectUpdateDescription = $("#projectUpdateDescription");
-									const $projectUpdateCode = $("#projectUpdateCode");
-									
-									projectUpdateModalTitle.value = project.title;
-									projectUpdateDescription.value = project.body;
-									updateStartDate.value = project.startDate;
-									updateEndDate.value = project.endDate;
-									projectUpdateCode.value = project.code;
-									
-								},
-								error: function(xhr, status, error) {
-									console.log(xhr);
-								}
-							});
-						});
-						
-					} else if(i === 1) {
-						
-						proBox.style.top = '370px';
-						
-						document.getElementById("deleteProject").onclick = function() {
-							
-							document.getElementById("delete_modal").style.display="block";
-							proBox.style.display = 'none';
-							
-							document.getElementById("delete_modal_close_btn").onclick = function() {
-						        document.getElementById("delete_modal").style.display="none";
-						    }
-							
-							document.getElementById("delete_modal_ok_btn").onclick = function() {
-								
-								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
-							}
-
-						}
-						
-						$('#updateAndSelectProject').click(function() {
-							proBox.style.display = 'none';
-							$.ajax({
-								url: "/byat/project/detail",
-								type: 'get',
-								data: { code : $code[i].value },
-								success: function(data, status, xhr) {
-									
-									const project = JSON.parse(data.projectDetail);
-									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
-									const $updateStartDate = $("#updateStartDate");
-									const $updateEndDate = $("#updateEndDate");
-									const $projectUpdateDescription = $("#projectUpdateDescription");
-									const $projectUpdateCode = $("#projectUpdateCode");
-									
-									projectUpdateModalTitle.value = project.title;
-									projectUpdateDescription.value = project.body;
-									updateStartDate.value = project.startDate;
-									updateEndDate.value = project.endDate;
-									projectUpdateCode.value = project.code;
-									
-								},
-								error: function(xhr, status, error) {
-									console.log(xhr);
-								}
-							});
-						});
-						
-					} else if(i === 2) {
-						
-						proBox.style.top = '440px';
-
-						document.getElementById("deleteProject").onclick = function() {
-							
-							document.getElementById("delete_modal").style.display="block";
-							proBox.style.display = 'none';
-							
-							document.getElementById("delete_modal_close_btn").onclick = function() {
-						        document.getElementById("delete_modal").style.display="none";
-						    }
-							
-							document.getElementById("delete_modal_ok_btn").onclick = function() {
-								
-								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
-							}
-
-						}
-						
-						$('#updateAndSelectProject').click(function() {
-							proBox.style.display = 'none';
-							$.ajax({
-								url: "/byat/project/detail",
-								type: 'get',
-								data: { code : $code[i].value },
-								success: function(data, status, xhr) {
-									
-									const project = JSON.parse(data.projectDetail);
-									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
-									const $updateStartDate = $("#updateStartDate");
-									const $updateEndDate = $("#updateEndDate");
-									const $projectUpdateDescription = $("#projectUpdateDescription");
-									const $projectUpdateCode = $("#projectUpdateCode");
-									
-									projectUpdateModalTitle.value = project.title;
-									projectUpdateDescription.value = project.body;
-									updateStartDate.value = project.startDate;
-									updateEndDate.value = project.endDate;
-									projectUpdateCode.value = project.code;
-									
-								},
-								error: function(xhr, status, error) {
-									console.log(xhr);
-								}
-							});
-						});
-						
-						
-					} else if(i === 3) {
-						
-						proBox.style.top = '510px';
-
-						document.getElementById("deleteProject").onclick = function() {
-							
-							document.getElementById("delete_modal").style.display="block";
-							proBox.style.display = 'none';
-							
-							document.getElementById("delete_modal_close_btn").onclick = function() {
-						        document.getElementById("delete_modal").style.display="none";
-						    }
-							
-							document.getElementById("delete_modal_ok_btn").onclick = function() {
-								
-								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
-							}
-
-						}
-						
-						$('#updateAndSelectProject').click(function() {
-							proBox.style.display = 'none';
-							$.ajax({
-								url: "/byat/project/detail",
-								type: 'get',
-								data: { code : $code[i].value },
-								success: function(data, status, xhr) {
-									
-									const project = JSON.parse(data.projectDetail);
-									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
-									const $updateStartDate = $("#updateStartDate");
-									const $updateEndDate = $("#updateEndDate");
-									const $projectUpdateDescription = $("#projectUpdateDescription");
-									const $projectUpdateCode = $("#projectUpdateCode");
-									
-									projectUpdateModalTitle.value = project.title;
-									projectUpdateDescription.value = project.body;
-									updateStartDate.value = project.startDate;
-									updateEndDate.value = project.endDate;
-									projectUpdateCode.value = project.code;
-									
-								},
-								error: function(xhr, status, error) {
-									console.log(xhr);
-								}
-							});
-						});
-						
-					} else if(i == 4) {
-						
-						proBox.style.top = '580px';
-
-						document.getElementById("deleteProject").onclick = function() {
-							
-							document.getElementById("delete_modal").style.display="block";
-							proBox.style.display = 'none';
-							
-							document.getElementById("delete_modal_close_btn").onclick = function() {
-						        document.getElementById("delete_modal").style.display="none";
-						    }
-							
-							document.getElementById("delete_modal_ok_btn").onclick = function() {
-								
-								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
-							}
-
-						}
-						
-						$('#updateAndSelectProject').click(function() {
-							proBox.style.display = 'none';
-							$.ajax({
-								url: "/byat/project/detail",
-								type: 'get',
-								data: { code : $code[i].value },
-								success: function(data, status, xhr) {
-									
-									const project = JSON.parse(data.projectDetail);
-									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
-									const $updateStartDate = $("#updateStartDate");
-									const $updateEndDate = $("#updateEndDate");
-									const $projectUpdateDescription = $("#projectUpdateDescription");
-									const $projectUpdateCode = $("#projectUpdateCode");
-									
-									projectUpdateModalTitle.value = project.title;
-									projectUpdateDescription.value = project.body;
-									updateStartDate.value = project.startDate;
-									updateEndDate.value = project.endDate;
-									projectUpdateCode.value = project.code;
-									
-								},
-								error: function(xhr, status, error) {
-									console.log(xhr);
-								}
-							});
-						});
-						
-					} else {
-						
-						proBox.style.top = '650px';
-
-						document.getElementById("deleteProject").onclick = function() {
-							
-							document.getElementById("delete_modal").style.display="block";
-							proBox.style.display = 'none';
-							
-							document.getElementById("delete_modal_close_btn").onclick = function() {
-						        document.getElementById("delete_modal").style.display="none";
-						    }
-							
-							document.getElementById("delete_modal_ok_btn").onclick = function() {
-								
-								location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;								
-							}
-
-						}
-						
-						$('#updateAndSelectProject').click(function() {
-							proBox.style.display = 'none';
-							$.ajax({
-								url: "/byat/project/detail",
-								type: 'get',
-								data: { code : $code[i].value },
-								success: function(data, status, xhr) {
-									
-									const project = JSON.parse(data.projectDetail);
-									const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
-									const $updateStartDate = $("#updateStartDate");
-									const $updateEndDate = $("#updateEndDate");
-									const $projectUpdateDescription = $("#projectUpdateDescription");
-									const $projectUpdateCode = $("#projectUpdateCode");
-									
-									projectUpdateModalTitle.value = project.title;
-									projectUpdateDescription.value = project.body;
-									updateStartDate.value = project.startDate;
-									updateEndDate.value = project.endDate;
-									projectUpdateCode.value = project.code;
-									
-								},
-								error: function(xhr, status, error) {
-									console.log(xhr);
-								}
-							});
-						});
-						
-					}
-					
-					if(proBox.style.display =='none') {
-						proBox.style.display = 'block';
-					} else {
-						proBox.style.display = 'none';
-					}
-					
-				}
-
 			}
 			
+			for(let i = 0; i < $proBox.length; i++) {
+				
+				$proBox[i].style.left = '1300px';
+			}
+			
+			for(let i = 0; i < $projectEditBtn.length; i++) {
+		          
+				$projectAddMemberBtn[i].onclick = function() {
+			             
+					if(i == 0) {
+					   
+						document.getElementById("regist_project_members_modal").style.display="block";
+				   
+					}
+   
+				}
+
+				$projectEditBtn[i].onclick = function() {
+   
+					if(i === 0) {
+					   
+					   $proBox[i].style.top = '190px';
+					   
+					} else if(i === 1) {
+					   
+					   $proBox[i].style.top = '260px';
+					   
+					} else if(i === 2) {
+					   
+					   $proBox[i].style.top = '330px';
+					   
+					} else if(i === 3) {
+					   
+					   $proBox[i].style.top = '400px';
+					
+					} else {
+					   
+					   $proBox[i].style.top = '470px';
+					
+					} 
+					
+					if($proBox[i].style.display =='none') {
+					   $proBox[i].style.display = 'block';
+					} else {
+					   $proBox[i].style.display = 'none';
+					}
+   
+				}
+				
+				$deleteProject[i].onclick = function() {
+					
+					document.getElementById("delete_modal").style.display="block";
+                    $proBox[i].style.display = 'none';
+                    
+                    document.getElementById("delete_modal_close_btn").onclick = function() {
+                         document.getElementById("delete_modal").style.display="none";
+                     }
+                    
+                    document.getElementById("delete_modal_ok_btn").onclick = function() {
+                       
+                       location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;                        
+                    }
+					
+				}				
+			
+				$updateAndSelectProject[i].onclick = function() {
+					
+					$proBox[i].style.display = 'none';
+					
+					$.ajax({
+						url: "/byat/project/detail",
+						type: 'get',
+						data: { code : $code[i].value },
+						success: function(data, status, xhr) {
+                     
+							const project = JSON.parse(data.projectDetail);
+							const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
+							const $updateStartDate = $("#updateStartDate");
+							const $updateEndDate = $("#updateEndDate");
+							const $projectUpdateDescription = $("#projectUpdateDescription");
+							const $projectUpdateCode = $("#projectUpdateCode");
+	                     
+							projectUpdateModalTitle.value = project.title;
+							projectUpdateDescription.value = project.body;
+							updateStartDate.value = project.startDate;
+							updateEndDate.value = project.endDate;
+							projectUpdateCode.value = project.code;
+					   
+							document.getElementById("projectUpdateModal").style.display="block";
+							
+							if(${sessionScope.loginMember.no} !=  project.projectMembers[0].no) {
+							   
+								projectUpdateModalTitle.readOnly = true;
+								projectUpdateDescription.readOnly = true;
+								updateStartDate.readOnly = true;
+								updateEndDate.readOnly = true;
+								projectUpdateCode = true;
+							
+							} else {
+								
+								projectUpdateModalTitle.readOnly = false;
+								projectUpdateDescription.readOnly = false;
+								updateStartDate.readOnly = false;
+								updateEndDate.readOnly = false;
+								projectUpdateCode = false;
+								
+							}
+				   
+						},
+						error: function(xhr, status, error) {
+						   console.log(xhr);
+						}
+					});
+				}
+			
+			}
 		}
+			
+			/* for(let i = 0; i < $projectEditBtn.length; i++) {
+			          
+				$projectAddMemberBtn[i].onclick = function() {
+			             
+					if(i == 0) {
+					   
+						document.getElementById("regist_project_members_modal").style.display="block";
+				   
+					}
+   
+				}
+
+				$projectEditBtn[i].onclick = function() {
+   
+					if(i === 0) {
+					   
+					   $proBox[i].style.top = '190px';
+					   
+					} else if(i === 1) {
+					   
+					   $proBox[i].style.top = '260px';
+					   
+					} else if(i === 2) {
+					   
+					   $proBox[i].style.top = '330px';
+					   
+					} else if(i === 3) {
+					   
+					   $proBox[i].style.top = '400px';
+					
+					} else {
+					   
+					   $proBox[i].style.top = '470px';
+					
+					} 
+					
+					if($proBox[i].style.display =='none') {
+					   $proBox[i].style.display = 'block';
+					} else {
+					   $proBox[i].style.display = 'none';
+					}
+   
+				}
+			
+			}
+			
+			if($proBox[1].style.display == 'block') {
+				
+				console.log("proBox[0] on");
+				
+				document.getElementById("deleteProject").onclick = function() {
+                    
+                    document.getElementById("delete_modal").style.display="block";
+                    proBox.style.display = 'none';
+                    
+                    document.getElementById("delete_modal_close_btn").onclick = function() {
+                         document.getElementById("delete_modal").style.display="none";
+                     }
+                    
+                    document.getElementById("delete_modal_ok_btn").onclick = function() {
+                       
+                       location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[0].value;                        
+                    }
+
+                 }
+                 
+                 $('#updateAndSelectProject').click(function() {
+                   
+                	 console.log("0번째 updateAndSelectProject On")
+                	 
+                	 $.ajax({
+                       url: "/byat/project/detail",
+                       type: 'get',
+                       data: { code : $code[0].value },
+                       success: function(data, status, xhr) {
+                          
+                          const project = JSON.parse(data.projectDetail);
+                          const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
+                          const $updateStartDate = $("#updateStartDate");
+                          const $updateEndDate = $("#updateEndDate");
+                          const $projectUpdateDescription = $("#projectUpdateDescription");
+                          const $projectUpdateCode = $("#projectUpdateCode");
+                          
+                          projectUpdateModalTitle.value = project.title;
+                          projectUpdateDescription.value = project.body;
+                          updateStartDate.value = project.startDate;
+                          updateEndDate.value = project.endDate;
+                          projectUpdateCode.value = project.code;
+                          
+                          if(${sessionScope.loginMember.no} !=  project.projectMembers[0].no) {
+                             
+                             projectUpdateModalTitle.readOnly = true;
+                          }
+                          
+                       },
+                       error: function(xhr, status, error) {
+                          console.log(xhr);
+                       }
+                    });
+                 });
+				
+				$proBox[0].style.display = 'none';
+			} */
+			
 	</script>
 
 </body>

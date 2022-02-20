@@ -64,7 +64,7 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		for(int i = 0; i < projectMembers.size(); i++) {
 			
-			if("일반멤버".equals(projectMembers.get(i).getRoleName())) {
+			if("일반 멤버".equals(projectMembers.get(i).getRoleName())) {
 				
 				orderProjectMembers.add(memberCount, projectMembers.get(i));
 				memberCount++;
