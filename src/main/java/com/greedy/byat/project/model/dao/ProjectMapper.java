@@ -24,4 +24,6 @@ public interface ProjectMapper {
 
 	int modifyProject(ProjectDTO project);
 
+	List<MemberDTO> searchAddMemberList(String searchMember);
+
 }

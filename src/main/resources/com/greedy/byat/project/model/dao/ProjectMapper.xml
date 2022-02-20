@@ -159,4 +159,12 @@
  		 WHERE A.PROJECT_CODE = #{ code }
  	</update>
  	
+ 	<select id="searchAddMemberList" resultMap="memberResultMap" parameterType="java.lang.String">
+ 		SELECT
+ 		       A.MEMBER_ID
+ 		     , A.MEMBER_NAME
+ 		  FROM TBL_MEMBER A
+ 		 WHERE A.MEMBER_NAME LIKE '%' || #{ searchMember } || '%'
+ 	</select>
+ 	
  </mapper>

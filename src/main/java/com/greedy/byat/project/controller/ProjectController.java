@@ -3,22 +3,29 @@ package com.greedy.byat.project.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
@@ -158,4 +165,28 @@ public class ProjectController {
 		return "redirect:/project/list";
 	}
 	
+	@RequestMapping(value="/searchMembers", method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public String searchMembers(Locale locale, Model model, HttpServletRequest request) {
+		
+		String searchMember = request.getParameter("searchValue");
+		
+		System.out.println("searchMember : " + searchMember);
+		
+		List<MemberDTO> memberList = projectService.searchAddMemberList(searchMember);
+		
+		System.out.println("memberList : " + memberList);
+		
+		List<String> searchMemberList = new ArrayList<>();
+		
+		for(int i = 0; i < memberList.size(); i++) {
+			
+			searchMemberList.add(i, memberList.get(i).getName() + " " + memberList.get(i).getId());
+			
+		}
+		
+		Gson gson = new Gson();
+		
+		return gson.toJson(searchMemberList);
+	}
 }

@@ -8,7 +8,6 @@
 <meta charset="UTF-8">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <style>
 	html {
@@ -738,12 +737,6 @@
 	</div>
 	
 	<script>
-	
-		/* let projectWriter = [];
-	
-		<c:forEach items="${projectList}" var="project">
-			projectWriter.push("${project.writer}");
-		</c:forEach> */
 		
 		document.getElementById("createProject").onclick = function() {
 	        document.getElementById("projectCreateModal").style.display="block";
@@ -753,10 +746,13 @@
 	        document.getElementById("projectCreateModal").style.display="none";
 	    }
 
-		/* document.getElementById("updateAndSelectProject").onclick = function() {
-	        document.getElementById("projectUpdateModal").style.display="block";
-	    } */
-
+	    document.getElementById("registMembersCancelBtn").onclick = function() {
+	    	document.getElementById("regist_project_members_modal").style.display = "none";
+	    	
+	    	document.getElementById("searchMembers").value = "";
+	    	
+	    }
+	    
 		document.getElementById("projectUpdateModalCloseBtn").onclick = function() {
 	        document.getElementById("projectUpdateModal").style.display="none";
 			
@@ -792,14 +788,16 @@
 				$proBox[i].style.left = '1300px';
 			}
 			
-			for(let i = 0; i < $projectEditBtn.length; i++) {
+			for(let i = 0; i < $projectAddMemberBtn.length; i++) {
 		          
 				$projectAddMemberBtn[i].onclick = function() {
+
+					document.getElementById("regist_project_members_modal").style.display="block";
 			             
 					if(i == 0) {
-					   
-						document.getElementById("regist_project_members_modal").style.display="block";
-				   
+						
+						
+						
 					}
    
 				}
@@ -883,7 +881,6 @@
 								projectUpdateDescription.readOnly = true;
 								updateStartDate.readOnly = true;
 								updateEndDate.readOnly = true;
-								projectUpdateCode = true;
 							
 							} else {
 								
@@ -891,7 +888,6 @@
 								projectUpdateDescription.readOnly = false;
 								updateStartDate.readOnly = false;
 								updateEndDate.readOnly = false;
-								projectUpdateCode = false;
 								
 							}
 				   
@@ -904,110 +900,93 @@
 			
 			}
 		}
-			
-			/* for(let i = 0; i < $projectEditBtn.length; i++) {
-			          
-				$projectAddMemberBtn[i].onclick = function() {
-			             
-					if(i == 0) {
-					   
-						document.getElementById("regist_project_members_modal").style.display="block";
-				   
-					}
-   
-				}
+		
+		var searchMembersValue;
+        // 모든 텍스트의 변경에 반응합니다.
+        $("#searchMembers").on("propertychange change keyup paste input", function() {
+           
+           // 현재 변경된 데이터 셋팅
+           searchMembersValue = $(this).val();
+           
+        });
+		
 
-				$projectEditBtn[i].onclick = function() {
-   
-					if(i === 0) {
-					   
-					   $proBox[i].style.top = '190px';
-					   
-					} else if(i === 1) {
-					   
-					   $proBox[i].style.top = '260px';
-					   
-					} else if(i === 2) {
-					   
-					   $proBox[i].style.top = '330px';
-					   
-					} else if(i === 3) {
-					   
-					   $proBox[i].style.top = '400px';
-					
-					} else {
-					   
-					   $proBox[i].style.top = '470px';
-					
-					} 
-					
-					if($proBox[i].style.display =='none') {
-					   $proBox[i].style.display = 'block';
-					} else {
-					   $proBox[i].style.display = 'none';
-					}
-   
-				}
-			
-			}
-			
-			if($proBox[1].style.display == 'block') {
-				
-				console.log("proBox[0] on");
-				
-				document.getElementById("deleteProject").onclick = function() {
-                    
-                    document.getElementById("delete_modal").style.display="block";
-                    proBox.style.display = 'none';
-                    
-                    document.getElementById("delete_modal_close_btn").onclick = function() {
-                         document.getElementById("delete_modal").style.display="none";
-                     }
-                    
-                    document.getElementById("delete_modal_ok_btn").onclick = function() {
-                       
-                       location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[0].value;                        
-                    }
-
-                 }
-                 
-                 $('#updateAndSelectProject').click(function() {
-                   
-                	 console.log("0번째 updateAndSelectProject On")
-                	 
-                	 $.ajax({
-                       url: "/byat/project/detail",
-                       type: 'get',
-                       data: { code : $code[0].value },
-                       success: function(data, status, xhr) {
-                          
-                          const project = JSON.parse(data.projectDetail);
-                          const $projectUpdateModalTitle = $("#projectUpdateModalTitle");
-                          const $updateStartDate = $("#updateStartDate");
-                          const $updateEndDate = $("#updateEndDate");
-                          const $projectUpdateDescription = $("#projectUpdateDescription");
-                          const $projectUpdateCode = $("#projectUpdateCode");
-                          
-                          projectUpdateModalTitle.value = project.title;
-                          projectUpdateDescription.value = project.body;
-                          updateStartDate.value = project.startDate;
-                          updateEndDate.value = project.endDate;
-                          projectUpdateCode.value = project.code;
-                          
-                          if(${sessionScope.loginMember.no} !=  project.projectMembers[0].no) {
-                             
-                             projectUpdateModalTitle.readOnly = true;
-                          }
-                          
-                       },
-                       error: function(xhr, status, error) {
-                          console.log(xhr);
-                       }
-                    });
-                 });
-				
-				$proBox[0].style.display = 'none';
-			} */
+		$(function() {
+			$('#searchMembers').autocomplete({
+				source : function(request, response) {
+					$.ajax({
+						type : 'get',
+		                url: '/byat/project/searchMembers',
+		                data : { searchValue : searchMembersValue },
+		                dataType : 'json',
+		                success : function(data) {
+		                    // 서버에서 json 데이터 response 후 목록 추가
+		                    response(
+		                        $.map(data, function(item) {
+		                            return {
+		                                label : item,
+		                                value : item,
+		                                test : item + 'test'
+		                            }
+		                        })
+		                    );
+		                }
+					});
+				},
+				select : function(event, ui) {
+		            console.log(ui);
+		            console.log(ui.item.label);
+		            console.log(ui.item.value);
+		            console.log(ui.item.test);
+		        },
+		        focus : function(event, ui) {
+		            return false;
+		        },
+		        minLength : 1,
+		        autoFocus : true,
+		        classes : {
+		            'ui-autocomplete': 'highlight'
+		        },
+		        delay : 500,
+		        position : { my : 'right top', at : 'right bottom' },
+		        close : function(event) {
+		            console.log(event);
+		        }
+			}).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
+		        return $('<li>') //기본 tag가 li
+		        .append('<div>' + item.value + '</div>') // 원하는 모양의 HTML 만들면 됨
+		        .appendTo(ul);
+		    };
+		});
+		
+		
+		/* $(function() {
+		    $('#searchMembers').autocomplete({
+		        source : function(request, response) {
+		            $.ajax({
+		                type : 'get',
+		                url: '/byat/project/searchMembers',
+		                dataType : 'json',
+		                success : function(data) {
+		                    // 서버에서 json 데이터 response 후 목록 추가
+		                    response(
+		                        $.map(data, function(item) {
+		                            return {
+		                                label : item,
+		                                value : item,
+		                                test : item + 'test'
+		                            }
+		                        })
+		                    );
+		                }
+		            });
+		        }
+		    }).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
+		        return $('<li>') //기본 tag가 li
+		        .append('<div>' + item.value + '<br>' + item.label + '</div>') // 원하는 모양의 HTML 만들면 됨
+		        .appendTo(ul);
+		    };
+		}); */
 			
 	</script>
 

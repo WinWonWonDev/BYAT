@@ -23,4 +23,6 @@ public interface ProjectService {
 
 	void modifyProject(ProjectDTO project) throws ProjectModifyException;
 
+	List<MemberDTO> searchAddMemberList(String searchMember);
+
 }
