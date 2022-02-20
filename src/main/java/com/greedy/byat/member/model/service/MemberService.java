@@ -1,6 +1,7 @@
 package com.greedy.byat.member.model.service;
 
 import com.greedy.byat.common.exception.member.LoginFailedException;
+import com.greedy.byat.common.exception.member.NotexistEmailException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 
 public interface MemberService {
@@ -13,7 +14,7 @@ public interface MemberService {
 
 	boolean emailduplicationCheck(int id);
 
-	int modifyPassword(String id);
+	int selectEmailById(String id) throws NotexistEmailException;
 
 
 }

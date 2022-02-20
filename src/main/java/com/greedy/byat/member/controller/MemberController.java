@@ -1,6 +1,10 @@
 package com.greedy.byat.member.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,12 +13,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.greedy.byat.common.exception.member.LoginFailedException;
+import com.greedy.byat.common.exception.member.NotexistEmailException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.member.model.service.MemberService;
 
@@ -59,42 +66,43 @@ public class MemberController {
 			return "redirect:/home";
 
 		}
-
-
-
 	}
 	
-	@PostMapping("/emailduplicationCheck")
+//	@PostMapping("/emailduplicationCheck")
+//	@ResponseBody
+//	public String emailduplicationCheck(@RequestParam(required = false)String emailAddress, HttpServletRequest request, Model model) {
+//		
+//		String result = "사용 가능한 이메일입니다!";
+//		
+//		int id = Integer.parseInt(request.getParameter("id"));
+//		
+//		if("".equals(emailAddress)) {
+//			result = "이메일을 입력해주세요!";
+//		} else if(memberService.emailduplicationCheck(id)){
+//			result = "중복된 이메일입니다! 다른 이메일을 입력해주세요!";
+//		}
+//		
+//		model.addAttribute(result);
+//		
+//		return result;
+//	}
+//
+	@PostMapping(value="selectemail", produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public String emailduplicationCheck(@RequestParam(required = false)String emailAddress, HttpServletRequest request, Model model) {
+	public String selectemail(String inputId, @ModelAttribute MemberDTO member, HttpServletResponse response, Model model, HttpServletRequest request, RedirectAttributes rttr) throws NotexistEmailException, IOException {
 		
-		String result = "사용 가능한 이메일입니다!";
+		System.out.println("나오냐 id : " + inputId);
 		
-		int id = Integer.parseInt(request.getParameter("id"));
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
 		
-		if("".equals(emailAddress)) {
-			result = "이메일을 입력해주세요!";
-		} else if(memberService.emailduplicationCheck(id)){
-			result = "중복된 이메일입니다! 다른 이메일을 입력해주세요!";
-		}
+		return gson.toJson(memberService.selectEmailById(inputId));
 		
-		model.addAttribute(result);
-		
-		return result;
-	}
-
-	@PostMapping("/modifyPassword")
-	public String modifyPassword(@ModelAttribute MemberDTO member, Model model, RedirectAttributes rttr) {
-		
-		String id = member.getId();
-		System.out.println("나오냐 id : " + id);
-		
-		int result = memberService.modifyPassword(id); 
-		
-		rttr.addFlashAttribute("message", "비밀번호가 성공적으로 변경되었습니다!");
-		//model.addAllAttributes(result);
-		
-		return "redirect:/login";
 	}
 	
 	

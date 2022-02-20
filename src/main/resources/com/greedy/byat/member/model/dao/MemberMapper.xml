@@ -76,4 +76,58 @@
 		   AND A.MEMBER_ID = #{ id }
 	</select>
 		
+	<select id="selectEmailById" resultType="java.lang.String">
+		SELECT
+		       A.MEMBER_EMAIL
+		  FROM TBL_MEMBER A
+		 WHERE A.ABSENCE_YN = 'N'
+		   AND A.MEMBER_ID = #{ id } 
+	</select>
+	
+	<insert id="insertverification" parameterType="_int">
+		INSERT 
+		  INTO TBL_VERIFICATION A 
+		( 
+		   A.VERIFICATION_NUM_CODE
+		 , A.VERIFICATION_NUM_KEY
+		 , A.VERIFICATION_NUM_TYPE
+		 , A.VERIFICATION_NUM_CREATED_DATE
+		 , A.VERIFICATION_NUM_USED_DATE
+		 , A.VERIFICATION_NUM_DESTRUCTION_YN
+		 , A.MEMBER_NO
+		)
+		VALUES
+		(
+		   SEQ_VERIFICATION_NUM_CODE.NEXTVAL
+		 , 34214
+		 , '멤버비밀번호찾기'
+		 , SYSDATE
+		 , SYSDATE
+		 , 'N'
+		 , 14
+		)
+		
+		<!-- INSERT 
+		  INTO TBL_VERIFICATION A 
+		( 
+		   A.VERIFICATION_NUM_CODE
+		 , A.VERIFICATION_NUM_KEY
+		 , A.VERIFICATION_NUM_TYPE
+		 , A.VERIFICATION_NUM_CREATED_DATE
+		 , A.VERIFICATION_NUM_USED_DATE
+		 , A.VERIFICATION_NUM_DESTRUCTION_YN
+		 , A.MEMBER_NO
+		)
+		VALUES
+		(
+		   SEQ_VERIFICATION_NUM_CODE.NEXTVAL
+		 , 34214
+		 , '멤버비밀번호찾기'
+		 , SYSDATE
+		 , SYSDATE
+		 , 'N'
+		 , 14
+		) -->
+	</insert>
+	
  </mapper>

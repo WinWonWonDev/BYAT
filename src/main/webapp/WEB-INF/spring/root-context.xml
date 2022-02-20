@@ -11,8 +11,6 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-	<!-- Root Context: defines shared resources visible to all other web components -->
-
 	<bean id="sqlSessionFactory"
 		class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation"
@@ -36,7 +34,6 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<!-- 이부분 저희 url에 따라서 추가되어야할 것 같은데 일단 확실한 것만 추가해 두었습니다. !! -->
 	<tx:advice id="txAdvice"
 		transaction-manager="transactionManager">
 		<tx:attributes>
@@ -62,14 +59,13 @@
 		class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="587" />
-		<property name="username" value="vkfkswjs26@gmail.com" /> <!-- 자신의 이메일 아이디 -->
-		<property name="password" value="ㄹㅇ그이메일비번넣기!" /> <!-- 자신의 비밀번호 -->
+		<property name="username" value="byatproject@gmail.com" />
+		<property name="password" value="byatProject12" /> 
 		
-		<!-- 보안연결 TLS과 관련된 설정 -->
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.smtp.auth">true    </prop>
+				<prop key="mail.smtp.auth">true</prop>
 				<prop key="mail.transport.protocol">smtp</prop>
 				<prop key="mail.debug">true</prop>
 				<prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
@@ -97,7 +93,6 @@
 					  com.greedy.byat.profile.model.dao,
 					  com.greedy.byat.history.model.dao" />
 
-	<!-- 여기다 bean으로 설정해주니까 됩니다.  -->
 	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	
 

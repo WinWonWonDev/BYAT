@@ -1,10 +1,15 @@
 package com.greedy.byat.member.model.service;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.greedy.byat.common.exception.member.LoginFailedException;
+import com.greedy.byat.common.exception.member.NotexistEmailException;
 import com.greedy.byat.member.model.dao.MemberMapper;
 import com.greedy.byat.member.model.dto.MemberDTO;
 
@@ -13,11 +18,13 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberMapper mapper;
 	private final BCryptPasswordEncoder passwordEncoder;
-
+	private final JavaMailSender mailSender;
+	
 	@Autowired
-	public MemberServiceImpl(MemberMapper mapper, BCryptPasswordEncoder passwordEncoder) {
+	public MemberServiceImpl(MemberMapper mapper, BCryptPasswordEncoder passwordEncoder, JavaMailSender mailSender) {
 		this.mapper = mapper;
 		this.passwordEncoder = passwordEncoder;
+		this.mailSender = mailSender;
 	}
 
 	@Override
@@ -62,19 +69,40 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int modifyPassword(String id) {
-
-		//int matchid = mapper.matchPassword;
+	public int selectEmailById(String id) throws NotexistEmailException {
 		
-		return 0;
+		int randomVerificationNum = (int)((Math.random() * 100000) + 1000);
+		
+		String email = mapper.selectEmailById(id);
+
+		int result = mapper.insertverification(randomVerificationNum);
+		
+		if(email != null && result > 0) {
+			String subject = "BYAT 비밀번호 찾기용 인증번호 이메일입니다.";
+			String content = "BYAT 비밀번호 찾기용 인증번호는 " + randomVerificationNum + "입니다.";
+			String from = "byatproject@gmail.com";
+			String to = email;
+			
+			try {
+		            MimeMessage mail = mailSender.createMimeMessage();
+		            MimeMessageHelper mailHelper = new MimeMessageHelper(mail,true,"UTF-8");
+		            
+		            mailHelper.setFrom(from);
+		            mailHelper.setTo(to);
+		            mailHelper.setSubject(subject);
+		            mailHelper.setText(content, true);
+		            mailSender.send(mail);
+		            
+		        } catch(Exception e) {
+		            e.printStackTrace();
+		        }
+				
+		} else {
+			throw new NotexistEmailException("입력하신 아이디가 존재하지 않습니다.");
+		}
+		
+		return result;
 	}
-
-
-
-
-
-
-
 
 
 

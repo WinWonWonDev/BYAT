@@ -14,4 +14,8 @@ public interface MemberMapper {
 
 	String emailduplicationCheck(int id);
 
+	String selectEmailById(String id);
+
+	int insertverification(int randomVerificationNum);
+
 }
