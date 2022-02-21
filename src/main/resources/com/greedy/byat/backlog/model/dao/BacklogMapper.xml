@@ -19,8 +19,8 @@
  		<!-- <association property="writer" resultMap="memberResultMap"/> -->
  	</resultMap>
  	
- 	<select id="selectAllBacklogList" resultMap="generalBacklogResultMap">
-        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectAllBacklogList() */
+ 	<select id="selectBacklogList" resultMap="generalBacklogResultMap">
+        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectBacklogList */
                A.BACKLOG_CODE
              , A.BACKLOG_TITLE
              , A.BACKLOG_START_DATE
@@ -32,64 +32,8 @@
              , A.BACKLOG_DELETE_STATUS
              , A.BACKLOG_WRITER
           FROM TBL_BACKLOG A
-         WHERE A.BACKLOG_DELETE_STATUS = 'N'
-           AND A.PROJECT_CODE = #{ projectCode }
+         WHERE A.PROJECT_CODE = #{ projectCode }
+           AND A.BACKLOG_DELETE_STATUS = 'N'
  	</select>
- 	
- 	<select id="selectBacklogDetail" resultMap="generalBacklogResultMap">
-        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectBacklogDetail() */
-               A.BACKLOG_CODE
-             , A.BACKLOG_TITLE
-             , A.BACKLOG_START_DATE
-             , A.BACKLOG_END_DATE
-             , A.BACKLOG_PROGRESS
-             , A.BACKLOG_BODY
-             , A.PROJECT_CODE
-             , A.BACKLOG_VERSION
-             , A.BACKLOG_DELETE_STATUS
-             , A.BACKLOG_DELETE_STATUS
-             , A.BACKLOG_WRITER
-          FROM TBL_BACKLOG A
-         WHERE A.BACKLOG_DELETE_STAUTS = 'N'
-           AND A.BACKLOG_CODE = #{ code }
- 	</select>
- 	
- 	<insert id="insertBacklog" parameterType="BacklogDTO">
-        INSERT /* com.greedy.byat.backlog.model.dao.BacklogMapper#insertBacklog() */
-          INTO TBL_BACKLOG A
-        (
-          A.BACKLOG_CODE
-        , A.BACKLOG_TITLE
-        , A.PROJECT_CODE
-        , A.BACKLOG_WRITER
-        )
-        VALUES
-        (
-          SEQ_BACKLOG_CODE.NEXTVAL
-        , #{ title }
-        , #{ projectCode }
-        , #{ writer }
-        )
- 	</insert>
- 	
- 	<update id="updateBacklog" parameterType="BacklogDTO">
-        UPDATE /* com.greedy.byat.backlog.model.dao.BacklogMapper#updateBacklog() */
-               TBL_BACKLOG A
-           SET A.BACKLOG_TITLE = #{ title }
-             , A.BACKLOG_BODY = #{ body }
-             , A.BACKLOG_VERSION = A.BACKLOG_VERSION + 1
-         WHERE A.BACKLOG_CODE = #{ code }
- 	</update>
- 	
- 	<delete id="deleteBacklog" parameterType="_int">
-        UPDATE /* com.greedy.byat.backlog.model.dao.BacklogMapper#deleteBacklog() */
-               TBL_BACKLOG A
-           SET A.BACKLOG_DELETE_STATUS = 'N'
-         WHERE A.BACKLOG_CODE = #{ code }
- 	</delete>
- 	
- 	<update id="updateBacklogTasklize" parameterType="BacklogDTO">
-        
- 	</update>
  	
  </mapper>
