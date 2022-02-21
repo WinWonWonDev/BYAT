@@ -3,6 +3,93 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.backlog.model.dao.BacklogMapper">
- 
+ 	<resultMap type="BacklogDTO" id="generalBacklogResultMap">
+ 		<id property="code" column="BACKLOG_NO"/>
+ 		<result property="title" column="BACKLOG_TITLE"/>
+ 		<result property="startDate" column="BACKLOG_START_DATE"/>
+ 		<result property="endDate" column="BACKLOG_END_DATE"/>
+ 		<result property="progress" column="BACKLOG_PROGRESS"/>
+ 		<result property="body" column="BACKLOG_BODY"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		<result property="version" column="BACKLOG_VERSION"/>
+ 		<result property="deleteStatus" column="BACKLOG_DELETE_STATUS"/>
+ 		<result property="writer" column="BACKLOG_WRITER"/>
+ 		
+ 		<!-- writer는 String으로 받아오기 때문에 association이 필요없을 거 같음 -->
+ 		<!-- <association property="writer" resultMap="memberResultMap"/> -->
+ 	</resultMap>
+ 	
+ 	<select id="selectAllBacklogList" resultMap="generalBacklogResultMap">
+        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectAllBacklogList() */
+               A.BACKLOG_CODE
+             , A.BACKLOG_TITLE
+             , A.BACKLOG_START_DATE
+             , A.BACKLOG_END_DATE
+             , A.BACKLOG_PROGRESS
+             , A.BACKLOG_BODY
+             , A.PROJECT_CODE
+             , A.BACKLOG_VERSION
+             , A.BACKLOG_DELETE_STATUS
+             , A.BACKLOG_WRITER
+          FROM TBL_BACKLOG A
+         WHERE A.BACKLOG_DELETE_STATUS = 'N'
+           AND A.PROJECT_CODE = #{ projectCode }
+ 	</select>
+ 	
+ 	<select id="selectBacklogDetail" resultMap="generalBacklogResultMap">
+        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectBacklogDetail() */
+               A.BACKLOG_CODE
+             , A.BACKLOG_TITLE
+             , A.BACKLOG_START_DATE
+             , A.BACKLOG_END_DATE
+             , A.BACKLOG_PROGRESS
+             , A.BACKLOG_BODY
+             , A.PROJECT_CODE
+             , A.BACKLOG_VERSION
+             , A.BACKLOG_DELETE_STATUS
+             , A.BACKLOG_DELETE_STATUS
+             , A.BACKLOG_WRITER
+          FROM TBL_BACKLOG A
+         WHERE A.BACKLOG_DELETE_STAUTS = 'N'
+           AND A.BACKLOG_CODE = #{ code }
+ 	</select>
+ 	
+ 	<insert id="insertBacklog" parameterType="BacklogDTO">
+        INSERT /* com.greedy.byat.backlog.model.dao.BacklogMapper#insertBacklog() */
+          INTO TBL_BACKLOG A
+        (
+          A.BACKLOG_CODE
+        , A.BACKLOG_TITLE
+        , A.PROJECT_CODE
+        , A.BACKLOG_WRITER
+        )
+        VALUES
+        (
+          SEQ_BACKLOG_CODE.NEXTVAL
+        , #{ title }
+        , #{ projectCode }
+        , #{ writer }
+        )
+ 	</insert>
+ 	
+ 	<update id="updateBacklog" parameterType="BacklogDTO">
+        UPDATE /* com.greedy.byat.backlog.model.dao.BacklogMapper#updateBacklog() */
+               TBL_BACKLOG A
+           SET A.BACKLOG_TITLE = #{ title }
+             , A.BACKLOG_BODY = #{ body }
+             , A.BACKLOG_VERSION = A.BACKLOG_VERSION + 1
+         WHERE A.BACKLOG_CODE = #{ code }
+ 	</update>
+ 	
+ 	<delete id="deleteBacklog" parameterType="_int">
+        UPDATE /* com.greedy.byat.backlog.model.dao.BacklogMapper#deleteBacklog() */
+               TBL_BACKLOG A
+           SET A.BACKLOG_DELETE_STATUS = 'N'
+         WHERE A.BACKLOG_CODE = #{ code }
+ 	</delete>
+ 	
+ 	<update id="updateBacklogTasklize" parameterType="BacklogDTO">
+        
+ 	</update>
  	
  </mapper>
