@@ -92,16 +92,21 @@ public class AuthenticationFilter implements Filter {
 		adminPermitList.add("/management/modify");
 		adminPermitList.add("/management/remove");
 
-		
-		
 		memberPermitList.add("/project/list");
 		memberPermitList.add("/project/regist");
 		memberPermitList.add("/project/remove");
+		memberPermitList.add("/project/detail");
+		memberPermitList.add("/project/modify");
+		memberPermitList.add("/project/searchMembers");
 		
 		memberPermitList.add("/sprint/list");
 		memberPermitList.add("/sprint/regist");
 		memberPermitList.add("/sprint/remove");
 		memberPermitList.add("/sprint/modify");
+		memberPermitList.add("/sprint/start");
+		memberPermitList.add("/sprint/end");
+		memberPermitList.add("/sprint/select");
+		
 
 		memberPermitList.add("/mytask/list");
 		memberPermitList.add("/mytask/regist");
@@ -116,10 +121,13 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/calendar/modify");
 		
 		memberPermitList.add("/member/logout");
+		memberPermitList.add("/member/moveprofile");
 		
 		
 	    allPermitList.add("/member/login");
-		allPermitList.add("/member/passwordfind");
+	    allPermitList.add("/member/selectemail");
+		allPermitList.add("/member/checkverification");
+		allPermitList.add("/member/modifypassword");
 		
 		permitURIList.put("adminPermitList", adminPermitList);
 		permitURIList.put("memberPermitList", memberPermitList);

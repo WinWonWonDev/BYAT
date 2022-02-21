@@ -221,10 +221,115 @@
 		font-size:1.5em;
 	}
 	
+	#whiteboard {
+		position:relative;
+		left:1300px;
+		top:-15px;
+		width:150px;
+		height:47px;
+		background:white;
+	}
+	
+	#ProfileArea {
+		position: relative;
+		border:1px solid black;
+		text-align: center;
+	}
+	
+	#logoutArea {
+		position: relative;
+		border:1px solid black;
+		text-align: center;
+	}
+	
+	#logoutModal {
+		display: none;
+		position:relative;
+		width:100%;
+		z-index:1;
+	}
+	
+		#logoutModal h2 {
+			margin:0;
+	}
+		#logoutModal button {
+			display:inline-block;
+			width:100px;
+			margin-left:calc(100% - 100px - 10px);
+	}
+		
+	#logoutModal .modal_content {
+			width:700px;
+			height:300px;
+			margin:100px auto;
+			/* padding:20px 10px; */
+			background:#fff;
+			border:2px solid #666;
+	}
+		
+	#logoutModal .modal_layer {
+			position:fixed;
+			top:0;
+			left:0;
+			width:100%;
+			height:100%;
+			background:rgba(0, 0, 0, 0.5);
+			z-index:-1;
+	}
+	.modal_head {
+			width:100.1%;
+			height:35px;
+			background-color:rgb(25,25,112);
+			color:white;
+			text-align:center;
+			font-size:20px;
+			float:right;
+	}
+		
+	#modal_close_btn {
+			background-color:rgb(25,25,112);
+			color:white;
+			text-align:center;
+			cursor:pointer;
+			width:80px;
+			height:50px;
+			position:absolute;
+			right:30%;
+			top:20%;
+	}
+		
+	#modal_ok_btn {
+			background-color:rgb(25,25,112);
+			color:white;
+			text-align:center;
+			cursor:pointer;
+			width:80px;
+			height:50px;
+			position:absolute;
+			right:55%;
+			top:20%;
+	}
+		
+	.modal_content_message {
+			width:100%;
+			height:50%;
+			float:right;
+			font-size:40px;
+			text-align:center;
+	}
+		
+	.modal_button {
+			width:100%;
+			height:30%;
+			float:right;
+			position:relative;
+	}
+
+	
 	
 </style>
 </head>
-<body>
+<body scroll="no">
 	<nav class="navbar navbar-expand-custom navbar-mainbg">
 		<div class="logoIcon">
 			<input type="button" class="homeButtonImg" onclick="location.href='${ pageContext.servletContext.contextPath }/home'" >
@@ -255,8 +360,9 @@
                 </c:if> 
             </ul>
             <input type="button" class="noticeButtonImg" onclick="noticeDisplay();">
+            <!-- 알림 갯수에 따라 숫자 나오게 하는거 ㅋㅋ ㄱㄷ... -->
 			<div class="note-num">3</div>
-			<div class="profile-area" onclick="location.href='        '">
+			<div class="profile-area" id="profileName">
 			<div class="user-name">
 				${ sessionScope.loginMember.name }
 			</div>
@@ -266,8 +372,36 @@
 			</div>
         </div>
     </nav>
+    
+    <!-- 프로필관리/로그아웃 모달창 -->
+    <div id="profileAndLogoutModal" style="display:none;">
+    	<div id="whiteboard">
+    		<div id="ProfileArea" onclick="location.href='${ pageContext.servletContext.contextPath }/member/moveprofile'">프로필 관리</div>
+    		<div id="logoutArea">로그아웃</div>
+    	</div>
+    </div>
+    
+    <!-- 로그아웃 모달창 -->
+    <div id="logoutModal" style="display:none;">
+	    <div class="modal_content">
+		    <div class="modal_head">
+		    	System Message
+		    </div>
+	       	<div class="modal_content_message">
+	  	   		<br>로그아웃 하시겠습니까?
+	       	</div>
+	       	<div class="modal_button">
+		        <button type="button" id="modal_ok_btn" onclick="location.href='${ pageContext.servletContext.contextPath }/member/logout'">Ok</button>
+		        <button type="button" id="modal_close_btn">Cancel</button>
+	       	</div>
+	    </div>
+    <div class="modal_layer"></div>
+</div>
+    
+    
+    
     <script>
-	    function test(){
+	    function test() {
 	    	var tabsNewAnim = $('#navbarSupportedContent');
 	    	var selectorNewAnim = $('#navbarSupportedContent').find('li').length;
 	    	var activeItemNewAnim = tabsNewAnim.find('.active');
@@ -323,6 +457,29 @@
 	    	// Add active class to target link
 	    	target.parent().addClass('active');
 	    });
+	    
+	    
+	    const $profileName = document.getElementById("profileName");
+	    const $logoutArea = document.getElementById("logoutArea");
+		    
+	    /* 결계 만들어야 함 ㄱㄷ */
+	    $profileName.onclick = function() {
+			document.getElementById("profileAndLogoutModal").style.display="block";
+			
+		} 
+	    
+	    $logoutArea.onclick = function() {
+	    	document.getElementById("logoutModal").style.display="block";
+	    }
+	    
+	    const $modal_close_btn = document.getElementById("modal_close_btn");
+	    $modal_close_btn.onclick = function() {
+	    	document.getElementById("logoutModal").style.display="none";
+	    	document.getElementById("profileAndLogoutModal").style.display="none";
+	    }
+	    
+	    
+	    
     </script>
 </body>
 </html>
