@@ -132,13 +132,27 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<MemberDTO> searchAddMemberList(String searchMember) {
-		
-		System.out.println("impl : " + searchMember);
+	public List<MemberDTO> searchAddMemberList(String searchMember, String[] projectMembersList) {
 		
 		List<MemberDTO> searchMemberList = mapper.searchAddMemberList(searchMember);
 		
-		System.out.println("여기오냐?");
+		if(searchMemberList != null) {
+			
+			for(int i = 0; i < searchMemberList.size(); i++) {
+				
+				for(int j = 0; j < projectMembersList.length; j++) {
+					
+					if(searchMemberList.get(i).getNo() == Integer.parseInt(projectMembersList[j])) {
+						
+						searchMemberList.remove(i);
+						
+					}
+					
+				}
+				
+			}
+			
+		}
 		
 		return searchMemberList;
 	}

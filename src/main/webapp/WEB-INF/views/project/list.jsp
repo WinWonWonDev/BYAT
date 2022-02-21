@@ -788,6 +788,10 @@
 	</div>
 	
 	<script>
+	
+		let projectCode;
+		let selectedMemberList = [];
+		let projectMembersList = [];
 		
 		document.getElementById("createProject").onclick = function() {
 	        document.getElementById("projectCreateModal").style.display="block";
@@ -809,6 +813,8 @@
 	    	}
 	    	
 	    	document.getElementById("searchMembers").value = "";
+	    	projectMembersList.length = 0;
+	    	
 	    }
 	    
 		document.getElementById("projectUpdateModalCloseBtn").onclick = function() {
@@ -821,11 +827,6 @@
 			document.getElementById("projectUpdateCode").value = "";
 			
 	    }
-		
-		let projectCode;
-		
-		let selectedMemberList = [];
-		let projectMemberList = [];
 		
 		if(document.querySelectorAll("#projectTable td")) {
 			const $tds = document.querySelectorAll("#projectTitle");

@@ -166,6 +166,7 @@
  		     , A.MEMBER_NO
  		  FROM TBL_MEMBER A
  		 WHERE A.MEMBER_NAME LIKE '%' || #{ searchMember } || '%'
+ 		   AND A.MEMBER_PERMIT != 'ADMIN'
  	</select>
  	
  </mapper>
