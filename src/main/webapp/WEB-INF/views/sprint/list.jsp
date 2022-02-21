@@ -857,23 +857,24 @@
 	<div id="sprint-update-modal">
    
    		<div class="modal_content">
-   			<form action="" method="post">
+   			<form action="${ pageContext.servletContext.contextPath }/sprint/modify" method="post">
 			<div class="modal_head">
-				<h3>Sprint-{}</h3>
+				<h3 id="sprintTitle1"></h3>
 	    	</div>
        		<div class="modal_content-box" id="sprintUpdate">
-       			<input type="text" class="title" name="sprintTitle" id="sprintTitle2" placeholder="Sprint Title">
-       			<input type="text" class="sprint-code" name="sprintCode" id="sprintCode2" disabled="disabled">
+       			<input type="hidden" name="projectCode" value="${ requestScope.code }">
+       			<input type="text" class="title" name="title" id="sprintTitle2" placeholder="Sprint Title">
+       			<input type="text" class="sprint-code" name="code" id="sprintCode2" disabled="disabled">
 				<h3>스프린트 코드는 자동으로 생성됩니다.</h3>       		
 				<h5>시작일</h5>
 				<h5>종료일</h5>
        			<br clear="both" style="height: 5px;">
-       			<input type='date' class="start-day" id="sprint-startday2" name='sprintStartday'/>
-       			<input type='date' class="end-day" id="sprint-endday2" name='sprintEndday'/>
-       			<textarea class="description" id="sprintDescription2" rows="13" cols="51" placeholder="sprint Detail Description"></textarea>
+       			<input type='date' class="start-day" id="sprint-startday2" name='startDate'/>
+       			<input type='date' class="end-day" id="sprint-endday2" name='endDate'/>
+       			<textarea class="description" id="sprintDescription2" rows="13" cols="51" name="body" placeholder="sprint Detail Description"></textarea>
        		</div>
        		<div class="modal_button">
-	        	<button type="button" id="sprint-update">Ok</button>
+	        	<button type="submit" id="sprint-update">Ok</button>
 	        	<button type="button" id="sprint-close-btn2">Cancel</button>
        		</div>
    			</form>
@@ -1003,7 +1004,7 @@
 	    		document.getElementById("sprint-update-modal").style.display = "block";
     		
 	    		$.ajax({
-	    			url: "/byat/sprint/modify",
+	    			url: "/byat/sprint/select",
 	    			type: "get",
 	    			data: { "sprintCode": $sprintCodes[i].value },
 	    			dataType: "json",
@@ -1012,17 +1013,19 @@
 	    				console.table(data);
 	    				console.log(data.title);
 						
+	    				const $sprintCode1 = $("#sprintCode1");
 	    				const $sprintTitle = $("#sprintTitle2");
-	    				const $sprintCode = $("#sprintCode2");
+	    				const $sprintCode2 = $("#sprintCode2");
 	    				const $sprintStartDate = $("#sprint-startday2");
 	    				const $sprintEndDate = $("#sprint-endday2");
 	    				const $sprintBody = $("#sprintDescription2");
 	    				
+	    				$sprintCode1.val(data.code);
 	    				$sprintTitle.val(data.title);
-	    				$sprintCode.val(data.code);
+	    				$sprintCode2.val(data.code);
 	    				$sprintStartDate.val(data.startDate);
-	    				$sprintEndDate.value(data.endDate);
-	    				$sprintBody.value(data.body);
+	    				$sprintEndDate.val(data.endDate);
+	    				$sprintBody.val(data.body);
 	    				
 	    			},
 	    			error: function(xhr, status, error){

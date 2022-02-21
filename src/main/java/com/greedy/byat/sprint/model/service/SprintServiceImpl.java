@@ -42,13 +42,19 @@ public class SprintServiceImpl implements SprintService {
 	}
 
 	@Override
+	public void modifySprint(SprintDTO sprint) {
+		
+		
+	}
+	
+	@Override
 	public SprintDTO selectSprint(int sprintCode) {
 		
 		SprintDTO sprint = mapper.selectSprint(sprintCode);
 		
 		return sprint;
 	}
-
+	
 	@Override
 	public void deleteSprint(int sprintCode) {
 		
@@ -66,6 +72,7 @@ public class SprintServiceImpl implements SprintService {
 		
 		return projectProgress;
 	}
+
 
 	
 

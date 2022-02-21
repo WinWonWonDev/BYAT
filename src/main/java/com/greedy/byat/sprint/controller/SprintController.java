@@ -80,7 +80,7 @@ public class SprintController {
 		return "redirect:/sprint/list?code="+projectCode;
 	}
 	
-	@GetMapping(value = "/modify", produces = "application/json; charset=UTF-8")
+	@GetMapping(value = "/select", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public String selectSprint(HttpServletRequest request) throws JsonProcessingException {
 		
@@ -101,6 +101,20 @@ public class SprintController {
 		return gson.toJson(sprint);
 	}
 	
+	@PostMapping("/modify")
+	public String modifySprint(@ModelAttribute SprintDTO sprint, HttpServletRequest request, RedirectAttributes rttr) {
+		
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		
+		sprint.setProjectCode(projectCode);
+		
+		sprintService.modifySprint(sprint);
+		
+		rttr.addFlashAttribute("message", "스프린트를 수정하였습니다.");
+		
+		return "redirect:/sprint/list?code="+projectCode;
+	}
+	
 	@GetMapping("/remove")
 	public String removeSprint(HttpServletRequest request, RedirectAttributes rttr) {
 		
@@ -116,4 +130,6 @@ public class SprintController {
 		
 		return "redirect:/sprint/list?code=" + projectCode;
 	}
+	
+	
 }

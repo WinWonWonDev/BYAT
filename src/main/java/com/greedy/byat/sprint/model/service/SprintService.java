@@ -17,4 +17,6 @@ public interface SprintService {
 
 	String selectProjectProgress(int projectCode);
 
+	void modifySprint(SprintDTO sprint);
+
 }
