@@ -170,6 +170,33 @@ public class ProjectController {
 	public String searchMembers(Locale locale, Model model, HttpServletRequest request) {
 		
 		String searchMember = request.getParameter("searchValue");
+
+		/*
+		 * List<Integer> selectMembers = new
+		 * ArrayList<>(Integer.parseInt(request.getParameter("selectedMemberList")));
+		 * 
+		 * int code = Integer.parseInt(request.getParameter("code"));
+		 * 
+		 * System.out.println("selectMembers : " + selectMembers);
+		 * System.out.println("PJcode : " + code);
+		 */
+		
+		int code = Integer.parseInt(request.getParameter("code"));
+		System.out.println("PJcode : " + code);
+		
+		List<Integer> selectMembers = null;
+		
+		if(request.getParameter("selectMembers") != null) {
+			
+			selectMembers = new ArrayList<>(Integer.parseInt(request.getParameter("selectMembers")));
+			
+			for(int i = 0; i < selectMembers.size(); i++) {
+				
+				System.out.println("selectMembers : " + selectMembers.get(i));
+				
+			}
+			
+		}
 		
 		System.out.println("searchMember : " + searchMember);
 		
@@ -177,16 +204,8 @@ public class ProjectController {
 		
 		System.out.println("memberList : " + memberList);
 		
-		List<String> searchMemberList = new ArrayList<>();
-		
-		for(int i = 0; i < memberList.size(); i++) {
-			
-			searchMemberList.add(i, memberList.get(i).getName() + " " + memberList.get(i).getId());
-			
-		}
-		
 		Gson gson = new Gson();
 		
-		return gson.toJson(searchMemberList);
+		return gson.toJson(memberList);
 	}
 }

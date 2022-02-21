@@ -163,6 +163,7 @@
  		SELECT
  		       A.MEMBER_ID
  		     , A.MEMBER_NAME
+ 		     , A.MEMBER_NO
  		  FROM TBL_MEMBER A
  		 WHERE A.MEMBER_NAME LIKE '%' || #{ searchMember } || '%'
  	</select>

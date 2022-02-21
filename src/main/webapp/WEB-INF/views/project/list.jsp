@@ -534,6 +534,57 @@
 		margin-top:5px;
 	}
 	
+	.selectedMemberArea {
+		
+		width:88%;
+		height:20%;
+		border:2px solid black;
+		margin-top:3%;
+		margin-left:6%;
+		position:relative;
+		border-radius:15px;
+		background-color:white;
+	}
+	
+	.selectedMember {
+		
+		width:35%;
+		font-size:15px;
+		float:left;
+		margin-top:5px;
+		margin-left:40px;
+		position:relative;
+	}
+	
+	.selectedMemberProjectRole {
+		
+		position:absolute;
+		margin-top:5px;
+		right:70px;		
+	}
+	
+	.addMembersBox {
+		background-color:rgb(242,242,242); 
+		height:140px; 
+		border-radius:10px; 
+		width:94%; 
+		border:1px solid black; 
+		margin-left:16px; 
+		margin-top:15px; 
+		overflow-y:scroll;
+	}
+	
+	.addMembersBox::-webkit-scrollbar {
+	
+		background-color: rgb(242,242,242);		
+		border-radius:15px;
+	}
+	
+	.addMembersBox::-webkit-scrollbar-thumb {
+		background-color: gray;
+		border-radius:15px;
+	}
+	
 </style>
 <script>
    const message = '${ requestScope.message }';
@@ -716,17 +767,17 @@
 				프로젝트 팀원 추가
 			</div>
 			<div class="regist_project_members_modal_content-box">
-				<div class="searchMembers" style="font-size:23px; text-align:left; margin-left:20px; padding-top:15px;">
+				<div class="searchMembersTitle" style="font-size:23px; text-align:left; margin-left:20px; padding-top:15px;">
 					팀원 검색
 				</div>
 				<div class="searchMembersBox">
-					<input type="text" id="searchMembers" maxlength="10" style="background-color:rgb(242,242,242); height:30px; border-radius:10px;" size="65">
+					<input type="text" id="searchMembers" maxlength="20" style="background-color:rgb(242,242,242); height:30px; border-radius:10px;" size="65">
 				</div>
 				<div class="addMembers" style="font-size:23px; text-align:left; margin-left:20px; padding-top:30px;">
 					팀원 추가
 				</div>
-				<div class="addMembersBox" style="background-color:rgb(242,242,242); height:140px; border-radius:10px; width:94%; border:1px solid black; margin-left:16px; margin-top:15px;">
-					
+				<div class="addMembersBox" id="addMembersBox">
+					<form action="${ pageContext.servletContext.contextPath }/project/registmember" id="addMembersForm" class="addMembersForm"></form>
 				</div>
 			</div>
 				<button type="button" id="registMembersOkBtn" style="margin-left:100px;">OK</button>
@@ -749,8 +800,15 @@
 	    document.getElementById("registMembersCancelBtn").onclick = function() {
 	    	document.getElementById("regist_project_members_modal").style.display = "none";
 	    	
-	    	document.getElementById("searchMembers").value = "";
+	    	const $selectedMemberArea = document.querySelectorAll("#selectedMemberArea");
 	    	
+	    	for(let i = 0; i < $selectedMemberArea.length; i++) {
+	    		
+	    		$selectedMemberArea[i].remove();
+	    		
+	    	}
+	    	
+	    	document.getElementById("searchMembers").value = "";
 	    }
 	    
 		document.getElementById("projectUpdateModalCloseBtn").onclick = function() {
@@ -763,6 +821,11 @@
 			document.getElementById("projectUpdateCode").value = "";
 			
 	    }
+		
+		let projectCode;
+		
+		let selectedMemberList = [];
+		let projectMemberList = [];
 		
 		if(document.querySelectorAll("#projectTable td")) {
 			const $tds = document.querySelectorAll("#projectTitle");
@@ -794,12 +857,19 @@
 
 					document.getElementById("regist_project_members_modal").style.display="block";
 			             
-					if(i == 0) {
-						
-						
-						
-					}
-   
+					projectCode = $code[i].value;
+					
+					console.log(projectCode);
+					
+					<c:forEach items="${projectList}" var="project" varStatus="status">
+						<c:forEach items="${project.projectMembers}" var="member">
+							if(i == ${status.index}) {
+								selectedMemberList.push(${member.no});					
+							}
+						</c:forEach>
+						projectMembersList = selectedMemberList;
+					</c:forEach>
+					
 				}
 
 				$projectEditBtn[i].onclick = function() {
@@ -897,11 +967,20 @@
 						}
 					});
 				}
-			
+				
 			}
 		}
 		
-		var searchMembersValue;
+		let addMembersFormTag;
+		let selectedMemberAreaDiv;
+		let selectedMemberDiv;
+		let selectedMemberProjectRoleDiv;
+		let selectMemberValue;
+		let roleOption;
+		let hiddenMemberNo;
+		let selectMemberNo;
+		
+		let searchMembersValue;
         // 모든 텍스트의 변경에 반응합니다.
         $("#searchMembers").on("propertychange change keyup paste input", function() {
            
@@ -909,24 +988,30 @@
            searchMembersValue = $(this).val();
            
         });
-		
-
+        
+        let selectMembers = [];
+        
 		$(function() {
 			$('#searchMembers').autocomplete({
 				source : function(request, response) {
 					$.ajax({
 						type : 'get',
-		                url: '/byat/project/searchMembers',
-		                data : { searchValue : searchMembersValue },
+		                url : '/byat/project/searchMembers',
+		                data : { 
+		                	searchValue : searchMembersValue,
+		                	code : projectCode,
+		                	selectMembers : selectMembers,
+		                	projectMembersList : projectMembersList
+		                },
+		                traditional : true,
 		                dataType : 'json',
 		                success : function(data) {
+		                	
 		                    // 서버에서 json 데이터 response 후 목록 추가
 		                    response(
 		                        $.map(data, function(item) {
 		                            return {
-		                                label : item,
-		                                value : item,
-		                                test : item + 'test'
+		                                value : item
 		                            }
 		                        })
 		                    );
@@ -934,10 +1019,15 @@
 					});
 				},
 				select : function(event, ui) {
-		            console.log(ui);
-		            console.log(ui.item.label);
-		            console.log(ui.item.value);
-		            console.log(ui.item.test);
+						
+					selectMemberValue = ui.item.value.name + " " + ui.item.value.id;
+					
+					selectMemberNo = ui.item.value.no;
+					
+					selectMembers.push(selectMemberNo);
+					
+					console.log(selectMembers);
+					
 		        },
 		        focus : function(event, ui) {
 		            return false;
@@ -947,47 +1037,60 @@
 		        classes : {
 		            'ui-autocomplete': 'highlight'
 		        },
-		        delay : 500,
+		        delay : 300,
 		        position : { my : 'right top', at : 'right bottom' },
 		        close : function(event) {
 		            console.log(event);
+		            
+		            if(selectMemberValue != null) {
+		            	
+		            	document.getElementById('searchMembers').value = "";
+			            
+			            addMembersFormTag = document.getElementById('addMembersForm');
+			            selectedMemberAreaDiv = document.createElement('div');
+			            selectedMemberDiv = document.createElement('div');
+			            selectedMemberProjectRoleDiv = document.createElement('select');
+			            roleOption = document.createElement('option');
+			            hiddenMemberNo = document.createElement('input');
+			            roleOption.innerText = '부PM';
+			            
+			            hiddenMemberNo.setAttribute('type', 'hidden');
+			            hiddenMemberNo.setAttribute('name', 'no');
+			            hiddenMemberNo.value = selectMemberNo;
+			            
+			            selectedMemberAreaDiv.setAttribute('class', 'selectedMemberArea');
+			            selectedMemberAreaDiv.setAttribute('id', 'selectedMemberArea');
+			            
+			            selectedMemberDiv.setAttribute('class', 'selectedMember');
+			            selectedMemberDiv.setAttribute('id', 'selectedMember');
+			            selectedMemberDiv.innerHTML = selectMemberValue;
+			            
+			            selectedMemberProjectRoleDiv.setAttribute('class','selectedMemberProjectRole');
+			            selectedMemberProjectRoleDiv.setAttribute('id','selectedMemberProjectRole');
+			            selectedMemberProjectRoleDiv.setAttribute('name','role');
+			            selectedMemberProjectRoleDiv.appendChild(roleOption);
+			            
+			            roleOption = document.createElement('option');
+			            roleOption.innerText = '일반 멤버';
+			            roleOption.setAttribute('selected', 'selected');
+			            
+			            selectedMemberProjectRoleDiv.appendChild(roleOption);
+			            
+			            addMembersFormTag.appendChild(selectedMemberAreaDiv);
+			            selectedMemberAreaDiv.appendChild(selectedMemberDiv);
+			            selectedMemberAreaDiv.appendChild(selectedMemberProjectRoleDiv);
+			            selectedMemberAreaDiv.appendChild(hiddenMemberNo);
+		            	
+		            }
+		            
 		        }
 			}).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
 		        return $('<li>') //기본 tag가 li
-		        .append('<div>' + item.value + '</div>') // 원하는 모양의 HTML 만들면 됨
+		        .append('<div>' + item.value.name + " " + item.value.id + '</div>') // 원하는 모양의 HTML 만들면 됨
 		        .appendTo(ul);
 		    };
 		});
 		
-		
-		/* $(function() {
-		    $('#searchMembers').autocomplete({
-		        source : function(request, response) {
-		            $.ajax({
-		                type : 'get',
-		                url: '/byat/project/searchMembers',
-		                dataType : 'json',
-		                success : function(data) {
-		                    // 서버에서 json 데이터 response 후 목록 추가
-		                    response(
-		                        $.map(data, function(item) {
-		                            return {
-		                                label : item,
-		                                value : item,
-		                                test : item + 'test'
-		                            }
-		                        })
-		                    );
-		                }
-		            });
-		        }
-		    }).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
-		        return $('<li>') //기본 tag가 li
-		        .append('<div>' + item.value + '<br>' + item.label + '</div>') // 원하는 모양의 HTML 만들면 됨
-		        .appendTo(ul);
-		    };
-		}); */
-			
 	</script>
 
 </body>
