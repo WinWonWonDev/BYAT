@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString 
 public class ToDoListDTO {
 
-	private java.sql.Date writingtTime;
+	private java.sql.Date writingTime;
 	private String title;
 	private String checkStatus;
 	private String deleteStatus;

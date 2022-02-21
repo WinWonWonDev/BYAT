@@ -6,6 +6,7 @@ import java.util.List;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,5 +23,5 @@ import lombok.ToString;
 public class MyTaskDTO {
 	private List<ProjectDTO> projectDTO;
 	private List<ToDoListDTO> todolistDTO;
-	//태스크 디티오 들어가야함
+	private List<TaskDTO> taskDTO;
 }

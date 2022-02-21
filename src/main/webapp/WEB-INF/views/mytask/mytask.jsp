@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+ <script src="https://code.jquery.com/jquery-latest.js"></script>
+
 <%@ include file="/WEB-INF/views/common/menubar.jsp"%>
 <!DOCTYPE html>
 <html>
@@ -26,6 +28,49 @@ p {
 	text-indent: 1ch;
 }
 
+.modal {
+
+	display: none; 
+    position: fixed; 
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+	width: 100%; 
+	height: 100%; 
+	overflow: auto; 
+	background-color: rgb(0,0,0);
+	background-color: rgba(0,0,0,0.4); 
+	overflow-y: hidden;
+	
+}
+.modal-content {
+	background-color:#3b60d0;
+	border-radius: 30px;
+	margin: 8% auto; 
+	padding: 10px;
+	border: 1px solid #888;
+    width: 40%;     
+}
+.modal-content-white{
+	background-color:white;
+	border-radius: 30px;
+	margin: 5% auto; 
+	padding: 20px;
+	border: 1px solid #888;
+    width: 80%; 
+    min-height: 200px;
+}
+.ok-button{
+	width:30%;
+	cursor:pointer;
+	text-align:center;
+	color:white;
+	margin: 0 auto;
+	border-radius: 10px;
+	background-color:#172653;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
 #myTaskWhiteBoard {
 	background: white;
 	position: absolute;
@@ -80,9 +125,9 @@ p {
 }
 
 #piechart {
-	width: 400px;
-	height: 230px;
 	position: absolute;
+	width: 100%;
+	height: 100%;
 }
 
 #myTaskListBox {
@@ -259,19 +304,22 @@ tbody:hover {background-color: skyblue;}
 					<c:forEach items="${ projectList }" var="project" >
 						<tbody id="border">
 							<tr>
-								<th colspan="4" id="myTaskProjectName" >
+								<th colspan="5" id="myTaskProjectName" >
 									 <c:out value="${ project.title }"/> 
 								</th>
 							</tr>
 							<tr>
 								<td id="myTaskProjectMemberBox">
 									<div id="myTaskProjectMemberInnerBox">
-										<c:forEach items="${ project.projectMembers } var="member" varStatus="status">
+										<c:forEach items="${ project.projectMembers }" var="member" varStatus="status">
                                 			 <div id="member-circle"> 
                                  		   		<c:out value="${ member.name }" />
                                 			 </div>
                               			</c:forEach>
 									</div>
+								</td>
+								<td>
+									<input type="button" value="..."/>
 								</td>
 								<td id="myTaskPrjectDeadline">
 									<c:out value="${ project.startDate }"/> <br> ~ <c:out value="${ project.endDate }"/>
@@ -301,54 +349,98 @@ tbody:hover {background-color: skyblue;}
 			<p>나의 테스크</p>
 			<div id="myTaskListInnerBox">
 				<table class="myTaskList">
-					<tr>
-						<td id="myTaskListProjectNmae">키오스크결제시스템</td>
-						<td id="myTaskListProjectDeadLine">2022-01-17<br>~
-						</td>
-						<td class="myTaskListProjectStateBox">진행전</td>
-					</tr>
-					
-					<tr>
-						<td id="myTaskListProjectNmae">키오스크결제시스템</td>
-						<td id="myTaskListProjectDeadLine">2022-01-17<br>~
-						</td>
-						<td class="myTaskListProjectStateBox">진행전</td>
-					</tr>
+					<%-- <c:forEach items="${ taskList }" var="member" varStatus="status">
+						<tbody id="border">
+							<tr>
+								<td id="myTaskListProjectNmae"><c:out value="${ taskList.title }"/></td>
+								<td id="myTaskListProjectDeadLine"><c:out value="${ taskList.endDate }"/><br>~</td>
+								<td class="myTaskListProjectStateBox"><c:out value="${ taskList.progress }"/></td>
+							</tr>
+						</tbody>
+					</c:forEach> --%>
 				</table>
 			</div>
 		</div>
 
 		<div id="myTaskDoToListBox">
 			<p>
-				ToDoList <input type="button" class="img-button-plus" value="+">
+				ToDoList 
+				<input type="button" class="img-button-plus" value="+">
 				<input type="button" class="img-button-minus" value="-">
 			</p>
 			<div class="myTaskDoToListInnerBox">
-				
-				
+				 <c:foreach items="${ todolist }" var="todo" varStatus="status">
+				 	<c:choose>
+				 		<c:when test="${status.index%2==1}">	
+							<table class="myTaskDoToList-left">
+								<tr>
+									<input type="checkbox" class="ToDoListCheckBox" name ="ToDoListText"/>
+									<input type="text" class="ToDoListText" name="ToDoListText" value="${todolist.title}"/>
+								</tr>
+							</table>
+						</c:when>
+						<c:when test="${status.index%2==0}">		
+							<table class="myTaskDoToList-right"></table>
+						</c:when>
+					</c:choose>
+				</c:foreach>
 			</div>
 		</div>
 	</div>
 	
+	 <div id="myModal" class="modal">
+ 
+      <!-- Modal content -->
+      <div class="modal-content">
+      		<h2 style="color:white; text-align: center;"> 프로젝트 구성원</h2>
+      		<div class="modal-content-white">
+                <h2 style="color:gray;">팀원 역할</h2>
+                <div>
+                	
+                </div>
+            </div>
+            	<div class="ok-button" onClick="close_pop();">
+                	<span class="pop_bt" style="font-size: 13pt;">ok</span>
+            	</div>
+      </div>
+ 
+    </div>
+        <!--End Modal-->
+ 
+ 
+    <script type="text/javascript">
+      
+        jQuery(document).ready(function() {
+                $('#myModal').show();
+        });
+        //팝업 Close 기능
+        function close_pop(flag) {
+             $('#myModal').hide();
+        };
+        
+      </script>
+ 
+	
 	<script>
-   		
+		let count = 0;
+		
 		google.charts.load('current', {'packages':['corechart']});
     	google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
+    	
+    	function drawChart() {
+
+        	var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
-                ['진행 중', 6],
-                ['완료', 2],
-                ['미진행', 4]
+                ['진행 중',${projectProgress[0]} ] ,
+                ['완료', ${projectProgress[1]} ] ,
+                ['미진행', ${projectProgress[2]}]
              ]);
             
-            var options = {'alignment':'center','width':390, 'height':230 ,
+            var options = {'alignment':'center','width':390, 'height':328 ,
                     legend: {'position':'right','alignment':'center'}};
             var chart = new google.visualization.PieChart(document.getElementById('piechart'));
             chart.draw(data, options);
         }
-            
-        let count=0;
             
         $('.img-button-plus').on("click", function () {
             var rowItem = "<tr>"

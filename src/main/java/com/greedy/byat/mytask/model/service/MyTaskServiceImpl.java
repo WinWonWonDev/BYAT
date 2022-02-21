@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.mytask.model.dao.MyTaskMapper;
+import com.greedy.byat.mytask.model.dto.ToDoListDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;
 
 @Service
 public class MyTaskServiceImpl implements MyTaskService {
@@ -30,9 +32,9 @@ public class MyTaskServiceImpl implements MyTaskService {
 	}
 	
 	@Override
-	public List<ProjectMembersDTO>selectMyTaskProjectMembers(int code){
+	public List<ProjectMembersDTO>selectMyTaskProjectMembers(int projectCode){
 		
-		List<ProjectMembersDTO> projectMembers = mapper.selectMyTaskProjectMembers(code);
+		List<ProjectMembersDTO> projectMembers = mapper.selectMyTaskProjectMembers(projectCode);
 		
 		List<ProjectMembersDTO> orderProjectMembers = new ArrayList<>();
 		
@@ -72,7 +74,22 @@ public class MyTaskServiceImpl implements MyTaskService {
 		return orderProjectMembers;
 	}
 
+	@Override
+	public List<TaskDTO> selectTaskList(int projectCode, int memberNo) {
+		
+		List<TaskDTO> task = mapper.selectTaskList(projectCode, memberNo);
 
+		
+		return task;
+	}
+
+	@Override
+	public List<ToDoListDTO> selectMyTaskToDoList(int memberNo) {
+
+		List<ToDoListDTO> todoList = mapper.selectMyTaskToDoList(memberNo);
+
+		return todoList;
+	}
 
 
 

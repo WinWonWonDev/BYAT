@@ -1,6 +1,9 @@
 package com.greedy.byat.mytask.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +20,7 @@ import com.greedy.byat.mytask.model.dto.ToDoListDTO;
 import com.greedy.byat.mytask.model.service.MyTaskService;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;
 
 @Controller
 @RequestMapping("/mytask")
@@ -31,7 +35,7 @@ public class MyTaskController {
 	}
 
 	@GetMapping("/list")
-	public String selectMytask(HttpServletRequest request, Model model) {
+	public String selectMytask(HttpServletRequest request, Model model) throws ParseException {
 
 		MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		
@@ -41,27 +45,49 @@ public class MyTaskController {
 		List<ProjectDTO> projectList = new ArrayList<>();
 		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
 		List<ToDoListDTO> toDoList = new ArrayList<>();
+		List<TaskDTO>taskList = new ArrayList<>(); 
 
-		// memberDTO를 넣어주어서 멤버에 해당되는 ProjectList를 뽑아 온다.
 		projectList = mytaskService.selectMyTaskProjectList(member);
-		mytask.setProjectDTO(projectList);
+		toDoList = mytaskService.selectMyTaskToDoList(member.getNo());
 		
+		System.out.println(member.getNo());
+		
+		int progressIng = 0;
+		int progressDone = 0;
+		int progressNotDone = 0;
 		
 		for(int i = 0; i < projectList.size(); i++) {
 		  
 		  projectList.get(i).setWriter(projectList.get(i).getWriter().substring(1, 3));
 		  
 		  projectMembers = mytaskService.selectMyTaskProjectMembers(projectList.get(i).getCode());
-		  
+
 		  projectList.get(i).setProjectMembers(projectMembers);
 		  
-		  System.out.println(projectList.get(i).getTitle());
+		  //taskList = mytaskService.selectTaskList(projectList.get(i).getCode(), member.getNo());
 		  
+		  if(projectList.get(i).getProgress().equals("진행중")) {
+			  progressIng++;
+		  }else if(projectList.get(i).getProgress().equals("완료")){
+			  progressDone++;
+		  } else {
+			  progressNotDone++;
+		  }
 		}
+		
+		// memberDTO를 넣어주어서 멤버에 해당되는 ProjectList를 뽑아 온다.
+		
+		mytask.setProjectDTO(projectList);
+		//mytask.setTaskDTO(taskList);
+		mytask.setTodolistDTO(toDoList);
+		
+		int [] projectProgressArr = {progressIng, progressDone, progressNotDone};
 		 
 		model.addAttribute("projectList", mytask.getProjectDTO());
 		
+		model.addAttribute("projectProgress",projectProgressArr);
 		
+		model.addAttribute("todolist", mytask.getTodolistDTO());
 		
 		return "/mytask/mytask";
 	}

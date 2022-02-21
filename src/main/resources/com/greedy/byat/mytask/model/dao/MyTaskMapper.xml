@@ -37,6 +37,32 @@
  		<result property="roleName" column="ROLE_NAME"/>
  	</resultMap>
  	
+ 	<resultMap id ="toDoListResultMap" type="ToDoListDTO">
+       <id property ="writingTime" column="TODOlIST_WRITING_TIME"/>
+       <result property="title" column="TODOLIST_TITLE"/>
+       <result property="checkStatus" column="TODOLIST_CHECK_STATUS"/>
+       <result property="deleteStatus" column="TODOLIST_DELETESTATUS"/>
+    </resultMap>
+ 	
+ 	
+ 	<!-- <resultMap id ="taskResultMap" type="TaskDTO">
+ 		<id property="code" column="SPRINT_CODE"/>
+ 		<id property="no" column="MEMBER_NO"/>
+ 		<id property="code" column="PROJECT_CODE"/>
+ 		<id property="code" column="TASK_CODE"/>
+ 		<result property="version" column="TASK_VERSION"/>
+ 		<result property="title" column="TASK_TITLE"/>
+ 		<result property="startDate" column="TASK_START_DATE"/>
+ 		<result property="progress" column="TASK_PROGRESS"/>
+ 		<result property="manager" column="TASK_MANAGER"/>
+ 		<result property="endDate" column="TASK_END_DATE"/>
+ 		<result property="deleteStatus" column="TASK_DELETE_STATUS"/>
+ 		<result property="sprintCode" column="TASK_CODE"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		<result property="backLogCode" column="BACKLOG_CODE"/>
+ 		
+ 	</resultMap> -->
+ 	
  	
   	<select id="selectMyTaskProjectList" resultMap="projectResultMap">
  		SELECT
@@ -70,5 +96,34 @@
 		 WHERE A.PROJECT_CODE = #{ code }
 		   AND B.MEMBER_NO = C.MEMBER_NO
  	</select>
+ 	
+ 	<select id="selectMyTaskToDoList" resultMap="toDoListResultMap">
+        SELECT
+               A.TODOLIST_WRITING_TIME
+             , A.TODILIST_TITLE
+             , A.TODOLIST_CHECK_STATUS
+             , A.TODOLIST_DELETE_STATUS
+             , A.MEMBER_NO
+          FROM TBL_TODOLIST A
+         WHERE A.MEMBER_NO= #{ memberNo }
+    </select>
+ 	
+ 	<!-- <select id="selectTaskList" resultMap="taskListResultMap">
+        SELECT
+             , A.TASK_CODE
+             , A.TASK_TITLE
+             , A.TASK_PROGRESS
+             , A.PROJECT_CODE
+             , A.TASK_DELETE_STATUS
+             , A.MEMBER_NO
+             , A.SPRING_CODE
+             , A.TASK_STATRT_DATE
+             , A.TASK_END_DATE
+          FROM TBL_TASK
+          JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
+          JOIN TBL_
+         WHERE A.PROJECT_CODE = #{ projectCode }
+           AND A.MEMBER_NO = #{ memberNo }
+     </select> -->
  	
  </mapper>
