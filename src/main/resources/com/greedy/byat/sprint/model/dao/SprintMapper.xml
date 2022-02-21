@@ -155,4 +155,5 @@
  		   SET A.SPRINT_DELETE_STATUS = 'Y'
  		 WHERE A.SPRINT_CODE = #{ sprintCode }
  	</update>
+ 	
  </mapper>
