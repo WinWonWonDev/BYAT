@@ -184,23 +184,31 @@ public class ProjectController {
 		int code = Integer.parseInt(request.getParameter("code"));
 		System.out.println("PJcode : " + code);
 		
-		List<Integer> selectMembers = null;
+		String[] selectMembers;
+		
+		String[] projectMembersList = request.getParameterValues("projectMembersList");
 		
 		if(request.getParameter("selectMembers") != null) {
 			
-			selectMembers = new ArrayList<>(Integer.parseInt(request.getParameter("selectMembers")));
+			selectMembers = request.getParameterValues("selectMembers");
 			
-			for(int i = 0; i < selectMembers.size(); i++) {
+			for(int i = 0; i < selectMembers.length; i++) {
 				
-				System.out.println("selectMembers : " + selectMembers.get(i));
+				System.out.print("selectMembers : " + selectMembers[i] + " ");
 				
 			}
 			
 		}
 		
-		System.out.println("searchMember : " + searchMember);
+		for(int i = 0; i < projectMembersList.length; i++) {
+			
+			System.out.print("projectMembersList : " + projectMembersList[i] + " ");
+			
+		}
 		
-		List<MemberDTO> memberList = projectService.searchAddMemberList(searchMember);
+		System.out.println("\nsearchMember : " + searchMember);
+		
+		List<MemberDTO> memberList = projectService.searchAddMemberList(searchMember, projectMembersList);
 		
 		System.out.println("memberList : " + memberList);
 		
