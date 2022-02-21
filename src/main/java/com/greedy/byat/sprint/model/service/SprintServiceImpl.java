@@ -30,10 +30,14 @@ public class SprintServiceImpl implements SprintService {
 	@Override
 	public void registSprint(SprintDTO sprint) {
 		
-		int result = mapper.insertSprint(sprint);
+		int result1 = mapper.insertSprint(sprint);
 		
-		if(!(result > 0)) {
-			System.out.println("스픤트 생성 시패");
+		int result2 = mapper.insertSprintVersionHistory(sprint);
+		
+		int result3 = mapper.insertSprintProgressHistory(sprint);
+		
+		if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0)) {
+			System.out.println("스프린트 생성 실패");
 		}
 	}
 
@@ -53,6 +57,14 @@ public class SprintServiceImpl implements SprintService {
 		if(!(result > 0)) {
 			System.out.println("스프린트 삭제 실패");
 		}
+	}
+
+	@Override
+	public String selectProjectProgress(int projectCode) {
+		
+		String projectProgress = mapper.selectProjectProgress(projectCode);
+		
+		return projectProgress;
 	}
 
 	

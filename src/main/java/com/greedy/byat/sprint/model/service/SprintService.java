@@ -15,4 +15,6 @@ public interface SprintService {
 
 	void deleteSprint(int sprintCode);
 
+	String selectProjectProgress(int projectCode);
+
 }

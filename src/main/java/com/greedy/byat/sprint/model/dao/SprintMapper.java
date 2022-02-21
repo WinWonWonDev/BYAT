@@ -14,5 +14,11 @@ public interface SprintMapper {
 
 	int deleteSprint(int sprintCode);
 
+	int insertSprintVersionHistory(SprintDTO sprint);
+
+	int insertSprintProgressHistory(SprintDTO sprint);
+
+	String selectProjectProgress(int projectCode);
+
 
 }

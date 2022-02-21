@@ -654,10 +654,11 @@
 			</div>
 		</div>
 		<div class="task-area">
-			<img class="siren" src="../byat/resources/images/siren.png">
+			<img class="siren" src="/byat/resources/images/siren.png">
 			<button type="button" class="task-add" id="task-create-open-btn">Task 생성</button>
 			<button type="button" class="sprint-start">Sprint 시작</button>
 			<button type="button" class="sprint-end">Sprint 종료</button>
+			<input type="hidden" id="projectProgress" value="${ requestScope.projectProgress }">
 			<button type="button" class="sprint-add" id="sprint-create-open-btn">Sprint 생성</button>
 			<div class="task-box">
 				
@@ -908,7 +909,15 @@
 
 	/*모달 키고 끄는 버튼*/
     document.getElementById("backlog-create-open-btn").onclick = function() {
-        document.getElementById("backlog-create-modal").style.display="block";
+		
+    	if(document.getElementById("projectProgress").value == "완료"){
+    		
+    		alert("완료된 프로젝트는 백로그를 생성할 수 없습니다.");
+    		
+    	} else {
+    		
+	        document.getElementById("backlog-create-modal").style.display="block";
+    	}
     }
     
     document.getElementById("backlog-close-btn1").onclick = function() {
@@ -916,7 +925,15 @@
     }
     
     document.getElementById("task-create-open-btn").onclick = function() {
-        document.getElementById("task-create-modal").style.display = "block";
+    	
+    	if(document.getElementById("projectProgress").value == "완료"){
+    		
+    		alert("완료된 프로젝트는 태스크를 생성할 수 없습니다.");
+    		
+    	} else {
+    		
+	        document.getElementById("task-create-modal").style.display = "block";
+    	}
     }
     
     document.getElementById("task-close-btn1").onclick = function() {
@@ -956,7 +973,16 @@
     }
     
     document.getElementById("sprint-create-open-btn").onclick = function() {
-        document.getElementById("sprint-create-modal").style.display = "block";
+    	
+    	if(document.getElementById("projectProgress").value == "완료"){
+    		
+    		alert("완료된 프로젝트는 스프린트를 생성할 수 없습니다.");
+    		
+    	} else {
+    		
+        	document.getElementById("sprint-create-modal").style.display = "block";
+    	}
+    	
     }
     
     document.getElementById("sprint-close-btn1").onclick = function() {

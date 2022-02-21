@@ -47,11 +47,14 @@ public class SprintController {
 		
 		System.out.println("list 프로젝트 코드 : " +projectCode);
 		
+		String projectProgress = sprintService.selectProjectProgress(projectCode);
 		List<SprintDTO> sprintList = sprintService.selectSprintList(projectCode);
 		
+		System.out.println(projectProgress);
 		System.out.println(sprintList);
 		
 		mv.addObject("sprintList", sprintList);
+		mv.addObject("projectProgress", projectProgress);
 		mv.addObject("code", projectCode);
 		mv.setViewName("/sprint/list");
 		
@@ -72,7 +75,7 @@ public class SprintController {
 		
 		sprintService.registSprint(sprint);
 		
-		rttr.addFlashAttribute("message", "스프린트 생성 성공!");
+		rttr.addFlashAttribute("message", "스프린트를 생성하였습니다.");
 		
 		return "redirect:/sprint/list?code="+projectCode;
 	}
