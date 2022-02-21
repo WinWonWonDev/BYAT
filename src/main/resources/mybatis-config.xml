@@ -20,7 +20,7 @@
 		<typeAlias alias="RetrospectDTO" type="com.greedy.byat.retrospect.model.dto.RetrospectDTO"/>
 		<typeAlias alias="SprintDTO" type="com.greedy.byat.sprint.model.dto.SprintDTO"/>
 		<typeAlias alias="TaskDTO" type="com.greedy.byat.task.model.dto.TaskDTO"/>
-		<typeAlias alias="TaDoListDTO" type="com.greedy.byat.mytask.model.dto.ToDoListDTO"/>
+        <typeAlias alias="TaDoListDTO" type="com.greedy.byat.mytask.model.dto.ToDoListDTO"/>
 	</typeAliases>
   
   

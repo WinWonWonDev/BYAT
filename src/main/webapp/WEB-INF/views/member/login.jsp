@@ -550,13 +550,13 @@ html, body {
 		
  	 	  $("#modalOkBtn2").on("click",function() {
  	 		   $.ajax({
- 	 			url:"checkverification",
-				type:"POST",
-				data: {"inputVerificationNum":$("#inputVerificationNum").val()},
+ 	 			url : "checkverification",
+				type : "POST",
+				data : {"inputVerificationNum":$("#inputVerificationNum").val()},
 				success : function(data, status, xhr) {
 
 					if(data > 0) {
-						alert("인증번호가 일치합니다! 변경할 비밀번호를 입력해주세요! ")
+						alert("인증번호가 일치합니다! 변경할 비밀번호를 입력해주세요!");
 						document.getElementById("inputEmailVeficationModal").style.display="none";
 						document.getElementById("passwordFindModal").style.display="block";
 						document.getElementById("inputIdModal").style.display="none";
@@ -606,7 +606,7 @@ html, body {
 						document.getElementById("inputEmailVeficationModal").style.display="none";
 					}
 				},
-				error: function (error){
+				error : function (error){
 			        alert("에러가 발생했습니다. 다시 접속해주세요."); 
 				}
 			});
@@ -615,12 +615,12 @@ html, body {
 		  
 		$("#modalOkBtn3").on("click",function () {
 			$.ajax({
-				url: "modifypassword",
-				type:"POST",
-				data: {"inputId":$("#inputId").val(),
+				url : "modifypassword",
+				type :"POST",
+				data : {"inputId":$("#inputId").val(),
 					"inputPassword":$("#inputPassword").val(),
 					"confirmPassword":$("#confirmPassword").val()},
-				success: function(data, status, xhr) {
+				success : function(data, status, xhr) {
 					
 					if(data > 0) {
 						alert("비밀번호 변경이 완료되었습니다 야호!");
@@ -634,7 +634,7 @@ html, body {
 						document.getElementById("inputIdModal").style.display="none";
 					}
 				},
-				error: function(error) {
+				error : function(error) {
 					alert("에러가 발생했습니다. 다시 시도해주세요.");
 				}
 			});

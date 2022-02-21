@@ -105,6 +105,8 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/sprint/modify");
 		memberPermitList.add("/sprint/start");
 		memberPermitList.add("/sprint/end");
+		memberPermitList.add("/sprint/select");
+		
 
 		memberPermitList.add("/mytask/list");
 		memberPermitList.add("/mytask/regist");

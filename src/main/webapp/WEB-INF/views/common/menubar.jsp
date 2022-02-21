@@ -401,7 +401,7 @@
     
     
     <script>
-	    function test(){
+	    function test() {
 	    	var tabsNewAnim = $('#navbarSupportedContent');
 	    	var selectorNewAnim = $('#navbarSupportedContent').find('li').length;
 	    	var activeItemNewAnim = tabsNewAnim.find('.active');

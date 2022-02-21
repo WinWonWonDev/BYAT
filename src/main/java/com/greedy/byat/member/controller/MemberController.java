@@ -78,25 +78,24 @@ public class MemberController {
 		}
 	}
 	
-//	@PostMapping("/emailduplicationCheck")
-//	@ResponseBody
-//	public String emailduplicationCheck(@RequestParam(required = false)String emailAddress, HttpServletRequest request, Model model) {
-//		
-//		String result = "사용 가능한 이메일입니다!";
-//		
-//		int id = Integer.parseInt(request.getParameter("id"));
-//		
-//		if("".equals(emailAddress)) {
-//			result = "이메일을 입력해주세요!";
-//		} else if(memberService.emailduplicationCheck(id)){
-//			result = "중복된 이메일입니다! 다른 이메일을 입력해주세요!";
-//		}
-//		
-//		model.addAttribute(result);
-//		
-//		return result;
-//	}
-//
+	@PostMapping(value="emailduplicationCheck", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public int emailduplicationCheck(String emailAddress, RedirectAttributes rttr) {
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+//		int result = memberService.emaildupl;
+		
+		
+		return 0;
+	}
+
 	@PostMapping(value="selectemail", produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public String selectemail(String inputId, @ModelAttribute MemberDTO member, HttpServletResponse response, Model model, HttpServletRequest request, RedirectAttributes rttr) throws NotexistEmailException, IOException {
