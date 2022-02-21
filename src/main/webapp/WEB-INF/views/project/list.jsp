@@ -1029,22 +1029,8 @@
 					
 					console.log(selectMembers);
 					
-		        },
-		        focus : function(event, ui) {
-		            return false;
-		        },
-		        minLength : 1,
-		        autoFocus : true,
-		        classes : {
-		            'ui-autocomplete': 'highlight'
-		        },
-		        delay : 300,
-		        position : { my : 'right top', at : 'right bottom' },
-		        close : function(event) {
-		            console.log(event);
-		            
-		            if(selectMemberValue != null) {
-		            	
+					if(selectMemberValue != null) {
+	            	
 		            	document.getElementById('searchMembers').value = "";
 			            
 			            addMembersFormTag = document.getElementById('addMembersForm');
@@ -1081,9 +1067,24 @@
 			            selectedMemberAreaDiv.appendChild(selectedMemberDiv);
 			            selectedMemberAreaDiv.appendChild(selectedMemberProjectRoleDiv);
 			            selectedMemberAreaDiv.appendChild(hiddenMemberNo);
-		            	
+	            	
 		            }
+					
+		        },
+		        focus : function(event, ui) {
+		            return false;
+		        },
+		        minLength : 1,
+		        autoFocus : true,
+		        classes : {
+		            'ui-autocomplete': 'highlight'
+		        },
+		        delay : 300,
+		        position : { my : 'right top', at : 'right bottom' },
+		        close : function(event) {
+		            console.log(event);
 		            
+		            document.getElementById('searchMembers').value = "";
 		        }
 			}).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
 		        return $('<li>') //기본 tag가 li
