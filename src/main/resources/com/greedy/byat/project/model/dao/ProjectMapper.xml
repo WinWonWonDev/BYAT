@@ -51,6 +51,8 @@
 		  JOIN TBL_MEMBER B ON(A.PROJECT_WRITER = B.MEMBER_NAME)
 		  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
 		 WHERE C.MEMBER_NO = #{ no }
+		   AND A.PROJECT_DELETE_STATUS = 'N'
+		 ORDER BY PROJECT_CODE DESC
  	</select>
  	
  	<select id="selectProjectMembers" resultMap="projectMembersResultMap">
@@ -66,5 +68,74 @@
 		 WHERE A.PROJECT_CODE = #{ code }
 		   AND B.MEMBER_NO = C.MEMBER_NO
  	</select>
+ 	
+ 	<insert id="registProject" parameterType="ProjectDTO">
+ 		INSERT
+ 		  INTO TBL_PROJECT A
+ 		(
+ 		  A.PROJECT_CODE
+ 		, A.PROJECT_TITLE
+ 		, A.PROJECT_START_DATE
+ 		, A.PROJECT_END_DATE
+ 		, A.PROJECT_PROGRESS
+ 		, A.PROJECT_BODY
+ 		, A.PROJECT_VERSION
+ 		, A.PROJECT_DELETE_STATUS
+ 		, A.PROJECT_WRITER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_NO.NEXTVAL
+ 		, #{ title } 
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, '미진행'
+ 		, #{ body }
+ 		, 1
+ 		, 'N'
+ 		, #{ writer }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="registProjectMembers" parameterType="ProjectMembersDTO">
+ 		INSERT
+ 		  INTO TBL_PROJECT_MEMBERS A
+ 		(
+ 		  A.PROJECT_CODE
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_PARTICIPATION_YN
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_NO.CURRVAL
+ 		, #{ no }
+ 		, 'Y'
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="registProjectMemberRole" parameterType="_int">
+ 		INSERT
+ 		  INTO TBL_ROLE A
+ 		(
+ 		  A.ROLE_CODE
+ 		, A.ROLE_NAME
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ROLE_CODE.NEXTVAL
+ 		, 'PM'
+ 		, #{ no }
+ 		, SEQ_PROJECT_NO.CURRVAL
+ 		)
+ 	</insert>
+ 	
+ 	<update id="removeProject" parameterType="_int">
+ 		UPDATE 
+ 		       TBL_PROJECT A
+ 		   SET A.PROJECT_DELETE_STATUS = 'Y'
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 	</update>
  	
  </mapper>

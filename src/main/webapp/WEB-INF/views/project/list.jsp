@@ -135,6 +135,7 @@
 		color:white;
 		text-align:left;
 		font-size:20px;
+		padding-top:20px;
 	}
 	
 	#projectCreateModalCloseBtn {
@@ -339,8 +340,6 @@
 	
  	#projectMenuBox {
  		position:absolute;
- 		top:46.4%;
- 		left:87.5%;
  		width:80px;
  		height:50px;
  	}
@@ -352,8 +351,70 @@
 		font-weight:bold;
 		cursor:pointer;
 	}
+	
+	#projectUpdateModal {
+		display: none;
+		position:absolute;
+		width:100%;
+		height:100%;
+		z-index:1;
+		bottom:1%;
+	}
+	
+	#projectUpdateModal button {
+		display:inline-block;
+		width:100px;
+		margin-left:calc(100% - 100px - 10px);
+	}
+	
+	#projectUpdateModal .modal_content {
+		width:1000px;
+		height:680px;
+		margin:20px auto;
+		background:#29428C;
+		border:1px solid black;
+		border-radius:25px;
+	}
+	
+	#projectUpdateModal .modal_layer {
+		position:fixed;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+		background:rgba(0, 0, 0, 0.5);
+		z-index:-1;
+	}
+	
+	#projectUpdateModalCloseBtn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:110px;
+		height:50px;
+		position:absolute;
+		right:30%;
+	}
+	
+	#projectUpdateBtn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:110px;
+		height:50px;
+		position:absolute;
+		right:65%;
+	}
  			
 </style>
+<script>
+   const message = '${ requestScope.message }';
+   if(message != null && message != '') {
+      alert(message);
+   }   
+</script>
 <title>Insert title here</title>
 </head>
 <body style="overflow:hidden;">
@@ -374,7 +435,7 @@
 					</tr>
 					<c:forEach items="${ projectList }" var="project">
 					<tr>
-						<td id="projectTitle"><c:out value="${ project.title }" />
+						<td id="projectTitle" style="cursor:pointer;"><c:out value="${ project.title }" />
 							<input type="hidden" value="${ project.code }" name="projectCode" id="projectCode">
 						</td>
 						<td id="projectRealMemberList">
@@ -421,7 +482,7 @@
 								<c:out value="${ project.writer }" />							
 							</div>
 						</td>
-						<td><input type="button" class="projectEditBtn" onclick="proBoxOpenDisplay()"></td>
+						<td><input type="button" class="projectEditBtn"></td>
 					</tr>
 				</c:forEach>
 	      		</table>
@@ -430,25 +491,25 @@
 	<div id="projectCreateModal">
   
   		<div class="modal_content">
-	  		<form action="" method="post">
+	  		<form action="${ pageContext.servletContext.contextPath }/project/regist" method="post">
 				<div class="modal_head">
 					<h3>프로젝트 생성</h3>
 		    	</div>
 	      		<div class="modal_content-box">
 	      			<div style="height:30px;"></div>
 	      			<div class="projectTitleTag">프로젝트 명</div>
-	      			<input type="text" class="projectModalTitle" name="projectModalTitle" placeholder="Project-001">
+	      			<input type="text" class="projectModalTitle" name="title" placeholder="ProjectTitle" required>
 	      			<div class="projectStartDayTag">프로젝트 시작일자</div>
 	      			<div class="projectEndDayTag">프로젝트 종료일자</div>
 	       			<br clear="both">
-	       			<input type='date' class="start-day" name='projectStartDay'/>
-	       			<input type='date' class="end-day" name='projectEndDay'/>
+	       			<input type='date' class="start-day" name='startDate' required/>
+	       			<input type='date' class="end-day" name='endDate' required/>
 	       			<div class="projectDescriptionTag">프로젝트 상세 설명</div>
-	      			<textarea class="projectDescription" id="projectDescription" rows="13" cols="100" placeholder="상세내용을 입력해주세요"></textarea>
+	      			<textarea class="projectDescription" id="projectDescription" name="body" rows="13" cols="100" placeholder="상세내용을 입력해주세요" required></textarea>
 	      			<div class="prjectCodeMessage">프로젝트  코드는 자동으로 생성됩니다.</div>
 	      		</div>
 	      		<div class="modal_button">
-		        	<button type="button" id="projectCreateBtn">Ok</button>
+		        	<button type="submit" id="projectCreateBtn">Ok</button>
 		        	<button type="button" id="projectCreateModalCloseBtn">Cancel</button>
 	      		</div>
 			</form>
@@ -456,12 +517,39 @@
    		<div class="modal_layer"></div>
 	</div>
 	
+	<div id="projectUpdateModal">
+  
+  		<div class="modal_content">
+	  		<form action="" method="post">
+				<div class="modal_head">
+					<h3>프로젝트 상세</h3>
+		    	</div>
+	      		<div class="modal_content-box">
+	      			<div style="height:30px;"></div>
+	      			<div class="projectTitleTag">프로젝트 명</div>
+	      			<input type="text" class="projectModalTitle" name="title" placeholder="Project-001">
+	      			<div class="projectStartDayTag">프로젝트 시작일자</div>
+	      			<div class="projectEndDayTag">프로젝트 종료일자</div>
+	       			<br clear="both">
+	       			<input type='date' class="start-day" name='startDate'/>
+	       			<input type='date' class="end-day" name='endDate'/>
+	       			<div class="projectDescriptionTag">프로젝트 상세 설명</div>
+	      			<textarea class="projectDescription" id="projectDescription" name="body" rows="13" cols="100" placeholder="상세내용을 입력해주세요"></textarea>
+	      			<div class="prjectCodeMessage">프로젝트  코드는 자동으로 생성됩니다.</div>
+	      		</div>
+	      		<div class="modal_button">
+		        	<button type="button" id="projectUpdateBtn">Ok</button>
+		        	<button type="button" id="projectUpdateModalCloseBtn">Cancel</button>
+	      		</div>
+			</form>
+   		</div>
+   		<div class="modal_layer"></div>
+	</div>
 	<div id="projectMenuBox" class="projectMenuBox" style="display:none"> 
 		<div id="projectMenuTitles">
-			<div>조회/수정</div>
-			<div>삭제하기</div>
+			<div id="updateAndSelectProject">조회/수정</div>
+			<div id="deleteProject">삭제하기</div>
 		</div>
-
 	</div>
 	
 	<script>
@@ -472,19 +560,21 @@
 		document.getElementById("projectCreateModalCloseBtn").onclick = function() {
 	        document.getElementById("projectCreateModal").style.display="none";
 	    }
-		
-		function proBoxOpenDisplay(){
-		   var proBox = document.getElementById("projectMenuBox");
-		   if(proBox.style.display =='none') {
-			   proBox.style.display = 'block';
-		   } else {
-			   proBox.style.display = 'none';
-		   }
-		}
+
+		document.getElementById("updateAndSelectProject").onclick = function() {
+	        document.getElementById("projectUpdateModal").style.display="block";
+	    }
+
+		document.getElementById("projectUpdateModalCloseBtn").onclick = function() {
+	        document.getElementById("projectUpdateModal").style.display="none";
+	    }
 		
 		if(document.querySelectorAll("#projectTable td")) {
 			const $tds = document.querySelectorAll("#projectTitle");
 			const $code = document.querySelectorAll("#projectCode");
+			const $projectEditBtn = document.querySelectorAll(".projectEditBtn");
+			let proBox = document.getElementById("projectMenuBox");
+			
 			for(let i = 0; i < $tds.length; i++) {
 				
 				$tds[i].onclick = function() {
@@ -492,6 +582,61 @@
 					location.href = "${ pageContext.servletContext.contextPath }/sprint/list?code=" + $code[i].value;
 				}
 			}
+		
+			for(let i = 0; i < $projectEditBtn.length; i++) {
+			
+				proBox.style.left = '1345px';
+				
+				$projectEditBtn[i].onclick = function() {
+					
+					if(i === 0) {
+						
+						proBox.style.top = '300px';
+						document.getElementById("deleteProject").onclick = function() {
+							
+							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+						}
+					} else if(i === 1) {
+						
+						proBox.style.top = '370px';
+						document.getElementById("deleteProject").onclick = function() {
+							
+							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+						}
+					} else if(i === 2) {
+						
+						proBox.style.top = '440px';
+						document.getElementById("deleteProject").onclick = function() {
+							
+							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+						}
+					} else if(i === 3) {
+						
+						proBox.style.top = '510px';
+						document.getElementById("deleteProject").onclick = function() {
+							
+							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+						}
+					} else {
+						
+						proBox.style.top = '580px';
+						document.getElementById("deleteProject").onclick = function() {
+							
+							location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;
+						}
+					}
+					
+					if(proBox.style.display =='none') {
+						   proBox.style.display = 'block';
+					} else {
+					 proBox.style.display = 'none';
+					}
+					
+				}
+
+			}
+			
+			
 		}
 		
 	</script>
