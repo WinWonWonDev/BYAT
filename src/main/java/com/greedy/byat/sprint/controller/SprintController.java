@@ -77,7 +77,7 @@ public class SprintController {
 		
 		rttr.addFlashAttribute("message", "스프린트를 생성하였습니다.");
 		
-		return "redirect:/sprint/list?code="+projectCode;
+		return "redirect:/sprint/list?code=" + projectCode;
 	}
 	
 	@GetMapping(value = "/select", produces = "application/json; charset=UTF-8")
@@ -105,14 +105,18 @@ public class SprintController {
 	public String modifySprint(@ModelAttribute SprintDTO sprint, HttpServletRequest request, RedirectAttributes rttr) {
 		
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		int sprintCode = Integer.parseInt(request.getParameter("code"));
 		
 		sprint.setProjectCode(projectCode);
+		sprint.setCode(sprintCode);
+		
+		System.out.println("수정 스프린트 : " + sprint);
 		
 		sprintService.modifySprint(sprint);
 		
 		rttr.addFlashAttribute("message", "스프린트를 수정하였습니다.");
 		
-		return "redirect:/sprint/list?code="+projectCode;
+		return "redirect:/sprint/list?code=" + projectCode;
 	}
 	
 	@GetMapping("/remove")
