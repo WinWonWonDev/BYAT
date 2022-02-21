@@ -458,34 +458,6 @@ html, body {
 				</div>
 			</div>
 			
-<%-- 			<form id="passwordResetForm" action="${ pageContext.servletContext.contextPath }/member/modifypassword" method="post">
-				<div class="idBox" align="center">
-				<br><br><br><br>
-					<input type="hidden" id="idForPasswordReset" name="idForPasswordReset" value="">
-					<input type="password" name="inputPassword" id="inputPassword" placeholder="Change Password"> <br>
-					<br> <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Change Password"> <br>
-					
-					<!-- 비밀번호 예외처리 -->
-					<c:choose>
-						<c:when test="">
-							<input type="text" name="errorPwd" value="비밀번호를 입력해주세요."
-								style="color: red">
-						</c:when>
-						<c:when test="">
-							<input type="text" name="errorPwd" value="비밀번호가 일치하지 않습니다."
-								style="color: red">
-						</c:when>
-					</c:choose>
-					
-					<br>
-				</div>
-				<br> <br> <br>
-
-				<div class="btns" align="center">
-					<input type="submit" class="btn btn-or" value="Ok" id="modalOkBtn3"> 
-					<input type="button" class="btn btn-yg" value="cancel" id="modalCancelBtn3">
-				</div>
-			</form> --%>
 
 		</div>
 	</div>
