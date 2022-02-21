@@ -200,6 +200,8 @@ public class ProjectController {
 			
 		}
 		
+		System.out.println();
+		
 		for(int i = 0; i < projectMembersList.length; i++) {
 			
 			System.out.print("projectMembersList : " + projectMembersList[i] + " ");
