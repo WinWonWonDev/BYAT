@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
- <script src="https://code.jquery.com/jquery-latest.js"></script>
-
 <%@ include file="/WEB-INF/views/common/menubar.jsp"%>
 <!DOCTYPE html>
 <html>
+<script src="https://code.jquery.com/jquery-latest.js"></script>
 <head>
 <meta charset="UTF-8">
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -302,7 +301,7 @@ tbody:hover {background-color: skyblue;}
 			<div id="myTaskProjectListInnerBox">
 				<table class="myTaskProjectTable" >
 					<c:forEach items="${ projectList }" var="project" >
-						<tbody id="border">
+						<tbody id="border" >
 							<tr>
 								<th colspan="5" id="myTaskProjectName" >
 									 <c:out value="${ project.title }"/> 
@@ -369,21 +368,35 @@ tbody:hover {background-color: skyblue;}
 				<input type="button" class="img-button-minus" value="-">
 			</p>
 			<div class="myTaskDoToListInnerBox">
-				 <c:foreach items="${ todolist }" var="todo" varStatus="status">
-				 	<c:choose>
-				 		<c:when test="${status.index%2==1}">	
-							<table class="myTaskDoToList-left">
+				 <table class="myTaskDoToList-left">
+						<c:forEach items="${ todolist }" var="todolist" varStatus="status">
+				 			<c:choose>	
+				 				<c:when test="${status.index%2==1}">	
+									<tr>
+										<td>
+											<input type="checkbox" class="ToDoListCheckBox" name ="ToDoListText" ${todolist.checkStatus  eq "Y" ? "checked" : ""}/>
+											<input type="text" class="ToDoListText" name="ToDoListText" value="${todolist.title}" ${todolist.checkStatus  eq "Y" ? "style=text-decoration:line-through;" : ""} />
+											
+										</td>
+									</tr>
+								</c:when>
+							</c:choose>
+						</c:forEach>
+					</table>
+				<table class="myTaskDoToList-right">
+					<c:forEach items="${ todolist }" var="todolist" varStatus="status">
+						<c:choose>	
+							<c:when test="${status.index%2==0}">		
 								<tr>
-									<input type="checkbox" class="ToDoListCheckBox" name ="ToDoListText"/>
-									<input type="text" class="ToDoListText" name="ToDoListText" value="${todolist.title}"/>
+									<td>
+										<input type="checkbox" class="ToDoListCheckBox" name ="ToDoListText" ${todolist.checkStatus  eq "Y" ? "checked" : ""}/>
+										<input type="text" class="ToDoListText" name="ToDoListText" value="${todolist.title}" ${todolist.checkStatus  eq "Y" ? "style=text-decoration:line-through;" : ""} />	
+									</td>
 								</tr>
-							</table>
-						</c:when>
-						<c:when test="${status.index%2==0}">		
-							<table class="myTaskDoToList-right"></table>
-						</c:when>
-					</c:choose>
-				</c:foreach>
+							</c:when>
+						</c:choose>
+					</c:forEach>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -399,9 +412,9 @@ tbody:hover {background-color: skyblue;}
                 	
                 </div>
             </div>
-            	<div class="ok-button" onClick="close_pop();">
+            <div class="ok-button" onClick="close_pop();">
                 	<span class="pop_bt" style="font-size: 13pt;">ok</span>
-            	</div>
+            </div>
       </div>
  
     </div>
@@ -411,7 +424,7 @@ tbody:hover {background-color: skyblue;}
     <script type="text/javascript">
       
         jQuery(document).ready(function() {
-                $('#myModal').show();
+        	 $('#myModal').hide();
         });
         //팝업 Close 기능
         function close_pop(flag) {

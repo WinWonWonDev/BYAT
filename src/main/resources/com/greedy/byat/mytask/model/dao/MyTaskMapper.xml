@@ -100,7 +100,7 @@
  	<select id="selectMyTaskToDoList" resultMap="toDoListResultMap">
         SELECT
                A.TODOLIST_WRITING_TIME
-             , A.TODILIST_TITLE
+             , A.TODOLIST_TITLE
              , A.TODOLIST_CHECK_STATUS
              , A.TODOLIST_DELETE_STATUS
              , A.MEMBER_NO

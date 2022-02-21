@@ -50,7 +50,6 @@ public class MyTaskController {
 		projectList = mytaskService.selectMyTaskProjectList(member);
 		toDoList = mytaskService.selectMyTaskToDoList(member.getNo());
 		
-		System.out.println(member.getNo());
 		
 		int progressIng = 0;
 		int progressDone = 0;
@@ -80,6 +79,10 @@ public class MyTaskController {
 		mytask.setProjectDTO(projectList);
 		//mytask.setTaskDTO(taskList);
 		mytask.setTodolistDTO(toDoList);
+		
+		System.out.println(mytask.getTodolistDTO());
+
+		
 		
 		int [] projectProgressArr = {progressIng, progressDone, progressNotDone};
 		 
