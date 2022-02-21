@@ -3,6 +3,157 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.sprint.model.dao.SprintMapper">
+ 	<resultMap type="SprintDTO" id="sprintResultMap">
+ 		<id property="code" column="SPRINT_CODE"/>
+ 		<result property="title" column="SPRINT_TITLE"/>
+ 		<result property="startDate" column="SPRINT_START_DATE"/>
+ 		<result property="endDate" column="SPRINT_END_DATE"/>
+ 		<result property="progress" column="SPRINT_PROGRESS"/>
+ 		<result property="body" column="SPRINT_BODY"/>
+ 		<result property="version" column="SPRINT_VERSION"/>
+ 		<result property="deleteStatus" column="SPRINT_DELETE_STATUS"/>
+ 		<result property="writer" column="SPRINT_WRITER"/>
+ 		
+ 		<association property="writerMember" resultMap="memberResultMap"/>
+ 	</resultMap>
  
+ 	<resultMap id="memberResultMap" type="MemberDTO">
+ 		<id property="no" column="MEMBER_NO"/>
+ 		<result property="permit" column="MEMBER_PERMIT"/>
+ 		<result property="id" column="MEMBER_ID"/>
+ 		<result property="name" column="MEMBER_NAME"/>
+ 		<result property="pwd" column="MEMBER_PWD"/>
+ 		<result property="phone" column="MEMBER_PHONE"/>
+ 		<result property="email" column="MEMBER_EMAIL"/>
+ 	</resultMap>
+ 	
+ 	<select id="selectSprintList" resultMap="sprintResultMap">
+ 		SELECT
+ 		       A.SPRINT_CODE
+ 		     , A.SPRINT_TITLE
+ 		     , A.SPRINT_START_DATE
+ 		     , A.SPRINT_END_DATE
+ 		     , A.SPRINT_PROGRESS
+ 		     , A.SPRINT_BODY
+ 		     , A.SPRINT_VERSION
+ 		     , A.SPRINT_DELETE_STATUS
+ 		     , A.SPRINT_WRITER
+ 		FROM TBL_SPRINT A
+ 		JOIN TBL_PROJECT B ON(A.PROJECT_CODE = B.PROJECT_CODE)
+ 	   WHERE B.PROJECT_CODE = #{ no }
+ 	     AND A.SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<select id="selectProjectProgress" resultType="java.lang.String">
+ 		SELECT
+ 			   A.PROJECT_PROGRESS
+ 		  FROM TBL_PROJECT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 	</select>
+ 	
+ 	<insert id="insertSprint">
+ 		INSERT
+ 		  INTO TBL_SPRINT A
+ 		(
+ 		  A.SPRINT_CODE
+ 		, A.SPRINT_TITLE
+ 		, A.SPRINT_START_DATE
+ 		, A.SPRINT_END_DATE
+ 		, A.SPRINT_PROGRESS
+ 		, A.SPRINT_BODY
+ 		, A.SPRINT_WRITER
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_CODE.NEXTVAL
+ 		, #{ title }
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, '진행전'
+ 		, #{ body }
+ 		, #{ writer }
+ 		, #{ projectCode }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertSprintVersionHistory">
+ 		INSERT
+		  INTO TBL_SPRINT_VERSION_HISTORY A
+		(
+		  A.SPRINT_VERSION_HISTORY_NO
+		, A.SPRINT_VERSION_HISTORY_TITLE
+		, A.SPRINT_VERSION_HISTORY_BODY
+		, A.SPRINT_HISTORY_VERSION
+		, A.SPRINT_HISTORY_UPDATE_DATE
+		, A.SPRINT_HISTORY_UPDATE_MEMBER
+		, A.SPRINT_CODE
+		)
+		VALUES
+		(
+		  SEQ_SPRINT_VERSION_HISTORY_NO.NEXTVAL
+		, CHR(39) || (SELECT
+						     B.SPRINT_TITLE
+				        FROM TBL_SPRINT B
+				       WHERE B.SPRINT_CODE = #{ code }
+				 ) || CHR(39) || ' 스프린트 생성 ' || CHR(40) || (SELECT
+				   								    			  C.PROJECT_TITLE 
+				   											 FROM TBL_PROJECT C 
+				   							   				WHERE C.PROJECT_CODE = #{ projectCode }
+				   							 ) || CHR(41)
+		, #{ body }
+		, 1
+		, SYSDATE
+		, #{ writer }
+		, #{ code }
+		)
+ 	</insert>
+ 	
+ 	<insert id="insertSprintProgressHistory">
+ 		INSERT
+  		  INTO TBL_SPRINT_PROGRESS_HISTORY A
+        (
+  		  A.SPRINT_PROGRESS_HISTORY_NO
+		, A.SPRINT_PROGRESS_HISTORY_UPDATE_DATE
+		, A.SPRINT_PROGRESS
+		, A.SPRINT_PROGRESS_HISTORY_START_DATE
+		, A.SPRINT_PROGRESS_HISTORY_END_DATE
+		, A.SPRINT_PROGRESS_HISTORY_UPDATE_MEMBER
+		, A.SPRINT_CODE
+		)
+		VALUES
+		(
+		  SEQ_SPRINT_PROGRESS_HISTORY_NO.NEXTVAL
+		, SYSDATE
+		, '진행전'
+		, #{ startDate } 
+		, #{ endDate }
+		, #{ writer }
+		, #{ code }
+		)
+ 	</insert>
+ 	
+ 	<select id="selectSprint" parameterType="_int"  resultMap="sprintResultMap">
+ 		SELECT
+ 			   A.SPRINT_CODE
+ 		     , A.SPRINT_TITLE
+ 		     , A.SPRINT_START_DATE
+ 		     , A.SPRINT_END_DATE
+ 		     , A.SPRINT_PROGRESS
+ 		     , A.SPRINT_BODY
+ 		     , A.SPRINT_VERSION
+ 		     , A.SPRINT_DELETE_STATUS
+ 		     , A.SPRINT_WRITER
+ 		FROM TBL_SPRINT A
+ 	   WHERE A.SPRINT_CODE = #{ sprintCode }
+ 	     AND A.SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<update id="deleteSprint">
+ 		UPDATE
+ 		       TBL_SPRINT A
+ 		   SET A.SPRINT_DELETE_STATUS = 'Y'
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 	</update>
  	
  </mapper>

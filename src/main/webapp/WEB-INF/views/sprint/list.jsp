@@ -7,6 +7,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script>
+   const message = '${ requestScope.message }';
+   if(message != null && message != '') {
+      alert(message);
+   }   
+</script>
 <style>
 	html {
 		width: 100%;
@@ -633,24 +639,26 @@
 			<h2 class="sprint-head">Sprint</h2>
 			<div class="sprint-box">
 			
-				<!-- c:foreach아니면 jsp로 -->
-				<div class="sprint-item" align="center">
-					<h4 class="sprint-item-title">크크크킄크큭</h4>
-					<input type="button" class="sprint-update-modal-open" id="sprint-update-open-btn" value="조회  / 수정">
-					<input type="button" class="sprint-delete-modal-open" id="sprint-delete-open-btn" value="삭제">
-				</div>
-				
-				
-				
+				<c:forEach items="${ sprintList }" var="sprint">
+					
+					<div class="sprint-item" align="center" id="sprintItem">
+						<h4 class="sprint-item-title">${ sprint.title }</h4>
+						<input type="hidden" name="code" id="projectCode" value="${ requestScope.code }">
+						<input type="hidden" name="sprintCode" id="sprintCode" value="${ sprint.code }">
+						<input type="button" class="sprint-update-modal-open" id="sprint-update-open-btn" value="조회  / 수정">
+						<button type="button" class="sprint-delete-modal-open" id="sprint-delete-open-btn" onclick="location.href='${ pageContext.servletContext.contextPath }/sprint/remove?sprintCode=${ sprint.code }&projectCode=${ requestScope.code }'">삭제</button>
+					</div>
+				</c:forEach>
 				
 				
 			</div>
 		</div>
 		<div class="task-area">
-			<img class="siren" src="../byat/resources/images/siren.png">
+			<img class="siren" src="/byat/resources/images/siren.png">
 			<button type="button" class="task-add" id="task-create-open-btn">Task 생성</button>
 			<button type="button" class="sprint-start">Sprint 시작</button>
 			<button type="button" class="sprint-end">Sprint 종료</button>
+			<input type="hidden" id="projectProgress" value="${ requestScope.projectProgress }">
 			<button type="button" class="sprint-add" id="sprint-create-open-btn">Sprint 생성</button>
 			<div class="task-box">
 				
@@ -822,23 +830,22 @@
 	<div id="sprint-create-modal">
    
    		<div class="modal_content">
-   			<form action="" method="post">
+   			<form action="${ pageContext.servletContext.contextPath }/sprint/regist" method="post">
 			<div class="modal_head">
-				<h3>Sprint-{}</h3>
+				<h3>스프린트 생성</h3>
 	    	</div>
-       		<div class="modal_content-box">
-       			<input type="text" class="title" name="sprintTitle" placeholder="Sprint Title">
-       			<input type="text" class="sprint-code" name="sprintCode" value="" disabled="disabled">
-				<h3>스프린트 코드는 자동으로 생성됩니다.</h3>       		
+       		<div class="modal_content-box" id="sprintCreate">
+       			<input type="hidden" name="code" id="projectCode2" value="${ requestScope.code }"> 
+       			<input type="text" class="title" name="title" placeholder="Sprint Title">
 				<h5>시작일</h5>
 				<h5>종료일</h5>
        			<br clear="both" style="height: 5px;">
-       			<input type='date' class="start-day" id="sprint-startday" name='sprintStartday'/>
-       			<input type='date' class="end-day" id="sprint-endday" name='sprintEndday'/>
-       			<textarea class="description" id="sprintDescription" rows="13" cols="51" placeholder="sprint Detail Description"></textarea>
+       			<input type='date' class="start-day" id="sprint-startday" name='startDate'/>
+       			<input type='date' class="end-day" id="sprint-endday" name='endDate'/>
+       			<textarea class="description" id="sprintDescription" name='body' rows="13" cols="51" placeholder="sprint Detail Description"></textarea>
        		</div>
        		<div class="modal_button">
-	        	<button type="button" id="sprint-create">Ok</button>
+	        	<button type="submit" id="sprint-create">Ok</button>
 	        	<button type="button" id="sprint-close-btn1">Cancel</button>
        		</div>
    			</form>
@@ -850,23 +857,24 @@
 	<div id="sprint-update-modal">
    
    		<div class="modal_content">
-   			<form action="" method="post">
+   			<form action="${ pageContext.servletContext.contextPath }/sprint/modify" method="post">
 			<div class="modal_head">
-				<h3>Sprint-{}</h3>
+				<h3 id="sprintTitle1"></h3>
 	    	</div>
-       		<div class="modal_content-box">
-       			<input type="text" class="title" name="sprintTitle" placeholder="Sprint Title">
-       			<input type="text" class="sprint-code" name="sprintCode" value="" disabled="disabled">
+       		<div class="modal_content-box" id="sprintUpdate">
+       			<input type="hidden" name="projectCode" value="${ requestScope.code }">
+       			<input type="text" class="title" name="title" id="sprintTitle2" placeholder="Sprint Title">
+       			<input type="text" class="sprint-code" name="code" id="sprintCode2" disabled="disabled">
 				<h3>스프린트 코드는 자동으로 생성됩니다.</h3>       		
 				<h5>시작일</h5>
 				<h5>종료일</h5>
        			<br clear="both" style="height: 5px;">
-       			<input type='date' class="start-day" id="sprint-startday" name='sprintStartday'/>
-       			<input type='date' class="end-day" id="sprint-endday" name='sprintEndday'/>
-       			<textarea class="description" id="sprintDescription" rows="13" cols="51" placeholder="sprint Detail Description"></textarea>
+       			<input type='date' class="start-day" id="sprint-startday2" name='startDate'/>
+       			<input type='date' class="end-day" id="sprint-endday2" name='endDate'/>
+       			<textarea class="description" id="sprintDescription2" rows="13" cols="51" name="body" placeholder="sprint Detail Description"></textarea>
        		</div>
        		<div class="modal_button">
-	        	<button type="button" id="sprint-update">Ok</button>
+	        	<button type="submit" id="sprint-update">Ok</button>
 	        	<button type="button" id="sprint-close-btn2">Cancel</button>
        		</div>
    			</form>
@@ -893,15 +901,24 @@
 		</div>
 		<div class="system-message">
 			<br>정말로 삭제하시겠습니까?
-		</div>
+		</div>    
 		<button type="button" id="task-delete">Ok</button>
 		<button type="button" id="task-cloes-btn3">Cancel</button>
     </div>
 	
 <script>
+
 	/*모달 키고 끄는 버튼*/
     document.getElementById("backlog-create-open-btn").onclick = function() {
-        document.getElementById("backlog-create-modal").style.display="block";
+		
+    	if(document.getElementById("projectProgress").value == "완료"){
+    		
+    		alert("완료된 프로젝트는 백로그를 생성할 수 없습니다.");
+    		
+    	} else {
+    		
+	        document.getElementById("backlog-create-modal").style.display="block";
+    	}
     }
     
     document.getElementById("backlog-close-btn1").onclick = function() {
@@ -909,7 +926,15 @@
     }
     
     document.getElementById("task-create-open-btn").onclick = function() {
-        document.getElementById("task-create-modal").style.display = "block";
+    	
+    	if(document.getElementById("projectProgress").value == "완료"){
+    		
+    		alert("완료된 프로젝트는 태스크를 생성할 수 없습니다.");
+    		
+    	} else {
+    		
+	        document.getElementById("task-create-modal").style.display = "block";
+    	}
     }
     
     document.getElementById("task-close-btn1").onclick = function() {
@@ -949,15 +974,68 @@
     }
     
     document.getElementById("sprint-create-open-btn").onclick = function() {
-        document.getElementById("sprint-create-modal").style.display = "block";
+    	
+    	if(document.getElementById("projectProgress").value == "완료"){
+    		
+    		alert("완료된 프로젝트는 스프린트를 생성할 수 없습니다.");
+    		
+    	} else {
+    		
+        	document.getElementById("sprint-create-modal").style.display = "block";
+    	}
+    	
     }
     
     document.getElementById("sprint-close-btn1").onclick = function() {
     	document.getElementById("sprint-create-modal").style.display = "none";
     }
     
-    document.getElementById("sprint-update-open-btn").onclick = function() {
-        document.getElementById("sprint-update-modal").style.display = "block";
+	if(document.querySelectorAll("#sprintUpdate input")){
+    	
+    	const $sprintUpdateButtons = document.querySelectorAll("#sprint-update-open-btn");
+    	const $sprintCodes = document.querySelectorAll("#sprintCode");
+    	
+    	console.log($sprintCodes);
+    
+    	for(let i = 0; i < $sprintUpdateButtons.length; i++){
+ 
+    		$sprintUpdateButtons[i].onclick = function() {
+    		
+	    		document.getElementById("sprint-update-modal").style.display = "block";
+    		
+	    		$.ajax({
+	    			url: "/byat/sprint/select",
+	    			type: "get",
+	    			data: { "sprintCode": $sprintCodes[i].value },
+	    			dataType: "json",
+	    			success: function(data, status, xhr){
+	    			
+	    				console.table(data);
+	    				console.log(data.title);
+						
+	    				const $sprintCode1 = $("#sprintCode1");
+	    				const $sprintTitle = $("#sprintTitle2");
+	    				const $sprintCode2 = $("#sprintCode2");
+	    				const $sprintStartDate = $("#sprint-startday2");
+	    				const $sprintEndDate = $("#sprint-endday2");
+	    				const $sprintBody = $("#sprintDescription2");
+	    				
+	    				$sprintCode1.val(data.code);
+	    				$sprintTitle.val(data.title);
+	    				$sprintCode2.val(data.code);
+	    				$sprintStartDate.val(data.startDate);
+	    				$sprintEndDate.val(data.endDate);
+	    				$sprintBody.val(data.body);
+	    				
+	    			},
+	    			error: function(xhr, status, error){
+						console.log(xhr);
+					}
+	    		});
+    		
+    		};
+    	
+    	}
     }
     
     document.getElementById("sprint-close-btn2").onclick = function() {
@@ -979,6 +1057,7 @@
     		document.getElementById("task-status").style.background="#3988FF";
     	}
     }
+    
     function chageLangSelect() {
     	const status = document.getElementById("task-status").value; 
     	const before = document.getElementById("before").value;
@@ -992,22 +1071,12 @@
     	} else{
     		document.getElementById("task-status").style.background="#3988FF";
     	}
-    	
     }
-    window.onload = function(){
-    	const status = document.getElementById("task-status").value; 
-    	const before = document.getElementById("before").value;
-    	const proceeding = document.getElementById("proceeding").value;
-    	const finish = document.getElementById("finish").value;
-    	
-    	if(status == before) {
-    		document.getElementById("task-status").style.background="#C4C4C4";
-    	} else if(status == proceeding) {
-    		document.getElementById("task-status").style.background="#F67B21";
-    	} else{
-    		document.getElementById("task-status").style.background="#3988FF";
-    	}
-    }
+    
+    
+    
+    
+   
 </script>
 </body>
 </html>
