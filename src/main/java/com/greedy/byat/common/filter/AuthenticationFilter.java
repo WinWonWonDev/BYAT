@@ -122,6 +122,7 @@ public class AuthenticationFilter implements Filter {
 		
 		memberPermitList.add("/member/logout");
 		memberPermitList.add("/member/moveprofile");
+		memberPermitList.add("/member/emailduplicationCheckforinit");
 		
 		
 	    allPermitList.add("/member/login");

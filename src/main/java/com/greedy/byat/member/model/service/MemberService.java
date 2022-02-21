@@ -12,13 +12,15 @@ public interface MemberService {
 
 	String selectMember(MemberDTO member);
 
-	boolean emailduplicationCheck(int id);
+	/* boolean emailduplicationCheck(int id); */
 
 	int selectEmailById(String id) throws NotexistEmailException;
 
 	int matchVerificationNumber(String inputVerificationNum);
 
 	int modifyMemberPwd(String inputPassword, String inputId);
+
+	int emailDuplicationCheck(String emailAddress);
 
 
 }

@@ -221,7 +221,7 @@
 		font-size:1.5em;
 	}
 	
-	#whiteboard {
+	#profileAndLogoutWhiteBoard {
 		position:relative;
 		left:1300px;
 		top:-15px;
@@ -258,7 +258,7 @@
 			margin-left:calc(100% - 100px - 10px);
 	}
 		
-	#logoutModal .modal_content {
+	#logoutModal .logoutModalContent {
 			width:700px;
 			height:300px;
 			margin:100px auto;
@@ -276,7 +276,7 @@
 			background:rgba(0, 0, 0, 0.5);
 			z-index:-1;
 	}
-	.modal_head {
+	.logoutModalHead {
 			width:100.1%;
 			height:35px;
 			background-color:rgb(25,25,112);
@@ -286,7 +286,7 @@
 			float:right;
 	}
 		
-	#modal_close_btn {
+	#logoutModalCloseButton {
 			background-color:rgb(25,25,112);
 			color:white;
 			text-align:center;
@@ -298,7 +298,7 @@
 			top:20%;
 	}
 		
-	#modal_ok_btn {
+	#logoutModalOkButton {
 			background-color:rgb(25,25,112);
 			color:white;
 			text-align:center;
@@ -310,7 +310,7 @@
 			top:20%;
 	}
 		
-	.modal_content_message {
+	.logoutModalContent_message {
 			width:100%;
 			height:50%;
 			float:right;
@@ -318,7 +318,7 @@
 			text-align:center;
 	}
 		
-	.modal_button {
+	.logoutModalButton {
 			width:100%;
 			height:30%;
 			float:right;
@@ -375,7 +375,7 @@
     
     <!-- 프로필관리/로그아웃 모달창 -->
     <div id="profileAndLogoutModal" style="display:none;">
-    	<div id="whiteboard">
+    	<div id="profileAndLogoutWhiteBoard">
     		<div id="ProfileArea" onclick="location.href='${ pageContext.servletContext.contextPath }/member/moveprofile'">프로필 관리</div>
     		<div id="logoutArea">로그아웃</div>
     	</div>
@@ -383,16 +383,16 @@
     
     <!-- 로그아웃 모달창 -->
     <div id="logoutModal" style="display:none;">
-	    <div class="modal_content">
-		    <div class="modal_head">
+	    <div class="logoutModalContent">
+		    <div class="logoutModalHead">
 		    	System Message
 		    </div>
-	       	<div class="modal_content_message">
+	       	<div class="logoutModalContent_message">
 	  	   		<br>로그아웃 하시겠습니까?
 	       	</div>
-	       	<div class="modal_button">
-		        <button type="button" id="modal_ok_btn" onclick="location.href='${ pageContext.servletContext.contextPath }/member/logout'">Ok</button>
-		        <button type="button" id="modal_close_btn">Cancel</button>
+	       	<div class="logoutModalButton">
+		        <button type="button" id="logoutModalOkButton" onclick="location.href='${ pageContext.servletContext.contextPath }/member/logout'">Ok</button>
+		        <button type="button" id="logoutModalCloseButton">Cancel</button>
 	       	</div>
 	    </div>
     <div class="modal_layer"></div>
@@ -472,8 +472,8 @@
 	    	document.getElementById("logoutModal").style.display="block";
 	    }
 	    
-	    const $modal_close_btn = document.getElementById("modal_close_btn");
-	    $modal_close_btn.onclick = function() {
+	    const $logoutModalCloseButton = document.getElementById("logoutModalCloseButton");
+	    $logoutModalCloseButton.onclick = function() {
 	    	document.getElementById("logoutModal").style.display="none";
 	    	document.getElementById("profileAndLogoutModal").style.display="none";
 	    }

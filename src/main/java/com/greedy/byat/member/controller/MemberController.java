@@ -78,9 +78,11 @@ public class MemberController {
 		}
 	}
 	
-	@PostMapping(value="emailduplicationCheck", produces="application/json; charset=UTF-8")
+	@GetMapping("emailduplicationCheckforinit")
 	@ResponseBody
-	public int emailduplicationCheck(String emailAddress, RedirectAttributes rttr) {
+	public int emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
+	
+		response.setContentType("application/json; charset=UTF-8");
 		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
@@ -90,11 +92,32 @@ public class MemberController {
 				.disableHtmlEscaping()
 				.create();
 		
-//		int result = memberService.emaildupl;
+		int result = memberService.emailDuplicationCheck(emailAddress);
 		
-		
-		return 0;
+		return result;
 	}
+	
+	@GetMapping("registverification")
+	@ResponseBody
+	public int registVerificationNumber(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int result = 0;
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		return result;
+		
+	}
+	//얘는 인증번호 생성하고 일치하면 result = 1 반환 ㅇ ㅋ
+	
 
 	@PostMapping(value="selectemail", produces="application/json; charset=UTF-8")
 	@ResponseBody

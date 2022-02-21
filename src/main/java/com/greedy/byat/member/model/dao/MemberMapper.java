@@ -29,4 +29,6 @@ public interface MemberMapper {
 
 	int updateMemberPwd(Map<String, String> map);
 
+	String emailDuplicationCheck(String emailAddress);
+
 }

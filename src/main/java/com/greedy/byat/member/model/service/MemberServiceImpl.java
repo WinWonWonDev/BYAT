@@ -63,13 +63,13 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.selectInitPasswordYN(member);
 	}
 
-	@Override
-	public boolean emailduplicationCheck(int id) {
-		
-		String result = mapper.emailduplicationCheck(id);
-		
-		return result != null? true: false;
-	}
+	/*
+	 * @Override public boolean emailduplicationCheck(int id) {
+	 * 
+	 * String result = mapper.emailduplicationCheck(id);
+	 * 
+	 * return result != null? true: false; }
+	 */
 
 	@Override
 	public int selectEmailById(String id) throws NotexistEmailException {
@@ -139,6 +139,20 @@ public class MemberServiceImpl implements MemberService {
 		map.put("id", inputId);
 		
 		int result = mapper.updateMemberPwd(map);
+		
+		return result;
+	}
+
+	@Override
+	public int emailDuplicationCheck(String emailAddress) {
+		
+		int result = 0;
+		
+		String existEmail  = mapper.emailDuplicationCheck(emailAddress);
+		
+		if(existEmail != null) {
+			result = 1; 
+		} 
 		
 		return result;
 	}
