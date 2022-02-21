@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
 import com.greedy.byat.member.model.dto.MemberDTO;
@@ -63,7 +64,7 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		for(int i = 0; i < projectMembers.size(); i++) {
 			
-			if("일반멤버".equals(projectMembers.get(i).getRoleName())) {
+			if("일반 멤버".equals(projectMembers.get(i).getRoleName())) {
 				
 				orderProjectMembers.add(memberCount, projectMembers.get(i));
 				memberCount++;
@@ -109,6 +110,37 @@ public class ProjectServiceImpl implements ProjectService {
 			throw new ProjectRemoveException("프로젝트 삭제 실패");
 		}
 		
+	}
+
+	@Override
+	public ProjectDTO selectProjectDetail(int code) {
+		
+		ProjectDTO projectDetail = mapper.selectProjectDetail(code);
+		
+		return projectDetail;
+	}
+
+	@Override
+	public void modifyProject(ProjectDTO project) throws ProjectModifyException {
+		
+		int result = mapper.modifyProject(project);
+		
+		if(!(result > 0)) {
+			throw new ProjectModifyException("프로젝트 수정 실패");
+		}
+		
+	}
+
+	@Override
+	public List<MemberDTO> searchAddMemberList(String searchMember) {
+		
+		System.out.println("impl : " + searchMember);
+		
+		List<MemberDTO> searchMemberList = mapper.searchAddMemberList(searchMember);
+		
+		System.out.println("여기오냐?");
+		
+		return searchMemberList;
 	}
 
 

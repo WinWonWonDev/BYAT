@@ -20,4 +20,10 @@ public interface ProjectMapper {
 
 	int removeProject(int code);
 
+	ProjectDTO selectProjectDetail(int code);
+
+	int modifyProject(ProjectDTO project);
+
+	List<MemberDTO> searchAddMemberList(String searchMember);
+
 }

@@ -138,4 +138,34 @@
  		 WHERE A.PROJECT_CODE = #{ code }
  	</update>
  	
+ 	<select id="selectProjectDetail" resultMap="projectResultMap" parameterType="_int">
+ 		SELECT
+ 		       A.PROJECT_CODE
+ 		     , A.PROJECT_TITLE
+ 		     , A.PROJECT_START_DATE
+ 		     , A.PROJECT_END_DATE
+ 		     , A.PROJECT_BODY
+ 		  FROM TBL_PROJECT A
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 	</select>
+ 	
+ 	<update id="modifyProject" parameterType="ProjectDTO">
+ 		UPDATE
+ 		       TBL_PROJECT A
+ 		   SET A.PROJECT_TITLE = #{ title }
+ 		     , A.PROJECT_START_DATE = #{ startDate }
+ 		     , A.PROJECT_END_DATE = #{ endDate }
+ 		     , A.PROJECT_BODY = #{ body }
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 	</update>
+ 	
+ 	<select id="searchAddMemberList" resultMap="memberResultMap" parameterType="java.lang.String">
+ 		SELECT
+ 		       A.MEMBER_ID
+ 		     , A.MEMBER_NAME
+ 		     , A.MEMBER_NO
+ 		  FROM TBL_MEMBER A
+ 		 WHERE A.MEMBER_NAME LIKE '%' || #{ searchMember } || '%'
+ 	</select>
+ 	
  </mapper>
