@@ -133,4 +133,10 @@
 		 WHERE A.VERIFICATION_NUM_KEY = #{ inputVerificationNum }
 	</update>
 	
+	<update id="updateMemberPwd" parameterType="java.lang.String">
+		UPDATE
+		       TBL_MEMBER A
+		   SET A.MEMBER_PWD = #{ encodedFirstPwd }
+		 WHERE A.ABSENCE_YN = 'N'
+	</update>
  </mapper>

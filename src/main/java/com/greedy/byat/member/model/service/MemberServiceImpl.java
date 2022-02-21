@@ -131,8 +131,9 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int modifyMemberPwd(String firstPwd, String confirmPwd) {
 
-		//암호화된 비밀번호로 저장이 되게 어떻게 할 것인가? encryp여기서 해주고 저장해야되나? 일단 ㄱㄷ
-		int result = mapper.updateMemberPwd(firstPwd);
+		String encodedFirstPwd = passwordEncoder.encode(firstPwd);
+		
+		int result = mapper.updateMemberPwd(encodedFirstPwd);
 		
 		return result;
 	}
