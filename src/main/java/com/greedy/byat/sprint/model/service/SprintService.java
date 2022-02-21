@@ -2,12 +2,17 @@ package com.greedy.byat.sprint.model.service;
 
 import java.util.List;
 
+import com.greedy.byat.common.exception.sprint.RegistSprintException;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 
 public interface SprintService {
 
 	List<SprintDTO> selectSprintList(int projectNo);
 
-	int registSprint(int projectCode, SprintDTO sprint);
+	void registSprint(SprintDTO sprint);
+
+	SprintDTO selectSprint(int sprintCode);
+
+	void deleteSprint(int sprintCode);
 
 }

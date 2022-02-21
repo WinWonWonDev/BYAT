@@ -43,4 +43,53 @@
  	   WHERE B.PROJECT_CODE = #{ no }
  	     AND A.SPRINT_DELETE_STATUS = 'N'
  	</select>
+ 	
+ 	<insert id="insertSprint">
+ 		INSERT
+ 		  INTO TBL_SPRINT A
+ 		(
+ 		  A.SPRINT_CODE
+ 		, A.SPRINT_TITLE
+ 		, A.SPRINT_START_DATE
+ 		, A.SPRINT_END_DATE
+ 		, A.SPRINT_PROGRESS
+ 		, A.SPRINT_BODY
+ 		, A.SPRINT_WRITER
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_CODE.NEXTVAL
+ 		, #{ title }
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, '진행전'
+ 		, #{ body }
+ 		, #{ writer }
+ 		, #{ projectCode }
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectSprint" parameterType="_int"  resultMap="sprintResultMap">
+ 		SELECT
+ 			   A.SPRINT_CODE
+ 		     , A.SPRINT_TITLE
+ 		     , A.SPRINT_START_DATE
+ 		     , A.SPRINT_END_DATE
+ 		     , A.SPRINT_PROGRESS
+ 		     , A.SPRINT_BODY
+ 		     , A.SPRINT_VERSION
+ 		     , A.SPRINT_DELETE_STATUS
+ 		     , A.SPRINT_WRITER
+ 		FROM TBL_SPRINT A
+ 	   WHERE A.SPRINT_CODE = #{ sprintCode }
+ 	     AND A.SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<update id="deleteSprint">
+ 		UPDATE
+ 		       TBL_SPRINT A
+ 		   SET A.SPRINT_DELETE_STATUS = 'Y'
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 	</update>
  </mapper>

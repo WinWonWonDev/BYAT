@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.common.exception.sprint.RegistSprintException;
 import com.greedy.byat.sprint.model.dao.SprintMapper;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 
@@ -27,12 +28,31 @@ public class SprintServiceImpl implements SprintService {
 	}
 
 	@Override
-	public int registSprint(int projectCode, SprintDTO sprint) {
+	public void registSprint(SprintDTO sprint) {
 		
+		int result = mapper.insertSprint(sprint);
 		
+		if(!(result > 0)) {
+			System.out.println("스픤트 생성 시패");
+		}
+	}
+
+	@Override
+	public SprintDTO selectSprint(int sprintCode) {
 		
+		SprintDTO sprint = mapper.selectSprint(sprintCode);
 		
-		return 0;
+		return sprint;
+	}
+
+	@Override
+	public void deleteSprint(int sprintCode) {
+		
+		int result = mapper.deleteSprint(sprintCode);
+		
+		if(!(result > 0)) {
+			System.out.println("스프린트 삭제 실패");
+		}
 	}
 
 	

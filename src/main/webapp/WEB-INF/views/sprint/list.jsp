@@ -7,6 +7,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script>
+   const message = '${ requestScope.message }';
+   if(message != null && message != '') {
+      alert(message);
+   }   
+</script>
 <style>
 	html {
 		width: 100%;
@@ -634,15 +640,15 @@
 			<div class="sprint-box">
 			
 				<c:forEach items="${ sprintList }" var="sprint">
-					<div class="sprint-item" align="center">
+					
+					<div class="sprint-item" align="center" id="sprintItem">
 						<h4 class="sprint-item-title">${ sprint.title }</h4>
-						<input type="hidden" value="${ sprint.code }">
+						<input type="hidden" name="code" id="projectCode" value="${ requestScope.code }">
+						<input type="hidden" name="sprintCode" id="sprintCode" value="${ sprint.code }">
 						<input type="button" class="sprint-update-modal-open" id="sprint-update-open-btn" value="조회  / 수정">
-						<input type="button" class="sprint-delete-modal-open" id="sprint-delete-open-btn" value="삭제">
+						<button type="button" class="sprint-delete-modal-open" id="sprint-delete-open-btn" onclick="location.href='${ pageContext.servletContext.contextPath }/sprint/remove?sprintCode=${ sprint.code }&projectCode=${ requestScope.code }'">삭제</button>
 					</div>
 				</c:forEach>
-				
-				
 				
 				
 			</div>
@@ -827,10 +833,9 @@
 			<div class="modal_head">
 				<h3>스프린트 생성</h3>
 	    	</div>
-       		<div class="modal_content-box">
+       		<div class="modal_content-box" id="sprintCreate">
+       			<input type="hidden" name="code" id="projectCode2" value="${ requestScope.code }"> 
        			<input type="text" class="title" name="title" placeholder="Sprint Title">
-       			<input type="text" class="sprint-code" name="manager">
-				<button id="selectProjectMembers">검색</button>     		
 				<h5>시작일</h5>
 				<h5>종료일</h5>
        			<br clear="both" style="height: 5px;">
@@ -839,7 +844,7 @@
        			<textarea class="description" id="sprintDescription" name='body' rows="13" cols="51" placeholder="sprint Detail Description"></textarea>
        		</div>
        		<div class="modal_button">
-	        	<button type="button" id="sprint-create">Ok</button>
+	        	<button type="submit" id="sprint-create">Ok</button>
 	        	<button type="button" id="sprint-close-btn1">Cancel</button>
        		</div>
    			</form>
@@ -855,16 +860,16 @@
 			<div class="modal_head">
 				<h3>Sprint-{}</h3>
 	    	</div>
-       		<div class="modal_content-box">
-       			<input type="text" class="title" name="sprintTitle" placeholder="Sprint Title">
-       			<input type="text" class="sprint-code" name="sprintCode" value="" disabled="disabled">
+       		<div class="modal_content-box" id="sprintUpdate">
+       			<input type="text" class="title" name="sprintTitle" id="sprintTitle2" placeholder="Sprint Title">
+       			<input type="text" class="sprint-code" name="sprintCode" id="sprintCode2" disabled="disabled">
 				<h3>스프린트 코드는 자동으로 생성됩니다.</h3>       		
 				<h5>시작일</h5>
 				<h5>종료일</h5>
        			<br clear="both" style="height: 5px;">
-       			<input type='date' class="start-day" id="sprint-startday" name='sprintStartday'/>
-       			<input type='date' class="end-day" id="sprint-endday" name='sprintEndday'/>
-       			<textarea class="description" id="sprintDescription" rows="13" cols="51" placeholder="sprint Detail Description"></textarea>
+       			<input type='date' class="start-day" id="sprint-startday2" name='sprintStartday'/>
+       			<input type='date' class="end-day" id="sprint-endday2" name='sprintEndday'/>
+       			<textarea class="description" id="sprintDescription2" rows="13" cols="51" placeholder="sprint Detail Description"></textarea>
        		</div>
        		<div class="modal_button">
 	        	<button type="button" id="sprint-update">Ok</button>
@@ -894,12 +899,13 @@
 		</div>
 		<div class="system-message">
 			<br>정말로 삭제하시겠습니까?
-		</div>
+		</div>    
 		<button type="button" id="task-delete">Ok</button>
 		<button type="button" id="task-cloes-btn3">Cancel</button>
     </div>
 	
 <script>
+
 	/*모달 키고 끄는 버튼*/
     document.getElementById("backlog-create-open-btn").onclick = function() {
         document.getElementById("backlog-create-modal").style.display="block";
@@ -957,8 +963,50 @@
     	document.getElementById("sprint-create-modal").style.display = "none";
     }
     
-    document.getElementById("sprint-update-open-btn").onclick = function() {
-        document.getElementById("sprint-update-modal").style.display = "block";
+	if(document.querySelectorAll("#sprintUpdate input")){
+    	
+    	const $sprintUpdateButtons = document.querySelectorAll("#sprint-update-open-btn");
+    	const $sprintCodes = document.querySelectorAll("#sprintCode");
+    	
+    	console.log($sprintCodes);
+    
+    	for(let i = 0; i < $sprintUpdateButtons.length; i++){
+ 
+    		$sprintUpdateButtons[i].onclick = function() {
+    		
+	    		document.getElementById("sprint-update-modal").style.display = "block";
+    		
+	    		$.ajax({
+	    			url: "/byat/sprint/modify",
+	    			type: "get",
+	    			data: { "sprintCode": $sprintCodes[i].value },
+	    			dataType: "json",
+	    			success: function(data, status, xhr){
+	    			
+	    				console.table(data);
+	    				console.log(data.title);
+						
+	    				const $sprintTitle = $("#sprintTitle2");
+	    				const $sprintCode = $("#sprintCode2");
+	    				const $sprintStartDate = $("#sprint-startday2");
+	    				const $sprintEndDate = $("#sprint-endday2");
+	    				const $sprintBody = $("#sprintDescription2");
+	    				
+	    				$sprintTitle.val(data.title);
+	    				$sprintCode.val(data.code);
+	    				$sprintStartDate.val(data.startDate);
+	    				$sprintEndDate.value(data.endDate);
+	    				$sprintBody.value(data.body);
+	    				
+	    			},
+	    			error: function(xhr, status, error){
+						console.log(xhr);
+					}
+	    		});
+    		
+    		};
+    	
+    	}
     }
     
     document.getElementById("sprint-close-btn2").onclick = function() {
@@ -980,22 +1028,8 @@
     		document.getElementById("task-status").style.background="#3988FF";
     	}
     }
+    
     function chageLangSelect() {
-    	const status = document.getElementById("task-status").value; 
-    	const before = document.getElementById("before").value;
-    	const proceeding = document.getElementById("proceeding").value;
-    	const finish = document.getElementById("finish").value;
-    	
-    	if(status == before) {
-    		document.getElementById("task-status").style.background="#C4C4C4";
-    	} else if(status == proceeding) {
-    		document.getElementById("task-status").style.background="#F67B21";
-    	} else{
-    		document.getElementById("task-status").style.background="#3988FF";
-    	}
-    	
-    }
-    window.onload = function(){
     	const status = document.getElementById("task-status").value; 
     	const before = document.getElementById("before").value;
     	const proceeding = document.getElementById("proceeding").value;
@@ -1010,9 +1044,9 @@
     	}
     }
     
-    document.getElementById("selectProjectMembers").onclick = function() {
-    	location.href = "/sprint/searchmanager";
-    }
+    
+    
+   
 </script>
 </body>
 </html>

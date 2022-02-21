@@ -8,4 +8,11 @@ public interface SprintMapper {
 
 	List<SprintDTO> selectSprintList(int projectNo);
 
+	int insertSprint(SprintDTO sprint);
+
+	SprintDTO selectSprint(int sprintCode);
+
+	int deleteSprint(int sprintCode);
+
+
 }
