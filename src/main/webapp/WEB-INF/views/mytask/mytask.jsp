@@ -6,8 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script type="text/javascript"
-	src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <style>
 html {
 	width: 100%;
@@ -61,7 +60,6 @@ p {
 	margin-bottom: 5px;
 	width: 94%;
 	height: auto;
-	border: 1px solid black;
 	border-collapse: collapse;
 }
 
@@ -241,44 +239,52 @@ p {
 .strike {
 	text-decoration: line-through;
 }
+
 #border{
-  border: 1px solid black;
-  margin: 20px;
-  
+  	border: 1px solid black;
+  	height: 90px;
+  	
 }
+tbody:hover {background-color: skyblue;}
+
 </style>
 <title>Insert title here</title>
 </head>
 <body>
 	<div id="myTaskWhiteBoard">
-
 		<div id="myTaskProjectListBox">
 			<p>프로젝트 목록</p>
 			<div id="myTaskProjectListInnerBox">
 				<table class="myTaskProjectTable" >
-					
-						<tr id="border">
+					<c:forEach items="${ projectList }" var="project" >
+						<tbody id="border">
 							<tr>
-								<th colspan="3" id="myTaskProjectName">"${ requestScope.mytask.projectDTO.projectName }"</th>
+								<th colspan="4" id="myTaskProjectName" >
+									 <c:out value="${ project.title }"/> 
+								</th>
 							</tr>
-							<tr >
+							<tr>
 								<td id="myTaskProjectMemberBox">
 									<div id="myTaskProjectMemberInnerBox">
-										<div id="member-circle"">수빈</div>
-										<div id="member-circle" style="left: 20px;">소현</div>
+										<c:forEach items="${ project.projectMembers } var="member" varStatus="status">
+                                			 <div id="member-circle"> 
+                                 		   		<c:out value="${ member.name }" />
+                                			 </div>
+                              			</c:forEach>
 									</div>
 								</td>
-
-								<td id="myTaskPrjectDeadline">2022-01-22<br>~2022-03-25</td>
+								<td id="myTaskPrjectDeadline">
+									<c:out value="${ project.startDate }"/> <br> ~ <c:out value="${ project.endDate }"/>
+								</td>
 								<td id="myTaskProjectStateBox">
-									<div class="projectstate">미진행</div>
+									<div class="projectstate"><c:out value="${ project.progress }"/></div>
 								</td>
 								<td class="myTaskProjectPMBox">
-									<div id="pm-circle">소현</div>
+									<div id="pm-circle"><c:out value="${ project.writer }"/></div>
 								</td>
 							</tr>
-						</tr>
-						
+						</tbody>	
+					</c:forEach>
 				</table>
 			</div>
 		</div>
@@ -319,49 +325,44 @@ p {
 			</p>
 			<div class="myTaskDoToListInnerBox">
 				
+				
 			</div>
 		</div>
-
 	</div>
-
-
-	<script type="text/javascript">
-
+	
+	<script>
+   		
 		google.charts.load('current', {'packages':['corechart']});
-		google.charts.setOnLoadCallback(drawChart);
-
-
-		function drawChart() {
-  			var data = google.visualization.arrayToDataTable([
-  				['Task', 'Hours per Day'],
-  				['진행 중', 6],
-  				['완료', 2],
- 			 	['미진행', 4]
-			]);
-  			
-  			var options = {'alignment':'center','width':390, 'height':230 ,
-  					legend: {'position':'right','alignment':'center'}};
-  			
-  			var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-  			
-  			chart.draw(data, options);
-		}
-		
-		let count=0;
-		
-		$('.img-button-plus').on("click", function () {
-			var rowItem = "<tr>"
-			rowItem += "<td> <input type='checkbox' class='ToDoListCheckBox' name='ToDoListCheckBox'/>"
-			rowItem += "<input type='text' class ='ToDoListText' name='ToDoListText'/></td>"
-			rowItem += "</tr>"
-			if(count % 2 == 0){
-				$('.myTaskDoToList-left').append(rowItem)
-			}else{
-				$('.myTaskDoToList-right').append(rowItem)		
-			}
-			count++;
-		});
-			
+    	google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Task', 'Hours per Day'],
+                ['진행 중', 6],
+                ['완료', 2],
+                ['미진행', 4]
+             ]);
+            
+            var options = {'alignment':'center','width':390, 'height':230 ,
+                    legend: {'position':'right','alignment':'center'}};
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            chart.draw(data, options);
+        }
+            
+        let count=0;
+            
+        $('.img-button-plus').on("click", function () {
+            var rowItem = "<tr>"
+                rowItem += "<td> <input type='checkbox' class='ToDoListCheckBox' name='ToDoListCheckBox'/>"
+                rowItem += "<input type='text' class ='ToDoListText' name='ToDoListText'/></td>"
+                rowItem += "</tr>"
+                if(count % 2 == 0){
+                	$('.myTaskDoToList-left').append(rowItem)
+                }else{
+                	$('.myTaskDoToList-right').append(rowItem)        
+                }
+            	count++;
+        });
+        
 	</script>
 </body>
 </html>

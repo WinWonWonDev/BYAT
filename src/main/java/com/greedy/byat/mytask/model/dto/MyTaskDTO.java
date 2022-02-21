@@ -21,6 +21,6 @@ import lombok.ToString;
 @ToString 
 public class MyTaskDTO {
 	private List<ProjectDTO> projectDTO;
-	private List<ProjectMembersDTO> projectMemberDTO;
-	private List<ToDoListDTO>todolistDTO;
+	private List<ToDoListDTO> todolistDTO;
+	//태스크 디티오 들어가야함
 }
