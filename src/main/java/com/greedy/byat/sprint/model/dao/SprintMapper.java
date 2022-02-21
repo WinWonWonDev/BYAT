@@ -20,6 +20,8 @@ public interface SprintMapper {
 
 	String selectProjectProgress(int projectCode);
 
+	int updateSprint(SprintDTO sprint);
+
 
 	
 }

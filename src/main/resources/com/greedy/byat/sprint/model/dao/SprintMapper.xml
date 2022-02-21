@@ -96,11 +96,11 @@
 						     B.SPRINT_TITLE
 				        FROM TBL_SPRINT B
 				       WHERE B.SPRINT_CODE = #{ code }
-				 ) || CHR(39) || ' 스프린트 생성 ' || CHR(40) || (SELECT
-				   								    			  C.PROJECT_TITLE 
-				   											 FROM TBL_PROJECT C 
-				   							   				WHERE C.PROJECT_CODE = #{ projectCode }
-				   							 ) || CHR(41)
+				 	 ) || CHR(39) || ' 스프린트 생성 ' || CHR(40) || (SELECT
+				   								    			  		C.PROJECT_TITLE 
+				   											 	   FROM TBL_PROJECT C 
+				   							   					  WHERE C.PROJECT_CODE = #{ projectCode }
+				   							 					) || CHR(41)
 		, #{ body }
 		, 1
 		, SYSDATE
@@ -132,6 +132,17 @@
 		, #{ code }
 		)
  	</insert>
+ 	
+ 	<update id="updateSprint">
+ 		UPDATE
+ 			   TBL_SPRINT A
+ 		   SET A.SPRINT_TITLE = #{ title }
+ 		     , A.SPRINT_START_DATE = #{ startDate }
+ 		     , A.SPRINT_END_DATE = #{ endDate }
+ 		     , A.SPRINT_BODY = #{ body }
+ 		 WHERE A.SPRINT_CODE = #{ code }
+ 	
+ 	</update>
  	
  	<select id="selectSprint" parameterType="_int"  resultMap="sprintResultMap">
  		SELECT

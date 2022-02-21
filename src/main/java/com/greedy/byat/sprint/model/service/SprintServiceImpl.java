@@ -44,8 +44,13 @@ public class SprintServiceImpl implements SprintService {
 	@Override
 	public void modifySprint(SprintDTO sprint) {
 		
+		int result1 = mapper.updateSprint(sprint);
 		
+		int result2 = mapper.insertSprintVersionHistory(sprint);
 		
+		if(!(result1 > 0) && !(result2 > 0)) {
+			System.out.println("스프린트 수정 실패");
+		}
 	}
 	
 	@Override
