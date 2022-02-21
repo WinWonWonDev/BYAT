@@ -67,14 +67,14 @@
 		  FROM TBL_MEMBER A
 		 WHERE A.MEMBER_ID = #{ id }
 	</select> 
-	
+<!-- 	
 	<select id="emailduplicationCheck" resultType="java.lang.String">
 		SELECT
 		       A.MEMBER_EMAIL
 		  FROM TBL_MEMBER A
 		 WHERE A.ABSENCE_YN = 'N'
 		   AND A.MEMBER_ID = #{ id }
-	</select>
+	</select> -->
 		
 	<select id="selectEmailById" resultType="java.lang.String">
 		SELECT
@@ -140,4 +140,13 @@
 		 WHERE A.ABSENCE_YN = 'N'
 		   AND A.MEMBER_ID = #{ id } 
 	</update>
+	
+	<select id="emailDuplicationCheck" resultType="java.lang.String">
+		SELECT
+		       A.MEMBER_EMAIL
+		  FROM TBL_MEMBER A
+		 WHERE A.MEMBER_EMAIL = #{ emailAddress	}
+		   AND A.ABSENCE_YN = 'N'
+	</select>
+	
  </mapper>
