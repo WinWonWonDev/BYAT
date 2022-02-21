@@ -430,12 +430,41 @@ html, body {
 				<h1>새 비밀번호 설정</h1>
 			</div>
 
-			<form id="passwordResetForm" action="${ pageContext.servletContext.contextPath }/member/modifypassword" method="post">
+			<div id="passwordResetForm">
 				<div class="idBox" align="center">
 				<br><br><br><br>
 					<input type="password" name="inputPassword" id="inputPassword" placeholder="Change Password"> <br>
 					<br> <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Change Password"> <br>
+					
+					<!-- 비밀번호 예외처리 -->
+					<c:choose>
+						<c:when test="">
+							<input type="text" name="errorPwd" value="비밀번호를 입력해주세요."
+								style="color: red">
+						</c:when>
+						<c:when test="">
+							<input type="text" name="errorPwd" value="비밀번호가 일치하지 않습니다."
+								style="color: red">
+						</c:when>
+					</c:choose>
+					
+					<br>
+				</div>
+				<br> <br> <br>
 
+				<div class="btns" align="center">
+					<input type="button" class="btn btn-or" value="Ok" id="modalOkBtn3"> 
+					<input type="button" class="btn btn-yg" value="cancel" id="modalCancelBtn3">
+				</div>
+			</div>
+			
+<%-- 			<form id="passwordResetForm" action="${ pageContext.servletContext.contextPath }/member/modifypassword" method="post">
+				<div class="idBox" align="center">
+				<br><br><br><br>
+					<input type="hidden" id="idForPasswordReset" name="idForPasswordReset" value="">
+					<input type="password" name="inputPassword" id="inputPassword" placeholder="Change Password"> <br>
+					<br> <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Change Password"> <br>
+					
 					<!-- 비밀번호 예외처리 -->
 					<c:choose>
 						<c:when test="">
@@ -456,7 +485,7 @@ html, body {
 					<input type="submit" class="btn btn-or" value="Ok" id="modalOkBtn3"> 
 					<input type="button" class="btn btn-yg" value="cancel" id="modalCancelBtn3">
 				</div>
-			</form>
+			</form> --%>
 
 		</div>
 	</div>
@@ -494,6 +523,7 @@ html, body {
 				success : function(data, status, xhr) {
 
 					if(data > 0) {
+						
 						alert("인증번호가 발송되었습니다.")
 						document.getElementById("inputEmailVeficationModal").style.display="block";
 						document.getElementById("passwordFindModal").style.display="none";
@@ -506,7 +536,7 @@ html, body {
 						  AuthTimer.timer =  setInterval(function(){AuthTimer.fnTimer()},1000);
 						  AuthTimer.domId = document.getElementById("timer");
 						
-						
+					
 						
 					} else {
 						alert("아이디를 찾을 수 없습니다.");
@@ -610,6 +640,33 @@ html, body {
 			});
 		});
 		  
+		  
+		$("#modalOkBtn3").on("click",function () {
+			$.ajax({
+				url: "modifypassword",
+				type:"POST",
+				data: {"inputId":$("#inputId").val(),
+					"inputPassword":$("#inputPassword").val(),
+					"confirmPassword":$("#confirmPassword").val()},
+				success: function(data, status, xhr) {
+					
+					if(data > 0) {
+						alert("비밀번호 변경이 완료되었습니다 야호!");
+						document.getElementById("inputEmailVeficationModal").style.display="none";
+						document.getElementById("passwordFindModal").style.display="none";
+						document.getElementById("inputIdModal").style.display="none";
+					} else {
+						alert("비밀번호 변경 실패! 다시 시도해 주세요!");
+						document.getElementById("inputEmailVeficationModal").style.display="none";
+						document.getElementById("passwordFindModal").style.display="display";
+						document.getElementById("inputIdModal").style.display="none";
+					}
+				},
+				error: function(error) {
+					alert("에러가 발생했습니다. 다시 시도해주세요.");
+				}
+			});
+		});
 		
 		$modalCancelBtn2.onclick = function() {
 			document.getElementById("inputEmailVeficationModal").style.display="none";

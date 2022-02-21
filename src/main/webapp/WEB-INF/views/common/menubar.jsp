@@ -221,6 +221,26 @@
 		font-size:1.5em;
 	}
 	
+	#whiteboard {
+		position:relative;
+		left:1300px;
+		top:-15px;
+		width:150px;
+		height:47px;
+		background:white;
+	}
+	
+	#ProfileArea {
+		position: relative;
+		border:1px solid black;
+		text-align: center;
+	}
+	
+	#logoutArea {
+		position: relative;
+		border:1px solid black;
+		text-align: center;
+	}
 	
 </style>
 </head>
@@ -255,8 +275,9 @@
                 </c:if> 
             </ul>
             <input type="button" class="noticeButtonImg" onclick="noticeDisplay();">
+            <!-- 알림 갯수에 따라 숫자 나오게 하는거 ㅋㅋ ㄱㄷ... -->
 			<div class="note-num">3</div>
-			<div class="profile-area" onclick="location.href='        '">
+			<div class="profile-area" id="profile-name">
 			<div class="user-name">
 				${ sessionScope.loginMember.name }
 			</div>
@@ -266,6 +287,17 @@
 			</div>
         </div>
     </nav>
+    
+    <!-- 프로필관리/로그아웃 모달창 -->
+    <div id="profileAndLogoutModal" style="display:none;">
+    	<div id="whiteboard">
+    		<div id="ProfileArea" onclick="location.href='${ pageContext.servletContext.contextPath }/member/moveprofile'">프로필 관리</div>
+    		<div id="logoutArea" onclick="logout();">로그아웃</div>
+    	</div>
+    
+    </div>
+    
+    
     <script>
 	    function test(){
 	    	var tabsNewAnim = $('#navbarSupportedContent');
@@ -323,6 +355,19 @@
 	    	// Add active class to target link
 	    	target.parent().addClass('active');
 	    });
+	    
+	    
+		$("#profileAndLogoutModal").onclick = function() {
+			document.getElementById("input")
+		} 
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
     </script>
 </body>
 </html>

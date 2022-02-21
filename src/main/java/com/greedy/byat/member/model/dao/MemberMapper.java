@@ -1,6 +1,7 @@
 package com.greedy.byat.member.model.dao;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.greedy.byat.member.model.dto.MemberDTO;
 
@@ -26,6 +27,6 @@ public interface MemberMapper {
 
 	int updateVerficiation(String inputVerificationNum);
 
-	int updateMemberPwd(String firstPwd);
+	int updateMemberPwd(Map<String, String> map);
 
 }

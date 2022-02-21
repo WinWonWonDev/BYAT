@@ -1,6 +1,7 @@
 package com.greedy.byat.member.model.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.mail.internet.MimeMessage;
 
@@ -35,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
 		if(!passwordEncoder.matches(member.getPwd(),
 				mapper.selectEncryptedPwd(member))) {
 
-			throw new  LoginFailedException("로그인 실패.. alert으로 띄우고 싶다");
+			throw new  LoginFailedException("로그인 실패..");
 			
 		}
 
@@ -49,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
 		if(!passwordEncoder.matches(member.getPwd(),
 				mapper.selectEncryptedPwd(member))) {
 
-			throw new LoginFailedException("로그인 실패.. alert으로 띄우고 싶다");
+			throw new LoginFailedException("로그인 실패.. ");
 
 		}
 
@@ -73,7 +74,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int selectEmailById(String id) throws NotexistEmailException {
 		
-		int randomVerificationNum = (int)((Math.random() * 100000) + 1000);
+		int randomVerificationNum = (int)((Math.random() * 100000) + 10000);
 		
 		String email = mapper.selectEmailById(id);
 
@@ -129,11 +130,15 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int modifyMemberPwd(String firstPwd, String confirmPwd) {
+	public int modifyMemberPwd(String inputPassword, String inputId) {
 
-		String encodedFirstPwd = passwordEncoder.encode(firstPwd);
+		String encodedFirstPwd = passwordEncoder.encode(inputPassword);
 		
-		int result = mapper.updateMemberPwd(encodedFirstPwd);
+		Map<String, String> map = new HashMap<>();
+		map.put("encodedFirstPwd", encodedFirstPwd);
+		map.put("id", inputId);
+		
+		int result = mapper.updateMemberPwd(map);
 		
 		return result;
 	}

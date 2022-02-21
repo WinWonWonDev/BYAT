@@ -50,17 +50,27 @@ public class MemberController {
 		if(memberService.selectMember(member).equals("Y")) {
 
 			model.addAttribute("loginMember", memberService.initLogin(member));
-
-			rttr.addFlashAttribute("message","로그인 성공!");
-
+			
+			if(memberService.initLogin(member) != null) {
+				rttr.addFlashAttribute("message","로그인 성공!");
+				
+			} else {
+				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+			}
+			
 			return "redirect:/home";
 
 		} else {
 
 			/* 초기 계정이 아닌 경우 */
 			model.addAttribute("loginMember", memberService.login(member));
-
-			rttr.addFlashAttribute("message","로그인 성공!");
+			
+			if(memberService.login(member) != null) {
+				rttr.addFlashAttribute("message","로그인 성공!");
+				
+			} else {
+				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+			}
 
 			return "redirect:/home";
 
@@ -98,6 +108,7 @@ public class MemberController {
 				.disableHtmlEscaping()
 				.create();
 		
+		
 		return gson.toJson(memberService.selectEmailById(inputId));
 		
 	}
@@ -120,23 +131,38 @@ public class MemberController {
 		
 	}
 	
-	@PostMapping("/modifypassword")
-	public String modifyMemberPwd(HttpServletRequest request, RedirectAttributes rttr) {
+	@PostMapping(value="modifypassword", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public int modifyMemberPwd(String inputPassword, String confirmPassword, String inputId, HttpServletRequest request, RedirectAttributes rttr) {
 		
-		String firstPwd = request.getParameter("inputPassword");
-		String confirmPwd = request.getParameter("confirmPassword");
+		int result = 0;
 		
-		if(firstPwd.equals(confirmPwd)) {
-			int result = memberService.modifyMemberPwd(firstPwd, confirmPwd);
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		
+		if(inputPassword.equals(confirmPassword)) {
+			result = memberService.modifyMemberPwd(inputPassword, inputId);
 			
 		} else {
-			rttr.addFlashAttribute("비밀번호가 일치하지 않습니다!");
+			rttr.addFlashAttribute("message", "비밀번호가 서로 일치하지 않습니다.");
+			
 		}
 		
-		
-		return "redirect:/member/login";
+		return result;
 	}
- 	
+	
+	@GetMapping("/moveprofile")
+	public String moveProfile() {
+		
+		
+		return "/member/profile";
+	}
 	
 	
 	

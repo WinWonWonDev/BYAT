@@ -18,7 +18,7 @@ public interface MemberService {
 
 	int matchVerificationNumber(String inputVerificationNum);
 
-	int modifyMemberPwd(String firstPwd, String confirmPwd);
+	int modifyMemberPwd(String inputPassword, String inputId);
 
 
 }
