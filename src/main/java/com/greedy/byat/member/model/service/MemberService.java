@@ -20,10 +20,11 @@ public interface MemberService {
 
 	int modifyMemberPwd(String inputPassword, String inputId);
 
-//	int emailDuplicationCheck(String emailAddress);
-	String emailDuplicationCheck(String emailAddress);
+	Object emailDuplicationCheck(String emailAddress);
 
-	int registVerificationNumber(String emailAddress, String memberId) throws NotexistEmailException;
+	int registVerificationNumber(String emailAddress, String inputId) throws NotexistEmailException;
+
+	int selectResubmitVerificationNum(String inputId, String emailAddress) throws NotexistEmailException;
 
 
 }

@@ -78,34 +78,11 @@ public class MemberController {
 		}
 	}
 	
-//	@GetMapping("emailduplicationcheckforinit")
-//	@ResponseBody
-//	public int emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
-//	
-//		response.setContentType("application/json; charset=UTF-8");
-//		
-//		int result = 0;
-//		
-//		Gson gson = new GsonBuilder()
-//				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
-//				.setPrettyPrinting()
-//				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-//				.serializeNulls()
-//				.disableHtmlEscaping()
-//				.create();
-//		
-//		result = memberService.emailDuplicationCheck(emailAddress);
-//
-//		return result;
-//	}
-
 	@GetMapping("emailduplicationcheckforinit")
 	@ResponseBody
-	public String emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
+	public Object emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
 		
 		response.setContentType("application/json; charset=UTF-8");
-		
-		int result = 0;
 		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
@@ -117,12 +94,14 @@ public class MemberController {
 		
 		String test = gson.toJson(memberService.emailDuplicationCheck(emailAddress));
 		
+		System.out.println("테스트에는 뭐드가? : " + test);
+		
 		return test;
 	}
 	
 	@GetMapping("/registverification")
 	@ResponseBody
-	public int registVerificationNumber(String emailAddress, String memberId, RedirectAttributes rttr, HttpServletResponse response) throws NotexistEmailException {
+	public int registVerificationNumber(String emailAddress, String inputId, RedirectAttributes rttr, HttpServletResponse response) throws NotexistEmailException {
 		
 		response.setContentType("application/json; charset=UTF-8");
 		
@@ -136,7 +115,7 @@ public class MemberController {
 				.disableHtmlEscaping()
 				.create();
 		
-		result = memberService.registVerificationNumber(emailAddress, memberId);
+		result = memberService.registVerificationNumber(emailAddress, inputId);
 		
 		return result;
 		
@@ -157,6 +136,22 @@ public class MemberController {
 		
 		
 		return gson.toJson(memberService.selectEmailById(inputId));
+		
+	}
+
+	@PostMapping(value="resubmitverificationnum", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public String resubmitVerificationNum(String inputId, String emailAddress, HttpServletResponse response, Model model, HttpServletRequest request, RedirectAttributes rttr) throws NotexistEmailException, IOException {
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		return gson.toJson(memberService.selectResubmitVerificationNum(inputId, emailAddress));
 		
 	}
 	

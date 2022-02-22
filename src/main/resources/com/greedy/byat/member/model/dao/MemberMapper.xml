@@ -116,6 +116,31 @@
 		)
 	</insert>
 	
+	<insert id="insertverificationforInit" parameterType="hashmap">
+		INSERT 
+		  INTO TBL_VERIFICATION A 
+		( 
+		   A.VERIFICATION_NUM_CODE
+		 , A.VERIFICATION_NUM_KEY
+		 , A.VERIFICATION_NUM_TYPE
+		 , A.VERIFICATION_NUM_CREATED_DATE
+		 , A.VERIFICATION_NUM_USED_DATE
+		 , A.VERIFICATION_NUM_DESTRUCTION_YN
+		 , A.MEMBER_NO
+		)
+		VALUES
+		(
+		   SEQ_VERIFICATION_NUM_CODE.NEXTVAL
+		 , #{ verification }
+		 , '초기계정정보설정'
+		 , SYSDATE
+		 , NULL
+		 , 'N'
+		 , #{ no }
+		)
+	</insert>
+	
+	
 	<select id="mathchVerificationNumber" resultType="java.lang.String">
 		SELECT
 			   A.VERIFICATION_NUM_KEY
