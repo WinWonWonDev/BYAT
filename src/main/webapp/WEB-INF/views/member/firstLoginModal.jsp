@@ -158,7 +158,7 @@
 		font-size: 20px;
 	}
 	
-	#modal_ok_btn {
+	#initInfoSumitBtn {
 		background-color: rgb(25, 25, 112);
 		color: white;
 		text-align: center;
@@ -308,7 +308,7 @@
 		top: 35%;
 	}
 	
-	##reSubmitBtn {
+	#reSubmitBtn {
 		background-color: rgb(25, 25, 112);
 		color: white;
 		text-align: center;
@@ -345,7 +345,6 @@
 
 		<div class="modalLayer"></div>
 	</div>
-<input type="hidden" id="inputId" name="inputId" value="${ sessionScope.loginMember.id }">
 	<!-- setting쪽 모달 -->
 	<div id="initInfoSettingModal">
 		<div class="modal_content2">
@@ -356,12 +355,12 @@
 				<input type="email" class="emailAddress" id="emailAddress" placeholder="Email" required> 
 				<input type="button" id="emailDuplicatieButton" value="중복확인">
 				<input type="button" id="AuthenticationNumber" value="인증번호보내기">
-				<input type="text" class="phoneNumber" placeholder="Phone" required>
-				<input type="password" class="newPassword" placeholder="newPassword" required> 
-				<input type="password" class="newPasswordConfirm" placeholder="newPasswordConfirm" required>
+				<input type="text" class="phoneNumber" id="phoneNumber" placeholder="Phone" required>
+				<input type="password" class="newPassword" id="newPassword" placeholder="newPassword" required> 
+				<input type="password" class="newPasswordConfirm" id="newPasswordConfirm" placeholder="newPasswordConfirm" required>
 			</div>
 			<div class="modal_button2">
-				<button type="submit" id="modal_ok_btn">Ok</button>
+				<button type="button" id="initInfoSumitBtn">Ok</button>
 			</div>
 		</div>
 		<div class="modal_layer2" id="modal_layer2"></div>
@@ -390,8 +389,11 @@
 		<div class="modal_layer2" id="modal_layer2"></div>
 	</div>
 
-<input type="hidden" id="oneOrEmail" name="oneOrEmail">
-<input type="hidden" id="isDidDuplicate" name="isDidDuplicate">
+	<input type="hidden" id="inputId" name="inputId" value="${ sessionScope.loginMember.id }">
+	<input type="hidden" id="inputNo" name="inputNo" value="${ sessionScope.loginMember.no }">
+	<input type="hidden" id="oneOrEmail" name="oneOrEmail">
+	<input type="hidden" id="isDidDuplicate" name="isDidDuplicate">
+	<input type="hidden" id="gotVerificate" name="gotVerificate">
 
 <script>
 	
@@ -430,13 +432,37 @@
 		}
     });
 
+	function $ComTimer(){
+	    //prototype extend
+	}
+	
+	$ComTimer.prototype = {
+	      comSecond : ""
+	    , fnCallback : function(){}
+	    , timer : ""
+	    , domId : ""
+	    , fnTimer : function(){
+	        var m = Math.floor(this.comSecond / 60) + "분 " + (this.comSecond % 60) + "초"
+	        this.comSecond--;					
+	        this.domId.innerText = m;
+	        
+	        if (this.comSecond < 0) {			
+	            clearInterval(this.timer);		
+	            alert("인증시간이 초과하였습니다. 다시 인증해주시기 바랍니다.");
+	            
+	        }
+	    }
+	    ,fnStop : function(){
+	        clearInterval(this.timer);
+	    }
+	}
 
     $("#AuthenticationNumber").click(function () {
     	if($("#isDidDuplicate").val() == 2) { 
     		if($("#oneOrEmail").val() != 1) {
    				if($("#emailAddress").val().includes('@', 1)) {
 				   $.ajax({
-			 			url : "${ pageContext.servletContext.contextPath }/member/registverification",
+			 			url : "${ pageContext.servletContext.contextPath }/member/resubmitverificationnum",
 						type : "GET",
 						contentType : "json",
 						data : {"emailAddress":$("#emailAddress").val(),
@@ -480,30 +506,6 @@
    		}
     });
 	    
-	function $ComTimer(){
-	    //prototype extend
-	}
-	
-	$ComTimer.prototype = {
-	      comSecond : ""
-	    , fnCallback : function(){}
-	    , timer : ""
-	    , domId : ""
-	    , fnTimer : function(){
-	        var m = Math.floor(this.comSecond / 60) + "분 " + (this.comSecond % 60) + "초"
-	        this.comSecond--;					
-	        this.domId.innerText = m;
-	        
-	        if (this.comSecond < 0) {			
-	            clearInterval(this.timer);		
-	            alert("인증시간이 초과하였습니다. 다시 인증해주시기 바랍니다.");
-	            
-	        }
-	    }
-	    ,fnStop : function(){
-	        clearInterval(this.timer);
-	    }
-	}
     
     
  	  $("#reSubmitBtn").click(function() {
@@ -542,21 +544,23 @@
 	
     $("#modalOkBtn2").click(function () {
     	$.ajax({
-    		url : "checkverification",
-    		type : "POST",
+    		url : "${ pageContext.servletContext.contextPath }/member/checkverificationforinit",
+    		type : "GET",
     		contentType : "json",
-    		data : {"inputVerificationNum":$("#inputVerificationNum").val()},
+    		data : {"inputVerificationNum":$("#inputVerificationNum").val(),
+    			"inputNo":$("#inputNo").val()},
     		success : function(data, status, xhr) {
     			
     			if(data > 0) {
     				alert("인증이 완료되었습니다.");
 					document.getElementById("initInfoSettingModal").style.display="block";
 					document.getElementById("inputEmailVeficationModal").style.display="none";
+					document.getElementById("gotVerificate").value = 1;
 				
     			} else {
     				alert("인증이 실패하였습니다! 다시 입력해주세요!");
-					document.getElementById("initInfoSettingModal").style.display="block";
-					document.getElementById("inputEmailVeficationModal").style.display="none";
+					document.getElementById("initInfoSettingModal").style.display="none";
+					document.getElementById("inputEmailVeficationModal").style.display="block";
     			}
     		},
     		error : function(error) {
@@ -567,17 +571,6 @@
     	
     });
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-     
 	document.getElementById("modal").style.display="block";
 	document.getElementById("initInfoSettingModal").style.display="none";
  	
@@ -587,11 +580,42 @@
 		document.getElementById("initInfoSettingModal").style.display="block";
     }
     
-    document.getElementById("modal_ok_btn").onclick = function() {
-    	document.getElementById("")
-    	
-    }
-    
+   	$("#initInfoSumitBtn").click(function () {
+	    if($("#gotVerificate").val() == 1) {
+	    	if($("#phoneNumber").val().includes('-', 1)) {
+		    	$.ajax({
+					url : "${ pageContext.servletContext.contextPath }/member/initialinputinfo",
+					type : "GET",
+					contentType : "json",
+					data : {"emailAddress":$("#emailAddress").val(),
+							"phoneNumber":$("#phoneNumber").val(),
+							"newPassword":$("#newPassword").val(),
+							"newPasswordConfirm":$("#newPasswordConfirm").val(),
+							"inputNo":$("#inputNo").val()},
+					success : function(data, status, xhr) {
+						
+						if(data > 0) {
+							//리다이랙트로 이동..? 아니면 모달없ㄱ애줘서 거기서 하다가 다른거 누르면 main으로 자연스럽게 가게?
+							alert("정보 등록 성공! 환영합니다!");
+							document.getElementById("modal").style.display="none";
+							document.getElementById("inputEmailVeficationModal").style.display="none";
+							document.getElementById("initInfoSettingModal").style.display="none";
+							
+						} else {
+							alert("정보 등록 실패! 다시 시도해주세요!");
+						}
+					}
+		    	});
+		    } else {
+		    	alert("전화번호 형식이 맞지 않습니다! 다시 입력해주세요!");
+		    } 
+		    	
+	    } else {
+	    	
+	    	alert("이메일 인증을 먼저 해주시기 바랍니다!");
+	    }
+   });
+	    
     
     
 </script>

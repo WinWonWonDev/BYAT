@@ -99,6 +99,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/project/modify");
 		memberPermitList.add("/project/searchmembers");
 		memberPermitList.add("/project/registmember");
+		memberPermitList.add("/project/projectmemberlist");
 		
 		memberPermitList.add("/sprint/list");
 		memberPermitList.add("/sprint/regist");
@@ -127,6 +128,8 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/member/emailduplicationcheckforinit");
 		memberPermitList.add("/member/registverification");
 		memberPermitList.add("/member/resubmitverificationnum");
+		memberPermitList.add("/member/checkverificationforinit");
+		memberPermitList.add("/member/initialinputinfo");
 		
 		
 	    allPermitList.add("/member/login");

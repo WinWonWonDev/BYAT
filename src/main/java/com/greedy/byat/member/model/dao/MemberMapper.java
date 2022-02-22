@@ -33,4 +33,10 @@ public interface MemberMapper {
 
 	int insertverificationforInit(HashMap<String, Integer> map);
 
+	String mathchVerificationNumberForInit(HashMap<String, Object> map);
+
+	int updateVerficiationForInit(String inputVerificationNum);
+
+	int initialInputInfo(HashMap<String, Object> map);
+
 }

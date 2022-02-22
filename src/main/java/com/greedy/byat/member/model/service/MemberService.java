@@ -26,5 +26,9 @@ public interface MemberService {
 
 	int selectResubmitVerificationNum(String inputId, String emailAddress) throws NotexistEmailException;
 
+	int matchVerificationNumberForInit(String inputVerificationNum, int inputNo);
+
+	int initialInputInfo(String emailAddress, String phoneNumber, String newPassword, int inputNo);
+	
 
 }

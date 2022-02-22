@@ -145,10 +145,19 @@
 		SELECT
 			   A.VERIFICATION_NUM_KEY
 	      FROM TBL_VERIFICATION A
-	     WHERE VERIFICATION_NUM_DESTRUCTION_YN = 'N'
-	       <!-- AND A.MEMBER_NO = #{ no } -->
+	     WHERE A.VERIFICATION_NUM_DESTRUCTION_YN = 'N'
 	       AND A.VERIFICATION_NUM_KEY = #{ inputVerificationNum }
 	</select>
+	
+	<select id="mathchVerificationNumberForInit" resultType="java.lang.String">
+		SELECT
+			   A.VERIFICATION_NUM_KEY
+	      FROM TBL_VERIFICATION A
+	     WHERE A.VERIFICATION_NUM_DESTRUCTION_YN = 'N'
+	       AND A.MEMBER_NO = #{ inputNo }
+	       AND A.VERIFICATION_NUM_KEY = #{ inputVerificationNum }
+	</select>
+	
 	
 	<update id="updateVerficiation" parameterType="java.lang.String">
 		UPDATE
@@ -156,7 +165,28 @@
 		   SET A.VERIFICATION_NUM_USED_DATE = (SELECT SYSDATE FROM DUAL)
 		     , A.VERIFICATION_NUM_DESTRUCTION_YN = 'Y'
 		 WHERE A.VERIFICATION_NUM_KEY = #{ inputVerificationNum }
+		   AND A.VERIFICATION_NUM_TYPE = '멤버비밀번호찾기'   	
 	</update>
+
+	<update id="updateVerficiationForInit" parameterType="java.lang.String">
+		UPDATE
+		       TBL_VERIFICATION A
+		   SET A.VERIFICATION_NUM_USED_DATE = (SELECT SYSDATE FROM DUAL)
+		     , A.VERIFICATION_NUM_DESTRUCTION_YN = 'Y'
+		 WHERE A.VERIFICATION_NUM_KEY = #{ inputVerificationNum }
+		   AND A.VERIFICATION_NUM_TYPE = '초기계정정보설정'   	 
+	</update>
+
+	<update id="initialInputInfo" parameterType="hashmap">
+		UPDATE
+		       TBL_MEMBER A 
+		   SET A.MEMBER_EMAIL = #{ email }
+		     , A.MEMBER_PHONE = #{ phone }
+		     , A.MEMBER_PWD = #{ password }
+		 WHERE A.MEMBER_NO = #{ no }
+		   AND A.ABSENCE_YN = 'N';
+	</update>
+
 	
 	<update id="updateMemberPwd" parameterType="hashmap">
 		UPDATE

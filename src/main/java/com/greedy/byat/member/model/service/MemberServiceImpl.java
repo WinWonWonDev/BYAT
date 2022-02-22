@@ -31,30 +31,29 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberDTO login(MemberDTO member) throws LoginFailedException {
+	public MemberDTO login(MemberDTO member) {
 		
-		if(!passwordEncoder.matches(member.getPwd(),
-				mapper.selectEncryptedPwd(member))) {
+		if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
+			return null;
 
-			throw new  LoginFailedException("로그인 실패..");
+		} else {
 			
+			return mapper.login(member);
 		}
 
-		return mapper.login(member);
 	}
 
 	@Override
-	public MemberDTO initLogin(MemberDTO member) throws LoginFailedException {
+	public MemberDTO initLogin(MemberDTO member) {
 
 
-		if(!passwordEncoder.matches(member.getPwd(),
-				mapper.selectEncryptedPwd(member))) {
+		if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
+			return null;
 
-			throw new LoginFailedException("로그인 실패.. ");
-
+		} else {
+			
+			return mapper.initLogin(member);
 		}
-
-		return mapper.initLogin(member);
 	}
 
 	@Override
@@ -156,23 +155,16 @@ public class MemberServiceImpl implements MemberService {
 			result = emailAddress;  
 		}
 		
-		System.out.println("이메일이 들와야지 : " + existEmail);
-		System.out.println("리절트에는 뭐? " + result);
-		
 		return result;
 	}
 
 	@Override
 	public int registVerificationNumber(String emailAddress, String inputId) throws NotexistEmailException {
 		
-		System.out.println("아이딩옴? : " + inputId);
 		int result = 0;
-		//이 이메일로 ㄹㅇ 인증번호 보내고 , verification에 저장해야됨
 		int randomVerificationNum = (int)((Math.random() * 100000) + 10000);
 		
-		//아이디나 넘버 받아와서 
 		int no = mapper.selectMemberNo(inputId); 
-		System.out.println("넘버 나옴? : " + no);
 		
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put("no", no);
@@ -246,6 +238,46 @@ public class MemberServiceImpl implements MemberService {
 		
 		return result;
 		
+	}
+
+	@Override
+	public int matchVerificationNumberForInit(String inputVerificationNum, int inputNo) {
+
+		int result = 0;
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("inputNo", inputNo);
+		map.put("inputVerificationNum", inputVerificationNum);
+		
+		String mathchVerificationForInit = mapper.mathchVerificationNumberForInit(map);
+		
+		if(mathchVerificationForInit != null) { 
+			
+			result = mapper.updateVerficiationForInit(inputVerificationNum);
+		}
+		
+		return result;
+
+	}
+
+	@Override
+	public int initialInputInfo(String emailAddress, String phoneNumber, String newPassword, int inputNo) {
+
+		String encodedFirstPwd = passwordEncoder.encode(newPassword);
+		
+		System.out.println("암호화된 비밀번호 ㅇㅇ : " + encodedFirstPwd);
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("email", emailAddress);
+		map.put("phone", phoneNumber);
+		map.put("password", encodedFirstPwd);
+		map.put("no", inputNo);
+		
+		int result = mapper.initialInputInfo(map);
+		
+		System.out.println("서비스에서 sesult : " + result);
+		
+		return result;
 	}
 
 }
