@@ -19,7 +19,7 @@
  		<!-- <association property="writer" resultMap="memberResultMap"/> -->
  	</resultMap>
  	
- 	<select id="selectAllBacklogList" resultMap="generalBacklogResultMap">
+ 	<select id="selectBacklogList" resultMap="generalBacklogResultMap">
         SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectAllBacklogList() */
                A.BACKLOG_CODE
              , A.BACKLOG_TITLE

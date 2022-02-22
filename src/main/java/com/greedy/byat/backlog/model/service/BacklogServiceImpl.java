@@ -23,9 +23,9 @@ public class BacklogServiceImpl implements BacklogService {
 	
 	/* Backlog 전체 조회용 메서드 */
 	@Override
-	public List<BacklogDTO> selectAllBacklogList(int projectCode) {
+	public List<BacklogDTO> selectBacklogList(int projectCode) {
 		
-		List<BacklogDTO> backlogList = mapper.selectAllBacklogList(projectCode);
+		List<BacklogDTO> backlogList = mapper.selectBacklogList(projectCode);
 		
 		return backlogList;
 	}
