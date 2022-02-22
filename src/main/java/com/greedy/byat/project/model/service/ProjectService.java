@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
+import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
@@ -23,6 +24,8 @@ public interface ProjectService {
 
 	void modifyProject(ProjectDTO project) throws ProjectModifyException;
 
-	List<MemberDTO> searchAddMemberList(String searchMember, String[] projectMembersList);
+	List<MemberDTO> searchAddMemberList(String searchMember, String[] projectMembersList, String[] selectMembers);
+
+	void registProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException;
 
 }

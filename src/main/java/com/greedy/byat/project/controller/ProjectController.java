@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
+import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
@@ -165,26 +166,16 @@ public class ProjectController {
 		return "redirect:/project/list";
 	}
 	
-	@RequestMapping(value="/searchMembers", method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	@RequestMapping(value="/searchmembers", method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public String searchMembers(Locale locale, Model model, HttpServletRequest request) {
 		
 		String searchMember = request.getParameter("searchValue");
-
-		/*
-		 * List<Integer> selectMembers = new
-		 * ArrayList<>(Integer.parseInt(request.getParameter("selectedMemberList")));
-		 * 
-		 * int code = Integer.parseInt(request.getParameter("code"));
-		 * 
-		 * System.out.println("selectMembers : " + selectMembers);
-		 * System.out.println("PJcode : " + code);
-		 */
 		
 		int code = Integer.parseInt(request.getParameter("code"));
 		System.out.println("PJcode : " + code);
 		
-		String[] selectMembers;
+		String[] selectMembers = null;
 		
 		String[] projectMembersList = request.getParameterValues("projectMembersList");
 		
@@ -210,7 +201,7 @@ public class ProjectController {
 		
 		System.out.println("\nsearchMember : " + searchMember);
 		
-		List<MemberDTO> memberList = projectService.searchAddMemberList(searchMember, projectMembersList);
+		List<MemberDTO> memberList = projectService.searchAddMemberList(searchMember, projectMembersList, selectMembers);
 		
 		System.out.println("memberList : " + memberList);
 		
@@ -218,4 +209,31 @@ public class ProjectController {
 		
 		return gson.toJson(memberList);
 	}
+	
+	@PostMapping("/registmember")
+	public String registProjectMembers(@ModelAttribute ProjectMembersDTO registMember, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistMemberException {
+		
+		String[] projectCode = request.getParameterValues("code");
+		String[] memberNo = request.getParameterValues("no");
+		String[] memberRole = request.getParameterValues("role");
+		
+		int code = Integer.parseInt(projectCode[0]);
+		
+		ProjectDTO projectDetail = projectService.selectProjectDetail(code);
+		
+		for(int i = 0; i < memberNo.length; i++) {
+		
+			registMember.setCode(code);
+			registMember.setNo(Integer.parseInt(memberNo[i]));
+			registMember.setRoleName(memberRole[i]);
+			
+			projectService.registProjectMember(registMember);
+			
+		}
+		
+		rttr.addFlashAttribute("message", projectDetail.getTitle() + " 프로젝트에 멤버 추가 성공!");
+		
+		return "redirect:/project/list";
+	}
+	
 }

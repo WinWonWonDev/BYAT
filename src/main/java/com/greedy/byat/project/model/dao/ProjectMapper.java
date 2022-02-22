@@ -14,9 +14,9 @@ public interface ProjectMapper {
 
 	int registProject(ProjectDTO project);
 
-	int registProjectMembers(ProjectMembersDTO projectMembers);
+	int registProjectWriteMember(ProjectMembersDTO projectMembers);
 
-	int registProjectMemberRole(int no);
+	int registProjectFirstMemberRole(ProjectMembersDTO projectMembers);
 
 	int removeProject(int code);
 
@@ -25,5 +25,10 @@ public interface ProjectMapper {
 	int modifyProject(ProjectDTO project);
 
 	List<MemberDTO> searchAddMemberList(String searchMember);
+
+	int registProjectMembers(ProjectMembersDTO registMember);
+
+	int registProjectMemberRole(ProjectMembersDTO registMember);
+
 
 }

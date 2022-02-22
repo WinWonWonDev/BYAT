@@ -97,7 +97,7 @@
  		)
  	</insert>
  	
- 	<insert id="registProjectMembers" parameterType="ProjectMembersDTO">
+ 	<insert id="registProjectWriteMember" parameterType="ProjectMembersDTO">
  		INSERT
  		  INTO TBL_PROJECT_MEMBERS A
  		(
@@ -113,7 +113,7 @@
  		)
  	</insert>
  	
- 	<insert id="registProjectMemberRole" parameterType="_int">
+ 	<insert id="registProjectFirstMemberRole" parameterType="ProjectMembersDTO">
  		INSERT
  		  INTO TBL_ROLE A
  		(
@@ -125,7 +125,7 @@
  		VALUES
  		(
  		  SEQ_ROLE_CODE.NEXTVAL
- 		, 'PM'
+ 		, #{ roleName }
  		, #{ no }
  		, SEQ_PROJECT_NO.CURRVAL
  		)
@@ -168,5 +168,39 @@
  		 WHERE A.MEMBER_NAME LIKE '%' || #{ searchMember } || '%'
  		   AND A.MEMBER_PERMIT != 'ADMIN'
  	</select>
+ 	
+ 	<insert id="registProjectMembers" parameterType="ProjectMembersDTO">
+ 		INSERT
+ 		  INTO TBL_PROJECT_MEMBERS A
+ 		(
+ 		  A.PROJECT_CODE
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_PARTICIPATION_YN
+ 		)
+ 		VALUES
+ 		(
+ 		  #{ code }
+ 		, #{ no }
+ 		, 'Y'
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="registProjectMemberRole" parameterType="ProjectMembersDTO">
+ 		INSERT
+ 		  INTO TBL_ROLE A
+ 		(
+ 		  A.ROLE_CODE
+ 		, A.ROLE_NAME
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ROLE_CODE.NEXTVAL
+ 		, #{ roleName }
+ 		, #{ no }
+ 		, #{ code }
+ 		)
+ 	</insert>
  	
  </mapper>

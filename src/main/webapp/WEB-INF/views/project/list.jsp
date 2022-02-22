@@ -337,7 +337,7 @@
 	}
 	
 	#projectRealMemberList {
-		float:right;
+		float:left;
 	}
 	
  	#projectMenuBox {
@@ -585,6 +585,51 @@
 		border-radius:15px;
 	}
 	
+	.selectedMemberProjectRole {
+		
+		background-color: skyblue;
+		border : none;
+		border-radius : 15px;
+		color : white;
+	}
+	
+	.registMembersOkBtn {
+		
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:110px;
+		height:30px;
+		position:absolute;
+		margin-top:5px;
+	}
+	
+	.projectRealMemberListBtn {
+		
+		background:url("/byat/resources/images/moreList.png") no-repeat;
+		border:none;
+		width:30px;
+		height:30px;
+		float:left;
+		position:relative;
+		margin-left:330px;
+		bottom:23px;
+		cursor:pointer;
+	}
+	
+	.memberDeleteBtn {
+		
+		background:url("/byat/resources/images/memberDeleteBtn1.png") no-repeat;
+		border:none;
+		width:20px;
+		height:30px;
+		position:relative;
+		cursor:pointer;
+		left:70px;
+		bottom:5px;
+	}
+	
 </style>
 <script>
    const message = '${ requestScope.message }';
@@ -619,23 +664,32 @@
 							<input type="hidden" value="${ project.code }" name="projectCode" id="projectCode">
 						</td>
 						<td id="projectRealMemberList">
-							<c:forEach items="${ project.projectMembers }" var="member">
-								<c:if test="${ member.roleName eq 'PM' }">
-									<div id="projectRealMember1">
-										<c:out value="${ member.name }" />															
-									</div>									
+							<c:set var="loop_flag" value="false"/>
+							<c:forEach items="${ project.projectMembers }" var="member" varStatus="status">
+								
+								<c:if test="${ not loop_flag }">
+									<c:if test="${ member.roleName eq 'PM' }">
+										<div id="projectRealMember1">
+											<c:out value="${ member.name }" />															
+										</div>									
+									</c:if>
+									<c:if test="${ member.roleName eq '부PM' }">
+										<div id="projectRealMember2">
+											<c:out value="${ member.name }" />															
+										</div>
+									</c:if>
+									<c:if test="${ member.roleName eq '일반 멤버' }">
+										<div id="projectRealMember3">
+											<c:out value="${ member.name }" />															
+										</div>
+									</c:if>
+									<c:if test="${ status.index eq 7 }">
+										<c:set var="loop_flag" value="true"/>
+									</c:if>
 								</c:if>
-								<c:if test="${ member.roleName eq '부PM' }">
-									<div id="projectRealMember2">
-										<c:out value="${ member.name }" />															
-									</div>
-								</c:if>
-								<c:if test="${ member.roleName eq '일반 멤버' }">
-									<div id="projectRealMember3">
-										<c:out value="${ member.name }" />															
-									</div>
-								</c:if>
+								
 							</c:forEach>
+							<input type="button" id="projectRealMemberListBtn" class="projectRealMemberListBtn">
 						</td>
 						<td>
 							
@@ -777,10 +831,10 @@
 					팀원 추가
 				</div>
 				<div class="addMembersBox" id="addMembersBox">
-					<form action="${ pageContext.servletContext.contextPath }/project/registmember" id="addMembersForm" class="addMembersForm"></form>
+					<form action="${ pageContext.servletContext.contextPath }/project/registmember" id="addMembersForm" class="addMembersForm" method="post"></form>
 				</div>
 			</div>
-				<button type="button" id="registMembersOkBtn" style="margin-left:100px;">OK</button>
+				<input type="button" id="registMembersOkBtn" class="registMembersOkBtn" style="margin-left:100px;" value="OK">
 				<button type="button" id="registMembersCancelBtn" style="margin-left:350px;">Cancel</button>
 		</div>
 		
@@ -814,6 +868,7 @@
 	    	
 	    	document.getElementById("searchMembers").value = "";
 	    	projectMembersList.length = 0;
+	    	selectMembers.length = 0;
 	    	
 	    }
 	    
@@ -836,7 +891,20 @@
 			const $proBox = document.querySelectorAll("#projectMenuBox");
 			const $updateAndSelectProject = document.querySelectorAll("#updateAndSelectProject");
 			const $deleteProject = document.querySelectorAll("#deleteProject");
-			console.log($updateAndSelectProject);
+			const $projectRealMemberListBtn = document.querySelectorAll("#projectRealMemberListBtn");
+			
+			const $memberDeleteBtn = document.querySelectorAll("#memberDeleteBtn");
+			const $selectedMemberArea = document.querySelectorAll("#selectedMemberArea");
+			
+			for(let i = 0; i < $projectRealMemberListBtn.length; i++) {
+				
+				$projectRealMemberListBtn[i].onclick = function() {
+					
+					
+					
+				}
+				
+			}			
 			
 			for(let i = 0; i < $tds.length; i++) {
 				
@@ -970,16 +1038,8 @@
 				}
 				
 			}
+			
 		}
-		
-		let addMembersFormTag;
-		let selectedMemberAreaDiv;
-		let selectedMemberDiv;
-		let selectedMemberProjectRoleDiv;
-		let selectMemberValue;
-		let roleOption;
-		let hiddenMemberNo;
-		let selectMemberNo;
 		
 		let searchMembersValue;
         // 모든 텍스트의 변경에 반응합니다.
@@ -997,7 +1057,7 @@
 				source : function(request, response) {
 					$.ajax({
 						type : 'get',
-		                url : '/byat/project/searchMembers',
+		                url : '/byat/project/searchmembers',
 		                data : { 
 		                	searchValue : searchMembersValue,
 		                	code : projectCode,
@@ -1037,13 +1097,16 @@
 			            selectedMemberAreaDiv = document.createElement('div');
 			            selectedMemberDiv = document.createElement('div');
 			            selectedMemberProjectRoleDiv = document.createElement('select');
-			            roleOption = document.createElement('option');
-			            hiddenMemberNo = document.createElement('input');
-			            roleOption.innerText = '부PM';
 			            
+			            hiddenMemberNo = document.createElement('input');
 			            hiddenMemberNo.setAttribute('type', 'hidden');
 			            hiddenMemberNo.setAttribute('name', 'no');
 			            hiddenMemberNo.value = selectMemberNo;
+			            
+			            hiddenProjectCode = document.createElement('input');
+			            hiddenProjectCode.setAttribute('type', 'hidden');
+			            hiddenProjectCode.setAttribute('name', 'code');
+			            hiddenProjectCode.value = projectCode;
 			            
 			            selectedMemberAreaDiv.setAttribute('class', 'selectedMemberArea');
 			            selectedMemberAreaDiv.setAttribute('id', 'selectedMemberArea');
@@ -1052,22 +1115,34 @@
 			            selectedMemberDiv.setAttribute('id', 'selectedMember');
 			            selectedMemberDiv.innerHTML = selectMemberValue;
 			            
-			            selectedMemberProjectRoleDiv.setAttribute('class','selectedMemberProjectRole');
-			            selectedMemberProjectRoleDiv.setAttribute('id','selectedMemberProjectRole');
-			            selectedMemberProjectRoleDiv.setAttribute('name','role');
+			            roleOption = document.createElement('option');
+			            roleOption.innerText = '부PM';
+
+			            selectedMemberProjectRoleDiv.setAttribute('class', 'selectedMemberProjectRole');
+			            selectedMemberProjectRoleDiv.setAttribute('id', 'selectedMemberProjectRole');
+			            selectedMemberProjectRoleDiv.setAttribute('name', 'role');
 			            selectedMemberProjectRoleDiv.appendChild(roleOption);
 			            
 			            roleOption = document.createElement('option');
+			            roleOption.setAttribute('id', 'roleOption');
+			            roleOption.setAttribute('class', 'roleOption');
 			            roleOption.innerText = '일반 멤버';
 			            roleOption.setAttribute('selected', 'selected');
 			            
 			            selectedMemberProjectRoleDiv.appendChild(roleOption);
 			            
-			            addMembersFormTag.appendChild(selectedMemberAreaDiv);
+			            memberDeleteBtn = document.createElement('input')
+			            memberDeleteBtn.setAttribute('type', 'button');
+			            memberDeleteBtn.setAttribute('id', 'memberDeleteBtn');
+			            memberDeleteBtn.setAttribute('class', 'memberDeleteBtn');
+			            
 			            selectedMemberAreaDiv.appendChild(selectedMemberDiv);
 			            selectedMemberAreaDiv.appendChild(selectedMemberProjectRoleDiv);
 			            selectedMemberAreaDiv.appendChild(hiddenMemberNo);
-	            	
+			            selectedMemberAreaDiv.appendChild(hiddenProjectCode);
+			            selectedMemberAreaDiv.appendChild(memberDeleteBtn);
+			            addMembersFormTag.appendChild(selectedMemberAreaDiv);
+	            		
 		            }
 					
 		        },
@@ -1085,6 +1160,7 @@
 		            console.log(event);
 		            
 		            document.getElementById('searchMembers').value = "";
+		            
 		        }
 			}).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
 		        return $('<li>') //기본 tag가 li
@@ -1092,6 +1168,27 @@
 		        .appendTo(ul);
 		    };
 		});
+		
+		const $memberDeleteBtn = document.querySelectorAll("#memberDeleteBtn");
+		const $selectedMemberArea = document.querySelectorAll("#selectedMemberArea");
+		
+		console.log($memberDeleteBtn);
+		
+		document.getElementById("registMembersOkBtn").onclick = function() {
+			
+			const $selectedMemberDivText = document.querySelectorAll("#selectedMember");
+			
+			if(!($selectedMemberDivText.length == 0)) {
+				
+				document.getElementById("addMembersForm").submit();
+				
+			} else {
+				
+				alert("추가할 멤버가 없습니다. 멤버를 추가해 주세요!");
+				
+			}
+			
+		}
 		
 	</script>
 
