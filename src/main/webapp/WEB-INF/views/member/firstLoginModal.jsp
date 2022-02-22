@@ -322,7 +322,7 @@
 
 		<div class="modalLayer"></div>
 	</div>
-<input type="hidden" value="${ sessionScope.loginMember.id }">
+<input type="hidden" id="memberId" name="memberId" value="${ sessionScope.loginMember.id }">
 	<!-- setting쪽 모달 -->
 	<div id="initInfoSettingModal">
 		<div class="modal_content2">
@@ -345,7 +345,6 @@
 	</div>
 
 <!-- 이메일 인증번호 입력 모달창 -->
-		<!-- 비밀번호 찾기: 이메일 인증번호 입력 모달창 -->
 	<div id="inputEmailVeficationModal" style="display:none;">
 		<div class="modalContent">
 			<div class="modalHead">Alert Message</div>
@@ -367,57 +366,155 @@
 		</div>
 	</div>
 
+<input type="hidden" id="test" name="test">
 
 <script>
-    
-    $("#emailDuplicatieButton").click(function () {
-    	$.ajax({
-    		url : "${ pageContext.servletContext.contextPath }/member/emailduplicationCheckforinit",
-    		type : "GET",
-    		contentType : "json",
-    		data : {"emailAddress":$("#emailAddress").val()},
-    		success : function(data, status, xhr) {
+/*     $("#emailDuplicatieButton").click(function () {
+if($("#emailAddress").val().includes('@', 1)) {
+	$.ajax({
+		url : "${ pageContext.servletContext.contextPath }/member/emailduplicationcheckforinit",
+		type : "GET",
+		contentType : "json",
+		data : {"emailAddress":$("#emailAddress").val()},
+		success : function(data, status, xhr) {
+			
+			if(data > 0) {
+				alert("이미 존재하는 이메일입니다. 다른 이메일을 써주시기 바랍니다!");
+		        document.getElementById("modal").style.display="none";
+				document.getElementById("initInfoSettingModal").style.display="block";
+			} else {
+				alert("사용 가능한 이메일입니다.");
+		        document.getElementById("modal").style.display="none";
+				document.getElementById("initInfoSettingModal").style.display="block";
+			}
+		},
+		error : function(error) {
+			alert("에러가 발생했습니다. 다시 시도해주세요!");	
+		}
+	});
 
-    			if(data > 0) {
-    				alert("이미 존재하는 이메일입니다. 다른 이메일을 써주시기 바랍니다!");
-			        document.getElementById("modal").style.display="none";
-					document.getElementById("initInfoSettingModal").style.display="block";
-    			} else {
-    				alert("사용 가능한 이메일입니다.");
-			        document.getElementById("modal").style.display="none";
-					document.getElementById("initInfoSettingModal").style.display="block";
-    			}
-    		},
-    		error : function(error) {
-    			alert("에러가 발생했습니다. 다시 시도해주세요!");	
-    		}
-    	});
+} else {
+	alert("이메일 형식에 맞게 적어주세요!");
+    document.getElementById("modal").style.display="none";
+	document.getElementById("initInfoSettingModal").style.display="block";
+}
+}); */
+    $("#emailDuplicatieButton").click(function () {
+		if($("#emailAddress").val().includes('@', 1)) {
+	    	$.ajax({
+	    		url : "${ pageContext.servletContext.contextPath }/member/emailduplicationcheckforinit",
+	    		type : "GET",
+	    		contentType : "json",
+	    		data : {"emailAddress":$("#emailAddress").val()},
+	    		success : function(data, status, xhr) {
+
+	    			if(data != "null") {
+	    				alert("이미 존재하는 이메일입니다. 다른 이메일을 써주시기 바랍니다!");
+				        document.getElementById("modal").style.display="none";
+						document.getElementById("initInfoSettingModal").style.display="block";
+	    			} else {
+	    				alert("사용 가능한 이메일입니다.");
+				        document.getElementById("modal").style.display="none";
+						document.getElementById("initInfoSettingModal").style.display="block";
+						document.getElementById("test").value = data;
+	    			}
+	    		},
+	    		error : function(error) {
+	    			alert("에러가 발생했습니다. 다시 시도해주세요!");	
+	    		}
+	    	});
+    	
+		} else {
+			alert("이메일 형식에 맞게 적어주세요!");
+	        document.getElementById("modal").style.display="none";
+			document.getElementById("initInfoSettingModal").style.display="block";
+		}
     });
 
 
     $("#AuthenticationNumber").click(function () {
-	   $.ajax({
- 			url : "registverification",
-			type : "GET",
-			contentType : "json",
-			data : {"emailAddress":$("#emailAddress").val()},
-			success : function(data, status, xhr) {
-
-				if(data > 0) {
-					alert("인증번호가 발송되었습니다! 인증번호를 입력해주세요!");
-					document.getElementById("inputEmailVeficationModal").style.display="block";
-					document.getElementById("initInfoSettingModal").style.display="none";
-				} else {
-					alert("존재하지 않는 이메일입니다. 다시 입력해주세요.")
+    	if($("#test").val() != "" ) {
+    			console.log($("#test").val());
+    			
+    			if($("#emailAddress").val().includes('@', 1)) {
+			   $.ajax({
+		 			url : "${ pageContext.servletContext.contextPath }/member/registverification",
+					type : "GET",
+					contentType : "json",
+					data : {"emailAddress":$("#emailAddress").val(),
+						"memberId":$("#memberId").val()},
+					success : function(data, status, xhr) {
+			
+						if(data > 0) {
+							alert("인증번호가 발송되었습니다! 인증번호를 입력해주세요!");
+							document.getElementById("inputEmailVeficationModal").style.display="block";
+							document.getElementById("initInfoSettingModal").style.display="none";
+						} else {
+							alert("존재하지 않는 이메일입니다. 다시 입력해주세요.")
+							document.getElementById("initInfoSettingModal").style.display="block";
+							document.getElementById("inputEmailVeficationModal").style.display="none";
+						}
+					},
+					error : function(error) {
+						alert("에러가 발생했습니다. 다시 시도해주세요.");
+					}
+				});
+			   
+			   
+	   	} else {
+				alert("이메일 형식에 맞게 적어주세요!");
+		        document.getElementById("modal").style.display="none";
+				document.getElementById("initInfoSettingModal").style.display="block";
+	   		
+	   	
+	   	
+		
+   		}
+    			
+	   	} else {
+	   			alert("중복체크를 먼저 해주세요!");
+	   		
+	   	}
+	 
+    });
+    
+    $("#modalOkBtn2").click(function () {
+    	$.ajax({
+    		url : "checkverification",
+    		type : "POST",
+    		contentType : "json",
+    		data : {"inputVerificationNum":$("#inputVerificationNum").val()},
+    		success : function(data, status, xhr) {
+    			
+    			if(data > 0) {
+    				alert("인증이 완료되었습니다.");
 					document.getElementById("initInfoSettingModal").style.display="block";
 					document.getElementById("inputEmailVeficationModal").style.display="none";
-				}
-			},
-			error : function(error) {
-				alert("에러가 발생했습니다. 다시 시도해주세요.");
-			}
-		});
- 	  });
+    			} else {
+    				alert("인증이 실패하였습니다! 다시 입력해주세요!");
+					document.getElementById("initInfoSettingModal").style.display="block";
+					document.getElementById("inputEmailVeficationModal").style.display="none";
+    			}
+    		},
+    		error : function(error) {
+    			alert("에러가 발생했습니다. 다시 시도해주세요.");
+    		}
+    		
+    	});
+    	
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
      
 	document.getElementById("modal").style.display="block";
 	document.getElementById("initInfoSettingModal").style.display="none";

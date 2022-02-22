@@ -97,7 +97,8 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/project/remove");
 		memberPermitList.add("/project/detail");
 		memberPermitList.add("/project/modify");
-		memberPermitList.add("/project/searchMembers");
+		memberPermitList.add("/project/searchmembers");
+		memberPermitList.add("/project/registmember");
 		
 		memberPermitList.add("/sprint/list");
 		memberPermitList.add("/sprint/regist");
@@ -106,6 +107,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/sprint/start");
 		memberPermitList.add("/sprint/end");
 		memberPermitList.add("/sprint/select");
+		memberPermitList.add("/sprint/selecttasks");
 		
 
 		memberPermitList.add("/mytask/list");
@@ -122,7 +124,8 @@ public class AuthenticationFilter implements Filter {
 		
 		memberPermitList.add("/member/logout");
 		memberPermitList.add("/member/moveprofile");
-		memberPermitList.add("/member/emailduplicationCheckforinit");
+		memberPermitList.add("/member/emailduplicationcheckforinit");
+		memberPermitList.add("/member/registverification");
 		
 		
 	    allPermitList.add("/member/login");

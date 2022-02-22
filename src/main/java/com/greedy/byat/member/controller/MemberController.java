@@ -78,28 +78,30 @@ public class MemberController {
 		}
 	}
 	
-	@GetMapping("emailduplicationCheckforinit")
+//	@GetMapping("emailduplicationcheckforinit")
+//	@ResponseBody
+//	public int emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
+//	
+//		response.setContentType("application/json; charset=UTF-8");
+//		
+//		int result = 0;
+//		
+//		Gson gson = new GsonBuilder()
+//				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+//				.setPrettyPrinting()
+//				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+//				.serializeNulls()
+//				.disableHtmlEscaping()
+//				.create();
+//		
+//		result = memberService.emailDuplicationCheck(emailAddress);
+//
+//		return result;
+//	}
+
+	@GetMapping("emailduplicationcheckforinit")
 	@ResponseBody
-	public int emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
-	
-		response.setContentType("application/json; charset=UTF-8");
-		
-		Gson gson = new GsonBuilder()
-				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
-				.setPrettyPrinting()
-				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-				.serializeNulls()
-				.disableHtmlEscaping()
-				.create();
-		
-		int result = memberService.emailDuplicationCheck(emailAddress);
-		
-		return result;
-	}
-	
-	@GetMapping("registverification")
-	@ResponseBody
-	public int registVerificationNumber(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
+	public String emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
 		
 		response.setContentType("application/json; charset=UTF-8");
 		
@@ -113,10 +115,32 @@ public class MemberController {
 				.disableHtmlEscaping()
 				.create();
 		
+		String test = gson.toJson(memberService.emailDuplicationCheck(emailAddress));
+		
+		return test;
+	}
+	
+	@GetMapping("/registverification")
+	@ResponseBody
+	public int registVerificationNumber(String emailAddress, String memberId, RedirectAttributes rttr, HttpServletResponse response) throws NotexistEmailException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int result = 0;
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		result = memberService.registVerificationNumber(emailAddress, memberId);
+		
 		return result;
 		
 	}
-	//얘는 인증번호 생성하고 일치하면 result = 1 반환 ㅇ ㅋ
 	
 
 	@PostMapping(value="selectemail", produces="application/json; charset=UTF-8")
