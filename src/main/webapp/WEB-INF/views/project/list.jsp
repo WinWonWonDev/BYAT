@@ -979,17 +979,19 @@
 			<div class="projectMemberModalList_content_content_box">
 				<div class="projectMemberModalListTitle">팀원 목록</div>
 				<div class="projectMemberModalListTableArea" id="projectMemberModalListTableArea" style="overflow-y:scroll;">
-					<table id="projectMemberModalListTable" class="projectMemberModalListTable">
-						<thead>
-							<tr>
-								<th>사번</th>
-								<th>이름</th>
-								<th>역할</th>
-								<th style="width:70px;"></th>
-							</tr>
-						</thead>
-						<tbody id="projectMemberModalListTableBody" class="projectMemberModalListTableBody"></tbody>
-					</table>
+					<form action="${ pageContext.servletContext.contextPath }/project/modifyrole" id="projectMemberModalListForm" method="post">
+						<table id="projectMemberModalListTable" class="projectMemberModalListTable">
+							<thead>
+								<tr>
+									<th>사번</th>
+									<th>이름</th>
+									<th>역할</th>
+									<th style="width:70px;"></th>
+								</tr>
+							</thead>
+							<tbody id="projectMemberModalListTableBody" class="projectMemberModalListTableBody"></tbody>
+						</table>					
+					</form>
 				</div>
 			</div>
 			<button type="button" id="projectMemberModalListOkBtn" class="projectMemberModalListOkBtn">Ok</button>
@@ -1016,7 +1018,15 @@
 		document.getElementById("projectMemberModalListCloseBtn").onclick = function() {
 			document.getElementById("projectMemberModalList").style.display = "none";
 			
+			const $table = $("#projectMemberModalListTable tbody");
 			
+			const bodyChildDelete = document.getElementById("projectMemberModalListTableBody");
+			
+			while( bodyChildDelete.hasChildNodes() ) {
+				
+				bodyChildDelete.removeChild(bodyChildDelete.firstChild );
+				
+			}
 			
 		}
 
@@ -1062,6 +1072,8 @@
 			const $memberDeleteBtn = document.querySelectorAll("#memberDeleteBtn");
 			const $selectedMemberArea = document.querySelectorAll("#selectedMemberArea");
 			
+			const pmNoList = [];
+			
 			for(let i = 0; i < $projectRealMemberListBtn.length; i++) {
 				
 				$projectRealMemberListBtn[i].onclick = function() {
@@ -1086,11 +1098,30 @@
 							for(let i in memberList) {
 								
 								const $tr = $("<tr>");
-								const $idTd = $("<td>").text(memberList[i].id);
+								const $idTd = $("<td id='listMemberList'>").text(memberList[i].id);
 								const $nameTd = $("<td>").text(memberList[i].name);
-								/* const $roleNameTd = $("<td>").text(memberList[i].roleName); */
-								const $roleNameTd = $("<td>");
+								const $roleNameTd = $("<td name='roleList'>");
 								const $deleteTd = $("<td>");
+								
+								memberListNo = document.createElement('input');
+								memberListNo.setAttribute('type', 'hidden');
+								memberListNo.setAttribute('name', 'no');
+								memberListNo.setAttribute('value', memberList[i].no);
+								
+								memberListCode = document.createElement('input');
+								memberListCode.setAttribute('type', 'hidden');
+								memberListCode.setAttribute('name', 'code');
+								memberListCode.setAttribute('value', removeMemberProjectCode);
+								
+								memberListName = document.createElement('input');
+								memberListName.setAttribute('type', 'hidden');
+								memberListName.setAttribute('name', 'name');
+								memberListName.setAttribute('value', memberList[i].name);
+								
+								$idTd.append(memberListNo);
+								$idTd.append(memberListCode);
+								
+								$nameTd.append(memberListName);
 								
 								memberListRoleOptionPM = document.createElement('option');
 								memberListRoleOptionPM.innerText ='PM';
@@ -1104,13 +1135,14 @@
 								memberListRole = document.createElement('select');
 								memberListRole.setAttribute('id', 'projectMemberListRole');
 								memberListRole.setAttribute('class', 'projectMemberListRole');
-								memberListRole.setAttribute('name', 'role');
+								memberListRole.setAttribute('name', 'roleName');
 								memberListRole.appendChild(memberListRoleOptionPM);
 								memberListRole.appendChild(memberListRoleOptionSecondPM);
 								memberListRole.appendChild(memberListRoleOptionGeneral);
 								
 								if(memberList[i].roleName == 'PM') {
 									memberListRoleOptionPM.setAttribute('selected', 'selected');
+									pmNoList.push(memberList[i].no);
 								} else if(memberList[i].roleName == '부PM') {
 									memberListRoleOptionSecondPM.setAttribute('selected', 'selected');
 								} else {
@@ -1182,6 +1214,49 @@
 										});
 										
 									}
+									
+								}
+								
+								document.getElementById("projectMemberModalListOkBtn").onclick = function() {
+									
+									const $projectMemberListRoleQuery = document.querySelectorAll("#projectMemberListRole");
+									const $listMemberListQuery = document.querySelectorAll("#listMemberList");
+									
+									console.log($listMemberListQuery[0].innerText);
+									console.log(${ sessionScope.loginMember.id });
+									
+									if($listMemberListQuery[0].innerText == ${ sessionScope.loginMember.id }) {
+										
+										let checkPm = 0;
+										
+										for(let i = 0; i < $projectMemberListRoleQuery.length; i++) {
+											
+											if($projectMemberListRoleQuery[i].value == "PM") {
+												
+												checkPm++;
+												
+											}
+											
+										}
+										
+										if(checkPm < 1) {
+											
+											alert("PM이 지정되지 않았습니다. 다시 확인해주세요!");
+											
+										} else if(checkPm > 1) {
+											
+											alert("PM은 두 명이상 될 수 없습니다. 다시 확인해주세요!");
+										} else {
+											
+											document.getElementById("projectMemberModalListForm").submit();
+										}
+										
+									} else {
+										
+										alert("변경 권한이 없습니다. Cancel 버튼으로 종료해주세요.");
+										
+									}
+									
 									
 								}
 								
@@ -1361,9 +1436,8 @@
 		                traditional : true,
 		                dataType : 'json',
 		                success : function(data) {
-		                	
-		                    // 서버에서 json 데이터 response 후 목록 추가
-		                    response(
+
+		                	response(
 		                        $.map(data, function(item) {
 		                            return {
 		                                value : item
@@ -1448,7 +1522,7 @@
 		        classes : {
 		            'ui-autocomplete': 'highlight'
 		        },
-		        delay : 300,
+		        delay : 100,
 		        position : { my : 'right top', at : 'right bottom' },
 		        close : function(event, ui) {
 		            console.log(event);
@@ -1456,9 +1530,9 @@
 		            document.getElementById('searchMembers').value = "";
 		            
 		        }
-			}).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
-		        return $('<li>') //기본 tag가 li
-		        .append('<div>' + item.value.name + " " + item.value.id + '</div>') // 원하는 모양의 HTML 만들면 됨
+			}).autocomplete('instance')._renderItem = function(ul, item) {
+		        return $('<li>')
+		        .append('<div>' + item.value.name + " " + item.value.id + '</div>')
 		        .appendTo(ul);
 		    };
 		});
@@ -1466,7 +1540,8 @@
         $(document).ready(function() {
         	$(document).on("click", "#memberDeleteBtn", function(event) {
         		
-				$(this).parent('div').remove();        		
+				$(this).parent('div').remove();
+				
         	});
         	
         });

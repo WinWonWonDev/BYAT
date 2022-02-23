@@ -27,11 +27,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
+import com.greedy.byat.common.exception.project.ProjectWriterChangeException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
@@ -272,5 +274,36 @@ public class ProjectController {
 		mv.setViewName("jsonView");
 		
 		return mv;
+	}
+	
+	@PostMapping("/modifyrole")
+	public String modifyMemberRole(HttpServletRequest request, RedirectAttributes rttr) throws ProjectMemberModifyRoleException, ProjectWriterChangeException {
+		
+		String[] no = request.getParameterValues("no");
+		String[] roleName = request.getParameterValues("roleName");
+		String[] code = request.getParameterValues("code");
+		String[] name = request.getParameterValues("name");
+		
+		List<ProjectMembersDTO> members = new ArrayList<>();
+		
+		for(int i = 0; i < no.length; i++) {
+			
+			System.out.println("name : " + name[i]);
+			
+			ProjectMembersDTO member = new ProjectMembersDTO();
+			
+			member.setCode(Integer.parseInt(code[i]));
+			member.setNo(Integer.parseInt(no[i]));
+			member.setRoleName(roleName[i]);
+			member.setName(name[i]);
+			members.add(i, member);
+		}
+		
+		
+		projectService.modifyProjectMemberRole(members);
+		
+		rttr.addFlashAttribute("message", "구성원 정보 수정 성공!");
+		
+		return "redirect:/project/list";
 	}
 }

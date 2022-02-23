@@ -35,5 +35,9 @@ public interface ProjectMapper {
 
 	int removeProjectMembers(ProjectMembersDTO removeMember);
 
+	int modifyProjectMemberRole(ProjectMembersDTO projectMembersDTO);
+
+	int modifyProjectWriter(ProjectMembersDTO projectMembersDTO);
+
 
 }

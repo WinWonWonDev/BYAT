@@ -8,11 +8,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
+import com.greedy.byat.common.exception.project.ProjectWriterChangeException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dao.ProjectMapper;
 import com.greedy.byat.project.model.dto.ProjectDTO;
@@ -223,6 +225,36 @@ public class ProjectServiceImpl implements ProjectService {
 		if(!(result > 0)) {
 			
 			throw new ProjectMemberRemoveException("구성원 제외 실패!");
+		}
+		
+	}
+
+	@Override
+	public void modifyProjectMemberRole(List<ProjectMembersDTO> members) throws ProjectMemberModifyRoleException, ProjectWriterChangeException {
+		
+		for(int i = 0; i < members.size(); i++) {
+			
+			int result = mapper.modifyProjectMemberRole(members.get(i));
+			
+			if("PM".equals(members.get(i).getRoleName())) {
+				
+				System.out.println("왓더 ?");
+				
+				int writerChangeResult = mapper.modifyProjectWriter(members.get(i));
+				
+				System.out.println("헬?");
+				
+				if(!(writerChangeResult > 0)) {
+					
+					throw new ProjectWriterChangeException("프로젝트 작성자 변경 실패!");
+				}
+			}
+			
+			if(!(result > 0)) {
+				
+				throw new ProjectMemberModifyRoleException("구성원 역할 변경 실패!");
+			}
+			
 		}
 		
 	}

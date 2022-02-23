@@ -230,4 +230,19 @@
  		   AND A.PROJECT_PARTICIPATION_YN = 'Y'
  	</update>
  	
+ 	<update id="modifyProjectMemberRole" parameterType="ProjectMembersDTO">
+ 		UPDATE
+ 			   TBL_ROLE A
+ 		   SET A.ROLE_NAME = #{ roleName }
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }
+ 	</update>
+ 	
+ 	<update id="modifyProjectWriter" parameterType="ProjectMembersDTO">
+ 		UPDATE
+ 		       TBL_PROJECT A
+ 		   SET A.PROJECT_WRITER = #{ name }
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 	</update>
+ 	
  </mapper>
