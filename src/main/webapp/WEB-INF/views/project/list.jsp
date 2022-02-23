@@ -706,7 +706,20 @@
 		height:30px;
 		position:absolute;
 		margin-top:5px;
-		margin-left:260px; 
+		margin-left:370px; 
+	}
+	
+	.projectMemberModalListOkBtn {
+		
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:110px;
+		height:30px;
+		position:absolute;
+		margin-top:5px;
+		margin-left:170px; 
 	}
 	
 	.projectMemberModalListTableArea {
@@ -736,6 +749,15 @@
 		position:relative;
 		cursor:pointer;
 		padding-top:3px;
+	}
+	
+	.projectMemberListRole {
+		
+		background-color: skyblue;
+		border : none;
+		border-radius : 15px;
+		color : white;
+		text-align:center;
 	}
 	
 </style>
@@ -970,6 +992,7 @@
 					</table>
 				</div>
 			</div>
+			<button type="button" id="projectMemberModalListOkBtn" class="projectMemberModalListOkBtn">Ok</button>
 			<button type="button" id="projectMemberModalListCloseBtn" class="projectMemberModalListCloseBtn">Close</button>
 		</div>
 		
@@ -1065,8 +1088,36 @@
 								const $tr = $("<tr>");
 								const $idTd = $("<td>").text(memberList[i].id);
 								const $nameTd = $("<td>").text(memberList[i].name);
-								const $roleNameTd = $("<td>").text(memberList[i].roleName);
+								/* const $roleNameTd = $("<td>").text(memberList[i].roleName); */
+								const $roleNameTd = $("<td>");
 								const $deleteTd = $("<td>");
+								
+								memberListRoleOptionPM = document.createElement('option');
+								memberListRoleOptionPM.innerText ='PM';
+
+								memberListRoleOptionSecondPM = document.createElement('option');
+								memberListRoleOptionSecondPM.innerText ='부PM';
+								
+								memberListRoleOptionGeneral = document.createElement('option');
+								memberListRoleOptionGeneral.innerText ='일반 멤버';
+
+								memberListRole = document.createElement('select');
+								memberListRole.setAttribute('id', 'projectMemberListRole');
+								memberListRole.setAttribute('class', 'projectMemberListRole');
+								memberListRole.setAttribute('name', 'role');
+								memberListRole.appendChild(memberListRoleOptionPM);
+								memberListRole.appendChild(memberListRoleOptionSecondPM);
+								memberListRole.appendChild(memberListRoleOptionGeneral);
+								
+								if(memberList[i].roleName == 'PM') {
+									memberListRoleOptionPM.setAttribute('selected', 'selected');
+								} else if(memberList[i].roleName == '부PM') {
+									memberListRoleOptionSecondPM.setAttribute('selected', 'selected');
+								} else {
+									memberListRoleOptionGeneral.setAttribute('selected', 'selected');
+								}
+								
+								$roleNameTd.append(memberListRole);
 								
 								memberListDeleteMember = document.createElement('input')
 					            memberListDeleteMember.setAttribute('type', 'button');
@@ -1404,14 +1455,6 @@
 		            
 		            document.getElementById('searchMembers').value = "";
 		            
-		            /* if(selectMemberValue != null) {
-		            	
-			            memberDeleteBtn.click = function() {
-			            	
-			            }
-		            	
-		            } */
-		            
 		        }
 			}).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
 		        return $('<li>') //기본 tag가 li
@@ -1419,6 +1462,14 @@
 		        .appendTo(ul);
 		    };
 		});
+		
+        $(document).ready(function() {
+        	$(document).on("click", "#memberDeleteBtn", function(event) {
+        		
+				$(this).parent('div').remove();        		
+        	});
+        	
+        });
 		
 		document.getElementById("registMembersOkBtn").onclick = function() {
 			
