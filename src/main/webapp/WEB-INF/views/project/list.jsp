@@ -1084,13 +1084,11 @@
 								
 								$memberListDeleteMember = document.querySelectorAll('#memberListDeleteMember');
 								
-								console.log(projectRealMemberListLine.children.length);
 								let tempMemberList = [];
 								
 								for(let i = 1; i < projectRealMemberListLine.children.length - 1; i++) {
 									
 									tempMemberList.push(projectRealMemberListLine.children[i].childNodes[1].value);
-									console.log(i + " : " + tempMemberList[i - 1]);
 								}
 								
 								$memberListDeleteMember[i].onclick = function() {
@@ -1119,11 +1117,11 @@
 												
 												tbody.deleteRow(i);
 												
-												for(let k = 0; k < tempMemberList.length; i++) {
+												for(let k = 0; k < tempMemberList.length; k++) {
 													
-													if(tempMemberList[k] == memberList[i].no) {
+													if(tempMemberList[k] == removeMemberNo) {
 														
-														projectRealMemberListLine.children[k].remove();
+														projectRealMemberListLine.children[k + 1].remove();
 														
 													}
 													
