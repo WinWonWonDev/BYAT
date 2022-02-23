@@ -27,6 +27,86 @@
  		<result property="email" column="MEMBER_EMAIL"/>
  	</resultMap>
  	
+ 	<resultMap type="RoleDTO" id="roleResultMap">
+ 		<id property="code" column="ROLE_CODE"/>
+ 		<id property="memberNo" column="MEMBER_NO"/>
+ 		<id property="projectCode" column="PROJECT_CODE"/>
+ 		<result property="roleName" column="ROLE_NAME"/>
+ 	</resultMap>
+ 	
+ 	<resultMap type="TaskDTO" id="taskResultMap">
+ 		<id property="code" column="TASK_CODE"/>
+ 		<result property="title" column="TASK_TITLE"/>
+ 		<result property="startDate" column="TASK_START_DATE"/>
+ 		<result property="endDate" column="TASK_END_DATE"/>
+ 		<result property="manager" column="TASK_MANAGER"/>
+ 		<result property="progress" column="TASK_PROGRESS"/>
+ 		<result property="body" column="TASK_BODY"/>
+ 		<result property="version" column="TASK_VERSION"/>
+ 		<result property="deleteStatus" column="TASK_DELETE_STATUS"/>
+ 		<result property="memberNo" column="MEMBER_NO"/>
+ 		<result property="backlogCode" column="BACKLOG_CODE"/>
+ 		<result property="sprintCode" column="SPRINT_CODE"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		
+ 		<association property="managerRole" resultMap="roleResultMap"/>
+ 		
+ 		<collection property="taskMemberList" column="code" select="selectTaskMembers"/>
+ 		
+ 	</resultMap>
+ 	
+ 	<resultMap id="taskMembersMap" type="TaskMembersDTO">
+ 		<id property="taskCode" column="TASK_CODE"/>
+ 		<id property="memberNo" column="MEMBER_NO"/>
+ 		<result property="sprintCode" column="SPRINT_CODE"/>
+ 	</resultMap>
+ 	
+ 	<select id="selectTaskList" resultMap="taskResultMap">
+ 		SELECT
+ 			   A.TASK_CODE
+ 			 , A.TASK_TITLE
+ 			 , A.TASK_MANAGER
+ 			 , A.TASK_START_DATE
+ 			 , A.TASK_END_DATE
+ 			 , A.TASK_PROGRESS
+ 			 , A.TASK_BODY
+ 			 , A.TASK_VERSION
+ 			 , A.TASK_DELETE_STATUS
+ 			 , A.MEMBER_NO
+ 			 , A.PROJECT_CODE
+ 			 , A.BACKLOG_CODE
+ 			 , A.SPRINT_CODE
+ 			 , B.ROLE_NAME
+ 		  FROM TBL_TASK A
+ 		  JOIN TBL_ROLE B ON (A.MEMBER_NO = B.MEMBER_NO)
+ 		  JOIN TBL_SPRINT C ON (A.PROJECT_CODE = C.PROJECT_CODE)
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 	</select>
+ 	
+ 	<select id="selectTaskMembers" resultMap="taskMembersMap">
+ 		SELECT
+ 			    B.TASK_CODE
+ 			  , B.MEMBER_NO
+ 			  , B.SPRINT_CODE
+ 		   FROM TBL_TASKMEMBERS B
+ 		  WHERE B.TASK_CODE = #{ code }
+ 	</select>
+ 	
+ 	<!-- <select id="selectTask" resultMap="taskResultMap">
+ 		SELECT
+ 			   A.TASK_CODE
+ 			 , A.TASK_TITLE
+ 			 , A.TASK_START_DATE
+ 			 , A.TASK_END_DATE
+ 			 , A.TASK_MANAGER
+ 			 , A.TASK_PROGRESS
+ 			 , A.TASK_BODY
+ 			 , A.TASK_VERSION
+ 			 , A.TASK_DELETE_STATUS
+ 			 , A.TASK_
+ 		
+ 	</select> -->
+ 	
  	<select id="selectSprintList" resultMap="sprintResultMap">
  		SELECT
  		       A.SPRINT_CODE

@@ -3,6 +3,7 @@ package com.greedy.byat.sprint.model.dao;
 import java.util.List;
 
 import com.greedy.byat.sprint.model.dto.SprintDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;
 
 public interface SprintMapper {
 
@@ -22,6 +23,7 @@ public interface SprintMapper {
 
 	int updateSprint(SprintDTO sprint);
 
+	List<TaskDTO> selectTaskList(int sprintCode);
 
 	
 }

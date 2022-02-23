@@ -24,10 +24,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.greedy.byat.backlog.model.dto.BacklogDTO;
+import com.greedy.byat.backlog.model.service.BacklogService;
 import com.greedy.byat.common.exception.sprint.RegistSprintException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.sprint.model.service.SprintService;
+import com.greedy.byat.task.model.dto.TaskDTO;
+import com.greedy.byat.task.model.service.TaskService;
 
 @Controller
 @RequestMapping("/sprint")
@@ -36,12 +40,13 @@ public class SprintController {
 	private final SprintService sprintService;
 	
 	@Autowired
-	public SprintController(SprintService sprintService) {
+	public SprintController(SprintService sprintService, BacklogService backlogService) {
 		this.sprintService = sprintService;
+		
 	}
 	
 	@GetMapping("/list")
-	public ModelAndView selectSprintList(HttpServletRequest request, ModelAndView mv) {
+	public ModelAndView selectAllList(HttpServletRequest request, ModelAndView mv) {
 
 		int projectCode = Integer.parseInt(request.getParameter("code"));
 		
@@ -49,6 +54,9 @@ public class SprintController {
 		
 		String projectProgress = sprintService.selectProjectProgress(projectCode);
 		List<SprintDTO> sprintList = sprintService.selectSprintList(projectCode);
+		/*
+		 * List<BacklogDTO> backlogList = backlogService.selectBacklogList(projectCode);
+		 */
 		
 		System.out.println(projectProgress);
 		System.out.println(sprintList);
@@ -135,6 +143,29 @@ public class SprintController {
 		return "redirect:/sprint/list?code=" + projectCode;
 	}
 	
-	
+	@GetMapping(value = "/selecttasks", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String selectTaskList(HttpServletRequest request) {
+		
+		System.out.println("씨익");
+		
+		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
+		
+		System.out.println("100일 축하"+sprintCode);
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		List<TaskDTO> taskList = sprintService.selectTaskList(sprintCode);
+		
+		System.out.println("200일축하"+taskList);
+		
+		return gson.toJson(taskList);
+	}
 	
 }

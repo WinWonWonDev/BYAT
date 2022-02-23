@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.greedy.byat.common.exception.sprint.RegistSprintException;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;
 
 public interface SprintService {
 
@@ -19,5 +20,6 @@ public interface SprintService {
 
 	void modifySprint(SprintDTO sprint);
 
-	
+	List<TaskDTO> selectTaskList(int sprintCode);
+
 }
