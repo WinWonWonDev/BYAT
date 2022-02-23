@@ -100,6 +100,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/project/searchmembers");
 		memberPermitList.add("/project/registmember");
 		memberPermitList.add("/project/projectmemberlist");
+		memberPermitList.add("/project/removemember");
 		
 		memberPermitList.add("/sprint/list");
 		memberPermitList.add("/sprint/regist");
@@ -107,7 +108,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/sprint/modify");
 		memberPermitList.add("/sprint/start");
 		memberPermitList.add("/sprint/end");
-		memberPermitList.add("/sprint/select");
+		memberPermitList.add("/sprint/detail");
 		memberPermitList.add("/sprint/selecttasks");
 		
 

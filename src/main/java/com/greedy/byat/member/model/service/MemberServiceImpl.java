@@ -76,7 +76,7 @@ public class MemberServiceImpl implements MemberService {
 		int randomVerificationNum = (int)((Math.random() * 100000) + 10000);
 		
 		String email = mapper.selectEmailById(id);
-
+		
 		int no = mapper.selectMemberNo(id); 
 		
 		HashMap<String, Integer> map = new HashMap<>();
@@ -272,6 +272,8 @@ public class MemberServiceImpl implements MemberService {
 		map.put("phone", phoneNumber);
 		map.put("password", encodedFirstPwd);
 		map.put("no", inputNo);
+		
+		System.out.println("map : " + map);
 		
 		int result = mapper.initialInputInfo(map);
 		

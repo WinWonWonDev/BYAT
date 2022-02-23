@@ -183,8 +183,9 @@
 		   SET A.MEMBER_EMAIL = #{ email }
 		     , A.MEMBER_PHONE = #{ phone }
 		     , A.MEMBER_PWD = #{ password }
+		     , A.INIT_PWD_YN = 'N'
 		 WHERE A.MEMBER_NO = #{ no }
-		   AND A.ABSENCE_YN = 'N';
+		   AND A.ABSENCE_YN = 'N'
 	</update>
 
 	

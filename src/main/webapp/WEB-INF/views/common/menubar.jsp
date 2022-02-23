@@ -70,6 +70,7 @@
 	}
 	#navbarSupportedContent .active>a:not(:only-child):after {
 		transform: rotate(90deg);
+		
 	}
 	.hori-selector{
 		display:inline-block;
@@ -249,10 +250,10 @@
 		z-index:1;
 	}
 	
-		#logoutModal h2 {
+	#logoutModal h2 {
 			margin:0;
 	}
-		#logoutModal button {
+	#logoutModal button {
 			display:inline-block;
 			width:100px;
 			margin-left:calc(100% - 100px - 10px);
@@ -337,7 +338,8 @@
        
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-            	<div class="hori-selector"><div class="left"></div><div class="right"></div></div>
+                 
+             	<div class="hori-selector"><div class="left"></div><div class="right"></div></div>
                 <li class="nav-item active">
                     <a class="nav-link" href="${ pageContext.servletContext.contextPath }/home">Home</a>
                 </li>
@@ -359,6 +361,32 @@
 	                </li>                
                 </c:if> 
             </ul>
+
+  <%--           	
+  					<메뉴를 눌렀을 시 그 페이지로 이동 + 하얀색이 그 페이지에 맞게 이동되는 것! (밑에 javascript에도 있음)ㄱㄷㄱㄷ 나중에 해봄>
+  				<div class="hori-selector"><div class="left"></div><div class="right"></div></div>
+                <li class="nav-item active" id="homeMenu">
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/home">Home</a>
+                </li>
+                <li class="nav-item" id="projectMenu">
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/project/list">Project</a>
+                </li>
+                <li class="nav-item" id="mytaskMenu">
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/mytask/list">My Task</a>
+                </li>
+                <li class="nav-item" id="calendarMenu">
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/calendar/list">Calendar</a>
+                </li>
+                <li class="nav-item" id="historyMenu">
+                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/history/list">History</a>
+                </li>
+                <c:if test="${ sessionScope.loginMember.permit eq 'ADMIN' }"> 
+	                <li class="nav-item" id="adminMenu">
+	                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/management/list">Management</a>
+	                </li>                
+                </c:if> --%>
+
+
             <input type="button" class="noticeButtonImg" onclick="noticeDisplay();">
             <!-- 알림 갯수에 따라 숫자 나오게 하는거 ㅋㅋ ㄱㄷ... -->
 			<div class="note-num">3</div>
@@ -443,7 +471,26 @@
 	
 	
 	
-	    // --------------add active class-on another-page move----------
+/* 	  
+		<메뉴를 눌렀을 시 그 페이지로 이동 + 하얀색이 그 페이지에 맞게 이동되는 것! ㄱㄷㄱㄷ 나중에 해봄>
+		// --------------add active class-on another-page move----------
+	    jQuery(document).ready(function($){
+	    	// Get current path and find target link
+	    	var path = window.location.pathname.split("/").pop();
+	
+	    	// Account for home page with empty path
+	    	if ( path == '${ pageContext.servletContext.contextPath }/home}' ) {
+	    		location.href = '${ pageContext.servletContext.contextPath }/home';
+	    	}  else if ( path == '${ pageContext.servletContext.contextPath }/project/list') {
+	    		location.href = '${ pageContext.servletContext.contextPath }/project/list';
+	    	}  
+	
+	    	var target = $('#navbarSupportedContent ul li a[href="'+path+'"]');
+	    	// Add active class to target link
+	    	target.parent().addClass('active');
+	    }); */
+	    
+ 	    // --------------add active class-on another-page move----------
 	    jQuery(document).ready(function($){
 	    	// Get current path and find target link
 	    	var path = window.location.pathname.split("/").pop();
@@ -456,8 +503,7 @@
 	    	var target = $('#navbarSupportedContent ul li a[href="'+path+'"]');
 	    	// Add active class to target link
 	    	target.parent().addClass('active');
-	    });
-	    
+	    }); 
 	    
 	    const $profileName = document.getElementById("profileName");
 	    const $logoutArea = document.getElementById("logoutArea");

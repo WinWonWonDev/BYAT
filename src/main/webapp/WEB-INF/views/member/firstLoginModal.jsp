@@ -595,11 +595,12 @@
 					success : function(data, status, xhr) {
 						
 						if(data > 0) {
-							//리다이랙트로 이동..? 아니면 모달없ㄱ애줘서 거기서 하다가 다른거 누르면 main으로 자연스럽게 가게?
 							alert("정보 등록 성공! 환영합니다!");
 							document.getElementById("modal").style.display="none";
 							document.getElementById("inputEmailVeficationModal").style.display="none";
 							document.getElementById("initInfoSettingModal").style.display="none";
+							//아 여기서.. 시간 초과되는 알림창 안떠야되는ㄷ
+							//clearInterval(AuthTimer.timer);
 							
 						} else {
 							alert("정보 등록 실패! 다시 시도해주세요!");
