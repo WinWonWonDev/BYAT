@@ -32,6 +32,7 @@
  		<id property="code" column="PROJECT_CODE"/>
  		<id property="no" column="MEMBER_NO"/>
  		<result property="participationYn" column="PROJECT_PARTICIPATION_YN"/>
+ 		<result property="id" column="MEMBER_ID"/>
  		<result property="name" column="MEMBER_NAME"/>
  		<result property="roleName" column="ROLE_NAME"/>
  	</resultMap>
@@ -66,6 +67,7 @@
 		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
 		  JOIN TBL_ROLE C ON(A.PROJECT_CODE = C.PROJECT_CODE)
 		 WHERE A.PROJECT_CODE = #{ code }
+		   AND A.PROJECT_PARTICIPATION_YN = 'Y'
 		   AND B.MEMBER_NO = C.MEMBER_NO
  	</select>
  	
@@ -202,5 +204,30 @@
  		, #{ code }
  		)
  	</insert>
+ 	
+ 	<select id="selectProjectMemberList" resultMap="projectMembersResultMap" parameterType="_int">
+ 		SELECT
+		       A.MEMBER_NO
+		     , A.PROJECT_PARTICIPATION_YN
+		     , B.MEMBER_NAME
+		     , B.MEMBER_ID
+		     , C.ROLE_NAME
+		  FROM TBL_PROJECT_MEMBERS A
+		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
+		  JOIN TBL_ROLE C ON(A.PROJECT_CODE = C.PROJECT_CODE)
+		 WHERE A.PROJECT_CODE = #{ code }
+		   AND A.PROJECT_PARTICIPATION_YN = 'Y'
+		   AND B.MEMBER_NO = C.MEMBER_NO
+		 ORDER BY C.ROLE_NAME
+ 	</select>
+ 	
+ 	<update id="removeProjectMembers" parameterType="ProjectMembersDTO">
+ 		UPDATE
+ 		       TBL_PROJECT_MEMBERS A
+ 		   SET A.PROJECT_PARTICIPATION_YN = 'N'
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }
+ 		   AND A.PROJECT_PARTICIPATION_YN = 'Y'
+ 	</update>
  	
  </mapper>

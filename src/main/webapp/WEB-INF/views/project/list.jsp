@@ -87,12 +87,12 @@
 		width:100px;
 	}
 	
-	table {
+	.projectListBox table {
     	width: 100%;
     	border-collapse: collapse;
     }
 	
-	th {
+	#projectTable th {
 		background-color:rgb(229,229,229);
 		height:50px;
 	}
@@ -262,15 +262,7 @@
 		margin-left:9%;
 	}
 
-	/* .projectTable:nth-child(2n+3) {
-		margin-top:10px;
-	}
-	
-	.projectTable:nth-child(2n) {
-		margin-top:10px;
-	} */
-	
-	td {
+	.projectTable td {
 		font-size:18px;
 		text-align:center;
 		height:70px;
@@ -623,11 +615,127 @@
 		background:url("/byat/resources/images/memberDeleteBtn1.png") no-repeat;
 		border:none;
 		width:20px;
-		height:30px;
+		height:20px;
 		position:relative;
 		cursor:pointer;
 		left:70px;
-		bottom:5px;
+		bottom:15px;
+	}
+	
+	.projectMemberModalList {
+		display: none;
+		position:relative;
+		width:100%;
+		height:100%;
+		margin-top:150px;
+		z-index:1;
+	}
+	
+	.projectMemberModalList_content {
+		width:650px;
+		height:450px;
+		margin:20px auto;
+		background:rgb(59, 96, 208);
+		border:1px solid black;
+		border-radius:25px;
+	}
+	
+	.projectMemberModalList_content_head {
+		color:white;
+		text-align:center;
+		font-size : 30px;
+		margin-top:15px;
+	}
+	
+	.projectMemberModalList_content_content_box {
+		width:90%;
+		height:75%;
+		font-size:40px;
+		text-align:center;
+		background: white;
+		border-radius: 25px;
+		margin-left: 32px;
+		margin-top:3%;
+	}
+	
+	.projectMemberModalListTitle {
+		font-size : 23px;
+		padding-top: 15px;
+		margin-left : 40px;
+		float : left;
+	}
+	
+	.projectMemberModalListTable {
+		font-size : 15px;
+		font-weight: none;
+		width: 85%;
+		border-radius: 8px;
+		border-collapse: collapse;
+		border-style: hidden;
+		box-shadow: 0 0 0 1px #000;
+		margin-left : 40px;
+		top : 20px;
+		position:relative;
+		background-color : rgb(242,242,242);
+		
+	}
+	
+	.projectMemberModalListTable tr {
+		
+		height : 30px;
+		
+	}
+	
+	.projectMemberModalListTable th {
+		
+		border:1px solid black;
+	}
+	
+	.projectMemberModalListTable td {
+		
+		border:1px solid black;
+	}
+	
+	.projectMemberModalListCloseBtn {
+		
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:110px;
+		height:30px;
+		position:absolute;
+		margin-top:5px;
+		margin-left:260px; 
+	}
+	
+	.projectMemberModalListTableArea {
+		
+		position:relative;
+		width:98%;
+		height:75%;
+		padding-bottom: 30px;		
+	}
+	
+	.projectMemberModalListTableArea::-webkit-scrollbar {
+	
+		background-color: rgb(242,242,242);		
+		border-radius:15px;
+	}
+	
+	.projectMemberModalListTableArea::-webkit-scrollbar-thumb {
+		background-color: gray;
+		border-radius:15px;
+	}
+	
+	.memberListDeleteMember {
+		background:url("/byat/resources/images/memberDeleteBtn1.png") no-repeat;
+		border:none;
+		width:20px;
+		height:20px;
+		position:relative;
+		cursor:pointer;
+		padding-top:3px;
 	}
 	
 </style>
@@ -665,25 +773,28 @@
 						</td>
 						<td id="projectRealMemberList">
 							<c:set var="loop_flag" value="false"/>
-							<c:forEach items="${ project.projectMembers }" var="member" varStatus="status">
+							<c:forEach items="${ project.projectMembers }" var="member" varStatus="roleStatus">
 								
 								<c:if test="${ not loop_flag }">
 									<c:if test="${ member.roleName eq 'PM' }">
 										<div id="projectRealMember1">
-											<c:out value="${ member.name }" />															
+											<c:out value="${ member.name }" />
+											<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
 										</div>									
 									</c:if>
 									<c:if test="${ member.roleName eq '부PM' }">
 										<div id="projectRealMember2">
-											<c:out value="${ member.name }" />															
+											<c:out value="${ member.name }" />	
+											<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
 										</div>
 									</c:if>
 									<c:if test="${ member.roleName eq '일반 멤버' }">
 										<div id="projectRealMember3">
-											<c:out value="${ member.name }" />															
+											<c:out value="${ member.name }" />	
+											<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
 										</div>
 									</c:if>
-									<c:if test="${ status.index eq 7 }">
+									<c:if test="${ roleStatus.index eq 7 }">
 										<c:set var="loop_flag" value="true"/>
 									</c:if>
 								</c:if>
@@ -834,11 +945,35 @@
 					<form action="${ pageContext.servletContext.contextPath }/project/registmember" id="addMembersForm" class="addMembersForm" method="post"></form>
 				</div>
 			</div>
-				<input type="button" id="registMembersOkBtn" class="registMembersOkBtn" style="margin-left:100px;" value="OK">
-				<button type="button" id="registMembersCancelBtn" style="margin-left:350px;">Cancel</button>
+			<input type="button" id="registMembersOkBtn" class="registMembersOkBtn" style="margin-left:100px;" value="OK">
+			<button type="button" id="registMembersCancelBtn" style="margin-left:350px;">Cancel</button>
+		</div>
+		<div class="modal_layer"></div>
+	</div>
+		
+	<div class="projectMemberModalList" id="projectMemberModalList">
+		<div class="projectMemberModalList_content">
+			<div class="projectMemberModalList_content_head">프로젝트 구성원</div>
+			<div class="projectMemberModalList_content_content_box">
+				<div class="projectMemberModalListTitle">팀원 목록</div>
+				<div class="projectMemberModalListTableArea" id="projectMemberModalListTableArea" style="overflow-y:scroll;">
+					<table id="projectMemberModalListTable" class="projectMemberModalListTable">
+						<thead>
+							<tr>
+								<th>사번</th>
+								<th>이름</th>
+								<th>역할</th>
+								<th style="width:70px;"></th>
+							</tr>
+						</thead>
+						<tbody id="projectMemberModalListTableBody" class="projectMemberModalListTableBody"></tbody>
+					</table>
+				</div>
+			</div>
+			<button type="button" id="projectMemberModalListCloseBtn" class="projectMemberModalListCloseBtn">Close</button>
 		</div>
 		
-		
+		<div class="modal_layer"></div>
 	</div>
 	
 	<script>
@@ -848,12 +983,19 @@
 		let projectMembersList = [];
 		
 		document.getElementById("createProject").onclick = function() {
-	        document.getElementById("projectCreateModal").style.display="block";
+	        document.getElementById("projectCreateModal").style.display = "block";
 	    }
 
 		document.getElementById("projectCreateModalCloseBtn").onclick = function() {
-	        document.getElementById("projectCreateModal").style.display="none";
+	        document.getElementById("projectCreateModal").style.display = "none";
 	    }
+		
+		document.getElementById("projectMemberModalListCloseBtn").onclick = function() {
+			document.getElementById("projectMemberModalList").style.display = "none";
+			
+			
+			
+		}
 
 	    document.getElementById("registMembersCancelBtn").onclick = function() {
 	    	document.getElementById("regist_project_members_modal").style.display = "none";
@@ -891,6 +1033,7 @@
 			const $proBox = document.querySelectorAll("#projectMenuBox");
 			const $updateAndSelectProject = document.querySelectorAll("#updateAndSelectProject");
 			const $deleteProject = document.querySelectorAll("#deleteProject");
+			const $projectRealMemberList = document.querySelectorAll("#projectRealMemberList");
 			const $projectRealMemberListBtn = document.querySelectorAll("#projectRealMemberListBtn");
 			
 			const $memberDeleteBtn = document.querySelectorAll("#memberDeleteBtn");
@@ -900,7 +1043,107 @@
 				
 				$projectRealMemberListBtn[i].onclick = function() {
 					
+					document.getElementById("projectMemberModalList").style.display = "block";
 					
+					const removeMemberProjectCode = $code[i].value;
+					const projectRealMemberListLine = $projectRealMemberList[i];
+					
+					
+					$.ajax({
+						url: "/byat/project/projectmemberlist",
+						type: 'get',
+						data: { code : $code[i].value },
+						success: function(data, status, xhr) {
+                     
+							const memberList = JSON.parse(data.memberList);
+							
+							const $table = $("#projectMemberModalListTable tbody");
+							$table.html("");
+							
+							for(let i in memberList) {
+								
+								const $tr = $("<tr>");
+								const $idTd = $("<td>").text(memberList[i].id);
+								const $nameTd = $("<td>").text(memberList[i].name);
+								const $roleNameTd = $("<td>").text(memberList[i].roleName);
+								const $deleteTd = $("<td>");
+								
+								memberListDeleteMember = document.createElement('input')
+					            memberListDeleteMember.setAttribute('type', 'button');
+								memberListDeleteMember.setAttribute('id', 'memberListDeleteMember');
+								memberListDeleteMember.setAttribute('class', 'memberListDeleteMember');
+								
+								$deleteTd.append(memberListDeleteMember)
+								
+								$tr.append($idTd);
+								$tr.append($nameTd);
+								$tr.append($roleNameTd);
+								$tr.append($deleteTd);
+								
+								$table.append($tr);
+								
+								$memberListDeleteMember = document.querySelectorAll('#memberListDeleteMember');
+								
+								console.log(projectRealMemberListLine.children.length);
+								let tempMemberList = [];
+								
+								for(let i = 1; i < projectRealMemberListLine.children.length - 1; i++) {
+									
+									tempMemberList.push(projectRealMemberListLine.children[i].childNodes[1].value);
+									console.log(i + " : " + tempMemberList[i - 1]);
+								}
+								
+								$memberListDeleteMember[i].onclick = function() {
+									
+									
+									if(i == 0) {
+										alert("관리자 또는 PM은 삭제하실 수 없습니다.");
+									} else if(${sessionScope.loginMember.id} != memberList[0].id) {
+										alert("권한이 없습니다.");
+									} else {
+										
+										const removeMemberNo = memberList[i].no;
+										
+										const tbody = document.getElementById("projectMemberModalListTableBody");
+										
+										$.ajax({
+											url: "/byat/project/removemember",
+											type: 'get',
+											data: { 
+												code : removeMemberProjectCode,
+												no : removeMemberNo
+											},
+											success: function(data, status, xhr) {
+												
+												alert(memberList[i].name + "님을 구성원에서 제외하셨습니다.");
+												
+												tbody.deleteRow(i);
+												
+												for(let k = 0; k < tempMemberList.length; i++) {
+													
+													if(tempMemberList[k] == memberList[i].no) {
+														
+														projectRealMemberListLine.children[k].remove();
+														
+													}
+													
+												}
+												
+											},
+										});
+										
+									}
+									
+								}
+								
+								
+							}
+							
+						},
+						error: function(xhr, status, error) {
+						   console.log(xhr);
+						}
+					});
 					
 				}
 				
@@ -1051,6 +1294,8 @@
         });
         
         let selectMembers = [];
+        const $memberDeleteBtn = document.querySelectorAll("#memberDeleteBtn");
+		const $selectedMemberArea = document.querySelectorAll("#selectedMemberArea");
         
 		$(function() {
 			$('#searchMembers').autocomplete({
@@ -1156,10 +1401,18 @@
 		        },
 		        delay : 300,
 		        position : { my : 'right top', at : 'right bottom' },
-		        close : function(event) {
+		        close : function(event, ui) {
 		            console.log(event);
 		            
 		            document.getElementById('searchMembers').value = "";
+		            
+		            /* if(selectMemberValue != null) {
+		            	
+			            memberDeleteBtn.click = function() {
+			            	
+			            }
+		            	
+		            } */
 		            
 		        }
 			}).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
@@ -1168,11 +1421,6 @@
 		        .appendTo(ul);
 		    };
 		});
-		
-		const $memberDeleteBtn = document.querySelectorAll("#memberDeleteBtn");
-		const $selectedMemberArea = document.querySelectorAll("#selectedMemberArea");
-		
-		console.log($memberDeleteBtn);
 		
 		document.getElementById("registMembersOkBtn").onclick = function() {
 			

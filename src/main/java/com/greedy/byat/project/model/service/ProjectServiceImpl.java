@@ -3,10 +3,12 @@ package com.greedy.byat.project.model.service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
@@ -201,6 +203,28 @@ public class ProjectServiceImpl implements ProjectService {
 
 		}
 
+	}
+
+	@Override
+	public List<ProjectMembersDTO> selectProjectMemberList(int code) {
+		
+		List<ProjectMembersDTO> projectMemberList = mapper.selectProjectMemberList(code);
+		
+		System.out.println(projectMemberList);
+		
+		return projectMemberList;
+	}
+
+	@Override
+	public void removeProjectMembers(ProjectMembersDTO removeMember) throws ProjectMemberRemoveException {
+		
+		int result = mapper.removeProjectMembers(removeMember);
+		
+		if(!(result > 0)) {
+			
+			throw new ProjectMemberRemoveException("구성원 제외 실패!");
+		}
+		
 	}
 
 }

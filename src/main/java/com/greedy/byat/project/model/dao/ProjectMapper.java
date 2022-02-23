@@ -1,6 +1,7 @@
 package com.greedy.byat.project.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
@@ -29,6 +30,10 @@ public interface ProjectMapper {
 	int registProjectMembers(ProjectMembersDTO registMember);
 
 	int registProjectMemberRole(ProjectMembersDTO registMember);
+
+	List<ProjectMembersDTO> selectProjectMemberList(int code);
+
+	int removeProjectMembers(ProjectMembersDTO removeMember);
 
 
 }

@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
@@ -236,4 +238,39 @@ public class ProjectController {
 		return "redirect:/project/list";
 	}
 	
+	@GetMapping("/projectmemberlist")
+	public ModelAndView projectMemberList(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int code = Integer.parseInt(request.getParameter("code"));
+		
+		List<ProjectMembersDTO> projectMemberList = projectService.selectProjectMemberList(code);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		mv.addObject("memberList", objectMapper.writeValueAsString(projectMemberList));
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	@GetMapping("/removemember")
+	public ModelAndView removeProjectMembers(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws ProjectMemberRemoveException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int code = Integer.parseInt(request.getParameter("code"));
+		int no = Integer.parseInt(request.getParameter("no"));
+		
+		ProjectMembersDTO removeMember = new ProjectMembersDTO();
+		removeMember.setCode(code);
+		removeMember.setNo(no);
+		
+		projectService.removeProjectMembers(removeMember);
+		
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
 }

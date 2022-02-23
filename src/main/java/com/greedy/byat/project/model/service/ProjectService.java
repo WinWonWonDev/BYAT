@@ -1,7 +1,9 @@
 package com.greedy.byat.project.model.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
@@ -27,5 +29,9 @@ public interface ProjectService {
 	List<MemberDTO> searchAddMemberList(String searchMember, String[] projectMembersList, String[] selectMembers);
 
 	void registProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException;
+
+	List<ProjectMembersDTO> selectProjectMemberList(int code);
+
+	void removeProjectMembers(ProjectMembersDTO removeMember) throws ProjectMemberRemoveException;
 
 }
