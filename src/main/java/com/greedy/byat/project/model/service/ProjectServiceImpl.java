@@ -192,18 +192,50 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public void registProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException {
 
-		int projectMembersRegistResult = mapper.registProjectMembers(registMember);
-		int projectRoleRegistResult = 0;
-
-		if (projectMembersRegistResult > 0) {
-			projectRoleRegistResult = mapper.registProjectMemberRole(registMember);
+		List<ProjectMembersDTO> projectAllMemberList = mapper.selectProjectMemberNonParticipationList(registMember.getCode());
+		
+		boolean checkNonParticipationList = false;
+		
+		for(int i = 0; i < projectAllMemberList.size(); i++) {
+			
+			if(projectAllMemberList.get(i).getNo() == registMember.getNo()) {
+				
+				checkNonParticipationList = true; 
+				break;
+			}
+			
 		}
-
-		if (!(projectMembersRegistResult > 0 && projectRoleRegistResult > 0)) {
-
-			throw new ProjectRegistMemberException("프로젝트 구성원 추가 실패!");
-
+		
+		if(checkNonParticipationList) {
+			
+			int updateParticipationResult = mapper.updateMemberParticipation(registMember);
+			
+			int updateRoleResult = mapper.updateMemberRole(registMember);
+			
+			if(!(updateParticipationResult > 0 && updateRoleResult > 0)) {
+				
+				throw new ProjectRegistMemberException("프로젝트 구성원 추가 실패!");
+				
+			}
+			
+		} else {
+			
+			int projectMembersRegistResult = mapper.registProjectMembers(registMember);
+			int projectRoleRegistResult = 0;
+			
+			if (projectMembersRegistResult > 0) {
+				projectRoleRegistResult = mapper.registProjectMemberRole(registMember);
+			}
+			
+			if (!(projectMembersRegistResult > 0 && projectRoleRegistResult > 0)) {
+				
+				throw new ProjectRegistMemberException("프로젝트 구성원 추가 실패!");
+				
+			}			
+			
 		}
+		
+		
 
 	}
 
@@ -238,11 +270,7 @@ public class ProjectServiceImpl implements ProjectService {
 			
 			if("PM".equals(members.get(i).getRoleName())) {
 				
-				System.out.println("왓더 ?");
-				
 				int writerChangeResult = mapper.modifyProjectWriter(members.get(i));
-				
-				System.out.println("헬?");
 				
 				if(!(writerChangeResult > 0)) {
 					

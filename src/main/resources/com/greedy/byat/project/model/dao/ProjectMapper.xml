@@ -245,4 +245,28 @@
  		 WHERE A.PROJECT_CODE = #{ code }
  	</update>
  	
+ 	<select id="selectProjectMemberNonParticipationList" resultMap="projectMembersResultMap" parameterType="_int">
+ 		SELECT 
+ 		       A.MEMBER_NO
+ 		  FROM TBL_PROJECT_MEMBERS A 
+ 		 WHERE A.PROJECT_CODE = 41 
+ 		   AND A.PROJECT_PARTICIPATION_YN = 'N'
+ 	</select>
+ 	
+ 	<update id="updateMemberParticipation" parameterType="ProjectMembersDTO">
+		UPDATE
+		       TBL_PROJECT_MEMBERS A
+		   SET A.PROJECT_PARTICIPATION_YN = 'Y'
+		 WHERE A.PROJECT_CODE = #{ code }
+		   AND A.MEMBER_NO = #{ no }
+ 	</update>
+ 	
+ 	<update id="updateMemberRole" parameterType="ProjectMembersDTO">
+ 		UPDATE
+ 		       TBL_ROLE A
+ 		   SET A.ROLE_NAME = #{ roleName }
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }   
+ 	</update>
+ 	
  </mapper>

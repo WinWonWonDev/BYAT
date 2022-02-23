@@ -39,5 +39,11 @@ public interface ProjectMapper {
 
 	int modifyProjectWriter(ProjectMembersDTO projectMembersDTO);
 
+	List<ProjectMembersDTO> selectProjectMemberNonParticipationList(int code);
+
+	int updateMemberParticipation(ProjectMembersDTO registMember);
+
+	int updateMemberRole(ProjectMembersDTO registMember);
+
 
 }
