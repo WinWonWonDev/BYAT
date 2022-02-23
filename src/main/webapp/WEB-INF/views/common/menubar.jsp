@@ -325,6 +325,10 @@
 			float:right;
 			position:relative;
 	}
+	
+	.profile-area , #ProfileArea, #logoutArea {
+		cursor: pointer;
+	}
 
 	
 	

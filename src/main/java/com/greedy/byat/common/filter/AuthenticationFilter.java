@@ -101,6 +101,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/project/registmember");
 		memberPermitList.add("/project/projectmemberlist");
 		memberPermitList.add("/project/removemember");
+		memberPermitList.add("/project/modifyrole");
 		
 		memberPermitList.add("/sprint/list");
 		memberPermitList.add("/sprint/regist");

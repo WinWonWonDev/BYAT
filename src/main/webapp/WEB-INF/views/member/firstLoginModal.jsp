@@ -394,6 +394,8 @@
 	<input type="hidden" id="oneOrEmail" name="oneOrEmail">
 	<input type="hidden" id="isDidDuplicate" name="isDidDuplicate">
 	<input type="hidden" id="gotVerificate" name="gotVerificate">
+	<input type="hidden" id="forSubmitTing" name="forSubmitTing">
+
 
 <script>
 	
@@ -480,6 +482,45 @@
 								  AuthTimer.timer =  setInterval(function(){AuthTimer.fnTimer()},1000);
 								  AuthTimer.domId = document.getElementById("timer");
 									
+								  document.getElementById("forSubmitTing").value = 3;
+								  
+								  if($("#forSubmitTing").val() == 3) {
+								 	  $("#reSubmitBtn").click(function() {
+											$.ajax({
+												url : "${ pageContext.servletContext.contextPath }/member/resubmitverificationnum",
+												type : "GET",
+												data : {"inputId":$("#inputId").val(),
+														"emailAddress":$("#emailAddress").val()}, 
+												success : function(data, status, xhr) {
+													
+													if(data > 0) {
+														alert("인증번호가 재발송 되었습니다.")
+														document.getElementById("initInfoSettingModal").style.display="none";
+														document.getElementById("inputEmailVeficationModal").style.display="block";
+														AuthTimer.timer = clearInterval(AuthTimer.timer);
+														/* AuthTimer = clearInterval(AuthTimer); */
+														
+														AuthTimer = new $ComTimer();
+											   	 			
+														AuthTimer.comSecond = 180;
+										    			AuthTimer.fnCallback = function(){alert("다시 인증을 시도해주세요.")};
+										    			AuthTimer.timer = setInterval(function(){AuthTimer.fnTimer()}, 1000);
+										    			AuthTimer.domId = document.getElementById("timer");
+										    			
+											    		
+													} else {
+														alert("인증번호 재발송에 실패하였습니다.");
+														document.getElementById("initInfoSettingModal").style.display="none";
+														document.getElementById("inputEmailVeficationModal").style.display="block";
+													}
+												},
+												error : function (error){
+											        alert("에러가 발생했습니다. 다시 접속해주세요."); 
+												}
+											});
+										}); 
+								  }
+								  
 							} else {
 								alert("존재하지 않는 이메일입니다. 다시 입력해주세요.")
 								document.getElementById("initInfoSettingModal").style.display="block";
@@ -507,39 +548,7 @@
     });
 	    
     
-    
- 	  $("#reSubmitBtn").click(function() {
-			$.ajax({
-				url : "${ pageContext.servletContext.contextPath }/member/resubmitverificationnum",
-				type : "POST",
-				data : {"inputId":$("#inputId").val(),
-						"emailAddress":$("#emailAddress").val()}, 
-				success : function(data, status, xhr) {
-					
-					if(data > 0) {
-						alert("인증번호가 재발송 되었습니다.")
-						document.getElementById("initInfoSettingModal").style.display="none";
-						document.getElementById("inputEmailVeficationModal").style.display="block";
-						
-				    	var AuthTimer2 = new $ComTimer()
-			   	 		AuthTimer2.comSecond = 180;
-			    		AuthTimer2.fnCallback = function(){alert("다시 인증을 시도해주세요.")};
-			    		AuthTimer2.timer = clearInterval(AuthTimer.timer);
-			    		AuthTimer2.timer = setInterval(function(){AuthTimer2.fnTimer()}, 1000);
-			    		AuthTimer2.domId = document.getElementById("timer");
-					
-			    		
-					} else {
-						alert("인증번호 재발송에 실패하였습니다.");
-						document.getElementById("initInfoSettingModal").style.display="none";
-						document.getElementById("inputEmailVeficationModal").style.display="block";
-					}
-				},
-				error : function (error){
-			        alert("에러가 발생했습니다. 다시 접속해주세요."); 
-				}
-			});
-		}); 
+
 	
 	
     $("#modalOkBtn2").click(function () {
