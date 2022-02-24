@@ -6,6 +6,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	
+	.pagingArea {
+		
+		margin-top : 1%;
+		position: relative;
+		
+	}
+	
+	.pagingArea button { 
+		
+		border:none;
+		background-color:white;
+		cursor:pointer;
+		font-size : 20px;
+	}
+	
+	
+</style>
+
 </head>
 <body>
 	<div class="pagingArea" align="center">
@@ -39,8 +59,16 @@
 	</div>
 	
 	<script>
-		const link = "${ pageContext.servletContext.contextPath }/board/list";
+		let link = "";
 		let searchText = "";
+		
+		if("${ pageContext.request.requestURI }" === "/byat/WEB-INF/views//project/list.jsp") {
+		   	link = "${ pageContext.servletContext.contextPath }/notice/list";
+		} else if("${pageContext.request.requestURI}" === "/spring/WEB-INF/views//board/boardList.jsp") {
+			link = "${ pageContext.servletContext.contextPath }/board/list";			
+		} else {
+			link = "${ pageContext.servletContext.contextPath }/thumbnail/list";
+		}
 		
 		if(${ !empty requestScope.selectCriteria.searchCondition? true: false }) {
 			searchText += "&searchCondition=${ requestScope.selectCriteria.searchCondition }";

@@ -16,7 +16,7 @@
 	}
 	
 	body {
-		width: 99%;
+		width: 100%;
 		height: 95%;
 		overflow-y:hidden;
 	}
@@ -63,7 +63,7 @@
 	
 	.managementListBox {
 		border: 1px solid black;
-		height: 77%;
+		height: 75%;
 		margin-left: 3%;
 		margin-right: 3%;
 	}
@@ -340,17 +340,20 @@
 			<div id="managementTitle">멤버 목록</div>
 			<div class="searchMember">
 				<div class="search-area">
-					<select id="searchCondition" name="searchCondition">
-						<option value="name">이름</option>
-						<option value="right">권한</option>
-						<option value="memberNum">사번</option>
-					</select> <input type="search">
-					<button type="submit">검색</button>
+					<form action="${ pageContext.servletContext.contextPath }/management/list" method="get" style="display: inline-block">
+						<input type="hidden" name="currentPage" value="1">
+						<select id="searchCondition" name="searchCondition">
+							<option value="name" ${ requestScope.selectCriteria.searchCondition eq 'name'? "selected":"" }>이름</option>
+							<option value="right" ${ requestScope.selectCriteria.searchCondition eq 'right'? "selected":"" }>권한</option>
+							<option value="memberNum" ${ requestScope.selectCriteria.searchCondition eq 'memberNum'? "selected":"" }>사번</option>
+						</select> 
+						<input type="search" id="searchValue" name="searchValue" value="<c:out value="${ requestScope.selectCriteria.searchValue }"/>">
+						<button type="submit">검색</button>
+					</form>
 				</div>
 				<div id="managementButtons">
 					<input type="button" id="plusButton" class="img-button plusButton">
-					<input type="button" id="minusButton"
-						class="img-button minusButton">
+					<input type="button" id="minusButton" class="img-button minusButton">
 				</div>
 			</div>
 		</div>
@@ -362,15 +365,21 @@
 					<th id="rightTh">권한</th>
 					<th id="memberNumTh">사번</th>
 				</tr>
-				<tr>
-
-				</tr>
+				<c:forEach var="management" items="${ requestScope.managementList }">
+					<tr>
+						<td><c:out value="${ management.no }"/></td>
+						<td><c:out value="${ management.name }"/></td>
+						<td><c:out value="${ management.permitName }"/></td>
+						<td><c:out value="${ management.id }"/></td>
+				   </tr>
+			   </c:forEach>
 			</table>
 		</div>
+	<jsp:include page="paging.jsp"/>
 	</div>
+	
 
 	<!-- 멤버 추가(+) 모달창 -->
-
 	<div id="management-create-modal">
 
 		<div class="modal_content">

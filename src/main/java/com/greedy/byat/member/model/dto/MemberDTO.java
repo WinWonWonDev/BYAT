@@ -15,7 +15,7 @@ import lombok.ToString;
 public class MemberDTO implements java.io.Serializable {
 
 	private int no;
-	private String permit;
+	private int permitCode;
 	private String id;
 	private String pwd;
 	private String name;

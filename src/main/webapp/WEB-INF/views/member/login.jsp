@@ -69,10 +69,6 @@ html, body {
 			height:80%; 
 			float:center;	
 		} */
-#passwordLink {
-	/* margin-right: 10%; */
-	
-}
 
 .btn {
 	width: 130px;
@@ -192,32 +188,38 @@ html, body {
 }
 
 #findPassword {
-	border:none;
-	cursor:pointer;
+
+	border: none;
+	cursor: pointer;
+	width: 180px;
+	height: 15px;
+	position: relative;
+	left: 35%;
+	
 	
 }
 
 .inputId {
 	position: relative;
-	left:20%;
-	width:430px;
-	height:35px;
+	left: 20%;
+	width: 430px;
+	height: 35px;
 
 }
 
 .inputPassword {
 	position: relative;
-	left:20%;
-	width:430px;
-	height:35px;
+	left: 20%;
+	width: 430px;
+	height: 35px;
 
 }
 
 .inputVerificationNum {
 	position: relative;
-	left:20%;
-	width:430px;
-	height:35px;
+	left: 20%;
+	width: 430px;
+	height: 35px;
 }
 
 #modalOkBtn {
@@ -300,13 +302,13 @@ html, body {
 	width: 80px;
 	height: 30px;
 	position: absolute;
-	right:29%;
-	top:18.5%;
+	right: 29%;
+	top: 18.5%;
 }
 
 #timerDiv {
-	position:relative;
-	left:38%;
+	position: relative;
+	left: 38%;
 	
 }
 
@@ -362,11 +364,9 @@ html, body {
 						<br>
 
 					</div>
-
-					<h4 align="right" id="passwordLink">
-						<p id="findPassword">비밀번호를잊으셨나요?</p>
-					</h4>
 					<br>
+						<div id="findPassword">비밀번호를잊으셨나요?</div>
+					<br><br><br>
 
 					<div class="btns" align="center">
 						<input type="submit" class="btn btn-or" value="login" id="login">
@@ -384,10 +384,10 @@ html, body {
 			<div class="modalHead">Alert Message</div>
 			<div class="modalContentMessage">
 				<br> <br>
-				<p id="contentBody">
-					비밀번호를 찾고자 하는 <font color="red">아이디</font>를 입력해주세요!
-				</p>
-			</div>
+					<p id="contentBody">
+						비밀번호를 찾고자 하는 <font color="red">아이디</font>를 입력해주세요!
+					</p>
+				</div>
 				<input type="text" class="inputId" name="inputId" id="inputId" placeholder="id">
 				<div class="modalButton">
 					<button type="button" id="modalOkBtn">Ok</button>
@@ -456,12 +456,42 @@ html, body {
 					<input type="button" class="btn btn-yg" value="cancel" id="modalCancelBtn3">
 				</div>
 			</div>
-			
-
 		</div>
 	</div>
 	
+	<input type="hidden" id="forSubmitTing" name="forSubmitTing">
+	<input type="hidden" id="forSubmitTing2" name="forSubmitTing2">
+
 	<script>
+
+		function $ComTimer(){
+		    //prototype extend
+		}
+		
+		$ComTimer.prototype = {
+		      comSecond : ""
+		    , fnCallback : function(){}
+		    , timer : ""
+		    , domId : ""
+		    , fnTimer : function(){
+		        var m = Math.floor(this.comSecond / 60) + "분 " + (this.comSecond % 60) + "초"
+		        this.comSecond--;					
+		        this.domId.innerText = m;
+		        console.log(m);
+		        
+		        if (this.comSecond < 0) {			
+		            clearInterval(this.timer);		
+		            alert("인증시간이 초과하였습니다. 다시 인증해주시기 바랍니다.");
+		        
+		        }
+		    }
+		    ,fnStop : function(){
+		        clearInterval(this.timer);
+		    }
+		}
+
+		
+		  
 		const $cancel = document.getElementById("cancel");
 		const $findPassword = document.getElementById("findPassword"); 
 		const $modalOkBtn = document.getElementById("modalOkBtn");
@@ -499,16 +529,63 @@ html, body {
 						document.getElementById("inputEmailVeficationModal").style.display="block";
 						document.getElementById("passwordFindModal").style.display="none";
 						document.getElementById("inputIdModal").style.display="none";
-
-						/* 최초의 경우는 무조건 실행이 되야하니까 여기 넣어 놓고! 밑에서 for문 돌리면 될듯?*/
+						
 						var AuthTimer = new $ComTimer()
 						  AuthTimer.comSecond = 180;
 						  AuthTimer.fnCallback = function(){alert("다시인증을 시도해주세요.")};
 						  AuthTimer.timer =  setInterval(function(){AuthTimer.fnTimer()},1000);
 						  AuthTimer.domId = document.getElementById("timer");
 						
-					
 						
+						document.getElementById("forSubmitTing").value = 3;
+						
+						  if($("#forSubmitTing").val() == 3) {
+							  $("#reSubmitBtn").click(function() {
+									$.ajax({
+										url : "selectemail",
+										type : "POST",
+										data : {"inputId":$("#inputId").val()}, 
+										success : function(data, status, xhr) {
+											
+											if(data > 0) {
+												alert("인증번호가 재발송 되었습니다.");
+												document.getElementById("inputEmailVeficationModal").style.display="block";
+												document.getElementById("passwordFindModal").style.display="none";
+												document.getElementById("inputIdModal").style.display="none";
+												
+												AuthTimer.timer = clearInterval(AuthTimer.timer);
+												/* AuthTimer = clearInterval(AuthTimer); */
+												
+												AuthTimer = new $ComTimer();
+									   	 			
+												AuthTimer.comSecond = 180;
+								    			AuthTimer.fnCallback = function(){alert("다시 인증을 시도해주세요.")};
+								    			AuthTimer.timer = setInterval(function(){AuthTimer.fnTimer()}, 1000);
+								    			AuthTimer.domId = document.getElementById("timer");
+								    			
+								    			
+								    			if($("#forSubmitTing2").val() == 2) {
+								    				AuthTimer = clearInterval(AuthTimer);
+								    				AuthTimer.timer = clearInterval(AuthTimer.timer);
+								    				console.log("아 지워져야하는데 이거 나와야됨 ㅠㅠ ");
+								    			}
+									    			
+		
+											} else {
+												alert("인증번호 재발송에 실패하였습니다.");
+												document.getElementById("inputIdModal").style.display="block";
+												document.getElementById("passwordFindModal").style.display="none";
+												document.getElementById("inputEmailVeficationModal").style.display="none";
+											}
+										},
+										error : function (error){
+									        alert("에러가 발생했습니다. 다시 접속해주세요."); 
+										}
+									});
+							});
+						}
+					  
+					  
 					} else {
 						alert("아이디를 찾을 수 없습니다.");
 						document.getElementById("inputIdModal").style.display="block";
@@ -521,32 +598,9 @@ html, body {
 				}
 			});
 		});
-		  
-		function $ComTimer(){
-		    //prototype extend
-		}
 		
-		$ComTimer.prototype = {
-		      comSecond : ""
-		    , fnCallback : function(){}
-		    , timer : ""
-		    , domId : ""
-		    , fnTimer : function(){
-		        var m = Math.floor(this.comSecond / 60) + "분 " + (this.comSecond % 60) + "초"
-		        this.comSecond--;					
-		        this.domId.innerText = m;
-		        
-		        if (this.comSecond < 0) {			
-		            clearInterval(this.timer);		
-		            alert("인증시간이 초과하였습니다. 다시 인증해주시기 바랍니다.");
-		            
-		        }
-		    }
-		    ,fnStop : function(){
-		        clearInterval(this.timer);
-		    }
-		}
 		
+			/* ok 버튼 눌러서 비밀번호 변경으로 갔을 시 시간이 나중에 되는 거*/
  	 	  $("#modalOkBtn2").on("click",function() {
  	 		   $.ajax({
  	 			url : "checkverification",
@@ -559,6 +613,8 @@ html, body {
 						document.getElementById("inputEmailVeficationModal").style.display="none";
 						document.getElementById("passwordFindModal").style.display="block";
 						document.getElementById("inputIdModal").style.display="none";
+						document.getElementById("forSubmitTing2").value = 2;
+						
 					} else {
 						alert("인증번호가 불일치합니다. 다시 입력해주세요.")
 						document.getElementById("inputEmailVeficationModal").style.display="block";
@@ -572,44 +628,6 @@ html, body {
 			});
  	 	  });
  	 	  
-		  
-		  $("#reSubmitBtn").click(function() {
-			$.ajax({
-				url : "selectemail",
-				type : "POST",
-				data : {"inputId":$("#inputId").val()}, 
-				success : function(data, status, xhr) {
-					
-					if(data > 0) {
-						alert("인증번호가 재발송 되었습니다.")
-						document.getElementById("inputEmailVeficationModal").style.display="block";
-						document.getElementById("passwordFindModal").style.display="none";
-						document.getElementById("inputIdModal").style.display="none";
-						
-						/* for(i = 2; i < ~; i++) { */
-						/* 이거 for문으로 객체 생성하게 해서 해야될 것 같은데 .. (재전송 2~3번 계속 누르면 겹침) -> + AuthTimer를 넣으면 이거 인식을 못함 아..넺ㅇ장*/
-				    	var AuthTimer2 = new $ComTimer()
-			   	 		AuthTimer2.comSecond = 180;
-			    		AuthTimer2.fnCallback = function(){alert("다시 인증을 시도해주세요.")};
-			    		/* AuthTimer(i-1).timer 이래 하면 될듯 */
-			    		AuthTimer2.timer = clearInterval(AuthTimer.timer);
-			    		AuthTimer2.timer = setInterval(function(){AuthTimer2.fnTimer()}, 1000);
-			    		AuthTimer2.domId = document.getElementById("timer");
-					
-						/* } */
-			    		
-					} else {
-						alert("인증번호 재발송에 실패하였습니다.");
-						document.getElementById("inputIdModal").style.display="block";
-						document.getElementById("passwordFindModal").style.display="none";
-						document.getElementById("inputEmailVeficationModal").style.display="none";
-					}
-				},
-				error : function (error){
-			        alert("에러가 발생했습니다. 다시 접속해주세요."); 
-				}
-			});
-		});
 		  
 		  
 		$("#modalOkBtn3").on("click",function () {

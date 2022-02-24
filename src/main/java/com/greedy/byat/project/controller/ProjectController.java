@@ -2,8 +2,10 @@ package com.greedy.byat.project.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,9 +28,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
+import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
+import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
+import com.greedy.byat.common.exception.project.ProjectWriterChangeException;
+import com.greedy.byat.common.paging.Pagenation;
+import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
@@ -49,15 +57,45 @@ public class ProjectController {
 	@GetMapping("/list")
 	public ModelAndView selectProjectList(ModelAndView mv, HttpServletRequest request) {
 		
+		String currentPage = request.getParameter("currentPage");
+		int pageNo = 1;
+		
+		if(currentPage != null && !"".equals(currentPage)) {
+			pageNo = Integer.parseInt(currentPage);
+		}
+		
+		String searchCondition = request.getParameter("searchCondition");
+		String searchValue = request.getParameter("searchValue");
+		
+		Map<String, String> searchMap = new HashMap<>();
+		searchMap.put("searchCondition", searchCondition);
+		searchMap.put("searchValue", searchValue);
+		
+		System.out.println("검색 조건 : " + searchMap);
+		
+		int totalCount = projectService.selectTotalCount(searchMap);
+		
+		System.out.println("totalProjectCount : " + totalCount);
+		
+		int limit = 5;
+		
+		int buttonAmount = 5;
+		
+		SelectCriteria selectCriteria = null;
+		
+		if(searchCondition != null && !"".equals(searchCondition)) {
+			selectCriteria = Pagenation.getSelectCriteria(pageNo, totalCount, limit, buttonAmount, searchCondition, searchValue);
+		} else {
+			selectCriteria = Pagenation.getSelectCriteria(pageNo, totalCount, limit, buttonAmount);
+		}
+		
 		MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		
-		List<ProjectDTO> projectList = projectService.selectProjectList(member);
+		List<ProjectDTO> projectList = projectService.selectProjectList(member, selectCriteria);
 		
 		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
 		
 		List<Integer> PmMemberNumber = new ArrayList<>();
-		
-		String name = "";
 		
 		for(int i = 0; i < projectList.size(); i++) {
 			
@@ -81,6 +119,7 @@ public class ProjectController {
 		
 		mv.addObject("projectList", projectList);
 		mv.addObject("PmMemberNumber", PmMemberNumber);
+		mv.addObject("selectCriteria", selectCriteria);
 		mv.setViewName("/project/list");
 		
 		return mv;
@@ -165,26 +204,16 @@ public class ProjectController {
 		return "redirect:/project/list";
 	}
 	
-	@RequestMapping(value="/searchMembers", method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	@RequestMapping(value="/searchmembers", method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public String searchMembers(Locale locale, Model model, HttpServletRequest request) {
 		
 		String searchMember = request.getParameter("searchValue");
-
-		/*
-		 * List<Integer> selectMembers = new
-		 * ArrayList<>(Integer.parseInt(request.getParameter("selectedMemberList")));
-		 * 
-		 * int code = Integer.parseInt(request.getParameter("code"));
-		 * 
-		 * System.out.println("selectMembers : " + selectMembers);
-		 * System.out.println("PJcode : " + code);
-		 */
 		
 		int code = Integer.parseInt(request.getParameter("code"));
 		System.out.println("PJcode : " + code);
 		
-		String[] selectMembers;
+		String[] selectMembers = null;
 		
 		String[] projectMembersList = request.getParameterValues("projectMembersList");
 		
@@ -210,12 +239,105 @@ public class ProjectController {
 		
 		System.out.println("\nsearchMember : " + searchMember);
 		
-		List<MemberDTO> memberList = projectService.searchAddMemberList(searchMember, projectMembersList);
+		List<MemberDTO> memberList = projectService.searchAddMemberList(searchMember, projectMembersList, selectMembers);
 		
 		System.out.println("memberList : " + memberList);
 		
 		Gson gson = new Gson();
 		
 		return gson.toJson(memberList);
+	}
+	
+	@PostMapping("/registmember")
+	public String registProjectMembers(@ModelAttribute ProjectMembersDTO registMember, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistMemberException {
+		
+		String[] projectCode = request.getParameterValues("code");
+		String[] memberNo = request.getParameterValues("no");
+		String[] memberRole = request.getParameterValues("role");
+		
+		int code = Integer.parseInt(projectCode[0]);
+		
+		ProjectDTO projectDetail = projectService.selectProjectDetail(code);
+		
+		for(int i = 0; i < memberNo.length; i++) {
+		
+			registMember.setCode(code);
+			registMember.setNo(Integer.parseInt(memberNo[i]));
+			registMember.setRoleName(memberRole[i]);
+			
+			projectService.registProjectMember(registMember);
+			
+		}
+		
+		rttr.addFlashAttribute("message", projectDetail.getTitle() + " 프로젝트에 멤버 추가 성공!");
+		
+		return "redirect:/project/list";
+	}
+	
+	@GetMapping("/projectmemberlist")
+	public ModelAndView projectMemberList(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int code = Integer.parseInt(request.getParameter("code"));
+		
+		List<ProjectMembersDTO> projectMemberList = projectService.selectProjectMemberList(code);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		mv.addObject("memberList", objectMapper.writeValueAsString(projectMemberList));
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	@GetMapping("/removemember")
+	public ModelAndView removeProjectMembers(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws ProjectMemberRemoveException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int code = Integer.parseInt(request.getParameter("code"));
+		int no = Integer.parseInt(request.getParameter("no"));
+		
+		ProjectMembersDTO removeMember = new ProjectMembersDTO();
+		removeMember.setCode(code);
+		removeMember.setNo(no);
+		
+		projectService.removeProjectMembers(removeMember);
+		
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	@PostMapping("/modifyrole")
+	public String modifyMemberRole(HttpServletRequest request, RedirectAttributes rttr) throws ProjectMemberModifyRoleException, ProjectWriterChangeException {
+		
+		String[] no = request.getParameterValues("no");
+		String[] roleName = request.getParameterValues("roleName");
+		String[] code = request.getParameterValues("code");
+		String[] name = request.getParameterValues("name");
+		
+		List<ProjectMembersDTO> members = new ArrayList<>();
+		
+		for(int i = 0; i < no.length; i++) {
+			
+			System.out.println("name : " + name[i]);
+			
+			ProjectMembersDTO member = new ProjectMembersDTO();
+			
+			member.setCode(Integer.parseInt(code[i]));
+			member.setNo(Integer.parseInt(no[i]));
+			member.setRoleName(roleName[i]);
+			member.setName(name[i]);
+			members.add(i, member);
+		}
+		
+		
+		projectService.modifyProjectMemberRole(members);
+		
+		rttr.addFlashAttribute("message", "구성원 정보 수정 성공!");
+		
+		return "redirect:/project/list";
 	}
 }
