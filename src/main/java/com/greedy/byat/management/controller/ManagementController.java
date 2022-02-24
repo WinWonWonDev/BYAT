@@ -1,8 +1,6 @@
 package com.greedy.byat.management.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.greedy.byat.common.paging.Pagenation;
-import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.management.model.dto.ManagementDTO;
 import com.greedy.byat.management.model.service.ManagementService;
 
@@ -32,6 +28,7 @@ public class ManagementController {
 	@GetMapping("list")
 	public ModelAndView selectManagementList(HttpServletRequest request, ModelAndView mv) {
 		
+		
 //		String currentPage = request.getParameter("currentPage");
 //		int pageNo = 1;
 //		
@@ -46,8 +43,9 @@ public class ManagementController {
 //		searchMap.put("searchCondition", searchCondition);
 //		searchMap.put("searchValue", searchValue);
 //		
-//		int totalCount = managementService.selectTotalCount(searchMap);
+		int totalCount = managementService.selectTotalCount();
 //		
+		System.out.println("여긴 옵니까? ㅣ " + totalCount);
 //		int limit = 9;
 //		int buttonAmount = 10;
 //
@@ -59,9 +57,9 @@ public class ManagementController {
 //			selectCriteria = Pagenation.getSelectCriteria(pageNo, totalCount, limit, buttonAmount);
 //		}
 //		
-//		List<ManagementDTO> managementList = managementService.selectManagementList(selectCriteria);
+		List<ManagementDTO> managementList = managementService.selectManagementList();
 //		
-//		mv.addObject("managementList", managementList);
+		mv.addObject("managementList", managementList);
 //		mv.addObject("selectCriteria", selectCriteria);
 		mv.setViewName("/management/management");
 		

@@ -122,7 +122,8 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/mytask/regist");
 		memberPermitList.add("/mytask/remove");
 		memberPermitList.add("/mytask/modify");
-		memberPermitList.add("/mytask/modifytodoListstatus");
+		memberPermitList.add("/mytask/modifytodoliststatus");
+		memberPermitList.add("/mytask/selectmembermodal");
 		
 		memberPermitList.add("/history/list");
 		

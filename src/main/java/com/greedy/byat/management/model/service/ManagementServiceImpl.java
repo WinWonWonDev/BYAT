@@ -21,16 +21,22 @@ public class ManagementServiceImpl implements ManagementService {
 	}
 
 	@Override
-	public int selectTotalCount(Map<String, String> searchMap) {
+	public int selectTotalCount() {
 		
-		int result = mapper.selectTotalCount(searchMap);
+		int result = mapper.selectTotalCount();
+		
+		System.out.println("토탈 카운트 : " + result);
+		
 		
 		return result;
 	}
 
 	@Override
-	public List<ManagementDTO> selectManagementList(SelectCriteria selectCriteria) {
-		return null;
+	public List<ManagementDTO> selectManagementList() {
+		
+		List<ManagementDTO> managementList = mapper.selectManagementList();
+		
+		return managementList;
 	}
 
 	

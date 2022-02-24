@@ -23,6 +23,7 @@
         <typeAlias alias="ToDoListDTO" type="com.greedy.byat.mytask.model.dto.ToDoListDTO"/>
     	<typeAlias alias="TaskMembersDTO" type="com.greedy.byat.task.model.dto.TaskMembersDTO"/> 
  		<typeAlias alias="RoleDTO" type="com.greedy.byat.project.model.dto.RoleDTO"/> 
+ 		<typeAlias alias="PermitDTO" type="com.greedy.byat.management.model.dto.PermitDTO"/> 
   </typeAliases>
   
   </configuration>

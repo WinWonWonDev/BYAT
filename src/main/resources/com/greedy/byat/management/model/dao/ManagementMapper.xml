@@ -4,47 +4,40 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.management.model.dao.ManagementMapper">
  	
-<!-- <resultMap type="ManagementDTO" id="managementResultMap">
+<resultMap type="ManagementDTO" id="managementResultMap">
 	<id property="memberNo" column="MEMBER_NO"/>
-	<result property="memberName" column="MEMBER_NAME"/>
 	<result property="memberId" column="MEMBER_ID"/>
-	<result property="premitName" column="PERMIT_NAME"/>
+	<result property="memberName" column="MEMBER_NAME"/>
+	<result property="permitName" column="PERMIT_NAME"/>
 </resultMap> 
+
+<resultMap type="PermitDTO" id="permitResultMap">
+	<id property="code" column="PERMIT_CODE"/>
+	<result property="name" column="PERMIT_NAME"/>
+	<result property="description" column="PERMIT_DESCRIPTION"/>
+</resultMap>
+
  	
- 	<select id="selectTotalCount" resultMap="_int" parameterType="hashmap">
+ 	<select id="selectTotalCount" resultType="_int">
   		SELECT
  		       COUNT(*)
  		  FROM TBL_MEMBER A
-		  JOIN TBL_PERMIT B ON (A.MEMBER_NO = B.MEMBER_NO)
-		  <where>
-				<if test="searchCondition == 'name'">
-				A.MEMBER_NAME LIKE '%' || #{ searchValue } || '%'
-				</if>
-				<if test="searchCondition == 'right'">
-				B.PERMIT_NAME LIKE '%' || #{ searchValue } || '%'
-				</if>
-				<if test="searchCondition == 'memberNum'">
-				A.MEMBER_NO = #{ searchValue }
-				</if>
-		   	  AND ABSENCE_YN = 'N'
-	      </where> 
+		  JOIN TBL_PERMIT B ON (A.PERMIT_CODE = B.PERMIT_CODE)
+		 WHERE A.ABSENCE_YN = 'N'
+		   AND A.MEMBER_NO != 13
  	</select> 
  	
  	<select id="selectManagementList" resultMap="managementResultMap">
- 
-		SELECT
- 		       B.MEMBER_NO
- 		     , B.MEMBER_NAME
- 		     , A.PERMIT_NAME
- 		     , B.MEMBER_ID
- 		     , B.ABSENCE_YN
- 		  FROM TBL_PERMIT A  
- 		  JOIN TBL_MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
- 		 WHERE B.ABSENCE_YN = 'N'
- 	
- 	</select>
- 	 -->
- 	
+			SELECT
+ 		       A.MEMBER_NO
+ 		     , A.MEMBER_NAME
+ 		     , B.PERMIT_NAME
+ 		     , A.MEMBER_ID
+ 		  FROM TBL_MEMBER A 
+ 		  JOIN TBL_PERMIT B ON (A.PERMIT_CODE = B.PERMIT_CODE)
+ 		 WHERE A.ABSENCE_YN = 'N'
+ 		   AND A.MEMBER_NO != 13
+ 	</select> 	
  	
  	
  </mapper>

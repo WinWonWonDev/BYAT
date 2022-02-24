@@ -8,8 +8,8 @@ import com.greedy.byat.management.model.dto.ManagementDTO;
 
 public interface ManagementService {
 
-	int selectTotalCount(Map<String, String> searchMap);
+	int selectTotalCount();
 
-	List<ManagementDTO> selectManagementList(SelectCriteria selectCriteria);
+	List<ManagementDTO> selectManagementList();
 
 }

@@ -6,7 +6,123 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/dataTables.jqueryui.min.css"/>  
+<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+
 <style>
+
+	:root {
+	  --theadColor: #6c7ae0;
+	}
+	
+	body {
+      font-family: "Open Sans", sans-serif;
+    }
+
+    table.dataTable {
+      box-shadow: #bbbbbb 0px 0px 5px 0px;
+    }
+
+    thead {
+      background-color: var(--theadColor);
+    }
+
+    thead > tr,
+    thead > tr > th {
+      background-color: transparent;
+      color: #fff;
+      font-weight: normal;
+      text-align: start;
+    }
+    
+    table.dataTable thead th,
+    table.dataTable thead td {
+      border-bottom: 0px solid #111 !important;
+    }
+
+    .dataTables_wrapper > div {
+      margin: 5px;
+    }
+
+    table.dataTable.display tbody tr.even > .sorting_1,
+    table.dataTable.order-column.stripe tbody tr.even> .sorting_1, 
+    table.dataTable.display   tbody tr.even,
+    table.dataTable.display tbody tr.odd > .sorting_1,
+    table.dataTable.order-column.stripe tbody tr.odd > .sorting_1,
+    table.dataTable.display tbody tr.odd {
+      background-color: #ffffff;
+    }
+
+    table.dataTable thead th {
+      position: relative;
+      background-image: none !important;
+    }
+
+    table.dataTable thead th.sorting:after,
+    table.dataTable thead th.sorting_asc:after,
+    table.dataTable thead th.sorting_desc:after {
+      position: absolute;
+      top: 12px;
+      right: 8px;
+      display: block;
+      font-family: "Font Awesome\ 5 Free";
+    }
+
+    table.dataTable thead th.sorting:after {
+      content: "\f0dc";
+      color: #ddd;
+      font-size: 0.8em;
+      padding-top: 0.12em;
+    }
+
+    table.dataTable thead th.sorting_asc:after {
+      content: "\f0de";
+    }
+
+    table.dataTable thead th.sorting_desc:after {
+      content: "\f0dd";
+    }
+
+    table.dataTable.display tbody tr:hover > .sorting_1,
+    table.dataTable.order-column.hover tbody tr:hover > .sorting_1 {
+      background-color: #f2f2f2 !important;
+      color: #000;
+    }
+
+    tbody tr:hover {
+      background-color: #f2f2f2 !important;
+      color: #000;
+    }
+	
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current, 
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+
+      background: none !important;
+      border-radius: 50px;
+      background-color: var(--theadColor) !important;
+      color:#fff !important
+	
+	}
+	
+	.paginate_button.current:hover {
+      background: none !important;
+      border-radius: 50px;
+      background-color: var(--theadColor) !important;
+      color:#fff !important
+	
+	}
+	
+	.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
+	.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+	
+	  border: 1px solid #979797;
+	  background: none !important;
+	  border-radius: 50px !important;
+	  background-color: #000 !important;
+	  color: #fff !important;
+	
+	}
+
 	html {
 		width: 100%;
 		height: 98%;
@@ -334,12 +450,35 @@
 </style>
 <title>Insert title here</title>
 </head>
+<script type="text/javascript">
+$(document).ready(function() {
+    
+    $.extend( $.fn.dataTable.defaults, {
+       
+       language: {
+          url : "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Korean.json"
+       }
+    });
+    
+ 
+    $('#managementTable').DataTable({
+       lengthChange: false,
+       ordering: false,
+       responsive: true,
+       order: [],
+       lengthMenu: [ 7 ],
+       
+       displayLength : 50,
+       stateSave: true,
+    });
+ });
+</script>
 <body>
 	<div id="whiteBoard">
 		<div class="historyListHead">
 			<div id="managementTitle">멤버 목록</div>
 			<div class="searchMember">
-				<div class="search-area">
+				<%-- <div class="search-area">
 					<form action="${ pageContext.servletContext.contextPath }/management/list" method="get" style="display: inline-block">
 						<input type="hidden" name="currentPage" value="1">
 						<select id="searchCondition" name="searchCondition">
@@ -350,7 +489,7 @@
 						<input type="search" id="searchValue" name="searchValue" value="<c:out value="${ requestScope.selectCriteria.searchValue }"/>">
 						<button type="submit">검색</button>
 					</form>
-				</div>
+				</div> --%>
 				<div id="managementButtons">
 					<input type="button" id="plusButton" class="img-button plusButton">
 					<input type="button" id="minusButton" class="img-button minusButton">
@@ -358,25 +497,29 @@
 			</div>
 		</div>
 		<div class="managementListBox">
-			<table border="1" class="managementTable">
-				<tr>
-					<th id="memberCodeTh">멤버번호</th>
-					<th id="nameTh">이름</th>
-					<th id="rightTh">권한</th>
-					<th id="memberNumTh">사번</th>
-				</tr>
-				<c:forEach var="management" items="${ requestScope.managementList }">
+			<table border="1" class="managementTable" id="managementTable">
+				<thead>
 					<tr>
-						<td><c:out value="${ management.no }"/></td>
-						<td><c:out value="${ management.name }"/></td>
-						<td><c:out value="${ management.permitName }"/></td>
-						<td><c:out value="${ management.id }"/></td>
-				   </tr>
-			   </c:forEach>
+						<th id="memberCodeTh">멤버번호</th>
+						<th id="nameTh">이름</th>
+						<th id="rightTh">권한</th>
+						<th id="memberNumTh">사번</th>
+					</tr>	
+				</thead>
+				<tbody>
+					<c:forEach var="management" items="${ requestScope.managementList }">
+						<tr>
+							<td><c:out value="${ management.memberNo }"/></td>
+							<td><c:out value="${ management.memberName }"/></td>
+							<td><c:out value="${ management.permitName }"/></td>
+							<td><c:out value="${ management.memberId }"/></td>
+					   </tr>
+				   </c:forEach>
+			   </tbody>
 			</table>
 		</div>
-	<jsp:include page="paging.jsp"/>
-	</div>
+	<%-- <jsp:include page="paging.jsp"/>
+ --%>	</div>
 	
 
 	<!-- 멤버 추가(+) 모달창 -->
@@ -470,6 +613,7 @@
 		document.getElementById("modal_close_btn").onclick = function() {
 			document.getElementById("modal").style.display = "none";
 		}
+		
 	</script>
 </body>
 </html>
