@@ -160,8 +160,13 @@
  		   AND SPRINT_PROGRESS IN ('진행중', '진행전')
  	</select>
  	
- 	<select id="selectProjectMembers" resultMap="">
- 		
+ 	<select id="selectProjectMembers">
+ 		SELECT
+ 			   A.MEMBER_ID
+ 			   A.MEMBER_NAME
+ 		  FROM TBL_MEMBER A
+ 		  JOIN TBL_PROJECT_MEMBERS B ON (A.MEMBER_NO = B.MEMBER_NO)
+ 		 WHERE B.PROJECT_CODE = #{ projectCode }
  	
  	</select>
  </mapper>
