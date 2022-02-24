@@ -161,10 +161,11 @@
  		 WHERE A.TODOLIST_NO = #{ todolistNo }
  	</update>
 
- 	<update id = "modifyToDoListStatus" parameterType="_int">
+ 	<update id = "modifyToDoListStatus" >
        UPDATE 
  		       TBL_TODOLIST A
- 		   SET A.TODOLIST_CHECK_STATUS= #{ checkStatus }
+ 		   SET A.TODOLIST_CHECK_STATUS = #{ checkStatus }
+ 		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
  		 WHERE A.TODOLIST_NO = #{ no }
  	</update>
  </mapper>

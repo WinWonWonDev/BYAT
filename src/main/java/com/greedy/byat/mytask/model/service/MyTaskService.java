@@ -18,6 +18,4 @@ public interface MyTaskService {
 	void registToDoList(int memberNo);
 	int removeToDoList(int todolistNo);
 	int modifyToDoListStatus(ToDoListDTO todolist);
-	
-
 }

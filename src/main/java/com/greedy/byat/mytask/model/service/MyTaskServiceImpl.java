@@ -103,8 +103,12 @@ public class MyTaskServiceImpl implements MyTaskService {
 
 	@Override
 	public int modifyToDoListStatus(ToDoListDTO todolist) {
-		int reuslt = mapper.modifyToDoListStatus(todolist);
-		return reuslt;
+		System.out.println("modifyToDoListStatus" + todolist);
+		
+		int result = mapper.modifyToDoListStatus(todolist);
+		
+		System.out.println("@@@@@@@@@" + result);
+		return result;
 	}
 
 }

@@ -133,13 +133,13 @@ public class MyTaskController {
 		
 		response.setContentType("application/json; charset=UTF-8");
 
-		
-		
+
+		System.out.println("@@@@@@@@@" +todolist);
 		int result = mytaskService.modifyToDoListStatus(todolist);
 		
 		System.out.println("@@@@@@@@@" + result);
 		
-		return 1;
+		return result;
 		
 	}
 }

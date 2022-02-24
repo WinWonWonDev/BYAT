@@ -62,13 +62,14 @@ p {
     min-height: 200px;
 }
 .modal-content-gray{
-	background-color:gray;
+	background-color: rgb(242,242,242);
+	border-collapse: collapse;
 	border-radius: 30px;
-	margin: 5% auto; 
 	padding: 10px;
-	border: 1px solid #888;
+	border: 2px solid #000000;
     width: 90%; 
     min-height: 100px;
+    max-height:60%;
 }
 .ok-button{
 	width:30%;
@@ -397,8 +398,8 @@ tbody:hover {background-color: skyblue;}
                                     </c:forEach>
                        			</td>
                         		<td>
-                          			 <input id="membersModal" type="button" value="..."/>
-                          			 <script></script>
+                        			<input type="hidden" id=projectNum value="${project.code}"/>
+                        			<input id="membersModal" type="button" value="..."/>
                        			 </td>
                       			 <td id="myTaskPrjectDeadline">
                           			 <c:out value="${ project.startDate }"/> <br> ~ <c:out value="${ project.endDate }"/>
@@ -495,24 +496,18 @@ tbody:hover {background-color: skyblue;}
 	
 	<div id="myModal" class="modal">
       <div class="modal-content">
-      		<h2 style="color:white; text-align: center;"> 프로젝트 구성원</h2>
+      		<h2 style="color:white; text-align: center; margin-top:10px;"> 프로젝트 구성원</h2>
       		<div class="modal-content-white">
-                <h2 style="color:gray;">팀원 역할</h2>
-                <div class="modal-content-gray">
-                	<table class="border">
+                <h2 style="color:gray; margin-bottom:10px">팀원 목록</h2>
+                	<table class="modal-content-gray">
                 		<tr>
+                			<th>사번</th>
                 			<th>구성원 이름</th>
                 			<th>역할</th>
                 		</tr>
-                		<c:forEach items="${ project.projectMembers }" var="projectmember" varStatus="status">
-                			<tr>
-                				<td><c:out value="projectmember"></c:out></td>
-                				<td></td>
-                			</tr>
-                		</c:forEach>
+
                 	</table>
-                </div>
-            </div>
+           	</div>
             <div class="ok-button" onClick="close_pop();">
                 	<span class="pop_bt" style="font-size: 13pt;">ok</span>
             </div>
@@ -542,6 +537,7 @@ tbody:hover {background-color: skyblue;}
 		const $ToDoListText = document.querySelectorAll("#ToDoListText");
 		const $todolist = document.querySelectorAll("#todolist");
 		const $toDoListNo = document.querySelectorAll("#toDoListNo");
+		const #projectNum = document.qerySelecttorAll("projectNum");
 		
 		google.charts.load('current', {'packages':['corechart']});
     	google.charts.setOnLoadCallback(drawChart);
@@ -575,7 +571,7 @@ tbody:hover {background-color: skyblue;}
     	    $('#stop').on('click',function(e){
     	        e.preventDefault();
     	        clearTimeout(timerID); // 타이머 중지
-    	        $('#showtime').html('');
+    	        $('#showtime').html('');S
     	    });   
     	}); */
 
@@ -601,9 +597,21 @@ tbody:hover {background-color: skyblue;}
         	}
         });
         
+    	//모달 버튼
         for(let i = 0; i < $membersModal.length; i++){
         	membersModal[i].onclick = function() {
-        		 $('#myModal').show();
+        		$.ajax({
+  	  				url: "/byat/mytask/remove",
+  	  				type: "get",
+  	  				data: { "projectNum" : $projectNum[i].value},
+  	  				success:function(data, status, xhr){
+  	  						$('#myModal').show();
+  	  				},
+					error: function(xhr, status, error) {
+					   console.log(xhr);
+					}
+  	  			}); 
+        		
         	}
         }
         
@@ -631,7 +639,7 @@ tbody:hover {background-color: skyblue;}
                      error: function(xhr, status, error) {
 						   console.log(xhr);
 						 }
-                     });
+                  });
       		 }
         }
        
