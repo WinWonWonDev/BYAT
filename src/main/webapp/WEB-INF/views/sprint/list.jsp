@@ -364,7 +364,6 @@
 		font-size: 20px;
 		float: none;
 		margin-top: 15px;
-		/* margin-bottom: 20px; */
 		border: 1px black solid;
 	}
 	h5 {
@@ -385,6 +384,16 @@
 	.description {
 		margin-top: 20px;
 		width: 400px;
+	}
+	.task-manager-box {
+		border-radius: 20px;
+		border: 1px red solid;
+		width: 40px;
+		height: 40px;
+		margin: 0px;
+		float: left;
+		font-size: 11px;
+		text-align: center;
 	}
 	.sprint-area {
 		position: absolute;
@@ -473,6 +482,12 @@
 		margin-bottom: 7px;
 		border-radius: 10px; 
 		position: relative;
+	}
+	.task-manager{
+		color: white;
+		line-height: 5px;
+		margin-top: 15px;
+		font-weight: bold;
 	}
 	.backlog-item-title {
 		position: absolute;
@@ -572,18 +587,7 @@
 		width: 75%;
 		height: 47%;
 		float: left;
-	}
-	.task-title h4 {
-		margin: 0;
-		height: 45px;
-	}
-	.task-management {
-		border-radius: 20px;
-		border: 1px black solid;
-		width: 40px;
-		height: 40px;;
-		margin: 0px;
-		float: left;
+		font-size: 15px;
 	}
 	.task-item h5 {
 		font-size: 10px;
@@ -593,18 +597,22 @@
 	}
 	.task-date-box {
 		width: 50%;
-		height: 40%;
+		height: 35%;
 		float: left;
 		text-align: center;
 	}
+	.task-date-box div {
+		width: 40%;
+		height: 40%;
+	}
 	.task-status {
-		position: absolute;
 		top: 65px;
 		left: 150px;
 		margin-left: 5px;
 		margin-top: 13px;
 		border-radius: 5px;
 		text-align: center;
+		float: left;
 	}
 	.modal_content-box h3 {
 		margin-top: 0px;
@@ -616,6 +624,7 @@
 </style>
 </head>
 <body>
+	<input type="hidden" id="projectCode" value="${ requestScope.code }">
 	<div id="whiteBoard">
 		<div class="backlog-area">
 			<h2 class="backlog-head">BackLog</h2>
@@ -648,8 +657,8 @@
 						<input type="button" class="sprint-update-modal-open" id="sprint-update-open-btn" value="조회  / 수정">
 						<button type="button" class="sprint-delete-modal-open" id="sprint-delete-open-btn" onclick="location.href='${ pageContext.servletContext.contextPath }/sprint/remove?sprintCode=${ sprint.code }&projectCode=${ requestScope.code }'">삭제</button>
 					</div>
+					
 				</c:forEach>
-				
 				
 			</div>
 		</div>
@@ -660,30 +669,30 @@
 			<button type="button" class="sprint-end">Sprint 종료</button>
 			<input type="hidden" id="projectProgress" value="${ requestScope.projectProgress }">
 			<button type="button" class="sprint-add" id="sprint-create-open-btn">Sprint 생성</button>
-			<div class="task-box">
+			<div class="task-box" id="task-box">
 				
-				<% int count = 0; %>
-				<!-- c:foreach로 -->
-				<% count++; %>
-				<div class="task-div">
-					<div class="task-item" id="task-item">
-						<div class="task-title"><h4>오오옷</h4></div>
-						<div class="task-management"></div>
-						<br clear="both">
-						<h5>기간:</h5>
-						<div class="task-date-box">
-							<div id="taskStartDay">0000-00-00</div>
-							<div id="taskEndDay">~0000-00-00</div>
+				<%-- <c:forEach items="${ taskList }" var="task">
+				
+					<div class="task-div">
+						<div class="task-item" id="task-item">
+							<input type="hidden" name="code" id="taskCode">
+							<div class="task-title" id="taskTitle"></div>
+							<div class="task-managements"></div>
+							<br clear="both">
+							<h5>기간:</h5>
+							<div class="task-date-box">
+								<div id="taskStartDate">0000-00-00</div>
+								<div id="taskEndDate">~0000-00-00</div>
+							</div>
 						</div>
+						<select class="task-status" id="task-status" name="taskProgress" onchange="chageLangSelect()">
+							<option id="before" value="Before" selected="selected">진행전</option>
+							<option id="proceeding" value="Proceeding">진행중</option>
+							<option id="finish" value="Finish">완료</option>
+						</select>
 					</div>
-					<select class="task-status" id="task-status" name="taskStatus" onchange="chageLangSelect()">
-						<option id="before" value="Before" selected="selected">진행전</option>
-						<option id="proceeding" value="Proceeding">진행중</option>
-						<option id="finish" value="Finish">완료</option>
-					</select>
-				</div>
-				
-			
+					
+				</c:forEach> --%>
 			</div>
 		</div>
 	</div>
@@ -761,18 +770,15 @@
 	<div id="task-create-modal">
    
    		<div class="modal_content">
-   			<form action="" method="post">
+   			<form action="${ pageContext.servletContext.contextPath }/task/regist" method="post">
 			<div class="modal_head">
 				<h3>태스크 생성</h3>
 	    	</div>
        		<div class="modal_content-box">
-       			<input type="text" class="title" name="taskTitle" placeholder="TaskTitle">
-       		
-       			<select class="manager" id="backlogManager">
-					<option>Manager</option>
-					<!-- c:foreach -->
-					
-					
+       			<input type="text" class="title" name="title"  placeholder="Task Title">
+       			
+       			<select class="manager" id="taskManager" name="manager">
+
 					
        			</select>
 				<h5>시작일</h5>
@@ -783,7 +789,7 @@
        			<textarea class="description" id="taskDescription" rows="13" cols="51" placeholder="Task Detail Description"></textarea>
        		</div>
        		<div class="modal_button">
-	        	<button type="button" id="task-create">Ok</button>
+	        	<button type="submit" id="task-create">Ok</button>
 	        	<button type="button" id="task-close-btn1">Cancel</button>
        		</div>
    			</form>
@@ -941,9 +947,9 @@
 		document.getElementById("task-create-modal").style.display = "none";
     }
     
-    document.getElementById("task-item").onclick = function() {
+    /* document.getElementById("task-item").onclick = function() {
         document.getElementById("task-update-modal").style.display = "block";
-    }
+    } */
     
     document.getElementById("task-close-btn2").onclick = function() {
 		document.getElementById("task-update-modal").style.display = "none";
@@ -990,7 +996,7 @@
     	document.getElementById("sprint-create-modal").style.display = "none";
     }
     
-	if(document.querySelectorAll("#sprintUpdate input")){
+	if(document.querySelectorAll("#sprintUpdate input")) {
     	
     	const $sprintUpdateButtons = document.querySelectorAll("#sprint-update-open-btn");
     	const $sprintCodes = document.querySelectorAll("#sprintCode");
@@ -1004,7 +1010,7 @@
 	    		document.getElementById("sprint-update-modal").style.display = "block";
     		
 	    		$.ajax({
-	    			url: "/byat/sprint/select",
+	    			url: "/byat/sprint/detail",
 	    			type: "get",
 	    			data: { "sprintCode": $sprintCodes[i].value },
 	    			dataType: "json",
@@ -1041,6 +1047,128 @@
     document.getElementById("sprint-close-btn2").onclick = function() {
     	document.getElementById("sprint-update-modal").style.display = "none";
     }
+
+    
+    if(document.querySelectorAll("#sprint-box div")){
+    	
+    	const $sprintItems = document.querySelectorAll("#sprintItem");
+    
+   		console.log($sprintItems);
+    
+		for(let i = 0; i < $sprintItems.length; i++){	
+    	
+    		$sprintItems[i].onclick = (function(e) {
+    		
+				if(!$(e.target).hasClass("sprint-update-modal-open") && !$(e.target).hasClass("sprint-delete-modal-open")) {
+				
+					const $sprintCodes = document.querySelectorAll("#sprintCode");
+			
+					console.log($sprintCodes[i].value);
+					
+					$.ajax({
+						url: "/byat/sprint/selecttasks",
+						type: "get",
+						data: { "sprintCode": $sprintCodes[i].value },
+						success: function(data, status, xhr){
+							console.table(data);
+							
+								const $taskBox = $("#task-box");
+								$taskBox.html("");
+								
+								for(let i = 0; i < data.length; i++){
+								
+									const $taskDiv = $("<div class='task-div'>");
+									const $taskItem = $("<div class='task-item' id='task-item'>");
+									const $memberNo = $("<input type='hidden' name='memberNo' id='memberNo'>").val(data[i].memberNo);
+									const $taskCode = $("<input type='hidden' name='code' id='taskCode'>").val(data[i].code);
+									const $taskTitle = $("<div class='task-title' id='taskTitle'>").text(data[i].title);
+									
+									const $taskManager = $("<div class='task-manager'>").text(data[i].manager);
+									let $taskManagerBox = null;
+									
+									if(data[i].managerRole.roleName == 'PM'){
+										
+										$taskManagerBox = $("<div class='task-manager-box' style='background-color:red;'>");
+
+									} else if(data[i].managerRole.roleName == '부PM'){
+										
+										$taskManagerBox = $("<div class='task-manager-box' style='background-color:yellowgreen;'>");
+										
+									} else if(data[i].managerRole.roleName == '일반 멤버'){
+										
+										$taskManagerBox = $("<div class='task-manager-box' style='background-color:#FFDFBA;'>");
+										
+									}
+									
+									const $br = $("<br clear='both'>");
+									const $h5 = $("<h5>").html("기간:");
+									const $taskDateBox = $("<div class='task-date-box'>");
+									
+									const $taskStartDate = $("<div id='taskStartDate'>").text(data[i].startDate);
+									const $taskEndDate = $("<div id='taskEndDate'>").text("~" + data[i].endDate);
+									
+									const $taskStatus = $("<select class='task-status' id='task-status' name='taskProgress' onchange='changeLangSelect()'>");
+									const $option1 = $("<option id='before' value='Before'>").text("진행전");
+									const $option2 = $("<option id='proceeding' value='Proceeding'>").text("진행중");
+									const $option3 = $("<option id='finish' value='Finish'>").text("완료");
+									
+									$taskDiv.append($taskItem);
+									$taskItem.append($taskCode);
+									$taskItem.append($taskTitle);
+
+									$taskManagerBox.append($taskManager);
+									$taskItem.append($taskManagerBox);
+									
+									$taskItem.append($br);
+									$taskItem.append($h5);
+									
+									$taskDateBox.append($taskStartDate);
+									$taskDateBox.append($taskEndDate);
+									$taskItem.append($taskDateBox);
+									
+									$taskStatus.append($option1);
+									$taskStatus.append($option2);
+									$taskStatus.append($option3);
+									$taskItem.append($taskStatus);
+									
+									$taskBox.append($taskDiv);
+								}
+						},
+						error: function(xhr, status, error){
+							console.log(xhr);
+						}
+					});
+				
+				} 
+			});
+	    }
+    
+    }
+    
+    const $taskManager = $("#taskManager");
+    
+    console.log($taskManager);
+    
+    $taskManger.onclick = function() {
+    	
+    	console.log("여기오나");
+    	
+    	const $projectCode = $("#projectCode").value;
+    	
+    	console.log($projectCode);
+    	
+    	$.ajax({
+			url: "/byat/task/manager",
+			type: "get",
+			data: { "projectCode": $projectCode },
+			success: function(data, status, xhr){
+				console.log(data);
+			},
+			error: function(xhr, status, error){
+				console.log(xhr);
+			}
+    }
+    
     
     /*태스크 상태 변경*/
     window.onload = function(){
@@ -1056,6 +1184,7 @@
     	} else{
     		document.getElementById("task-status").style.background="#3988FF";
     	}
+    	
     }
     
     function chageLangSelect() {
@@ -1072,10 +1201,6 @@
     		document.getElementById("task-status").style.background="#3988FF";
     	}
     }
-    
-    
-    
-    
    
 </script>
 </body>

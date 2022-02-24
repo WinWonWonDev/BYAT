@@ -29,17 +29,33 @@ public class SprintServiceImpl implements SprintService {
 	}
 
 	@Override
-	public void registSprint(SprintDTO sprint) {
+	public String registSprint(SprintDTO sprint) {
 		
-		int result1 = mapper.insertSprint(sprint);
+		int projectCode = sprint.getProjectCode();
 		
-		int result2 = mapper.insertSprintVersionHistory(sprint);
+		/*진행중인 스프린트가 있으면 스프린트를 생성할 수 없다.*/
+		int checkResult = mapper.checkSprintProgress(projectCode);
 		
-		int result3 = mapper.insertSprintProgressHistory(sprint);
+		String result = null;
 		
-		if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0)) {
-			System.out.println("스프린트 생성 실패");
+		if(!(checkResult > 0)) {
+			
+			int result1 = mapper.insertSprint(sprint);
+		
+			int result2 = mapper.insertSprintVersionHistory(sprint);
+		
+			int result3 = mapper.insertSprintProgressHistory(sprint);
+		
+			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0)) {
+				result = "스프린트 생성 실패";
+			} else {
+				result = "스프린트를 생성하였습니다.";
+			}
+		} else {
+			result = "완료되지 않은 스프린트가 존재합니다.";
 		}
+		
+		return result;
 	}
 
 	@Override

@@ -13,7 +13,8 @@ import lombok.ToString;
 @ToString 
 public class TaskMembersDTO {
 	
-	private int code;
+	private int taskCode;
 	private int memberNo;
-	private int sprintCode;
+	private int projectCode;
+	private String roleName;
 }
