@@ -15,4 +15,9 @@ public interface MyTaskService {
 	List<ProjectMembersDTO> selectMyTaskProjectMembers(int projectCode);
 	List<TaskDTO> selectTaskList(int projectCode, int i);
 	List<ToDoListDTO> selectMyTaskToDoList(int memberNo);
+	void registToDoList(int memberNo);
+	int removeToDoList(int todolistNo);
+	int modifyToDoListStatus(ToDoListDTO todolist);
+	
+
 }

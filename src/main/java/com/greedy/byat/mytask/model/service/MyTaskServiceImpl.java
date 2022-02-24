@@ -78,8 +78,6 @@ public class MyTaskServiceImpl implements MyTaskService {
 	public List<TaskDTO> selectTaskList(int projectCode, int memberNo) {
 		
 		List<TaskDTO> task = mapper.selectTaskList(projectCode, memberNo);
-
-		
 		return task;
 	}
 
@@ -91,10 +89,23 @@ public class MyTaskServiceImpl implements MyTaskService {
 		return todoList;
 	}
 
+	@Override
+	public void registToDoList(int memberNo) {
+	
+		mapper.reqistToDoList(memberNo);
+	}
 
+	@Override
+	public int removeToDoList(int todolistNo) {
+		int reuslt = mapper.removeToDoList(todolistNo);
+		return reuslt;
+	}
 
-
-
+	@Override
+	public int modifyToDoListStatus(ToDoListDTO todolist) {
+		int reuslt = mapper.modifyToDoListStatus(todolist);
+		return reuslt;
+	}
 
 }
 
