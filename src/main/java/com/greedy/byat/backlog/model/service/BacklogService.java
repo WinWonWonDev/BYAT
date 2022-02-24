@@ -9,7 +9,7 @@ import com.greedy.byat.common.exception.backlog.BacklogRemoveException;
 
 public interface BacklogService {
 
-	List<BacklogDTO> selectAllBacklogList(int projectCode);
+	List<BacklogDTO> selectBacklogList(int projectCode);
 	
 	void registBacklog(BacklogDTO backlog) throws BacklogRegistException;
 	

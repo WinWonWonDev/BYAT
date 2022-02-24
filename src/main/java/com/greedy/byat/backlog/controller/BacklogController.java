@@ -30,7 +30,7 @@ public class BacklogController {
 		
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		
-		List<BacklogDTO> backlogList = backlogService.selectAllBacklogList(projectCode);
+		List<BacklogDTO> backlogList = backlogService.selectBacklogList(projectCode);
 		
 		System.out.println("backlogList : " + backlogList);
 		

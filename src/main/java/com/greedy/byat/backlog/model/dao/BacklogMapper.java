@@ -6,7 +6,7 @@ import com.greedy.byat.backlog.model.dto.BacklogDTO;
 
 public interface BacklogMapper {
 	
-	List<BacklogDTO> selectAllBacklogList(int projectCode);
+	List<BacklogDTO> selectBacklogList(int projectCode);
 	
 	BacklogDTO selectBacklogDetail(int code);
 	
