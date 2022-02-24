@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.greedy.byat.common.exception.sprint.RegistSprintException;
 import com.greedy.byat.sprint.model.dao.SprintMapper;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;
 
 @Service
 public class SprintServiceImpl implements SprintService {
@@ -77,6 +78,16 @@ public class SprintServiceImpl implements SprintService {
 		String projectProgress = mapper.selectProjectProgress(projectCode);
 		
 		return projectProgress;
+	}
+
+	@Override
+	public List<TaskDTO> selectTaskList(int sprintCode) {
+		
+		List<TaskDTO> taskList = mapper.selectTaskList(sprintCode);
+		
+		System.out.println("asdf"+taskList);
+		
+		return taskList;
 	}
 
 
