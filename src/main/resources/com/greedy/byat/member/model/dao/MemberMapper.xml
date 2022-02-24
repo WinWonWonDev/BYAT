@@ -29,7 +29,7 @@
  	<select id="login" resultMap="memberResultMap">
  		SELECT
  		       A.MEMBER_NO
- 		     , B.PERMIT_NAME
+ 		     , A.PERMIT_CODE
  		     , A.MEMBER_ID
  		     , A.MEMBER_PWD
  		     , A.MEMBER_NAME
@@ -48,7 +48,7 @@
  	<select id="initLogin" resultMap="memberResultMap">
  		SELECT
  		       A.MEMBER_NO
- 		     , B.PERMIT_NAME
+ 		     , A.PERMIT_CODE
  		     , A.MEMBER_ID
  		     , A.MEMBER_PWD
  		     , A.MEMBER_NAME

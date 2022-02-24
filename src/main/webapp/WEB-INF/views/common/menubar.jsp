@@ -430,9 +430,8 @@
     <div class="modal_layer"></div>
 </div>
     
-    
-    
     <script>
+    
 	    function test() {
 	    	var tabsNewAnim = $('#navbarSupportedContent');
 	    	var selectorNewAnim = $('#navbarSupportedContent').find('li').length;
