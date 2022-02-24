@@ -6,8 +6,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/dataTables.jqueryui.min.css"/>  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <style>
 	html {
@@ -46,17 +49,18 @@
 		color:white;
 		font-size:25px;
 		float:right;
-		margin-right:6%;
-		margin-top:3%;
+		margin-right:3%;
+		margin-top:2%;
 		cursor:pointer;
 	}
 	
 	.projectListBox {
 		border:1px solid black;
-		height:75%;
+		height:77%;
 		margin-left:3%;
 		margin-right:3%;
 		margin-top:6%;
+		border:none;
 	}
 	
 	#manageProjectTd {
@@ -92,9 +96,13 @@
     	border-collapse: collapse;
     }
 	
-	#projectTable th {
+	.projectTable th {
 		background-color:rgb(229,229,229);
 		height:50px;
+	}
+	
+	.projectTable {
+		border : 1px solid black;	
 	}
 	
 	#projectCreateModal {
@@ -336,6 +344,7 @@
  		position:absolute;
  		width:80px;
  		height:50px;
+ 		z-index:10;
  	}
  	
  	#projectMenuTitles div {
@@ -855,27 +864,14 @@
 <body style="overflow:hidden;">
 	<div id="whiteBoard">
 		<div class="projectListHeadName" style="font-weight:bold">전체 프로젝트 목록</div>
-		<div class="searchProject">
-			<div class="search-project-area" style="width:350px;">
-				<form action="${ pageContext.servletContext.contextPath }/project/list" method="get" style="display: inline-block">
-					<input type="hidden" name="currentPage" value="1">
-					<select id="searchCondition" name="searchCondition" style="text-align:center">
-						<option value="title" ${ requestScope.selectCriteria.searchCondition eq "title"? "selected": "" }>제목</option>
-						<option value="body" ${ requestScope.selectCriteria.searchCondition eq "body"? "selected": "" }>내용</option>
-						<option value="name" ${ requestScope.selectCriteria.searchCondition eq "name"? "selected": "" }>참여자 이름</option>
-					</select> 
-					<input type="search" id="searchValue" name="searchValue" value="<c:out value="${ requestSCope.selectCriteria.searchValue }"/>">
-					<button type="submit">검색</button>					
-				</form>
-			</div>
-		</div>
 		
-		<c:if test="${ (sessionScope.loginMember.permit eq 'PM') or (sessionScope.loginMember.permit eq 'ADMIN')}">
+		<c:if test="${ (sessionScope.loginMember.permitCode == 1) or (sessionScope.loginMember.permitCode == 2)}">
 			<button id="createProject">새 프로젝트 생성</button>					
 		</c:if>
-			<button id="createProject" style="display:none;"></button>
+		<button id="createProject" style="display:none;"></button>
 		<div class="projectListBox">
-	      		<table class="projectTable" id="projectTable">
+      		<table class="projectTable" id="projectTable">
+      			<thead>
 					<tr>
 						<th id="manageProjectTd">프로젝트 관리</th>
 						<th id="projectParticipantsTd">참여자</th>
@@ -886,88 +882,89 @@
 						<th id="projectManager">담당자</th>
 						<th id="projectSetting">설정</th>
 					</tr>
+      			</thead>
+      			<tbody>
 					<c:forEach items="${ projectList }" var="project" varStatus="status">
-					<tr>
-						<td id="projectTitle" style="cursor:pointer;"><c:out value="${ project.title }" />
-							<input type="hidden" value="${ project.code }" name="projectCode" id="projectCode">
-						</td>
-						<td id="projectRealMemberList">
-							<c:set var="loop_flag" value="false"/>
-							<c:forEach items="${ project.projectMembers }" var="member" varStatus="roleStatus">
+						<tr>
+							<td id="projectTitle" style="cursor:pointer;"><c:out value="${ project.title }" />
+								<input type="hidden" value="${ project.code }" name="projectCode" id="projectCode">
+							</td>
+							<td id="projectRealMemberList">
+								<c:set var="loop_flag" value="false"/>
+								<c:forEach items="${ project.projectMembers }" var="member" varStatus="roleStatus">
+									
+									<c:if test="${ not loop_flag }">
+										<c:if test="${ member.roleName eq 'PM' }">
+											<div id="projectRealMember1">
+												<c:out value="${ member.name }" />
+												<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
+											</div>									
+										</c:if>
+										<c:if test="${ member.roleName eq '부PM' }">
+											<div id="projectRealMember2">
+												<c:out value="${ member.name }" />	
+												<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
+											</div>
+										</c:if>
+										<c:if test="${ member.roleName eq '일반 멤버' }">
+											<div id="projectRealMember3">
+												<c:out value="${ member.name }" />	
+												<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
+											</div>
+										</c:if>
+										<c:if test="${ roleStatus.index eq 7 }">
+											<c:set var="loop_flag" value="true"/>
+										</c:if>
+									</c:if>
+									
+								</c:forEach>
+								<input type="button" id="projectRealMemberListBtn" class="projectRealMemberListBtn">
+							</td>
+							<td>
 								
-								<c:if test="${ not loop_flag }">
-									<c:if test="${ member.roleName eq 'PM' }">
-										<div id="projectRealMember1">
-											<c:out value="${ member.name }" />
-											<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
-										</div>									
-									</c:if>
-									<c:if test="${ member.roleName eq '부PM' }">
-										<div id="projectRealMember2">
-											<c:out value="${ member.name }" />	
-											<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
-										</div>
-									</c:if>
-									<c:if test="${ member.roleName eq '일반 멤버' }">
-										<div id="projectRealMember3">
-											<c:out value="${ member.name }" />	
-											<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
-										</div>
-									</c:if>
-									<c:if test="${ roleStatus.index eq 7 }">
-										<c:set var="loop_flag" value="true"/>
-									</c:if>
+								<input type="button" class="projectAddMemberBtn">
+							</td>
+							<td><c:out value="${ project.startDate }" /></td>
+							<td><c:out value="${ project.endDate }" /></td>
+							<td style="padding-left:15px;">
+								<c:if test="${ project.progress eq '진행중' }">
+									<div class="projectRealProgress">
+										<c:out value="${ project.progress }" />
+									</div>								
 								</c:if>
-								
-							</c:forEach>
-							<input type="button" id="projectRealMemberListBtn" class="projectRealMemberListBtn">
-						</td>
-						<td>
-							
-							<input type="button" class="projectAddMemberBtn">
-						</td>
-						<td><c:out value="${ project.startDate }" /></td>
-						<td><c:out value="${ project.endDate }" /></td>
-						<td style="padding-left:15px;">
-							<c:if test="${ project.progress eq '진행중' }">
-								<div class="projectRealProgress">
-									<c:out value="${ project.progress }" />
-								</div>								
-							</c:if>
-							<c:if test="${ project.progress eq '완료' }">
-								<div class="projectRealProgress" style="background-color:rgb(41, 60, 117)">
-									<c:out value="${ project.progress }" />
-								</div>		
-							</c:if>
-							<c:if test="${ project.progress eq '미진행' }">
-								<div class="projectRealProgress" style="background-color:rgb(196, 196, 196)">
-									<c:out value="${ project.progress }" />
-								</div>		
-							</c:if>
-						</td>
-						<td style="padding-left:30px;">
-							<div class="projectRealManager">
-								<c:out value="${ project.writer }" />							
+								<c:if test="${ project.progress eq '완료' }">
+									<div class="projectRealProgress" style="background-color:rgb(41, 60, 117)">
+										<c:out value="${ project.progress }" />
+									</div>		
+								</c:if>
+								<c:if test="${ project.progress eq '미진행' }">
+									<div class="projectRealProgress" style="background-color:rgb(196, 196, 196)">
+										<c:out value="${ project.progress }" />
+									</div>		
+								</c:if>
+							</td>
+							<td style="padding-left:20px;">
+								<div class="projectRealManager">
+									<c:out value="${ project.writer }" />							
+								</div>
+							</td>
+							<td>
+								<input type="button" class="projectEditBtn" id="projectEditBtn">
+							</td>
+						</tr>
+						<div id="projectMenuBox" class="projectMenuBox" style="display:none"> 
+							<div id="projectMenuTitles">
+								<div id="updateAndSelectProject">조회/수정</div>
+								<c:if test="${ (sessionScope.loginMember.no eq PmMemberNumber[status.index]) or (sessionScope.loginMember.permitCode == 1)}">
+									<div id="deleteProject">삭제하기</div>			
+								</c:if>
+								<div id="deleteProject" style="display:none;"></div>
 							</div>
-						</td>
-						<td>
-							<input type="button" class="projectEditBtn" id="projectEditBtn">
-						</td>
-					</tr>
-					<div id="projectMenuBox" class="projectMenuBox" style="display:none"> 
-						<div id="projectMenuTitles">
-							<div id="updateAndSelectProject">조회/수정</div>
-							<c:if test="${ (sessionScope.loginMember.no eq PmMemberNumber[status.index]) or (sessionScope.loginMember.permit eq 'ADMIN')}">
-								<div id="deleteProject">삭제하기</div>			
-							</c:if>
-							<div id="deleteProject" style="display:none;"></div>
 						</div>
-					</div>
-				</c:forEach>
-	      		</table>
+					</c:forEach>
+      			</tbody>
+      		</table>
 		</div>
-		
-		<jsp:include page="../common/paging.jsp" />
 		
 	</div>
 	<div id="projectCreateModal">
@@ -1121,6 +1118,28 @@
 	</div>
 	
 	<script>
+	
+	$(document).ready(function() {
+        
+        $.extend( $.fn.dataTable.defaults, {
+           
+           language: {
+              url : "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Korean.json"
+           }
+        });
+        
+        $('#projectTable').DataTable({
+           
+        	lengthChange: false,
+			order: [],
+			ordering: false,
+			lengthMenu : [ 4 ],
+			columnDefs: [
+				{ targets: 6, width: 60 },
+				{ targets: 7, width: 40 }
+			]
+        });
+     });
 	
 		let projectCode;
 		let selectedMemberList = [];
@@ -1421,7 +1440,7 @@
 			
 			for(let i = 0; i < $proBox.length; i++) {
 				
-				$proBox[i].style.left = '1300px';
+				$proBox[i].style.left = '1295px';
 			}
 			
 			for(let i = 0; i < $projectAddMemberBtn.length; i++) {
@@ -1431,10 +1450,6 @@
 					document.getElementById("regist_project_members_modal").style.display="block";
 			             
 					const $projectRealMemberList = document.querySelectorAll("#projectRealMemberList");
-					
-					/* for(let i = 0; i < $test1[0].children.length - 1; i++) {
-						console.log($test1[0].children[i].children[0].value);
-					} */
 					
 					projectCode = $code[i].value;
 					
@@ -1461,26 +1476,28 @@
 				}
 
 				$projectEditBtn[i].onclick = function() {
-   
+   	
+					console.log($proBox[i].style.display);
+					
 					if(i === 0) {
 					   
-					   $proBox[i].style.top = '190px';
+					   $proBox[i].style.top = '247px';
 					   
 					} else if(i === 1) {
 					   
-					   $proBox[i].style.top = '260px';
+					   $proBox[i].style.top = '317px';
 					   
 					} else if(i === 2) {
 					   
-					   $proBox[i].style.top = '330px';
+					   $proBox[i].style.top = '387px';
 					   
 					} else if(i === 3) {
 					   
-					   $proBox[i].style.top = '400px';
+					   $proBox[i].style.top = '457px';
 					
 					} else {
 					   
-					   $proBox[i].style.top = '470px';
+					   $proBox[i].style.top = '527px';
 					
 					} 
 					

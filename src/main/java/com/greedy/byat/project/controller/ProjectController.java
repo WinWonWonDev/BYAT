@@ -40,6 +40,7 @@ import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
+import com.greedy.byat.project.model.dto.ProjectPagingDTO;
 import com.greedy.byat.project.model.service.ProjectService;
 
 @Controller
@@ -57,41 +58,9 @@ public class ProjectController {
 	@GetMapping("/list")
 	public ModelAndView selectProjectList(ModelAndView mv, HttpServletRequest request) {
 		
-		String currentPage = request.getParameter("currentPage");
-		int pageNo = 1;
-		
-		if(currentPage != null && !"".equals(currentPage)) {
-			pageNo = Integer.parseInt(currentPage);
-		}
-		
-		String searchCondition = request.getParameter("searchCondition");
-		String searchValue = request.getParameter("searchValue");
-		
-		Map<String, String> searchMap = new HashMap<>();
-		searchMap.put("searchCondition", searchCondition);
-		searchMap.put("searchValue", searchValue);
-		
-		System.out.println("검색 조건 : " + searchMap);
-		
-		int totalCount = projectService.selectTotalCount(searchMap);
-		
-		System.out.println("totalProjectCount : " + totalCount);
-		
-		int limit = 5;
-		
-		int buttonAmount = 5;
-		
-		SelectCriteria selectCriteria = null;
-		
-		if(searchCondition != null && !"".equals(searchCondition)) {
-			selectCriteria = Pagenation.getSelectCriteria(pageNo, totalCount, limit, buttonAmount, searchCondition, searchValue);
-		} else {
-			selectCriteria = Pagenation.getSelectCriteria(pageNo, totalCount, limit, buttonAmount);
-		}
-		
 		MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		
-		List<ProjectDTO> projectList = projectService.selectProjectList(member, selectCriteria);
+		List<ProjectDTO> projectList = projectService.selectProjectList(member);
 		
 		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
 		
@@ -119,7 +88,6 @@ public class ProjectController {
 		
 		mv.addObject("projectList", projectList);
 		mv.addObject("PmMemberNumber", PmMemberNumber);
-		mv.addObject("selectCriteria", selectCriteria);
 		mv.setViewName("/project/list");
 		
 		return mv;

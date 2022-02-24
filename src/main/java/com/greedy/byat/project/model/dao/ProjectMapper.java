@@ -7,10 +7,11 @@ import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
+import com.greedy.byat.project.model.dto.ProjectPagingDTO;
 
 public interface ProjectMapper {
 
-	List<ProjectDTO> selectProjectList(MemberDTO member, SelectCriteria selectCriteria);
+	List<ProjectDTO> selectProjectList(MemberDTO member);
 
 	List<ProjectMembersDTO> selectProjectMembers(int code);
 

@@ -20,12 +20,14 @@
  	
  	<resultMap id="memberResultMap" type="MemberDTO">
  		<id property="no" column="MEMBER_NO"/>
- 		<result property="permitCode" column="MEMBER_PERMIT_CODE"/>
+ 		<result property="permitCode" column="PERMIT_CODE"/>
  		<result property="id" column="MEMBER_ID"/>
- 		<result property="name" column="MEMBER_NAME"/>
  		<result property="pwd" column="MEMBER_PWD"/>
+ 		<result property="name" column="MEMBER_NAME"/>
  		<result property="phone" column="MEMBER_PHONE"/>
  		<result property="email" column="MEMBER_EMAIL"/>
+ 		<result property="absenceYN" column="ABSENCE_YN"/>
+ 		<result property="initPwdYN" column="INIT_PWD_YN"/>
  	</resultMap>
  	
  	<resultMap id ="projectMembersResultMap" type="ProjectMembersDTO">
@@ -36,6 +38,29 @@
  		<result property="name" column="MEMBER_NAME"/>
  		<result property="roleName" column="ROLE_NAME"/>
  	</resultMap>
+ 	
+ 	<!-- <resultMap id="projectPagingResultMap" type="ProjectPagingDTO">
+ 		<id property="no" column="MEMBER_NO"/>
+ 		<result property="permitCode" column="PERMIT_CODE"/>
+ 		<result property="id" column="MEMBER_ID"/>
+ 		<result property="pwd" column="MEMBER_PWD"/>
+ 		<result property="name" column="MEMBER_NAME"/>
+ 		<result property="phone" column="MEMBER_PHONE"/>
+ 		<result property="email" column="MEMBER_EMAIL"/>
+ 		<result property="absenceYN" column="ABSENCE_YN"/>
+ 		<result property="initPwdYN" column="INIT_PWD_YN"/>
+ 		<result property="pageNo"/>
+ 		<result property="totalCount"/>
+ 		<result property="limit"/>
+ 		<result property="buttonAmount"/>
+ 		<result property="maxPage"/>
+ 		<result property="startPage"/>
+ 		<result property="endPage"/>
+ 		<result property="startRow"/>
+ 		<result property="endRow"/>
+ 		<result property="searchCondition"/>
+ 		<result property="searchValue"/>
+ 	</resultMap> -->
  	
  	<select id="selectTotalCount" resultType="_int"> 	
  		SELECT
@@ -60,7 +85,7 @@
  	</select>
  	
  	<select id="selectProjectList" resultMap="projectResultMap">
- 		<!-- SELECT
+ 		SELECT
 			   A.PROJECT_CODE
 			 , A.PROJECT_TITLE
 			 , A.PROJECT_START_DATE
@@ -75,9 +100,9 @@
 		  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
 		 WHERE C.MEMBER_NO = #{ no }
 		   AND A.PROJECT_DELETE_STATUS = 'N'
-		 ORDER BY PROJECT_CODE DESC -->
+		 ORDER BY PROJECT_CODE DESC
 		 
-		 SELECT
+		 <!-- SELECT
 		        A.RNUM
 		      , A.PROJECT_CODE
 		      , A.PROJECT_TITLE
@@ -124,7 +149,7 @@
 	  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
 	 WHERE C.MEMBER_NO = #{ no }
 	   AND A.PROJECT_DELETE_STATUS = 'N'
-	 ORDER BY 1 DESC 
+	 ORDER BY 1 DESC  -->
  	</select>
  	
  	<select id="selectProjectMembers" resultMap="projectMembersResultMap">
@@ -239,7 +264,7 @@
  		     , A.MEMBER_NO
  		  FROM TBL_MEMBER A
  		 WHERE A.MEMBER_NAME LIKE '%' || #{ searchMember } || '%'
- 		   AND A.MEMBER_PERMIT != 'ADMIN'
+ 		   AND A.PERMIT_CODE != 1
  	</select>
  	
  	<insert id="registProjectMembers" parameterType="ProjectMembersDTO">
