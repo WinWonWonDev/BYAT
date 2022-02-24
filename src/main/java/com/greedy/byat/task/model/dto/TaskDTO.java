@@ -1,6 +1,9 @@
 package com.greedy.byat.task.model.dto;
 
-import java.util.Date;
+
+import java.util.List;
+
+import com.greedy.byat.project.model.dto.RoleDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,17 +17,22 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString 
 public class TaskDTO {
+	
 	private int code;
-	private int backLogCode;
 	private String title;
-	private java.util.Date startDate;
-	private java.util.Date endDate;
 	private String manager;
+	private java.sql.Date startDate;
+	private java.sql.Date endDate;
 	private String progress;
 	private String body;
-	private int projectCode;
 	private int version;
 	private String deleteStatus;
-	private int memberNo;
+	private int backLogCode;
 	private int sprintCode;
+	private int projectCode;
+	private int memberNo;
+	private RoleDTO managerRole;
+	private List<TaskMembersDTO> taskMemberList;
+	private List<RoleDTO> membersRole;
+	
 }

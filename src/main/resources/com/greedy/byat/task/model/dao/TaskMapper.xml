@@ -3,6 +3,165 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.task.model.dao.TaskMapper">
- 
  	
+ 	<resultMap type="TaskDTO" id="taskResultMap2">
+ 		<id property="code" column="TASK_CODE"/>
+ 		<result property="title" column="TASK_TITLE"/>
+ 		<result property="startDate" column="TASK_START_DATE"/>
+ 		<result property="endDate" column="TASK_END_DATE"/>
+ 		<result property="manager" column="TASK_MANAGER"/>
+ 		<result property="progress" column="TASK_PROGRESS"/>
+ 		<result property="body" column="TASK_BODY"/>
+ 		<result property="version" column="TASK_VERSION"/>
+ 		<result property="deleteStatus" column="TASK_DELETE_STATUS"/>
+ 		<result property="memberNo" column="MEMBER_NO"/>
+ 		<result property="backlogCode" column="BACKLOG_CODE"/>
+ 		<result property="sprintCode" column="SPRINT_CODE"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		
+ 		<collection property="membersRole" column="code" select="selectMembersRoleList"/>
+ 	</resultMap>
+ 
+ 	<resultMap type="TaskMembersDTO" id="taskMembersRoleResultMap">
+ 		<id property="projectCode" column="PROJECT_CODE"/>
+ 		<id property="taskCode" column="TASK_CODE"/>
+ 		<id property="memberNo" column="MEMBER_NO"/>
+ 		<result property="roleName" column="ROLE_NAME"/>
+ 	</resultMap>
+ 	
+ 	<select id="selectMembersRoleList" resultMap="taskMembersRoleResultMap">
+ 		SELECT
+	   		   A.PROJECT_CODE
+	 		 , B.TASK_CODE 
+	 		 , A.MEMBER_NO  
+	 	 	 , A.ROLE_NAME
+  		  FROM TBL_ROLE A
+  		  JOIN TBL_TASK_MEMBERS B ON(A.MEMBER_NO = B.MEMBER_NO)
+  		  JOIN TBL_SPRINT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
+ 		 GROUP BY A.PROJECT_CODE, B.TASK_CODE, A.MEMBER_NO, A.ROLE_NAME
+		HAVING A.PROJECT_CODE = #{ projectCode };
+ 	
+ 	</select>
+ 	
+ 	<select id="selectTask" resultMap="taskResultMap2">
+ 		SELECT
+ 			   A.TASK_CODE
+ 			 , A.TASK_TITLE
+ 			 , A.TASK_START_DATE
+ 			 , A.TASK_END_DATE
+ 			 , A.TASK_MANAGER
+ 			 , A.TASK_PROGRESS
+ 			 , A.TASK_BODY
+ 			 , A.TASK_VERSION
+ 			 , A.TASK_DELETE_STATUS
+ 			 , A.MEMBER_NO
+ 			 , A.PROJECT_CODE
+ 			 , A.BACKLOG_CODE
+ 			 , A.SPRINT_CODE
+ 		  FROM TBL_TASK A
+ 		 WHERE A.TASK_CODE = #{ code }
+ 	</select>
+ 
+ 	<insert id="insertTask" parameterType="TaskDTO">
+ 		INSERT
+ 		  INTO TBL_TASK A
+ 		(
+ 		  A.TASK_CODE
+ 		, A.TASK_TITLE
+ 		, A.TASK_START_DATE
+ 		, A.TASK_END_DATE
+ 		, A.TASK_MANAGER
+ 		, A.TASK_PROGRESS
+ 		, A.TASK_BODY
+ 		, A.TASK_VERSION
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_CODE.NEXTVAL
+ 		, #{ title }
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, #{ manager }
+ 		, '진행전'
+ 		, #{ body }
+ 		, 1
+ 		, #{ memberNo }
+ 		, (SELECT
+       			  B.SPRINT_CODE 
+  			 FROM TBL_SPRINT B
+ 			WHERE B.SPRINT_PROGRESS IN ('진행전', '진행중')
+   			  AND B.PROJECT_CODE = #{ projectCode })
+   		, #{ projectCode }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertTaskVersionHistory">
+ 		INSERT
+ 		  INTO TBL_TASK_VERSION_HISTORY A
+ 		(
+ 		  A.TASK_VERSION_HISTORY_NO
+ 		, A.TASK_VERSION_HISTORY_TITLE
+ 		, A.TASK_VERSION_HISTORY_BODY
+ 		, A.TASK_VERSION_HISTORY_VERSION
+ 		, A.TASK_VERSION_HISTORY_UPDATE_MEMBER
+ 		, A.TASK_VERSION_HISTORY_UPDATE_DATE
+ 		, A.TASK_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_VERSION_HISTORY_NO
+ 		, CHR(39) || (SELECT
+						     B.TASK_TITLE
+				        FROM TBL_TASK B
+				       WHERE B.TASK_CODE = #{ code }
+				 	 ) || CHR(39) || ' 태스크 생성 ' || CHR(40) || (SELECT
+				   								    			  		C.PROJECT_TITLE 
+				   											 	   FROM TBL_PROJECT C 
+				   							   					  WHERE C.PROJECT_CODE = #{ projectCode }
+				   							 					) || CHR(41)
+		, #{ body }
+		, 1
+		, #{ manager }
+		, SYSDATE
+		, SEQ_TASK_CODE.CURRVAL
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertTaskProgressHistory">
+ 		INSERT
+ 		  INTO TBL_TASK_PROGRESS_HISTORY A
+ 		(
+ 		  A.TASK_PROGRESS_HISTORY_NO
+ 		, A.TASK_PROGRESS_HISTORY_START_DATE
+ 		, A.TASK_PROGRESS_HISTORY_END_DATE
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		, A.TASK_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_PROGRESS_HISTORY_NO
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, SYSDATE
+ 		, #{ manager }
+ 		, SEQ_TASK_CODE.CURRVAL
+ 		)
+ 	</insert>
+ 	
+ 	<select id="checkSprintProgress" parameterType="_int">
+ 		SELECT
+ 			   COUNT(*)
+ 		  FROM TBL_SPRINT
+ 		 WHERE PROJECT_CODE = #{ projectCode }
+ 		   AND SPRINT_PROGRESS IN ('진행중', '진행전')
+ 	</select>
+ 	
+ 	<select id="selectProjectMembers" resultMap="">
+ 		
+ 	
+ 	</select>
  </mapper>
