@@ -17,5 +17,10 @@ public interface MyTaskMapper {
 	List<TaskDTO> selectTaskList(int projectCode, int memberNo);
 
 	List<ToDoListDTO> selectMyTaskToDoList(int memberNo);
+
+	void reqistToDoList(int memberNo);
+
+	int removeToDoList(int todolistNo);
 	
+	int modifyToDoListStatus(ToDoListDTO todolist);
 }

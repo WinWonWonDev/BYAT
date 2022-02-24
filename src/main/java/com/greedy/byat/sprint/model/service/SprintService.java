@@ -10,7 +10,7 @@ public interface SprintService {
 
 	List<SprintDTO> selectSprintList(int projectNo);
 
-	void registSprint(SprintDTO sprint);
+	String registSprint(SprintDTO sprint);
 
 	SprintDTO selectSprint(int sprintCode);
 

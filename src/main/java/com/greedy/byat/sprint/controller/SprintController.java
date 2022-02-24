@@ -81,16 +81,16 @@ public class SprintController {
 		sprint.setProjectCode(projectCode);
 		sprint.setWriter(writer.getName());
 		
-		sprintService.registSprint(sprint);
+		String message = sprintService.registSprint(sprint);
 		
-		rttr.addFlashAttribute("message", "스프린트를 생성하였습니다.");
+		rttr.addFlashAttribute("message", message);
 		
 		return "redirect:/sprint/list?code=" + projectCode;
 	}
 	
-	@GetMapping(value = "/select", produces = "application/json; charset=UTF-8")
+	@GetMapping(value = "/detail", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public String selectSprint(HttpServletRequest request) throws JsonProcessingException {
+	public String selectSprintDetail(HttpServletRequest request) throws JsonProcessingException {
 		
 		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
 		

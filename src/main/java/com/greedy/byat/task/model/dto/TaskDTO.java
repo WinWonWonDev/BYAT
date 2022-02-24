@@ -31,7 +31,8 @@ public class TaskDTO {
 	private int sprintCode;
 	private int projectCode;
 	private int memberNo;
-	private List<TaskMembersDTO> taskMemberList;
 	private RoleDTO managerRole;
+	private List<TaskMembersDTO> taskMemberList;
+	private List<RoleDTO> membersRole;
 	
 }

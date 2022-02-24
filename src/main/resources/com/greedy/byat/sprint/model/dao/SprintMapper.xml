@@ -51,14 +51,6 @@
  		
  		<association property="managerRole" resultMap="roleResultMap"/>
  		
- 		<collection property="taskMemberList" column="code" select="selectTaskMembers"/>
- 		
- 	</resultMap>
- 	
- 	<resultMap id="taskMembersMap" type="TaskMembersDTO">
- 		<id property="taskCode" column="TASK_CODE"/>
- 		<id property="memberNo" column="MEMBER_NO"/>
- 		<result property="sprintCode" column="SPRINT_CODE"/>
  	</resultMap>
  	
  	<select id="selectTaskList" resultMap="taskResultMap">
@@ -81,31 +73,9 @@
  		  JOIN TBL_ROLE B ON (A.MEMBER_NO = B.MEMBER_NO)
  		  JOIN TBL_SPRINT C ON (A.PROJECT_CODE = C.PROJECT_CODE)
  		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		   AND A.TASK_DELETE_STATUS = 'N'
  	</select>
  	
- 	<select id="selectTaskMembers" resultMap="taskMembersMap">
- 		SELECT
- 			    B.TASK_CODE
- 			  , B.MEMBER_NO
- 			  , B.SPRINT_CODE
- 		   FROM TBL_TASKMEMBERS B
- 		  WHERE B.TASK_CODE = #{ code }
- 	</select>
- 	
- 	<!-- <select id="selectTask" resultMap="taskResultMap">
- 		SELECT
- 			   A.TASK_CODE
- 			 , A.TASK_TITLE
- 			 , A.TASK_START_DATE
- 			 , A.TASK_END_DATE
- 			 , A.TASK_MANAGER
- 			 , A.TASK_PROGRESS
- 			 , A.TASK_BODY
- 			 , A.TASK_VERSION
- 			 , A.TASK_DELETE_STATUS
- 			 , A.TASK_
- 		
- 	</select> -->
  	
  	<select id="selectSprintList" resultMap="sprintResultMap">
  		SELECT
@@ -185,7 +155,7 @@
 		, 1
 		, SYSDATE
 		, #{ writer }
-		, #{ code }
+		, SEQ_SPRINT_CODE.CURRVAL
 		)
  	</insert>
  	
@@ -209,7 +179,7 @@
 		, #{ startDate } 
 		, #{ endDate }
 		, #{ writer }
-		, #{ code }
+		, SEQ_SPRINT_CODE.CURRVAL
 		)
  	</insert>
  	
@@ -244,7 +214,16 @@
  		UPDATE
  		       TBL_SPRINT A
  		   SET A.SPRINT_DELETE_STATUS = 'Y'
+ 		     , A.SPRINT_PROGRESS = '완료'
  		 WHERE A.SPRINT_CODE = #{ sprintCode }
  	</update>
+ 	
+ 	<select id="checkSprintProgress" resultType="_int">
+ 		SELECT
+	   		   COUNT(*)
+  		  FROM TBL_SPRINT
+ 		 WHERE PROJECT_CODE = #{ projectCode }
+   		   AND SPRINT_PROGRESS IN ('진행전','진행중')
+ 	</select>
  	
  </mapper>

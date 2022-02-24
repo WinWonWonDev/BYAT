@@ -1,4 +1,4 @@
-package com.greedy.byat.task.model.dto;
+package com.greedy.byat.management.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,14 +7,15 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter 
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString 
-public class TaskMembersDTO {
+public class PermitDTO {
 	
-	private int taskCode;
+	private int code;
+	private String name;
+	private String description;
 	private int memberNo;
-	private int projectCode;
-	private String roleName;
+	
 }
