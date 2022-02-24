@@ -20,7 +20,7 @@
  	
  	<resultMap id="memberResultMap" type="MemberDTO">
  		<id property="no" column="MEMBER_NO"/>
- 		<result property="permit" column="MEMBER_PERMIT"/>
+ 		<result property="permitCode" column="MEMBER_PERMIT_CODE"/>
  		<result property="id" column="MEMBER_ID"/>
  		<result property="name" column="MEMBER_NAME"/>
  		<result property="pwd" column="MEMBER_PWD"/>
@@ -37,8 +37,30 @@
  		<result property="roleName" column="ROLE_NAME"/>
  	</resultMap>
  	
- 	<select id="selectProjectList" resultMap="projectResultMap">
+ 	<select id="selectTotalCount" resultType="_int"> 	
  		SELECT
+ 		       COUNT(*)
+ 		  FROM TBL_PROJECT A
+ 		<if test="searchCondition == 'name'">
+ 		  JOIN TBL_PROJECT_MEMBERS B ON(A.PROJECT_CODE = B.PROJECT_CODE)
+ 		  JOIN TBL_MEMBER C ON(B.MEMBER_NO = C.MEMBER_NO)
+ 		</if>
+ 		<where>
+ 			<if test="searchCondition == 'title'">
+ 				A.PROJECT_TITLE '%' || #{ searchValue } || '%'
+ 			</if>
+ 			<if test="searchCondition == 'body'">
+ 				A.PROJECT_BODY '%' || #{ body } || '%'
+ 			</if>
+ 			<if test="searchCondition == 'name'">
+ 				C.MEMBER_NAME '%' || #{ name } || '%' 
+ 			</if>
+ 	        AND A.PROJECT_DELETE_STATUS = 'N'
+ 		</where>
+ 	</select>
+ 	
+ 	<select id="selectProjectList" resultMap="projectResultMap">
+ 		<!-- SELECT
 			   A.PROJECT_CODE
 			 , A.PROJECT_TITLE
 			 , A.PROJECT_START_DATE
@@ -53,7 +75,56 @@
 		  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
 		 WHERE C.MEMBER_NO = #{ no }
 		   AND A.PROJECT_DELETE_STATUS = 'N'
-		 ORDER BY PROJECT_CODE DESC
+		 ORDER BY PROJECT_CODE DESC -->
+		 
+		 SELECT
+		        A.RNUM
+		      , A.PROJECT_CODE
+		      , A.PROJECT_TITLE
+		      , A.PROJECT_START_DATE
+		      , A.PROJECT_END_DATE
+		      , A.PROJECT_PROGRESS
+		      , A.PROJECT_BODY
+		      , A.PROJECT_VERSION
+		      , A.PROJECT_DELETE_STATUS
+		      , A.PROJECT_WRITER
+		   FROM (SELECT ROWNUM RNUM
+		              , B.PROJECT_CODE
+				      , B.PROJECT_TITLE
+				      , B.PROJECT_START_DATE
+				      , B.PROJECT_END_DATE
+				      , B.PROJECT_PROGRESS
+				      , B.PROJECT_BODY
+				      , B.PROJECT_VERSION
+				      , B.PROJECT_DELETE_STATUS
+				      , B.PROJECT_WRITER
+				   FROM TBL_PROJECT B
+				 <if test="searchCondition == 'name'">
+				   JOIN TBL_PROJECT_MEMBERS C ON (B.PROJECT_CODE = C.PROJECT_CODE)
+				   JOIN TBL_MEMBER D ON(D.MEMBER_NO = D.MEMBER_NO)
+				 </if>
+				 <where>
+				 	<if test="searchCondition == 'title'">
+				 		B.PROJECT_TITLE LIKE '%' || #{ title } || '%'
+				 	</if>
+				 	<if test="searchCondition == 'body'">
+				 		B.PROJECT_BODY LIKE '%' || #{ body } || '%'
+				 	</if>
+				 	<if test="searchCondition =='name'">
+				 		D.MEMBER_NAME LIKE '%' || #{ name } || '%'
+				 	</if>
+				    AND B.PROJECT_DELETE_STATUS = 'N'
+				 </where>
+				   <![CDATA[
+				   	AND ROWNUM <= #{ endRow }
+				   ]]>
+				  ORDER BY B.PROJECT_CODE DESC
+		   ) A
+	  JOIN TBL_MEMBER B ON(A.PROJECT_WRITER = B.MEMBER_NAME)
+	  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
+	 WHERE C.MEMBER_NO = #{ no }
+	   AND A.PROJECT_DELETE_STATUS = 'N'
+	 ORDER BY 1 DESC 
  	</select>
  	
  	<select id="selectProjectMembers" resultMap="projectMembersResultMap">

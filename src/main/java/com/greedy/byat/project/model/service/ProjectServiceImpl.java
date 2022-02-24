@@ -15,6 +15,7 @@ import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
 import com.greedy.byat.common.exception.project.ProjectWriterChangeException;
+import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dao.ProjectMapper;
 import com.greedy.byat.project.model.dto.ProjectDTO;
@@ -31,9 +32,9 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectDTO> selectProjectList(MemberDTO member) {
+	public List<ProjectDTO> selectProjectList(MemberDTO member, SelectCriteria selectCriteria) {
 
-		List<ProjectDTO> projectList = mapper.selectProjectList(member);
+		List<ProjectDTO> projectList = mapper.selectProjectList(member, selectCriteria);
 
 		return projectList;
 	}
@@ -144,16 +145,23 @@ public class ProjectServiceImpl implements ProjectService {
 
 		List<MemberDTO> searchMemberList = mapper.searchAddMemberList(searchMember);
 
+		System.out.println("확인 출력용1");
+		
 		if (searchMemberList != null) {
-
+			
 			for (int i = 0; i < searchMemberList.size(); i++) {
-
+				
+				System.out.println(i + "??");
+				
 				for (int j = 0; j < projectMembersList.length; j++) {
 
+					System.out.println("???");
+					
 					if (searchMemberList.get(i).getNo() == Integer.parseInt(projectMembersList[j])) {
 
+						System.out.println("what? j : " + j + " i  : " + i);
 						searchMemberList.remove(i);
-
+						System.out.println("the j : " + j + " i  : " + i);
 					}
 
 				}
@@ -161,6 +169,8 @@ public class ProjectServiceImpl implements ProjectService {
 			}
 
 		}
+		
+		System.out.println("확인 출력용2");
 
 		if (selectMembers != null && searchMemberList != null) {
 
@@ -185,6 +195,8 @@ public class ProjectServiceImpl implements ProjectService {
 			}
 
 		}
+		
+		System.out.println("확인 출력용3");
 
 		return searchMemberList;
 	}
@@ -285,6 +297,14 @@ public class ProjectServiceImpl implements ProjectService {
 			
 		}
 		
+	}
+
+	@Override
+	public int selectTotalCount(Map<String, String> searchMap) {
+
+		int result = mapper.selectTotalCount(searchMap);
+		
+		return result;
 	}
 
 }
