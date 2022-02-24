@@ -54,12 +54,13 @@ public class MemberController {
 			
 			if(memberService.initLogin(member) != null) {
 				rttr.addFlashAttribute("message","로그인 성공!");
+				return "redirect:/home";
 				
 			} else {
 				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+				return "redirect:/member/login";
 			}
 			
-			return "redirect:/home";
 
 		} else {
 
@@ -68,20 +69,21 @@ public class MemberController {
 			
 			if(memberService.login(member) != null) {
 				rttr.addFlashAttribute("message","로그인 성공!");
+				return "redirect:/home";
 				
 			} else {
 				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+				return "redirect:/member/login";
 			}
 
-			return "redirect:/home";
 
 		}
 	}
 	
-	@GetMapping("emailduplicationCheckforinit")
+	@GetMapping("emailduplicationcheckforinit")
 	@ResponseBody
-	public int emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
-	
+	public Object emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
+		
 		response.setContentType("application/json; charset=UTF-8");
 		
 		Gson gson = new GsonBuilder()
@@ -92,14 +94,14 @@ public class MemberController {
 				.disableHtmlEscaping()
 				.create();
 		
-		int result = memberService.emailDuplicationCheck(emailAddress);
+		String test = gson.toJson(memberService.emailDuplicationCheck(emailAddress));
 		
-		return result;
+		return test;
 	}
 	
-	@GetMapping("registverification")
+	@GetMapping("/registverification")
 	@ResponseBody
-	public int registVerificationNumber(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {
+	public int registVerificationNumber(String emailAddress, String inputId, RedirectAttributes rttr, HttpServletResponse response) throws NotexistEmailException {
 		
 		response.setContentType("application/json; charset=UTF-8");
 		
@@ -113,10 +115,11 @@ public class MemberController {
 				.disableHtmlEscaping()
 				.create();
 		
+		result = memberService.registVerificationNumber(emailAddress, inputId);
+		
 		return result;
 		
 	}
-	//얘는 인증번호 생성하고 일치하면 result = 1 반환 ㅇ ㅋ
 	
 
 	@PostMapping(value="selectemail", produces="application/json; charset=UTF-8")
@@ -135,6 +138,22 @@ public class MemberController {
 		return gson.toJson(memberService.selectEmailById(inputId));
 		
 	}
+
+	@GetMapping(value="resubmitverificationnum", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public String resubmitVerificationNum(String inputId, String emailAddress, HttpServletResponse response, Model model, HttpServletRequest request, RedirectAttributes rttr) throws NotexistEmailException, IOException {
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		return gson.toJson(memberService.selectResubmitVerificationNum(inputId, emailAddress));
+		
+	}
 	
 	@PostMapping(value="checkverification", produces="application/json; charset=UTF-8")
 	@ResponseBody
@@ -149,6 +168,24 @@ public class MemberController {
 				.create();
 
 		int result = memberService.matchVerificationNumber(inputVerificationNum);
+		
+		return result;
+		
+	}
+	
+	@GetMapping(value="checkverificationforinit", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public int matchVerificationNumberForInit(String inputVerificationNum, int inputNo, RedirectAttributes rttr) {
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		int result = memberService.matchVerificationNumberForInit(inputVerificationNum, inputNo);
 		
 		return result;
 		
@@ -179,6 +216,33 @@ public class MemberController {
 		
 		return result;
 	}
+	
+	@GetMapping(value="initialinputinfo", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public int initialInputInfo(String emailAddress, String phoneNumber, String newPassword, String newPasswordConfirm, int inputNo, RedirectAttributes rttr) {
+
+		int result = 0;
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		System.out.println("이메일 : " + emailAddress + "폰 넘버 : " + phoneNumber + " 새 패스워드 : " + newPassword + "새 패스워드 확인 : " + newPasswordConfirm);
+		
+		if(!(newPassword.equals(newPasswordConfirm))) {
+			rttr.addFlashAttribute("message", "비밀번호가 일치하지 않습니다! 확인해주세요!");
+		} else {
+			result = memberService.initialInputInfo(emailAddress, phoneNumber, newPassword, inputNo);
+		}
+		
+		System.out.println("결과 뭐? : " + result );
+		
+		return result;
+	}
+	
 	
 	@GetMapping("/moveprofile")
 	public String moveProfile() {

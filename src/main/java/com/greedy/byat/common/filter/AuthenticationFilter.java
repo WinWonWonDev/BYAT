@@ -46,17 +46,17 @@ public class AuthenticationFilter implements Filter {
 			boolean isPermitMember = permitURIList.get("memberPermitList").contains(intent);
 			boolean isPermitAll = permitURIList.get("allPermitList").contains(intent);
 			
-			if ("ADMIN".equals(loginMember.getPermit())) {
+			if (1 == (loginMember.getPermitCode())) {
 				
 				if(isPermitAdmin || isPermitMember || isPermitAll) {
 					isAuthorized = true;
 				}
-			} else if ("PM".equals(loginMember.getPermit())) {
+			} else if (2 == (loginMember.getPermitCode())) {
 				
 				if((isPermitMember || isPermitAll) && !isPermitAdmin) {
 					isAuthorized = true;
 				}
-			} else if("일반 멤버".equals(loginMember.getPermit())) {
+			} else if(3 == (loginMember.getPermitCode())) {
 				
 				if((isPermitMember || isPermitAll) && !isPermitAdmin) {
 					isAuthorized = true;
@@ -97,7 +97,11 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/project/remove");
 		memberPermitList.add("/project/detail");
 		memberPermitList.add("/project/modify");
-		memberPermitList.add("/project/searchMembers");
+		memberPermitList.add("/project/searchmembers");
+		memberPermitList.add("/project/registmember");
+		memberPermitList.add("/project/projectmemberlist");
+		memberPermitList.add("/project/removemember");
+		memberPermitList.add("/project/modifyrole");
 		
 		memberPermitList.add("/sprint/list");
 		memberPermitList.add("/sprint/regist");
@@ -105,13 +109,20 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/sprint/modify");
 		memberPermitList.add("/sprint/start");
 		memberPermitList.add("/sprint/end");
-		memberPermitList.add("/sprint/select");
+		memberPermitList.add("/sprint/detail");
+		memberPermitList.add("/sprint/selecttasks");
 		
+		memberPermitList.add("/task/detail");
+		memberPermitList.add("/task/regist");
+		memberPermitList.add("/task/remove");
+		memberPermitList.add("/task/update");
+		memberPermitList.add("/task/manager");
 
 		memberPermitList.add("/mytask/list");
 		memberPermitList.add("/mytask/regist");
 		memberPermitList.add("/mytask/remove");
 		memberPermitList.add("/mytask/modify");
+		memberPermitList.add("/mytask/modifytodoListstatus");
 		
 		memberPermitList.add("/history/list");
 		
@@ -122,7 +133,11 @@ public class AuthenticationFilter implements Filter {
 		
 		memberPermitList.add("/member/logout");
 		memberPermitList.add("/member/moveprofile");
-		memberPermitList.add("/member/emailduplicationCheckforinit");
+		memberPermitList.add("/member/emailduplicationcheckforinit");
+		memberPermitList.add("/member/registverification");
+		memberPermitList.add("/member/resubmitverificationnum");
+		memberPermitList.add("/member/checkverificationforinit");
+		memberPermitList.add("/member/initialinputinfo");
 		
 		
 	    allPermitList.add("/member/login");

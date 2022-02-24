@@ -140,6 +140,16 @@
 		height: 100%;
 		background: rgba(0, 0, 0, 0.5);
 	}
+
+	#inputEmailVeficationModal .modal_layer2 {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		z-index:-1;
+	}
 	
 	.modal_head2 {
 		height: 35px;
@@ -148,7 +158,7 @@
 		font-size: 20px;
 	}
 	
-	#modal_ok_btn {
+	#initInfoSumitBtn {
 		background-color: rgb(25, 25, 112);
 		color: white;
 		text-align: center;
@@ -298,6 +308,19 @@
 		top: 35%;
 	}
 	
+	#reSubmitBtn {
+		background-color: rgb(25, 25, 112);
+		color: white;
+		text-align: center;
+		cursor: pointer;
+		width: 80px;
+		height: 30px;
+		position: absolute;
+		right:29%;
+		top:18.5%;
+	}
+	
+	
 </style>
 <title>Insert title here</title>
 </head>
@@ -322,7 +345,6 @@
 
 		<div class="modalLayer"></div>
 	</div>
-<input type="hidden" value="${ sessionScope.loginMember.id }">
 	<!-- setting쪽 모달 -->
 	<div id="initInfoSettingModal">
 		<div class="modal_content2">
@@ -333,19 +355,18 @@
 				<input type="email" class="emailAddress" id="emailAddress" placeholder="Email" required> 
 				<input type="button" id="emailDuplicatieButton" value="중복확인">
 				<input type="button" id="AuthenticationNumber" value="인증번호보내기">
-				<input type="text" class="phoneNumber" placeholder="Phone" required>
-				<input type="password" class="newPassword" placeholder="newPassword" required> 
-				<input type="password" class="newPasswordConfirm" placeholder="newPasswordConfirm" required>
+				<input type="text" class="phoneNumber" id="phoneNumber" placeholder="Phone" required>
+				<input type="password" class="newPassword" id="newPassword" placeholder="newPassword" required> 
+				<input type="password" class="newPasswordConfirm" id="newPasswordConfirm" placeholder="newPasswordConfirm" required>
 			</div>
 			<div class="modal_button2">
-				<button type="submit" id="modal_ok_btn">Ok</button>
+				<button type="button" id="initInfoSumitBtn">Ok</button>
 			</div>
 		</div>
-		<div class="modal_layer2"></div>
+		<div class="modal_layer2" id="modal_layer2"></div>
 	</div>
 
 <!-- 이메일 인증번호 입력 모달창 -->
-		<!-- 비밀번호 찾기: 이메일 인증번호 입력 모달창 -->
 	<div id="inputEmailVeficationModal" style="display:none;">
 		<div class="modalContent">
 			<div class="modalHead">Alert Message</div>
@@ -365,60 +386,200 @@
 				<button type="button" id="modalCancelBtn2">Cancel</button>
 			</div>
 		</div>
+		<div class="modal_layer2" id="modal_layer2"></div>
 	</div>
+
+	<input type="hidden" id="inputId" name="inputId" value="${ sessionScope.loginMember.id }">
+	<input type="hidden" id="inputNo" name="inputNo" value="${ sessionScope.loginMember.no }">
+	<input type="hidden" id="oneOrEmail" name="oneOrEmail">
+	<input type="hidden" id="isDidDuplicate" name="isDidDuplicate">
+	<input type="hidden" id="gotVerificate" name="gotVerificate">
+	<input type="hidden" id="forSubmitTing" name="forSubmitTing">
 
 
 <script>
+	
+	$("#emailDuplicatieButton").click(function () {
+		if($("#emailAddress").val().includes('@', 1)) {
+			$.ajax({
+	    		url : "${ pageContext.servletContext.contextPath }/member/emailduplicationcheckforinit",
+	    		type : "GET",
+	    		contentType : "json",
+	    		data : {"emailAddress":$("#emailAddress").val()},
+	    		success : function(data, status, xhr) {
+					
+	    			if(data == 1) {
+	    				alert("이미 존재하는 이메일입니다. 다른 이메일을 써주시기 바랍니다!");
+				        document.getElementById("modal").style.display="none";
+						document.getElementById("initInfoSettingModal").style.display="block";
+						document.getElementById("oneOrEmail").value = data; 
+	    			} else {
+	    				alert("사용 가능한 이메일입니다.");
+				        document.getElementById("modal").style.display="none";
+						document.getElementById("initInfoSettingModal").style.display="block";
+						document.getElementById("oneOrEmail").value = data;  
+						document.getElementById("isDidDuplicate").value = 2;
+	    				
+	    			}
+	    		},
+	    		error : function(error) {
+	    			alert("에러가 발생했습니다. 다시 시도해주세요!");	
+	    		}
+	    	});
+    	
+		} else {
+			alert("이메일 형식에 맞게 적어주세요!");
+	        document.getElementById("modal").style.display="none";
+			document.getElementById("initInfoSettingModal").style.display="block";
+		}
+    });
+
+	function $ComTimer(){
+	    //prototype extend
+	}
+	
+	$ComTimer.prototype = {
+	      comSecond : ""
+	    , fnCallback : function(){}
+	    , timer : ""
+	    , domId : ""
+	    , fnTimer : function(){
+	        var m = Math.floor(this.comSecond / 60) + "분 " + (this.comSecond % 60) + "초"
+	        this.comSecond--;					
+	        this.domId.innerText = m;
+	        
+	        if (this.comSecond < 0) {			
+	            clearInterval(this.timer);		
+	            alert("인증시간이 초과하였습니다. 다시 인증해주시기 바랍니다.");
+	            
+	        }
+	    }
+	    ,fnStop : function(){
+	        clearInterval(this.timer);
+	    }
+	}
+
+    $("#AuthenticationNumber").click(function () {
+    	if($("#isDidDuplicate").val() == 2) { 
+    		if($("#oneOrEmail").val() != 1) {
+   				if($("#emailAddress").val().includes('@', 1)) {
+				   $.ajax({
+			 			url : "${ pageContext.servletContext.contextPath }/member/resubmitverificationnum",
+						type : "GET",
+						contentType : "json",
+						data : {"emailAddress":$("#emailAddress").val(),
+							"inputId":$("#inputId").val()},
+						success : function(data, status, xhr) {
+				
+							if(data > 0) {
+								alert("인증번호가 발송되었습니다! 인증번호를 입력해주세요!");
+								document.getElementById("inputEmailVeficationModal").style.display="block";
+								document.getElementById("initInfoSettingModal").style.display="none";
+									
+								var AuthTimer = new $ComTimer()
+								  AuthTimer.comSecond = 180;
+								  AuthTimer.fnCallback = function(){alert("다시인증을 시도해주세요.")};
+								  AuthTimer.timer =  setInterval(function(){AuthTimer.fnTimer()},1000);
+								  AuthTimer.domId = document.getElementById("timer");
+									
+								  document.getElementById("forSubmitTing").value = 3;
+								  
+								  if($("#forSubmitTing").val() == 3) {
+								 	  $("#reSubmitBtn").click(function() {
+											$.ajax({
+												url : "${ pageContext.servletContext.contextPath }/member/resubmitverificationnum",
+												type : "GET",
+												data : {"inputId":$("#inputId").val(),
+														"emailAddress":$("#emailAddress").val()}, 
+												success : function(data, status, xhr) {
+													
+													if(data > 0) {
+														alert("인증번호가 재발송 되었습니다.")
+														document.getElementById("initInfoSettingModal").style.display="none";
+														document.getElementById("inputEmailVeficationModal").style.display="block";
+														AuthTimer.timer = clearInterval(AuthTimer.timer);
+														/* AuthTimer = clearInterval(AuthTimer); */
+														
+														AuthTimer = new $ComTimer();
+											   	 			
+														AuthTimer.comSecond = 180;
+										    			AuthTimer.fnCallback = function(){alert("다시 인증을 시도해주세요.")};
+										    			AuthTimer.timer = setInterval(function(){AuthTimer.fnTimer()}, 1000);
+										    			AuthTimer.domId = document.getElementById("timer");
+										    			
+											    		
+													} else {
+														alert("인증번호 재발송에 실패하였습니다.");
+														document.getElementById("initInfoSettingModal").style.display="none";
+														document.getElementById("inputEmailVeficationModal").style.display="block";
+													}
+												},
+												error : function (error){
+											        alert("에러가 발생했습니다. 다시 접속해주세요."); 
+												}
+											});
+										}); 
+								  }
+								  
+							} else {
+								alert("존재하지 않는 이메일입니다. 다시 입력해주세요.")
+								document.getElementById("initInfoSettingModal").style.display="block";
+								document.getElementById("inputEmailVeficationModal").style.display="none";
+							}
+						},
+							
+						error : function(error) {
+							alert("에러가 발생했습니다. 다시 시도해주세요.");
+						}
+					});
+					   
+			   	} else {
+					alert("이메일 형식에 맞게 적어주세요!");
+			        document.getElementById("modal").style.display="none";
+					document.getElementById("initInfoSettingModal").style.display="block";
+		   		}
+		    			
+		   	} else {
+   				alert("이미 존재하는 이메일 입니다! 다른 이메일을 써주세요!");
+		   	}
+   		} else {
+   			alert("중복체크 먼저 해주세요!");
+   		}
+    });
+	    
     
-    $("#emailDuplicatieButton").click(function () {
+
+	
+	
+    $("#modalOkBtn2").click(function () {
     	$.ajax({
-    		url : "${ pageContext.servletContext.contextPath }/member/emailduplicationCheckforinit",
+    		url : "${ pageContext.servletContext.contextPath }/member/checkverificationforinit",
     		type : "GET",
     		contentType : "json",
-    		data : {"emailAddress":$("#emailAddress").val()},
+    		data : {"inputVerificationNum":$("#inputVerificationNum").val(),
+    			"inputNo":$("#inputNo").val()},
     		success : function(data, status, xhr) {
-
+    			
     			if(data > 0) {
-    				alert("이미 존재하는 이메일입니다. 다른 이메일을 써주시기 바랍니다!");
-			        document.getElementById("modal").style.display="none";
+    				alert("인증이 완료되었습니다.");
 					document.getElementById("initInfoSettingModal").style.display="block";
+					document.getElementById("inputEmailVeficationModal").style.display="none";
+					document.getElementById("gotVerificate").value = 1;
+				
     			} else {
-    				alert("사용 가능한 이메일입니다.");
-			        document.getElementById("modal").style.display="none";
-					document.getElementById("initInfoSettingModal").style.display="block";
+    				alert("인증이 실패하였습니다! 다시 입력해주세요!");
+					document.getElementById("initInfoSettingModal").style.display="none";
+					document.getElementById("inputEmailVeficationModal").style.display="block";
     			}
     		},
     		error : function(error) {
-    			alert("에러가 발생했습니다. 다시 시도해주세요!");	
+    			alert("에러가 발생했습니다. 다시 시도해주세요.");
     		}
+    		
     	});
+    	
     });
-
-
-    $("#AuthenticationNumber").click(function () {
-	   $.ajax({
- 			url : "registverification",
-			type : "GET",
-			contentType : "json",
-			data : {"emailAddress":$("#emailAddress").val()},
-			success : function(data, status, xhr) {
-
-				if(data > 0) {
-					alert("인증번호가 발송되었습니다! 인증번호를 입력해주세요!");
-					document.getElementById("inputEmailVeficationModal").style.display="block";
-					document.getElementById("initInfoSettingModal").style.display="none";
-				} else {
-					alert("존재하지 않는 이메일입니다. 다시 입력해주세요.")
-					document.getElementById("initInfoSettingModal").style.display="block";
-					document.getElementById("inputEmailVeficationModal").style.display="none";
-				}
-			},
-			error : function(error) {
-				alert("에러가 발생했습니다. 다시 시도해주세요.");
-			}
-		});
- 	  });
-     
+    
 	document.getElementById("modal").style.display="block";
 	document.getElementById("initInfoSettingModal").style.display="none";
  	
@@ -428,11 +589,43 @@
 		document.getElementById("initInfoSettingModal").style.display="block";
     }
     
-    document.getElementById("modal_ok_btn").onclick = function() {
-    	document.getElementById("")
-    	
-    }
-    
+   	$("#initInfoSumitBtn").click(function () {
+	    if($("#gotVerificate").val() == 1) {
+	    	if($("#phoneNumber").val().includes('-', 1)) {
+		    	$.ajax({
+					url : "${ pageContext.servletContext.contextPath }/member/initialinputinfo",
+					type : "GET",
+					contentType : "json",
+					data : {"emailAddress":$("#emailAddress").val(),
+							"phoneNumber":$("#phoneNumber").val(),
+							"newPassword":$("#newPassword").val(),
+							"newPasswordConfirm":$("#newPasswordConfirm").val(),
+							"inputNo":$("#inputNo").val()},
+					success : function(data, status, xhr) {
+						
+						if(data > 0) {
+							alert("정보 등록 성공! 환영합니다!");
+							document.getElementById("modal").style.display="none";
+							document.getElementById("inputEmailVeficationModal").style.display="none";
+							document.getElementById("initInfoSettingModal").style.display="none";
+							//아 여기서.. 시간 초과되는 알림창 안떠야되는ㄷ
+							//clearInterval(AuthTimer.timer);
+							
+						} else {
+							alert("정보 등록 실패! 다시 시도해주세요!");
+						}
+					}
+		    	});
+		    } else {
+		    	alert("전화번호 형식이 맞지 않습니다! 다시 입력해주세요!");
+		    } 
+		    	
+	    } else {
+	    	
+	    	alert("이메일 인증을 먼저 해주시기 바랍니다!");
+	    }
+   });
+	    
     
     
 </script>

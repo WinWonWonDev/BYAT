@@ -31,4 +31,12 @@ public interface MemberMapper {
 
 	String emailDuplicationCheck(String emailAddress);
 
+	int insertverificationforInit(HashMap<String, Integer> map);
+
+	String mathchVerificationNumberForInit(HashMap<String, Object> map);
+
+	int updateVerficiationForInit(String inputVerificationNum);
+
+	int initialInputInfo(HashMap<String, Object> map);
+
 }
