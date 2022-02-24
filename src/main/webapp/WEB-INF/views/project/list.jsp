@@ -87,12 +87,12 @@
 		width:100px;
 	}
 	
-	table {
+	.projectListBox table {
     	width: 100%;
     	border-collapse: collapse;
     }
 	
-	th {
+	#projectTable th {
 		background-color:rgb(229,229,229);
 		height:50px;
 	}
@@ -262,15 +262,7 @@
 		margin-left:9%;
 	}
 
-	/* .projectTable:nth-child(2n+3) {
-		margin-top:10px;
-	}
-	
-	.projectTable:nth-child(2n) {
-		margin-top:10px;
-	} */
-	
-	td {
+	.projectTable td {
 		font-size:18px;
 		text-align:center;
 		height:70px;
@@ -337,7 +329,7 @@
 	}
 	
 	#projectRealMemberList {
-		float:right;
+		float:left;
 	}
 	
  	#projectMenuBox {
@@ -585,6 +577,272 @@
 		border-radius:15px;
 	}
 	
+	.selectedMemberProjectRole {
+		
+		background-color: skyblue;
+		border : none;
+		border-radius : 15px;
+		color : white;
+	}
+	
+	.registMembersOkBtn {
+		
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:110px;
+		height:30px;
+		position:absolute;
+		margin-top:5px;
+	}
+	
+	.projectRealMemberListBtn {
+		
+		background:url("/byat/resources/images/moreList.png") no-repeat;
+		border:none;
+		width:30px;
+		height:30px;
+		float:left;
+		position:relative;
+		margin-left:330px;
+		bottom:23px;
+		cursor:pointer;
+	}
+	
+	.memberDeleteBtn {
+		
+		background:url("/byat/resources/images/memberDeleteBtn1.png") no-repeat;
+		border:none;
+		width:20px;
+		height:20px;
+		position:relative;
+		cursor:pointer;
+		left:70px;
+		bottom:15px;
+	}
+	
+	.projectMemberModalList {
+		display: none;
+		position:relative;
+		width:100%;
+		height:100%;
+		margin-top:150px;
+		z-index:1;
+	}
+	
+	.projectMemberModalList_content {
+		width:650px;
+		height:450px;
+		margin:20px auto;
+		background:rgb(59, 96, 208);
+		border:1px solid black;
+		border-radius:25px;
+	}
+	
+	.projectMemberModalList_content_head {
+		color:white;
+		text-align:center;
+		font-size : 30px;
+		margin-top:15px;
+	}
+	
+	.projectMemberModalList_content_content_box {
+		width:90%;
+		height:75%;
+		font-size:40px;
+		text-align:center;
+		background: white;
+		border-radius: 25px;
+		margin-left: 32px;
+		margin-top:3%;
+	}
+	
+	.projectMemberModalListTitle {
+		font-size : 23px;
+		padding-top: 15px;
+		margin-left : 40px;
+		float : left;
+	}
+	
+	.projectMemberModalListTable {
+		font-size : 15px;
+		font-weight: none;
+		width: 85%;
+		border-radius: 8px;
+		border-collapse: collapse;
+		border-style: hidden;
+		box-shadow: 0 0 0 1px #000;
+		margin-left : 40px;
+		top : 20px;
+		position:relative;
+		background-color : rgb(242,242,242);
+		
+	}
+	
+	.projectMemberModalListTable tr {
+		
+		height : 30px;
+		
+	}
+	
+	.projectMemberModalListTable th {
+		
+		border:1px solid black;
+	}
+	
+	.projectMemberModalListTable td {
+		
+		border:1px solid black;
+	}
+	
+	.projectMemberModalListCloseBtn {
+		
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:110px;
+		height:30px;
+		position:absolute;
+		margin-top:5px;
+		margin-left:370px; 
+	}
+	
+	.projectMemberModalListOkBtn {
+		
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:110px;
+		height:30px;
+		position:absolute;
+		margin-top:5px;
+		margin-left:170px; 
+	}
+	
+	.projectMemberModalListTableArea {
+		
+		position:relative;
+		width:98%;
+		height:75%;
+		padding-bottom: 30px;		
+	}
+	
+	.projectMemberModalListTableArea::-webkit-scrollbar {
+	
+		background-color: rgb(242,242,242);		
+		border-radius:15px;
+	}
+	
+	.projectMemberModalListTableArea::-webkit-scrollbar-thumb {
+		background-color: gray;
+		border-radius:15px;
+	}
+	
+	.memberListDeleteMember {
+		background:url("/byat/resources/images/memberDeleteBtn1.png") no-repeat;
+		border:none;
+		width:20px;
+		height:20px;
+		position:relative;
+		cursor:pointer;
+		padding-top:3px;
+	}
+	
+	.projectMemberListRole {
+		
+		background-color: skyblue;
+		border : none;
+		border-radius : 15px;
+		color : white;
+		text-align:center;
+	}
+	
+	#delete_member_modal {
+		display: none;
+		position:relative;
+		width:100%;
+		height:100%;
+		z-index:10;
+		bottom:470px;
+		right:30px;
+	}
+	
+	#delete_member_modal h2 {
+		margin:0;
+	}
+	
+	#delete_member_modal button {
+		display:inline-block;
+		width:100px;
+		margin-left:calc(100% - 100px - 10px);
+	}
+	
+	#delete_member_modal .delete_member_modal_content {
+		width:700px;
+		height:300px;
+		margin:100px auto;
+		background:#fff;
+		border:2px solid #666;
+	}
+	
+	.delete_member_modal_head {
+		width:100.1%;
+		height:35px;
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		font-size:20px;
+		float:right;
+	}
+	
+	#delete_member_modal_close_btn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:80px;
+		height:50px;
+		position:absolute;
+		right:30%;
+		top:20%;
+	}
+	
+	#delete_member_modal_ok_btn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:80px;
+		height:50px;
+		position:absolute;
+		right:55%;
+		top:20%;
+	}
+	
+	.delete_member_modal_content_message {
+		width:100%;
+		height:50%;
+		float:right;
+		font-size:23px;
+		text-align:center;
+	}
+	
+	.delete_member_modal_button {
+		width:100%;
+		height:30%;
+		float:right;
+		position:relative;
+	}
+	
+	.searchProject {
+		position: absolute;
+		left : 850px;
+		top : 52px;
+	}
+	
 </style>
 <script>
    const message = '${ requestScope.message }';
@@ -597,6 +855,21 @@
 <body style="overflow:hidden;">
 	<div id="whiteBoard">
 		<div class="projectListHeadName" style="font-weight:bold">전체 프로젝트 목록</div>
+		<div class="searchProject">
+			<div class="search-project-area" style="width:350px;">
+				<form action="${ pageContext.servletContext.contextPath }/project/list" method="get" style="display: inline-block">
+					<input type="hidden" name="currentPage" value="1">
+					<select id="searchCondition" name="searchCondition" style="text-align:center">
+						<option value="title" ${ requestScope.selectCriteria.searchCondition eq "title"? "selected": "" }>제목</option>
+						<option value="body" ${ requestScope.selectCriteria.searchCondition eq "body"? "selected": "" }>내용</option>
+						<option value="name" ${ requestScope.selectCriteria.searchCondition eq "name"? "selected": "" }>참여자 이름</option>
+					</select> 
+					<input type="search" id="searchValue" name="searchValue" value="<c:out value="${ requestSCope.selectCriteria.searchValue }"/>">
+					<button type="submit">검색</button>					
+				</form>
+			</div>
+		</div>
+		
 		<c:if test="${ (sessionScope.loginMember.permit eq 'PM') or (sessionScope.loginMember.permit eq 'ADMIN')}">
 			<button id="createProject">새 프로젝트 생성</button>					
 		</c:if>
@@ -619,23 +892,35 @@
 							<input type="hidden" value="${ project.code }" name="projectCode" id="projectCode">
 						</td>
 						<td id="projectRealMemberList">
-							<c:forEach items="${ project.projectMembers }" var="member">
-								<c:if test="${ member.roleName eq 'PM' }">
-									<div id="projectRealMember1">
-										<c:out value="${ member.name }" />															
-									</div>									
+							<c:set var="loop_flag" value="false"/>
+							<c:forEach items="${ project.projectMembers }" var="member" varStatus="roleStatus">
+								
+								<c:if test="${ not loop_flag }">
+									<c:if test="${ member.roleName eq 'PM' }">
+										<div id="projectRealMember1">
+											<c:out value="${ member.name }" />
+											<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
+										</div>									
+									</c:if>
+									<c:if test="${ member.roleName eq '부PM' }">
+										<div id="projectRealMember2">
+											<c:out value="${ member.name }" />	
+											<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
+										</div>
+									</c:if>
+									<c:if test="${ member.roleName eq '일반 멤버' }">
+										<div id="projectRealMember3">
+											<c:out value="${ member.name }" />	
+											<input type="hidden" name="hiddenMemberNo" value="${ member.no }">															
+										</div>
+									</c:if>
+									<c:if test="${ roleStatus.index eq 7 }">
+										<c:set var="loop_flag" value="true"/>
+									</c:if>
 								</c:if>
-								<c:if test="${ member.roleName eq '부PM' }">
-									<div id="projectRealMember2">
-										<c:out value="${ member.name }" />															
-									</div>
-								</c:if>
-								<c:if test="${ member.roleName eq '일반 멤버' }">
-									<div id="projectRealMember3">
-										<c:out value="${ member.name }" />															
-									</div>
-								</c:if>
+								
 							</c:forEach>
+							<input type="button" id="projectRealMemberListBtn" class="projectRealMemberListBtn">
 						</td>
 						<td>
 							
@@ -681,6 +966,9 @@
 				</c:forEach>
 	      		</table>
 		</div>
+		
+		<jsp:include page="../common/paging.jsp" />
+		
 	</div>
 	<div id="projectCreateModal">
   
@@ -777,14 +1065,59 @@
 					팀원 추가
 				</div>
 				<div class="addMembersBox" id="addMembersBox">
-					<form action="${ pageContext.servletContext.contextPath }/project/registmember" id="addMembersForm" class="addMembersForm"></form>
+					<form action="${ pageContext.servletContext.contextPath }/project/registmember" id="addMembersForm" class="addMembersForm" method="post"></form>
 				</div>
 			</div>
-				<button type="button" id="registMembersOkBtn" style="margin-left:100px;">OK</button>
-				<button type="button" id="registMembersCancelBtn" style="margin-left:350px;">Cancel</button>
+			<input type="button" id="registMembersOkBtn" class="registMembersOkBtn" style="margin-left:100px;" value="OK">
+			<button type="button" id="registMembersCancelBtn" style="margin-left:350px;">Cancel</button>
+		</div>
+		<div class="modal_layer"></div>
+	</div>
+		
+	<div class="projectMemberModalList" id="projectMemberModalList">
+		<div class="projectMemberModalList_content">
+			<div class="projectMemberModalList_content_head">프로젝트 구성원</div>
+			<div class="projectMemberModalList_content_content_box">
+				<div class="projectMemberModalListTitle">팀원 목록</div>
+				<div class="projectMemberModalListTableArea" id="projectMemberModalListTableArea" style="overflow-y:scroll;">
+					<form action="${ pageContext.servletContext.contextPath }/project/modifyrole" id="projectMemberModalListForm" method="post">
+						<table id="projectMemberModalListTable" class="projectMemberModalListTable">
+							<thead>
+								<tr>
+									<th>사번</th>
+									<th>이름</th>
+									<th>역할</th>
+									<th style="width:70px;"></th>
+								</tr>
+							</thead>
+							<tbody id="projectMemberModalListTableBody" class="projectMemberModalListTableBody"></tbody>
+						</table>					
+					</form>
+				</div>
+			</div>
+			<button type="button" id="projectMemberModalListOkBtn" class="projectMemberModalListOkBtn">Ok</button>
+			<button type="button" id="projectMemberModalListCloseBtn" class="projectMemberModalListCloseBtn">Close</button>
+			<div id="delete_member_modal">
+   
+			    <div class="delete_member_modal_content">
+				    <div class="delete_member_modal_head">
+				    	Alert Message
+				    </div>
+			       	<div class="delete_member_modal_content_message">
+			  	   		<br>삭제한 멤버는 Cancel 버튼을 눌러도 <font style="color:red;">복구</font>하실 수 없습니다.<br>다시 추가하는 작업을 진행하셔야 합니다.<br>정말 삭제하시겠습니까?
+			       	</div>
+			       	<div class="delete_member_modal_button">
+				        <button type="button" id="delete_member_modal_ok_btn">Ok</button>
+				        <button type="button" id="delete_member_modal_close_btn">Cancel</button>
+			       	</div>
+			       
+			    </div>
+			   
+			    <div class="modal_layer"></div>
+			</div>
 		</div>
 		
-		
+		<div class="modal_layer"></div>
 	</div>
 	
 	<script>
@@ -794,12 +1127,28 @@
 		let projectMembersList = [];
 		
 		document.getElementById("createProject").onclick = function() {
-	        document.getElementById("projectCreateModal").style.display="block";
+	        document.getElementById("projectCreateModal").style.display = "block";
 	    }
 
 		document.getElementById("projectCreateModalCloseBtn").onclick = function() {
-	        document.getElementById("projectCreateModal").style.display="none";
+	        document.getElementById("projectCreateModal").style.display = "none";
 	    }
+		
+		document.getElementById("projectMemberModalListCloseBtn").onclick = function() {
+			
+			document.getElementById("projectMemberModalList").style.display = "none";
+
+			const $table = $("#projectMemberModalListTable tbody");
+			
+			const bodyChildDelete = document.getElementById("projectMemberModalListTableBody");
+			
+			while( bodyChildDelete.hasChildNodes() ) {
+				
+				bodyChildDelete.removeChild(bodyChildDelete.firstChild );
+				
+			}
+			
+		}
 
 	    document.getElementById("registMembersCancelBtn").onclick = function() {
 	    	document.getElementById("regist_project_members_modal").style.display = "none";
@@ -814,6 +1163,7 @@
 	    	
 	    	document.getElementById("searchMembers").value = "";
 	    	projectMembersList.length = 0;
+	    	selectMembers.length = 0;
 	    	
 	    }
 	    
@@ -836,7 +1186,229 @@
 			const $proBox = document.querySelectorAll("#projectMenuBox");
 			const $updateAndSelectProject = document.querySelectorAll("#updateAndSelectProject");
 			const $deleteProject = document.querySelectorAll("#deleteProject");
-			console.log($updateAndSelectProject);
+			const $projectRealMemberList = document.querySelectorAll("#projectRealMemberList");
+			const $projectRealMemberListBtn = document.querySelectorAll("#projectRealMemberListBtn");
+			
+			const $memberDeleteBtn = document.querySelectorAll("#memberDeleteBtn");
+			const $selectedMemberArea = document.querySelectorAll("#selectedMemberArea");
+			
+			const pmNoList = [];
+			
+			for(let i = 0; i < $projectRealMemberListBtn.length; i++) {
+				
+				$projectRealMemberListBtn[i].onclick = function() {
+					
+					document.getElementById("projectMemberModalList").style.display = "block";
+					
+					const removeMemberProjectCode = $code[i].value;
+					const projectRealMemberListLine = $projectRealMemberList[i];
+					
+					
+					$.ajax({
+						url: "/byat/project/projectmemberlist",
+						type: 'get',
+						data: { code : $code[i].value },
+						success: function(data, status, xhr) {
+                     
+							const memberList = JSON.parse(data.memberList);
+							
+							const $table = $("#projectMemberModalListTable tbody");
+							$table.html("");
+							
+							for(let i in memberList) {
+								
+								const $tr = $("<tr>");
+								const $idTd = $("<td id='listMemberList'>").text(memberList[i].id);
+								const $nameTd = $("<td>").text(memberList[i].name);
+								const $roleNameTd = $("<td name='roleList'>");
+								const $deleteTd = $("<td>");
+								
+								memberListNo = document.createElement('input');
+								memberListNo.setAttribute('type', 'hidden');
+								memberListNo.setAttribute('name', 'no');
+								memberListNo.setAttribute('value', memberList[i].no);
+								
+								memberListCode = document.createElement('input');
+								memberListCode.setAttribute('type', 'hidden');
+								memberListCode.setAttribute('name', 'code');
+								memberListCode.setAttribute('value', removeMemberProjectCode);
+								
+								memberListName = document.createElement('input');
+								memberListName.setAttribute('type', 'hidden');
+								memberListName.setAttribute('name', 'name');
+								memberListName.setAttribute('value', memberList[i].name);
+								
+								$idTd.append(memberListNo);
+								$idTd.append(memberListCode);
+								
+								$nameTd.append(memberListName);
+								
+								memberListRoleOptionPM = document.createElement('option');
+								memberListRoleOptionPM.innerText ='PM';
+
+								memberListRoleOptionSecondPM = document.createElement('option');
+								memberListRoleOptionSecondPM.innerText ='부PM';
+								
+								memberListRoleOptionGeneral = document.createElement('option');
+								memberListRoleOptionGeneral.innerText ='일반 멤버';
+
+								memberListRole = document.createElement('select');
+								memberListRole.setAttribute('id', 'projectMemberListRole');
+								memberListRole.setAttribute('class', 'projectMemberListRole');
+								memberListRole.setAttribute('name', 'roleName');
+								memberListRole.appendChild(memberListRoleOptionPM);
+								memberListRole.appendChild(memberListRoleOptionSecondPM);
+								memberListRole.appendChild(memberListRoleOptionGeneral);
+								
+								if(memberList[i].roleName == 'PM') {
+									memberListRoleOptionPM.setAttribute('selected', 'selected');
+									pmNoList.push(memberList[i].no);
+								} else if(memberList[i].roleName == '부PM') {
+									memberListRoleOptionSecondPM.setAttribute('selected', 'selected');
+								} else {
+									memberListRoleOptionGeneral.setAttribute('selected', 'selected');
+								}
+								
+								$roleNameTd.append(memberListRole);
+								
+								memberListDeleteMember = document.createElement('input')
+					            memberListDeleteMember.setAttribute('type', 'button');
+								memberListDeleteMember.setAttribute('id', 'memberListDeleteMember');
+								memberListDeleteMember.setAttribute('class', 'memberListDeleteMember');
+								
+								$deleteTd.append(memberListDeleteMember)
+								
+								$tr.append($idTd);
+								$tr.append($nameTd);
+								$tr.append($roleNameTd);
+								$tr.append($deleteTd);
+								
+								$table.append($tr);
+								
+								$memberListDeleteMember = document.querySelectorAll('#memberListDeleteMember');
+								
+								let tempMemberList = [];
+								
+								for(let i = 1; i < projectRealMemberListLine.children.length - 1; i++) {
+									
+									tempMemberList.push(projectRealMemberListLine.children[i].childNodes[1].value);
+								}
+								
+								$memberListDeleteMember[i].onclick = function() {
+									
+									
+									if(i == 0) {
+										alert("관리자 또는 PM은 삭제하실 수 없습니다.");
+									} else if(${ sessionScope.loginMember.id } != memberList[0].id) {
+										alert("권한이 없습니다.");
+									} else {
+										
+										console.log("오냐?");
+										
+										document.getElementById("delete_member_modal").style.display = "block";
+										
+										document.getElementById("delete_member_modal_ok_btn").onclick = function() {
+								        	
+											const removeMemberNo = memberList[i].no;
+											
+											const tbody = document.getElementById("projectMemberModalListTableBody");
+											
+											$.ajax({
+												url: "/byat/project/removemember",
+												type: 'get',
+												data: { 
+													code : removeMemberProjectCode,
+													no : removeMemberNo
+												},
+												success: function(data, status, xhr) {
+													
+													alert(memberList[i].name + "님을 구성원에서 제외하셨습니다.");
+													
+													tbody.deleteRow(i);
+													
+													for(let k = 0; k < tempMemberList.length; k++) {
+														
+														if(tempMemberList[k] == removeMemberNo) {
+															
+															projectRealMemberListLine.children[k + 1].remove();
+															
+														}
+														
+													}
+													
+												},
+											});
+											
+											document.getElementById("delete_member_modal").style.display = "none";
+										
+										}
+										
+										document.getElementById("delete_member_modal_close_btn").onclick = function() {
+											
+											document.getElementById("delete_member_modal").style.display = "none";
+											
+										}
+										
+										
+									}
+									
+								}
+								
+								document.getElementById("projectMemberModalListOkBtn").onclick = function() {
+									
+									const $projectMemberListRoleQuery = document.querySelectorAll("#projectMemberListRole");
+									const $listMemberListQuery = document.querySelectorAll("#listMemberList");
+									
+									console.log($listMemberListQuery[0].innerText);
+									console.log(${ sessionScope.loginMember.id });
+									
+									if($listMemberListQuery[0].innerText == ${ sessionScope.loginMember.id }) {
+										
+										let checkPm = 0;
+										
+										for(let i = 0; i < $projectMemberListRoleQuery.length; i++) {
+											
+											if($projectMemberListRoleQuery[i].value == "PM") {
+												
+												checkPm++;
+												
+											}
+											
+										}
+										
+										if(checkPm < 1) {
+											
+											alert("PM이 지정되지 않았습니다. 다시 확인해주세요!");
+											
+										} else if(checkPm > 1) {
+											
+											alert("PM은 두 명이상 될 수 없습니다. 다시 확인해주세요!");
+										} else {
+											
+											document.getElementById("projectMemberModalListForm").submit();
+										}
+										
+									} else {
+										
+										alert("변경 권한이 없습니다. Cancel 버튼으로 종료해주세요.");
+										
+									}
+									
+									
+								}
+								
+								
+							}
+							
+						},
+						error: function(xhr, status, error) {
+						   console.log(xhr);
+						}
+					});
+					
+				}
+				
+			}			
 			
 			for(let i = 0; i < $tds.length; i++) {
 				
@@ -858,14 +1430,29 @@
 
 					document.getElementById("regist_project_members_modal").style.display="block";
 			             
+					const $projectRealMemberList = document.querySelectorAll("#projectRealMemberList");
+					
+					/* for(let i = 0; i < $test1[0].children.length - 1; i++) {
+						console.log($test1[0].children[i].children[0].value);
+					} */
+					
 					projectCode = $code[i].value;
 					
 					console.log(projectCode);
 					
+					let memberListFlag = 0;
+					
 					<c:forEach items="${projectList}" var="project" varStatus="status">
 						<c:forEach items="${project.projectMembers}" var="member">
 							if(i == ${status.index}) {
-								selectedMemberList.push(${member.no});					
+								
+								if(memberListFlag == 0) {
+									for(let k = 0; k < $projectRealMemberList[i].children.length - 1; k++) {
+										selectedMemberList.push($projectRealMemberList[i].children[k].children[0].value);
+									}
+								}
+								
+								memberListFlag++;
 							}
 						</c:forEach>
 						projectMembersList = selectedMemberList;
@@ -970,16 +1557,8 @@
 				}
 				
 			}
+			
 		}
-		
-		let addMembersFormTag;
-		let selectedMemberAreaDiv;
-		let selectedMemberDiv;
-		let selectedMemberProjectRoleDiv;
-		let selectMemberValue;
-		let roleOption;
-		let hiddenMemberNo;
-		let selectMemberNo;
 		
 		let searchMembersValue;
         // 모든 텍스트의 변경에 반응합니다.
@@ -991,13 +1570,15 @@
         });
         
         let selectMembers = [];
+        const $memberDeleteBtn = document.querySelectorAll("#memberDeleteBtn");
+		const $selectedMemberArea = document.querySelectorAll("#selectedMemberArea");
         
 		$(function() {
 			$('#searchMembers').autocomplete({
 				source : function(request, response) {
 					$.ajax({
 						type : 'get',
-		                url : '/byat/project/searchMembers',
+		                url : '/byat/project/searchmembers',
 		                data : { 
 		                	searchValue : searchMembersValue,
 		                	code : projectCode,
@@ -1007,9 +1588,8 @@
 		                traditional : true,
 		                dataType : 'json',
 		                success : function(data) {
-		                	
-		                    // 서버에서 json 데이터 response 후 목록 추가
-		                    response(
+
+		                	response(
 		                        $.map(data, function(item) {
 		                            return {
 		                                value : item
@@ -1037,13 +1617,16 @@
 			            selectedMemberAreaDiv = document.createElement('div');
 			            selectedMemberDiv = document.createElement('div');
 			            selectedMemberProjectRoleDiv = document.createElement('select');
-			            roleOption = document.createElement('option');
-			            hiddenMemberNo = document.createElement('input');
-			            roleOption.innerText = '부PM';
 			            
+			            hiddenMemberNo = document.createElement('input');
 			            hiddenMemberNo.setAttribute('type', 'hidden');
 			            hiddenMemberNo.setAttribute('name', 'no');
 			            hiddenMemberNo.value = selectMemberNo;
+			            
+			            hiddenProjectCode = document.createElement('input');
+			            hiddenProjectCode.setAttribute('type', 'hidden');
+			            hiddenProjectCode.setAttribute('name', 'code');
+			            hiddenProjectCode.value = projectCode;
 			            
 			            selectedMemberAreaDiv.setAttribute('class', 'selectedMemberArea');
 			            selectedMemberAreaDiv.setAttribute('id', 'selectedMemberArea');
@@ -1052,22 +1635,34 @@
 			            selectedMemberDiv.setAttribute('id', 'selectedMember');
 			            selectedMemberDiv.innerHTML = selectMemberValue;
 			            
-			            selectedMemberProjectRoleDiv.setAttribute('class','selectedMemberProjectRole');
-			            selectedMemberProjectRoleDiv.setAttribute('id','selectedMemberProjectRole');
-			            selectedMemberProjectRoleDiv.setAttribute('name','role');
+			            roleOption = document.createElement('option');
+			            roleOption.innerText = '부PM';
+
+			            selectedMemberProjectRoleDiv.setAttribute('class', 'selectedMemberProjectRole');
+			            selectedMemberProjectRoleDiv.setAttribute('id', 'selectedMemberProjectRole');
+			            selectedMemberProjectRoleDiv.setAttribute('name', 'role');
 			            selectedMemberProjectRoleDiv.appendChild(roleOption);
 			            
 			            roleOption = document.createElement('option');
+			            roleOption.setAttribute('id', 'roleOption');
+			            roleOption.setAttribute('class', 'roleOption');
 			            roleOption.innerText = '일반 멤버';
 			            roleOption.setAttribute('selected', 'selected');
 			            
 			            selectedMemberProjectRoleDiv.appendChild(roleOption);
 			            
-			            addMembersFormTag.appendChild(selectedMemberAreaDiv);
+			            memberDeleteBtn = document.createElement('input')
+			            memberDeleteBtn.setAttribute('type', 'button');
+			            memberDeleteBtn.setAttribute('id', 'memberDeleteBtn');
+			            memberDeleteBtn.setAttribute('class', 'memberDeleteBtn');
+			            
 			            selectedMemberAreaDiv.appendChild(selectedMemberDiv);
 			            selectedMemberAreaDiv.appendChild(selectedMemberProjectRoleDiv);
 			            selectedMemberAreaDiv.appendChild(hiddenMemberNo);
-	            	
+			            selectedMemberAreaDiv.appendChild(hiddenProjectCode);
+			            selectedMemberAreaDiv.appendChild(memberDeleteBtn);
+			            addMembersFormTag.appendChild(selectedMemberAreaDiv);
+	            		
 		            }
 					
 		        },
@@ -1079,19 +1674,53 @@
 		        classes : {
 		            'ui-autocomplete': 'highlight'
 		        },
-		        delay : 300,
+		        delay : 100,
 		        position : { my : 'right top', at : 'right bottom' },
-		        close : function(event) {
+		        close : function(event, ui) {
 		            console.log(event);
 		            
 		            document.getElementById('searchMembers').value = "";
+		            
 		        }
-			}).autocomplete('instance')._renderItem = function(ul, item) { // UI 변경 부
-		        return $('<li>') //기본 tag가 li
-		        .append('<div>' + item.value.name + " " + item.value.id + '</div>') // 원하는 모양의 HTML 만들면 됨
+			}).autocomplete('instance')._renderItem = function(ul, item) {
+		        return $('<li>')
+		        .append('<div>' + item.value.name + " " + item.value.id + '</div>')
 		        .appendTo(ul);
 		    };
 		});
+		
+        $(document).ready(function() {
+        	$(document).on("click", "#memberDeleteBtn", function(event) {
+        		
+				$(this).parent('div').remove();
+				
+				selectMembers = [];
+
+        	});
+        	
+        });
+        
+        document.getElementById("delete_member_modal_close_btn").onclick = function() {
+        	
+        	document.getElementById("delete_member_modal").style.display = "none";
+        }
+		
+        
+		document.getElementById("registMembersOkBtn").onclick = function() {
+			
+			const $selectedMemberDivText = document.querySelectorAll("#selectedMember");
+			
+			if(!($selectedMemberDivText.length == 0)) {
+				
+				document.getElementById("addMembersForm").submit();
+				
+			} else {
+				
+				alert("추가할 멤버가 없습니다. 멤버를 추가해 주세요!");
+				
+			}
+			
+		}
 		
 	</script>
 

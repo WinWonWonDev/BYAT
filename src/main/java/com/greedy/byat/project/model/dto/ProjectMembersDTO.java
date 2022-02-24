@@ -20,6 +20,7 @@ public class ProjectMembersDTO {
 	private int code;
 	private int no;
 	private String participationYn;
+	private String id;
 	private String name;
 	private String roleName;
 	
