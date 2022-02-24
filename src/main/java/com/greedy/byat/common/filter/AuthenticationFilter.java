@@ -46,17 +46,17 @@ public class AuthenticationFilter implements Filter {
 			boolean isPermitMember = permitURIList.get("memberPermitList").contains(intent);
 			boolean isPermitAll = permitURIList.get("allPermitList").contains(intent);
 			
-			if ("ADMIN".equals(loginMember.getPermit())) {
+			if (1 == (loginMember.getPermitCode())) {
 				
 				if(isPermitAdmin || isPermitMember || isPermitAll) {
 					isAuthorized = true;
 				}
-			} else if ("PM".equals(loginMember.getPermit())) {
+			} else if (2 == (loginMember.getPermitCode())) {
 				
 				if((isPermitMember || isPermitAll) && !isPermitAdmin) {
 					isAuthorized = true;
 				}
-			} else if("일반 멤버".equals(loginMember.getPermit())) {
+			} else if(3 == (loginMember.getPermitCode())) {
 				
 				if((isPermitMember || isPermitAll) && !isPermitAdmin) {
 					isAuthorized = true;
@@ -112,11 +112,17 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/sprint/detail");
 		memberPermitList.add("/sprint/selecttasks");
 		
+		memberPermitList.add("/task/detail");
+		memberPermitList.add("/task/regist");
+		memberPermitList.add("/task/remove");
+		memberPermitList.add("/task/update");
+		memberPermitList.add("/task/manager");
 
 		memberPermitList.add("/mytask/list");
 		memberPermitList.add("/mytask/regist");
 		memberPermitList.add("/mytask/remove");
 		memberPermitList.add("/mytask/modify");
+		memberPermitList.add("/mytask/modifytodoListstatus");
 		
 		memberPermitList.add("/history/list");
 		

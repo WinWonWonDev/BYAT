@@ -6,7 +6,7 @@
  	
  	<resultMap id="memberResultMap" type="MemberDTO">
  		<id property="no" column="MEMBER_NO"/>
- 		<result property="permit" column="MEMBER_PERMIT"/>
+ 		<result property="permitCode" column="PERMIT_CODE"/>
  		<result property="id" column="MEMBER_ID"/>
  		<result property="pwd" column="MEMBER_PWD"/>
  		<result property="name" column="MEMBER_NAME"/>
@@ -29,7 +29,7 @@
  	<select id="login" resultMap="memberResultMap">
  		SELECT
  		       A.MEMBER_NO
- 		     , A.MEMBER_PERMIT
+ 		     , B.PERMIT_NAME
  		     , A.MEMBER_ID
  		     , A.MEMBER_PWD
  		     , A.MEMBER_NAME
@@ -38,6 +38,7 @@
  		     , A.ABSENCE_YN
  		     , A.INIT_PWD_YN
  		  FROM TBL_MEMBER A
+ 		  JOIN TBL_PERMIT B ON (A.PERMIT_CODE = B.PERMIT_CODE)
  		 WHERE A.ABSENCE_YN = 'N'
  		   AND A.INIT_PWD_YN = 'N'
  		   AND A.MEMBER_ID = #{ id }
@@ -47,7 +48,7 @@
  	<select id="initLogin" resultMap="memberResultMap">
  		SELECT
  		       A.MEMBER_NO
- 		     , A.MEMBER_PERMIT
+ 		     , B.PERMIT_NAME
  		     , A.MEMBER_ID
  		     , A.MEMBER_PWD
  		     , A.MEMBER_NAME
@@ -56,6 +57,7 @@
 	      	 , A.ABSENCE_YN
  		     , A.INIT_PWD_YN
  		  FROM TBL_MEMBER A
+ 		  JOIN TBL_PERMIT B ON (A.PERMIT_CODE = B.PERMIT_CODE)
  		 WHERE A.ABSENCE_YN = 'N'
  		   AND A.INIT_PWD_YN = 'Y'
  		   AND A.MEMBER_ID = #{ id }
@@ -67,14 +69,6 @@
 		  FROM TBL_MEMBER A
 		 WHERE A.MEMBER_ID = #{ id }
 	</select> 
-<!-- 	
-	<select id="emailduplicationCheck" resultType="java.lang.String">
-		SELECT
-		       A.MEMBER_EMAIL
-		  FROM TBL_MEMBER A
-		 WHERE A.ABSENCE_YN = 'N'
-		   AND A.MEMBER_ID = #{ id }
-	</select> -->
 		
 	<select id="selectEmailById" resultType="java.lang.String">
 		SELECT

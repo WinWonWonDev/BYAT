@@ -3,6 +3,48 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.management.model.dao.ManagementMapper">
+ 	
+<!-- <resultMap type="ManagementDTO" id="managementResultMap">
+	<id property="memberNo" column="MEMBER_NO"/>
+	<result property="memberName" column="MEMBER_NAME"/>
+	<result property="memberId" column="MEMBER_ID"/>
+	<result property="premitName" column="PERMIT_NAME"/>
+</resultMap> 
+ 	
+ 	<select id="selectTotalCount" resultMap="_int" parameterType="hashmap">
+  		SELECT
+ 		       COUNT(*)
+ 		  FROM TBL_MEMBER A
+		  JOIN TBL_PERMIT B ON (A.MEMBER_NO = B.MEMBER_NO)
+		  <where>
+				<if test="searchCondition == 'name'">
+				A.MEMBER_NAME LIKE '%' || #{ searchValue } || '%'
+				</if>
+				<if test="searchCondition == 'right'">
+				B.PERMIT_NAME LIKE '%' || #{ searchValue } || '%'
+				</if>
+				<if test="searchCondition == 'memberNum'">
+				A.MEMBER_NO = #{ searchValue }
+				</if>
+		   	  AND ABSENCE_YN = 'N'
+	      </where> 
+ 	</select> 
+ 	
+ 	<select id="selectManagementList" resultMap="managementResultMap">
  
+		SELECT
+ 		       B.MEMBER_NO
+ 		     , B.MEMBER_NAME
+ 		     , A.PERMIT_NAME
+ 		     , B.MEMBER_ID
+ 		     , B.ABSENCE_YN
+ 		  FROM TBL_PERMIT A  
+ 		  JOIN TBL_MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
+ 		 WHERE B.ABSENCE_YN = 'N'
+ 	
+ 	</select>
+ 	 -->
+ 	
+ 	
  	
  </mapper>

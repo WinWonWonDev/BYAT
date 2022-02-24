@@ -69,10 +69,6 @@ html, body {
 			height:80%; 
 			float:center;	
 		} */
-#passwordLink {
-	/* margin-right: 10%; */
-	
-}
 
 .btn {
 	width: 130px;
@@ -192,32 +188,38 @@ html, body {
 }
 
 #findPassword {
-	border:none;
-	cursor:pointer;
+
+	border: none;
+	cursor: pointer;
+	width: 180px;
+	height: 15px;
+	position: relative;
+	left: 35%;
+	
 	
 }
 
 .inputId {
 	position: relative;
-	left:20%;
-	width:430px;
-	height:35px;
+	left: 20%;
+	width: 430px;
+	height: 35px;
 
 }
 
 .inputPassword {
 	position: relative;
-	left:20%;
-	width:430px;
-	height:35px;
+	left: 20%;
+	width: 430px;
+	height: 35px;
 
 }
 
 .inputVerificationNum {
 	position: relative;
-	left:20%;
-	width:430px;
-	height:35px;
+	left: 20%;
+	width: 430px;
+	height: 35px;
 }
 
 #modalOkBtn {
@@ -300,13 +302,13 @@ html, body {
 	width: 80px;
 	height: 30px;
 	position: absolute;
-	right:29%;
-	top:18.5%;
+	right: 29%;
+	top: 18.5%;
 }
 
 #timerDiv {
-	position:relative;
-	left:38%;
+	position: relative;
+	left: 38%;
 	
 }
 
@@ -362,11 +364,9 @@ html, body {
 						<br>
 
 					</div>
-
-					<h4 align="right" id="passwordLink">
-						<p id="findPassword">비밀번호를잊으셨나요?</p>
-					</h4>
 					<br>
+						<div id="findPassword">비밀번호를잊으셨나요?</div>
+					<br><br><br>
 
 					<div class="btns" align="center">
 						<input type="submit" class="btn btn-or" value="login" id="login">
@@ -384,10 +384,10 @@ html, body {
 			<div class="modalHead">Alert Message</div>
 			<div class="modalContentMessage">
 				<br> <br>
-				<p id="contentBody">
-					비밀번호를 찾고자 하는 <font color="red">아이디</font>를 입력해주세요!
-				</p>
-			</div>
+					<p id="contentBody">
+						비밀번호를 찾고자 하는 <font color="red">아이디</font>를 입력해주세요!
+					</p>
+				</div>
 				<input type="text" class="inputId" name="inputId" id="inputId" placeholder="id">
 				<div class="modalButton">
 					<button type="button" id="modalOkBtn">Ok</button>
