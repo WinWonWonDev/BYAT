@@ -112,19 +112,13 @@ public class SprintController {
 	@PostMapping("/modify")
 	public String modifySprint(@ModelAttribute SprintDTO sprint, HttpServletRequest request, RedirectAttributes rttr) {
 		
-		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
-		int sprintCode = Integer.parseInt(request.getParameter("code"));
-		
-		sprint.setProjectCode(projectCode);
-		sprint.setCode(sprintCode);
-		
 		System.out.println("수정 스프린트 : " + sprint);
 		
 		sprintService.modifySprint(sprint);
 		
 		rttr.addFlashAttribute("message", "스프린트를 수정하였습니다.");
 		
-		return "redirect:/sprint/list?code=" + projectCode;
+		return "redirect:/sprint/list?code=" + sprint.getProjectCode();
 	}
 	
 	@GetMapping("/remove")
@@ -151,8 +145,6 @@ public class SprintController {
 		
 		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
 		
-		System.out.println("100일 축하"+sprintCode);
-		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd")
 				.setPrettyPrinting()
@@ -163,7 +155,6 @@ public class SprintController {
 		
 		List<TaskDTO> taskList = sprintService.selectTaskList(sprintCode);
 		
-		System.out.println("200일축하"+taskList);
 		
 		return gson.toJson(taskList);
 	}

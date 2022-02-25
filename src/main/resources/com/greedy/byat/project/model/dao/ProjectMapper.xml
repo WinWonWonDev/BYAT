@@ -20,12 +20,14 @@
  	
  	<resultMap id="memberResultMap" type="MemberDTO">
  		<id property="no" column="MEMBER_NO"/>
- 		<result property="permitCode" column="MEMBER_PERMIT_CODE"/>
+ 		<result property="permitCode" column="PERMIT_CODE"/>
  		<result property="id" column="MEMBER_ID"/>
- 		<result property="name" column="MEMBER_NAME"/>
  		<result property="pwd" column="MEMBER_PWD"/>
+ 		<result property="name" column="MEMBER_NAME"/>
  		<result property="phone" column="MEMBER_PHONE"/>
  		<result property="email" column="MEMBER_EMAIL"/>
+ 		<result property="absenceYN" column="ABSENCE_YN"/>
+ 		<result property="initPwdYN" column="INIT_PWD_YN"/>
  	</resultMap>
  	
  	<resultMap id ="projectMembersResultMap" type="ProjectMembersDTO">
@@ -60,7 +62,7 @@
  	</select>
  	
  	<select id="selectProjectList" resultMap="projectResultMap">
- 		<!-- SELECT
+ 		SELECT
 			   A.PROJECT_CODE
 			 , A.PROJECT_TITLE
 			 , A.PROJECT_START_DATE
@@ -75,56 +77,7 @@
 		  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
 		 WHERE C.MEMBER_NO = #{ no }
 		   AND A.PROJECT_DELETE_STATUS = 'N'
-		 ORDER BY PROJECT_CODE DESC -->
-		 
-		 SELECT
-		        A.RNUM
-		      , A.PROJECT_CODE
-		      , A.PROJECT_TITLE
-		      , A.PROJECT_START_DATE
-		      , A.PROJECT_END_DATE
-		      , A.PROJECT_PROGRESS
-		      , A.PROJECT_BODY
-		      , A.PROJECT_VERSION
-		      , A.PROJECT_DELETE_STATUS
-		      , A.PROJECT_WRITER
-		   FROM (SELECT ROWNUM RNUM
-		              , B.PROJECT_CODE
-				      , B.PROJECT_TITLE
-				      , B.PROJECT_START_DATE
-				      , B.PROJECT_END_DATE
-				      , B.PROJECT_PROGRESS
-				      , B.PROJECT_BODY
-				      , B.PROJECT_VERSION
-				      , B.PROJECT_DELETE_STATUS
-				      , B.PROJECT_WRITER
-				   FROM TBL_PROJECT B
-				 <if test="searchCondition == 'name'">
-				   JOIN TBL_PROJECT_MEMBERS C ON (B.PROJECT_CODE = C.PROJECT_CODE)
-				   JOIN TBL_MEMBER D ON(D.MEMBER_NO = D.MEMBER_NO)
-				 </if>
-				 <where>
-				 	<if test="searchCondition == 'title'">
-				 		B.PROJECT_TITLE LIKE '%' || #{ title } || '%'
-				 	</if>
-				 	<if test="searchCondition == 'body'">
-				 		B.PROJECT_BODY LIKE '%' || #{ body } || '%'
-				 	</if>
-				 	<if test="searchCondition =='name'">
-				 		D.MEMBER_NAME LIKE '%' || #{ name } || '%'
-				 	</if>
-				    AND B.PROJECT_DELETE_STATUS = 'N'
-				 </where>
-				   <![CDATA[
-				   	AND ROWNUM <= #{ endRow }
-				   ]]>
-				  ORDER BY B.PROJECT_CODE DESC
-		   ) A
-	  JOIN TBL_MEMBER B ON(A.PROJECT_WRITER = B.MEMBER_NAME)
-	  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
-	 WHERE C.MEMBER_NO = #{ no }
-	   AND A.PROJECT_DELETE_STATUS = 'N'
-	 ORDER BY 1 DESC 
+		 ORDER BY PROJECT_CODE DESC
  	</select>
  	
  	<select id="selectProjectMembers" resultMap="projectMembersResultMap">
@@ -142,7 +95,7 @@
 		   AND B.MEMBER_NO = C.MEMBER_NO
  	</select>
  	
- 	<insert id="registProject" parameterType="ProjectDTO">
+ 	<insert id="insertProject" parameterType="ProjectDTO">
  		INSERT
  		  INTO TBL_PROJECT A
  		(
@@ -170,7 +123,7 @@
  		)
  	</insert>
  	
- 	<insert id="registProjectWriteMember" parameterType="ProjectMembersDTO">
+ 	<insert id="insertProjectWriteMember" parameterType="ProjectMembersDTO">
  		INSERT
  		  INTO TBL_PROJECT_MEMBERS A
  		(
@@ -186,7 +139,7 @@
  		)
  	</insert>
  	
- 	<insert id="registProjectFirstMemberRole" parameterType="ProjectMembersDTO">
+ 	<insert id="insertProjectFirstMemberRole" parameterType="ProjectMembersDTO">
  		INSERT
  		  INTO TBL_ROLE A
  		(
@@ -204,7 +157,7 @@
  		)
  	</insert>
  	
- 	<update id="removeProject" parameterType="_int">
+ 	<update id="deleteProject" parameterType="_int">
  		UPDATE 
  		       TBL_PROJECT A
  		   SET A.PROJECT_DELETE_STATUS = 'Y'
@@ -218,11 +171,12 @@
  		     , A.PROJECT_START_DATE
  		     , A.PROJECT_END_DATE
  		     , A.PROJECT_BODY
+ 		     , A.PROJECT_VERSION
  		  FROM TBL_PROJECT A
  		 WHERE A.PROJECT_CODE = #{ code }
  	</select>
  	
- 	<update id="modifyProject" parameterType="ProjectDTO">
+ 	<update id="updateProject" parameterType="ProjectDTO">
  		UPDATE
  		       TBL_PROJECT A
  		   SET A.PROJECT_TITLE = #{ title }
@@ -239,10 +193,10 @@
  		     , A.MEMBER_NO
  		  FROM TBL_MEMBER A
  		 WHERE A.MEMBER_NAME LIKE '%' || #{ searchMember } || '%'
- 		   AND A.MEMBER_PERMIT != 'ADMIN'
+ 		   AND A.PERMIT_CODE != 1
  	</select>
  	
- 	<insert id="registProjectMembers" parameterType="ProjectMembersDTO">
+ 	<insert id="insertProjectMembers" parameterType="ProjectMembersDTO">
  		INSERT
  		  INTO TBL_PROJECT_MEMBERS A
  		(
@@ -258,7 +212,7 @@
  		)
  	</insert>
  	
- 	<insert id="registProjectMemberRole" parameterType="ProjectMembersDTO">
+ 	<insert id="insertProjectMemberRole" parameterType="ProjectMembersDTO">
  		INSERT
  		  INTO TBL_ROLE A
  		(
@@ -292,7 +246,7 @@
 		 ORDER BY C.ROLE_NAME
  	</select>
  	
- 	<update id="removeProjectMembers" parameterType="ProjectMembersDTO">
+ 	<update id="deleteProjectMembers" parameterType="ProjectMembersDTO">
  		UPDATE
  		       TBL_PROJECT_MEMBERS A
  		   SET A.PROJECT_PARTICIPATION_YN = 'N'
@@ -301,7 +255,7 @@
  		   AND A.PROJECT_PARTICIPATION_YN = 'Y'
  	</update>
  	
- 	<update id="modifyProjectMemberRole" parameterType="ProjectMembersDTO">
+ 	<update id="updateProjectMemberRole" parameterType="ProjectMembersDTO">
  		UPDATE
  			   TBL_ROLE A
  		   SET A.ROLE_NAME = #{ roleName }
@@ -309,7 +263,7 @@
  		   AND A.MEMBER_NO = #{ no }
  	</update>
  	
- 	<update id="modifyProjectWriter" parameterType="ProjectMembersDTO">
+ 	<update id="updateProjectWriter" parameterType="ProjectMembersDTO">
  		UPDATE
  		       TBL_PROJECT A
  		   SET A.PROJECT_WRITER = #{ name }
@@ -320,7 +274,7 @@
  		SELECT 
  		       A.MEMBER_NO
  		  FROM TBL_PROJECT_MEMBERS A 
- 		 WHERE A.PROJECT_CODE = 41 
+ 		 WHERE A.PROJECT_CODE = #{ code } 
  		   AND A.PROJECT_PARTICIPATION_YN = 'N'
  	</select>
  	
@@ -339,5 +293,146 @@
  		 WHERE A.PROJECT_CODE = #{ code }
  		   AND A.MEMBER_NO = #{ no }   
  	</update>
+ 	
+ 	<insert id="insertFirstVersionHistory" parameterType="ProjectDTO">
+ 		INSERT
+ 		  INTO TBL_PROJECT_VERSION_HISTORY A
+ 		(
+ 		  A.PROJECT_VERSION_HISTORY_NO
+ 		, A.PROJECT_VERSION_HISTORY_TITLE
+ 		, A.PROJECT_VERSION_HISTORY_BODY
+ 		, A.PROJECT_VERSION_HISTORY_VERSION
+ 		, A.PROJECT_CODE
+ 		, A.PROJECT_VERSION_HISTORY_UPDATE_DATE
+ 		, A.PROJECT_VERSION_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_VERSION_HISTORY_NO.NEXTVAL
+ 		, #{ title }
+ 		, #{ body }
+ 		, 1
+ 		, SEQ_PROJECT_NO.CURRVAL
+ 		, SYSDATE
+ 		, #{ writer }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertFirstProgressHistory" parameterType="ProjectDTO">
+ 		INSERT
+ 		  INTO TBL_PROJECT_PROGRESS_HISTORY A
+ 		(
+ 		  A.PROJECT_PROGRESS_HISTORY_NO
+ 		, A.PROJECT_CODE
+ 		, A.PROJECT_PROGRESS_HISTORY_STATUS
+ 		, A.PROJECT_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.PROJECT_PROGRESS_HISTORY_START_DATE
+ 		, A.PROJECT_PROGRESS_HISTORY_END_DATE
+ 		, A.PROJECT_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SEQ_PROJECT_NO.CURRVAL
+ 		, #{ progress }
+ 		, SYSDATE
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, #{ writer }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertFirstMemberHistory" parameterType="ProjectMembersDTO">
+ 		INSERT
+ 		  INTO TBL_PROJECT_MEMBERS_HISTORY A
+ 		(
+ 		  A.PROJECT_MEMBERS_HISTORY_NO
+ 		, A.PROJECT_CODE
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_MEMBERS_HISTORY_UPDATE_DATE
+ 		, A.PROJECT_MEMBERS_HISTORY_ROLE_IN_PROJECT
+ 		, A.PROJECT_MEMBERS_HISTORY_PARTICIPATION_YN
+ 		, A.PROJECT_MEMBERS_HISTORY_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_MEMBERS_HISTORY_NO.NEXTVAL
+ 		, SEQ_PROJECT_NO.CURRVAL
+ 		, #{ no }
+ 		, SYSDATE
+ 		, #{ roleName }
+ 		, 'Y'
+ 		, #{ name }
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updateProjectVersion" parameterType="ProjectDTO">
+ 		UPDATE
+ 		       TBL_PROJECT A
+ 		   SET A.PROJECT_VERSION = #{ version }
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 	</update>
+ 	
+ 	<insert id="insertVersionHistory">
+ 		INSERT
+ 		  INTO TBL_PROJECT_VERSION_HISTORY A
+ 		(
+ 		  A.PROJECT_VERSION_HISTORY_NO
+ 		, A.PROJECT_VERSION_HISTORY_TITLE
+ 		, A.PROJECT_VERSION_HISTORY_BODY
+ 		, A.PROJECT_VERSION_HISTORY_VERSION
+ 		, A.PROJECT_CODE
+ 		, A.PROJECT_VERSION_HISTORY_UPDATE_DATE
+ 		, A.PROJECT_VERSION_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_VERSION_HISTORY_NO.NEXTVAL
+ 		, #{ title }
+ 		, #{ body }
+ 		, #{ version }
+ 		, #{ code }
+ 		, SYSDATE
+ 		, #{ writer }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertMemberHistory">
+ 		INSERT
+ 		  INTO TBL_PROJECT_MEMBERS_HISTORY A
+ 		(
+ 		  A.PROJECT_MEMBERS_HISTORY_NO
+ 		, A.PROJECT_CODE
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_MEMBERS_HISTORY_UPDATE_DATE
+ 		, A.PROJECT_MEMBERS_HISTORY_ROLE_IN_PROJECT
+ 		, A.PROJECT_MEMBERS_HISTORY_PARTICIPATION_YN
+ 		, A.PROJECT_MEMBERS_HISTORY_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_MEMBERS_HISTORY_NO.NEXTVAL
+ 		, #{ code }
+ 		, #{ no }
+ 		, SYSDATE
+ 		, #{ roleName }
+ 		, #{ participation }
+ 		, #{ name }
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectProjectMember" resultType="ProjectMembersDTO">
+ 		SELECT
+ 		       A.PROJECT_CODE
+ 		     , A.MEMBER_NO
+ 		     , A.PROJECT_PARTICIPATION_YN
+ 		     , B.MEMBER_NAME
+ 		     , C.ROLE_NAME
+ 		  FROM TBL_PROJECT_MEMBERS A
+ 		  JOIN TBL_MEMBER ON (A.MEMBER_NO = B.MEMBER_NO)
+ 		  JOIN TBL_ROLE ON (A.PROJECT_CODE = C.PROJECT_CODE)
+ 	     WHERE A.PROJECT_CODE = #{ code }
+ 	       AND A.MEMBER_NO = #{ no }
+ 	</select>
  	
  </mapper>

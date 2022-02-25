@@ -6,7 +6,119 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/dataTables.jqueryui.min.css"/>  
+<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+
 <style>
+
+	:root {
+	  --theadColor: #6c7ae0;
+	}
+
+    table.dataTable {
+      box-shadow: #bbbbbb 0px 0px 5px 0px;
+    }
+
+    thead {
+      background-color: var(--theadColor);
+    }
+
+    thead > tr,
+    thead > tr > th {
+      background-color: transparent;
+      color: #fff;
+      font-weight: normal;
+      text-align: start;
+    }
+    
+    table.dataTable thead th,
+    table.dataTable thead td {
+      border-bottom: 0px solid #111 !important;
+    }
+
+    .dataTables_wrapper > div {
+      margin: 5px;
+    }
+
+    table.dataTable.display tbody tr.even > .sorting_1,
+    table.dataTable.order-column.stripe tbody tr.even> .sorting_1, 
+    table.dataTable.display   tbody tr.even,
+    table.dataTable.display tbody tr.odd > .sorting_1,
+    table.dataTable.order-column.stripe tbody tr.odd > .sorting_1,
+    table.dataTable.display tbody tr.odd {
+      background-color: #ffffff;
+    }
+
+    table.dataTable thead th {
+      position: relative;
+      background-image: none !important;
+    }
+
+    table.dataTable thead th.sorting:after,
+    table.dataTable thead th.sorting_asc:after,
+    table.dataTable thead th.sorting_desc:after {
+      position: absolute;
+      top: 12px;
+      right: 8px;
+      display: block;
+      font-family: "Font Awesome\ 5 Free";
+    }
+
+    table.dataTable thead th.sorting:after {
+      content: "\f0dc";
+      color: #ddd;
+      font-size: 0.8em;
+      padding-top: 0.12em;
+    }
+
+    table.dataTable thead th.sorting_asc:after {
+      content: "\f0de";
+    }
+
+    table.dataTable thead th.sorting_desc:after {
+      content: "\f0dd";
+    }
+
+    table.dataTable.display tbody tr:hover > .sorting_1,
+    table.dataTable.order-column.hover tbody tr:hover > .sorting_1 {
+      background-color: #f2f2f2 !important;
+      color: #000;
+    }
+
+    tbody tr:hover {
+      background-color: #f2f2f2 !important;
+      color: #000;
+    }
+	
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current, 
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+
+      background: none !important;
+      border-radius: 50px;
+      background-color: var(--theadColor) !important;
+      color:#fff !important
+	
+	}
+	
+	.paginate_button.current:hover {
+      background: none !important;
+      border-radius: 50px;
+      background-color: var(--theadColor) !important;
+      color:#fff !important
+	
+	}
+	
+	.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
+	.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+	
+	  border: 1px solid #979797;
+	  background: none !important;
+	  border-radius: 50px !important;
+	  background-color: #000 !important;
+	  color: #fff !important;
+	
+	}
+
 	html {
 		width: 100%;
 		height: 98%;
@@ -219,22 +331,34 @@
 		height: 95%;
 	}
 	
-	.managementModalInput {
+	.managementModalInputNameforCreate {
 		position: absolute;
 		width: 260px;
 		height: 47px;
-	}
-	
-	.title {
 		top: 23%;
 		left: 15%;
 	}
-	
-	.ID {
+	.managementModalInputIdforCreate {
+		position: absolute;
+		width: 260px;
+		height: 47px;
 		top: 40%;
 		left: 15%;
 	}
-	
+	.managementModalInputNameforUpdate {
+		position: absolute;
+		width: 260px;
+		height: 47px;
+		top: 23%;
+		left: 15%;
+	}
+	.managementModalInputIdforCreate {
+		position: absolute;
+		width: 260px;
+		height: 47px;
+		top: 40%;
+		left: 15%;
+	}
 	.role {
 		position: absolute;
 		width: 270px;
@@ -334,71 +458,85 @@
 </style>
 <title>Insert title here</title>
 </head>
+<script type="text/javascript">
+$(document).ready(function() {
+    
+    $.extend( $.fn.dataTable.defaults, {
+       
+       language: {
+          url : "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Korean.json"
+       }
+    });
+    
+ 
+    $('#managementTable').DataTable({
+    lengthChange: false,
+       ordering: false,
+       order: [],
+       displayLength : 7,
+       stateSave: true,
+    });
+ });
+</script>
 <body>
 	<div id="whiteBoard">
 		<div class="historyListHead">
 			<div id="managementTitle">멤버 목록</div>
 			<div class="searchMember">
-				<div class="search-area">
-					<form action="${ pageContext.servletContext.contextPath }/management/list" method="get" style="display: inline-block">
-						<input type="hidden" name="currentPage" value="1">
-						<select id="searchCondition" name="searchCondition">
-							<option value="name" ${ requestScope.selectCriteria.searchCondition eq 'name'? "selected":"" }>이름</option>
-							<option value="right" ${ requestScope.selectCriteria.searchCondition eq 'right'? "selected":"" }>권한</option>
-							<option value="memberNum" ${ requestScope.selectCriteria.searchCondition eq 'memberNum'? "selected":"" }>사번</option>
-						</select> 
-						<input type="search" id="searchValue" name="searchValue" value="<c:out value="${ requestScope.selectCriteria.searchValue }"/>">
-						<button type="submit">검색</button>
-					</form>
-				</div>
 				<div id="managementButtons">
 					<input type="button" id="plusButton" class="img-button plusButton">
-					<input type="button" id="minusButton" class="img-button minusButton">
 				</div>
 			</div>
 		</div>
 		<div class="managementListBox">
-			<table border="1" class="managementTable">
-				<tr>
-					<th id="memberCodeTh">멤버번호</th>
-					<th id="nameTh">이름</th>
-					<th id="rightTh">권한</th>
-					<th id="memberNumTh">사번</th>
-				</tr>
-				<c:forEach var="management" items="${ requestScope.managementList }">
+			<table border="1" class="managementTable" id="managementTable">
+				<thead>
 					<tr>
-						<td><c:out value="${ management.no }"/></td>
-						<td><c:out value="${ management.name }"/></td>
-						<td><c:out value="${ management.permitName }"/></td>
-						<td><c:out value="${ management.id }"/></td>
-				   </tr>
-			   </c:forEach>
+						<th id="memberCodeTh">멤버번호</th>
+						<th id="nameTh">이름</th>
+						<th id="rightTh">권한</th>
+						<th id="memberNumTh">사번</th>
+					</tr>	
+				</thead>
+				<tbody>
+					<c:forEach var="management" items="${ requestScope.managementList }">
+						<tr>
+							<td><div id="memberNo">${ management.memberNo }</div></td>
+							<td><div id="memberName">${ management.memberName }</div></td>
+							<td><div id="permitName">${ management.permitName }</div></td>
+							<td><div id="memberId">${ management.memberId }</div></td>
+<%-- 							<td><c:out value="${ management.memberNo }"/></td>
+							<td><c:out value="${ management.memberName }"/></td>
+							<td><c:out value="${ management.permitName }"/></td>
+							<td><c:out value="${ management.memberId }"/></td> --%>
+					   </tr>
+				   </c:forEach>
+			   </tbody>
 			</table>
 		</div>
-	<jsp:include page="paging.jsp"/>
 	</div>
 	
 
 	<!-- 멤버 추가(+) 모달창 -->
 	<div id="management-create-modal">
-
 		<div class="modal_content">
-			<form action="" method="post">
+			<form action="${ pageContext.servletContext.contextPath }/management/regist" method="post" name="createMember">
 				<div class="modal_head">
 					<h3>멤버계정 생성</h3>
 				</div>
 				<div class="modal_content-box">
-					<input type="text" class="managementModalInput title" name="managementTitle" placeholder="멤버 이름"> 
+					<input type="text" class="managementModalInputNameforCreate" name="name" id="name" placeholder="멤버 이름"> 
 					<br> 
-					<input type="text" class="managementModalInput ID" name="managementNum" placeholder="ID(사번)"> 
+					<input type="text" class="managementModalInputIdforCreate" name="id" id="id" placeholder="ID(사번)"> 
 					<br> 
-					<select name="managementRole" class="role">
+					
+					<select name="managementRoleforCreate" class="role">
 						<option value="PM">PM</option>
-						<option value="사원" selected="selected">사원</option>
+						<option value="일반 멤버" selected="selected">일반 멤버</option>
 					</select>
 				</div>
 				<div class="modal_button">
-					<button type="button" id="management-create">Ok</button>
+					<button type="submit" id="management-create" class="management-create">Ok</button>
 					<button type="button" id="management-close-btn">Cancel</button>
 				</div>
 			</form>
@@ -406,22 +544,35 @@
 		<div class="modal_layer"></div>
 	</div>
 
-	<div id="management-update-modal">
-
+	<div id="management-update-modal" style="display:none;">
 		<div class="modal_content">
 			<form action="" method="post">
 				<div class="modal_head">
 					<h3>멤버계정 조회/수정</h3>
 				</div>
 				<div class="modal_content-box">
-					<input type="text" class="managementModalInput title" name="managementtitle" placeholder="멤버 이름"> 
-					<br> 
-					<input type="text" class="managementModalInput ID" name="managementNum" placeholder="ID(사번)"> 
-					<br> 
-					<select name="managementRole" class="role">
-						<option value="PM">PM</option>
-						<option value="사원" selected="selected">사원</option>
-					</select>
+					<c:forEach var="management" items="${ requestScope.managementList }">
+						<input type="hidden" id="memberNoforUpdate">
+						<input type="text" class="managementModalInputNameforUpdate" name="name" id="managementModalInputNameforUpdate" placeholder="멤버 이름"> 
+						<br> 
+						<input type="text" class="managementModalInputIdforUpdate" name="id" id="managementModalInputIdforUpdate" placeholder="ID(사번)"> 
+						<br> 
+	
+						<c:if test="${ management.permitName eq 'PM'}">
+							<select name="managementRoleforCreate" class="role" id="managementRoleforCreate">
+								<option value="PM" selected="selected">PM</option>
+								<option value="일반 멤버">일반 멤버</option>
+							</select>
+						</c:if>
+	
+						<c:if test="${ management.permitName eq '일반 멤버'}">
+							<select name="managementRoleforCreate" class="role" id="managementRoleforCreate">
+								<option value="PM">PM</option>
+								<option value="일반 멤버"  selected="selected">일반 멤버</option>
+							</select>
+						</c:if>
+	
+					</c:forEach>
 				</div>
 				<div class="modal_button">
 					<button type="button" id="management-update">Ok</button>
@@ -434,7 +585,6 @@
 
 	<!-- 삭제하시겠습니까?시스템모달창, 일단 임시로 만들어둠(멤버정보가 들어와야 클릭해서 삭제하는기능아직구현 안함)  -->
 	<div id="modal">
-
 		<div class="modal_content2">
 			<div class="modal_head2">System Message</div>
 			<div class="modal_content_message">
@@ -444,13 +594,12 @@
 				<button type="button" id="modal_ok_btn">Ok</button>
 				<button type="button" id="modal_close_btn">Cancel</button>
 			</div>
-
 		</div>
-
 		<div class="modal_layer"></div>
 	</div>
 
 	<script>
+		
 		document.getElementById("plusButton").onclick = function() {
 			document.getElementById("management-create-modal").style.display = "block";
 		}
@@ -463,13 +612,57 @@
 			document.getElementById("management-update-modal").style.display = "none";
 		}
 		
-		document.getElementById("minusButton").onclick = function() {
-			document.getElementById("modal").style.display = "block";
-		}
-
 		document.getElementById("modal_close_btn").onclick = function() {
 			document.getElementById("modal").style.display = "none";
 		}
+			let memberNo = document.querySelectorAll("#memberNo");
+			let memberName = document.querySelectorAll("#memberName");
+			let permitName = document.querySelectorAll("#permitName");
+			let memberId = document.querySelectorAll("#memberId");
+			
+			let memberNoInput = document.getElementById("memberNoforUpdate");
+			let memberNameInput = document.getElementById("managementModalInputNameforUpdate");
+			let memberIdInput = document.getElementById("managementModalInputIdforUpdate");
+			let permitNameInput = document.getElementById("managementRoleforCreate");
+
+		if(document.querySelectorAll("#managementTable td")) {
+			const $tr = document.querySelectorAll("#managementTable td");
+			
+			
+			for(let i = 0; i < $tr.length; i++) {
+				
+				$tr[i].onmouseenter = function() {
+					console.log("돠ㅣ냐");
+					this.parentNode.style.cursor = "pointer";
+					
+				}
+				
+				$tr[i].onmouseout = function() {
+					this.parentNode.style.backgroundColor = "white";
+				}
+				
+					
+				$tr[i].onclick = function() {
+					console.log("뭐고");
+					document.getElementById("management-update-modal").style.display = "block";
+					console.log(memberNoInput.value);
+					console.log(memberNameInput.value);
+					console.log(memberIdInput.value);
+					console.log(permitNameInput);
+					console.log(memberNo);
+					console.log(permitName[i].innerText);
+					console.log(memberName[i].innerText);
+					
+					permitNameInput.value = permitName[i].innerText;
+					memberNoInput.value = memberNo[i].innerText;
+					memberNameInput.val = memberName[i].val;
+					memberIdInput.val = memberId[i].val;
+					console.log("여까지옴?");
+				}
+			}
+		}
+		
+		
 	</script>
 </body>
 </html>

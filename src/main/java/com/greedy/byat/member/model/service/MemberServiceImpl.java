@@ -10,6 +10,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.greedy.byat.common.exception.member.LoginFailedException;
 import com.greedy.byat.common.exception.member.NotexistEmailException;
@@ -31,44 +33,83 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberDTO login(MemberDTO member) {
+	public String selectMember(MemberDTO member, RedirectAttributes rttr, Model model) {
 		
-		if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
-			return null;
+		if(mapper.selectInitPasswordYN(member).equals("Y")) {
+			//초기계정인경우
+				if(mapper.initLogin(member) != null) {
+					
+					if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
+						return null;
+					
+					} else {
+						model.addAttribute("loginMember", mapper.initLogin(member));
+						rttr.addFlashAttribute("message", "로그인 성공!");
+						return "redirect:/home";
+					}
+					
+				} else {
+					rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+					return "redirect:/member/login";
+				}
+				
+			} else {
 			
-		} else {
+			/* 초기 계정이 아닌 경우 */
 			
-			return mapper.login(member);
-		}
-
-	}
-
-	@Override
-	public MemberDTO initLogin(MemberDTO member) {
-
-
-		if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
-			return null;
-
-		} else {
-			
-			return mapper.initLogin(member);
-		}
-	}
-
-	@Override
-	public String selectMember(MemberDTO member) {
+			if(mapper.login(member) != null) {
+				
+					if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
+						return null;
+						
+					} else {
+						model.addAttribute("loginMember", mapper.login(member));
+						rttr.addFlashAttribute("message","로그인 성공!");
+						return "redirect:/home";
+					}
+					
+				} else {
+					rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+					return "redirect:/member/login";
+				}
 		
-		return mapper.selectInitPasswordYN(member);
+			}
 	}
 
-	/*
-	 * @Override public boolean emailduplicationCheck(int id) {
-	 * 
-	 * String result = mapper.emailduplicationCheck(id);
-	 * 
-	 * return result != null? true: false; }
-	 */
+//혹시 모르니 남겨두기	
+//	@Override
+//	public MemberDTO login(MemberDTO member) {
+//		
+//		if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
+//			return null;
+//			
+//		} else {
+//			
+//			return mapper.login(member);
+//		}
+//		
+//	}
+//	
+//	@Override
+//	public MemberDTO initLogin(MemberDTO member) {
+//		
+//		
+//		if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
+//			return null;
+//			
+//		} else {
+//			
+//			return mapper.initLogin(member);
+//		}
+//	}
+//	
+//	@Override
+//	public String selectMember(MemberDTO member) {
+//		
+//		return mapper.selectInitPasswordYN(member);
+//	}
+
+	
 
 	@Override
 	public int selectEmailById(String id) throws NotexistEmailException {
@@ -281,6 +322,7 @@ public class MemberServiceImpl implements MemberService {
 		
 		return result;
 	}
+
 
 }
 

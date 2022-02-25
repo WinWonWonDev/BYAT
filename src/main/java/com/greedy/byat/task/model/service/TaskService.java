@@ -2,6 +2,7 @@ package com.greedy.byat.task.model.service;
 
 import java.util.List;
 
+import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 
 public interface TaskService {
@@ -10,6 +11,6 @@ public interface TaskService {
 
 	TaskDTO selectTaskDetail(int taskCode);
 
-	List<String> selectProjectMembers(int projectCode);
+	List<MemberDTO> selectProjectMembers(int projectCode);
 
 }

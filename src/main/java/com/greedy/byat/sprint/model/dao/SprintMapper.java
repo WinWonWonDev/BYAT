@@ -26,5 +26,9 @@ public interface SprintMapper {
 	List<TaskDTO> selectTaskList(int sprintCode);
 
 	int checkSprintProgress(int projectCode);
+
+	int insertSprintVersionHistory2(SprintDTO sprint);
+
+	int insertSprintProgressHistory2(SprintDTO sprint);
 	
 }

@@ -5,11 +5,14 @@ import java.util.Map;
 
 import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.management.model.dto.ManagementDTO;
+import com.greedy.byat.member.model.dto.MemberDTO;
 
 public interface ManagementService {
 
-	int selectTotalCount(Map<String, String> searchMap);
+	int selectTotalCount();
 
-	List<ManagementDTO> selectManagementList(SelectCriteria selectCriteria);
+	List<ManagementDTO> selectManagementList();
+
+	int registManagement(MemberDTO member, String managementRoleforCreate);
 
 }
