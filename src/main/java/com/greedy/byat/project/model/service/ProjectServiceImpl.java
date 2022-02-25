@@ -233,19 +233,26 @@ public class ProjectServiceImpl implements ProjectService {
 
 		if (searchMemberList != null) {
 			
-			for (int i = 0; i < searchMemberList.size(); i++) {
+			for(Iterator<MemberDTO> searchItem = searchMemberList.iterator(); searchItem.hasNext();) {
 				
-				for (int j = 0; j < projectMembersList.length; j++) {
-
-					if (searchMemberList.get(i).getNo() == Integer.parseInt(projectMembersList[j])) {
-
-						searchMemberList.remove(i);
+				int searchNo = searchItem.next().getNo();
+				
+				for(int j = 0; j < projectMembersList.length; j++) {
+					
+					if(searchNo == Integer.parseInt(projectMembersList[j])) {
+						
+						searchItem.remove();
+						
 					}
-
 				}
-
 			}
 
+		}
+		
+		for(int i = 0; i < searchMemberList.size(); i++) {
+			
+			System.out.println(i + " : " + searchMemberList.get(i).getNo());
+			
 		}
 		
 		if (selectMembers != null && searchMemberList != null) {
@@ -254,12 +261,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 				int searchNo = searchItem.next().getNo();
 				
-				System.out.println("searchNo : " + searchNo);
-
 				for (int j = 0; j < selectMembers.length; j++) {
 					
-					System.out.println("selectMembers[j] : " + selectMembers[j]);
-
 					if (searchNo == Integer.parseInt(selectMembers[j])) {
 
 						searchItem.remove();
@@ -321,7 +324,9 @@ public class ProjectServiceImpl implements ProjectService {
 			int projectRoleRegistResult = 0;
 			
 			if (projectMembersRegistResult > 0) {
+				
 				projectRoleRegistResult = mapper.insertProjectMemberRole(registMember);
+				
 			}
 
 			if (!(projectMembersRegistResult > 0 && projectRoleRegistResult > 0)) {
@@ -361,32 +366,42 @@ public class ProjectServiceImpl implements ProjectService {
 		int result = mapper.deleteProjectMembers(removeMember);
 
 		ProjectMembersDTO projectMemberDetail = new ProjectMembersDTO();
-		
+
 		projectMemberDetail = mapper.selectProjectMember(removeMember);
 		
+		projectMemberDetail.setParticipationYn("N");
+		
+		int memberHistoryResult = mapper.insertMemberHistory(projectMemberDetail);
+
 		if(!(result > 0)) {
 			
 			throw new ProjectMemberRemoveException("구성원 제외 실패!");
-		} /*
-			 * else {
-			 * 
-			 * int memberHistoryResult = mapper.insertMemberHistory(projectMemberDetail);
-			 * 
-			 * if(!(memberHistoryResult > 0)) {
-			 * 
-			 * throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!"); }
-			 * 
-			 * }
-			 */
+		}
+		
+		if(!(memberHistoryResult > 0)) {
+		
+			throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+		}
 		
 	}
 
 	@Override
-	public void updateProjectMemberRole(List<ProjectMembersDTO> members) throws ProjectMemberModifyRoleException, ProjectWriterChangeException {
+	public void updateProjectMemberRole(List<ProjectMembersDTO> members) throws ProjectMemberModifyRoleException, ProjectWriterChangeException, ProjectMemberHistoryRegistException {
+		
+		int result = 0;
 		
 		for(int i = 0; i < members.size(); i++) {
 			
-			int result = mapper.updateProjectMemberRole(members.get(i));
+			members.get(i).setParticipationYn("Y");
+			
+			ProjectMembersDTO projectMemberBeforeDetail = mapper.selectProjectMember(members.get(i));
+			
+			if(projectMemberBeforeDetail.getRoleName() != members.get(i).getRoleName()) {
+				
+				result = mapper.updateProjectMemberRole(members.get(i));
+				
+			}
+			
 			
 			if("PM".equals(members.get(i).getRoleName())) {
 				
@@ -401,6 +416,15 @@ public class ProjectServiceImpl implements ProjectService {
 			if(!(result > 0)) {
 				
 				throw new ProjectMemberModifyRoleException("구성원 역할 변경 실패!");
+			} else {
+				
+				int memberHistoryResult = mapper.insertMemberHistory(members.get(i));
+				
+				if(!(memberHistoryResult > 0)) {
+					
+					throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+				}
+				
 			}
 			
 		}

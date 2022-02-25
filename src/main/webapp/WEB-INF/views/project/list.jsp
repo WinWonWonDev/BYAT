@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/dataTables.jqueryui.min.css"/>  
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/dataTables.jqueryui.min.css"/>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
@@ -1453,25 +1453,18 @@
 					
 					projectCode = $code[i].value;
 					
-					console.log(projectCode);
-					
 					let memberListFlag = 0;
 					
 					<c:forEach items="${projectList}" var="project" varStatus="status">
-						<c:forEach items="${project.projectMembers}" var="member">
-							if(i == ${status.index}) {
-								
-								if(memberListFlag == 0) {
-									for(let k = 0; k < $projectRealMemberList[i].children.length - 1; k++) {
-										selectedMemberList.push($projectRealMemberList[i].children[k].children[0].value);
-									}
-								}
-								
-								memberListFlag++;
+						if(i == ${status.index}) {
+							for(let k = 0; k < $projectRealMemberList[i].children.length - 1; k++) {
+								selectedMemberList.push($projectRealMemberList[i].children[k].children[0].value);
 							}
-						</c:forEach>
+						}
 						projectMembersList = selectedMemberList;
 					</c:forEach>
+					
+					console.log(projectMembersList);
 					
 				}
 
@@ -1622,6 +1615,8 @@
 					
 					selectMemberNo = ui.item.value.no;
 					
+					selectName = ui.item.value.name;
+					
 					selectMembers.push(selectMemberNo);
 					
 					console.log(selectMembers);
@@ -1644,6 +1639,11 @@
 			            hiddenProjectCode.setAttribute('type', 'hidden');
 			            hiddenProjectCode.setAttribute('name', 'code');
 			            hiddenProjectCode.value = projectCode;
+			            
+			            hiddenProjectMemberName = document.createElement('input');
+			            hiddenProjectMemberName.setAttribute('type', 'hidden');
+			            hiddenProjectMemberName.setAttribute('name', 'name');
+			            hiddenProjectMemberName.value = selectName;
 			            
 			            selectedMemberAreaDiv.setAttribute('class', 'selectedMemberArea');
 			            selectedMemberAreaDiv.setAttribute('id', 'selectedMemberArea');
@@ -1677,6 +1677,7 @@
 			            selectedMemberAreaDiv.appendChild(selectedMemberProjectRoleDiv);
 			            selectedMemberAreaDiv.appendChild(hiddenMemberNo);
 			            selectedMemberAreaDiv.appendChild(hiddenProjectCode);
+			            selectedMemberAreaDiv.appendChild(hiddenProjectMemberName);
 			            selectedMemberAreaDiv.appendChild(memberDeleteBtn);
 			            addMembersFormTag.appendChild(selectedMemberAreaDiv);
 	            		

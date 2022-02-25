@@ -236,7 +236,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/modifyrole")
-	public String modifyMemberRole(HttpServletRequest request, RedirectAttributes rttr) throws ProjectMemberModifyRoleException, ProjectWriterChangeException {
+	public String modifyMemberRole(HttpServletRequest request, RedirectAttributes rttr) throws ProjectMemberModifyRoleException, ProjectWriterChangeException, ProjectMemberHistoryRegistException {
 		
 		String[] no = request.getParameterValues("no");
 		String[] roleName = request.getParameterValues("roleName");

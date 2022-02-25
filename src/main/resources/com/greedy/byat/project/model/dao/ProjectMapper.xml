@@ -416,12 +416,12 @@
  		, #{ no }
  		, SYSDATE
  		, #{ roleName }
- 		, #{ participation }
+ 		, #{ participationYn }
  		, #{ name }
  		)
  	</insert>
  	
- 	<select id="selectProjectMember" resultType="ProjectMembersDTO">
+ 	<select id="selectProjectMember" resultMap="projectMembersResultMap">
  		SELECT
  		       A.PROJECT_CODE
  		     , A.MEMBER_NO
@@ -429,8 +429,8 @@
  		     , B.MEMBER_NAME
  		     , C.ROLE_NAME
  		  FROM TBL_PROJECT_MEMBERS A
- 		  JOIN TBL_MEMBER ON (A.MEMBER_NO = B.MEMBER_NO)
- 		  JOIN TBL_ROLE ON (A.PROJECT_CODE = C.PROJECT_CODE)
+ 		  JOIN TBL_MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
+ 		  JOIN TBL_ROLE C ON (A.PROJECT_CODE = C.PROJECT_CODE AND A.MEMBER_NO = C.MEMBER_NO)
  	     WHERE A.PROJECT_CODE = #{ code }
  	       AND A.MEMBER_NO = #{ no }
  	</select>
