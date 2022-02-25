@@ -14,10 +14,6 @@
 	:root {
 	  --theadColor: #6c7ae0;
 	}
-	
-	body {
-      font-family: "Open Sans", sans-serif;
-    }
 
     table.dataTable {
       box-shadow: #bbbbbb 0px 0px 5px 0px;
@@ -335,22 +331,34 @@
 		height: 95%;
 	}
 	
-	.managementModalInput {
+	.managementModalInputNameforCreate {
 		position: absolute;
 		width: 260px;
 		height: 47px;
-	}
-	
-	.title {
 		top: 23%;
 		left: 15%;
 	}
-	
-	.ID {
+	.managementModalInputIdforCreate {
+		position: absolute;
+		width: 260px;
+		height: 47px;
 		top: 40%;
 		left: 15%;
 	}
-	
+	.managementModalInputNameforUpdate {
+		position: absolute;
+		width: 260px;
+		height: 47px;
+		top: 23%;
+		left: 15%;
+	}
+	.managementModalInputIdforCreate {
+		position: absolute;
+		width: 260px;
+		height: 47px;
+		top: 40%;
+		left: 15%;
+	}
 	.role {
 		position: absolute;
 		width: 270px;
@@ -462,13 +470,10 @@ $(document).ready(function() {
     
  
     $('#managementTable').DataTable({
-       lengthChange: false,
+    lengthChange: false,
        ordering: false,
-       responsive: true,
        order: [],
-       lengthMenu: [ 7 ],
-       
-       displayLength : 50,
+       displayLength : 7,
        stateSave: true,
     });
  });
@@ -478,21 +483,8 @@ $(document).ready(function() {
 		<div class="historyListHead">
 			<div id="managementTitle">멤버 목록</div>
 			<div class="searchMember">
-				<%-- <div class="search-area">
-					<form action="${ pageContext.servletContext.contextPath }/management/list" method="get" style="display: inline-block">
-						<input type="hidden" name="currentPage" value="1">
-						<select id="searchCondition" name="searchCondition">
-							<option value="name" ${ requestScope.selectCriteria.searchCondition eq 'name'? "selected":"" }>이름</option>
-							<option value="right" ${ requestScope.selectCriteria.searchCondition eq 'right'? "selected":"" }>권한</option>
-							<option value="memberNum" ${ requestScope.selectCriteria.searchCondition eq 'memberNum'? "selected":"" }>사번</option>
-						</select> 
-						<input type="search" id="searchValue" name="searchValue" value="<c:out value="${ requestScope.selectCriteria.searchValue }"/>">
-						<button type="submit">검색</button>
-					</form>
-				</div> --%>
 				<div id="managementButtons">
 					<input type="button" id="plusButton" class="img-button plusButton">
-					<input type="button" id="minusButton" class="img-button minusButton">
 				</div>
 			</div>
 		</div>
@@ -509,39 +501,42 @@ $(document).ready(function() {
 				<tbody>
 					<c:forEach var="management" items="${ requestScope.managementList }">
 						<tr>
-							<td><c:out value="${ management.memberNo }"/></td>
+							<td><div id="memberNo">${ management.memberNo }</div></td>
+							<td><div id="memberName">${ management.memberName }</div></td>
+							<td><div id="permitName">${ management.permitName }</div></td>
+							<td><div id="memberId">${ management.memberId }</div></td>
+<%-- 							<td><c:out value="${ management.memberNo }"/></td>
 							<td><c:out value="${ management.memberName }"/></td>
 							<td><c:out value="${ management.permitName }"/></td>
-							<td><c:out value="${ management.memberId }"/></td>
+							<td><c:out value="${ management.memberId }"/></td> --%>
 					   </tr>
 				   </c:forEach>
 			   </tbody>
 			</table>
 		</div>
-	<%-- <jsp:include page="paging.jsp"/>
- --%>	</div>
+	</div>
 	
 
 	<!-- 멤버 추가(+) 모달창 -->
 	<div id="management-create-modal">
-
 		<div class="modal_content">
-			<form action="" method="post">
+			<form action="${ pageContext.servletContext.contextPath }/management/regist" method="post" name="createMember">
 				<div class="modal_head">
 					<h3>멤버계정 생성</h3>
 				</div>
 				<div class="modal_content-box">
-					<input type="text" class="managementModalInput title" name="managementTitle" placeholder="멤버 이름"> 
+					<input type="text" class="managementModalInputNameforCreate" name="name" id="name" placeholder="멤버 이름"> 
 					<br> 
-					<input type="text" class="managementModalInput ID" name="managementNum" placeholder="ID(사번)"> 
+					<input type="text" class="managementModalInputIdforCreate" name="id" id="id" placeholder="ID(사번)"> 
 					<br> 
-					<select name="managementRole" class="role">
+					
+					<select name="managementRoleforCreate" class="role">
 						<option value="PM">PM</option>
-						<option value="사원" selected="selected">사원</option>
+						<option value="일반 멤버" selected="selected">일반 멤버</option>
 					</select>
 				</div>
 				<div class="modal_button">
-					<button type="button" id="management-create">Ok</button>
+					<button type="submit" id="management-create" class="management-create">Ok</button>
 					<button type="button" id="management-close-btn">Cancel</button>
 				</div>
 			</form>
@@ -549,22 +544,35 @@ $(document).ready(function() {
 		<div class="modal_layer"></div>
 	</div>
 
-	<div id="management-update-modal">
-
+	<div id="management-update-modal" style="display:none;">
 		<div class="modal_content">
 			<form action="" method="post">
 				<div class="modal_head">
 					<h3>멤버계정 조회/수정</h3>
 				</div>
 				<div class="modal_content-box">
-					<input type="text" class="managementModalInput title" name="managementtitle" placeholder="멤버 이름"> 
-					<br> 
-					<input type="text" class="managementModalInput ID" name="managementNum" placeholder="ID(사번)"> 
-					<br> 
-					<select name="managementRole" class="role">
-						<option value="PM">PM</option>
-						<option value="사원" selected="selected">사원</option>
-					</select>
+					<c:forEach var="management" items="${ requestScope.managementList }">
+						<input type="hidden" id="memberNoforUpdate">
+						<input type="text" class="managementModalInputNameforUpdate" name="name" id="managementModalInputNameforUpdate" placeholder="멤버 이름"> 
+						<br> 
+						<input type="text" class="managementModalInputIdforUpdate" name="id" id="managementModalInputIdforUpdate" placeholder="ID(사번)"> 
+						<br> 
+	
+						<c:if test="${ management.permitName eq 'PM'}">
+							<select name="managementRoleforCreate" class="role" id="managementRoleforCreate">
+								<option value="PM" selected="selected">PM</option>
+								<option value="일반 멤버">일반 멤버</option>
+							</select>
+						</c:if>
+	
+						<c:if test="${ management.permitName eq '일반 멤버'}">
+							<select name="managementRoleforCreate" class="role" id="managementRoleforCreate">
+								<option value="PM">PM</option>
+								<option value="일반 멤버"  selected="selected">일반 멤버</option>
+							</select>
+						</c:if>
+	
+					</c:forEach>
 				</div>
 				<div class="modal_button">
 					<button type="button" id="management-update">Ok</button>
@@ -577,7 +585,6 @@ $(document).ready(function() {
 
 	<!-- 삭제하시겠습니까?시스템모달창, 일단 임시로 만들어둠(멤버정보가 들어와야 클릭해서 삭제하는기능아직구현 안함)  -->
 	<div id="modal">
-
 		<div class="modal_content2">
 			<div class="modal_head2">System Message</div>
 			<div class="modal_content_message">
@@ -587,13 +594,12 @@ $(document).ready(function() {
 				<button type="button" id="modal_ok_btn">Ok</button>
 				<button type="button" id="modal_close_btn">Cancel</button>
 			</div>
-
 		</div>
-
 		<div class="modal_layer"></div>
 	</div>
 
 	<script>
+		
 		document.getElementById("plusButton").onclick = function() {
 			document.getElementById("management-create-modal").style.display = "block";
 		}
@@ -606,13 +612,56 @@ $(document).ready(function() {
 			document.getElementById("management-update-modal").style.display = "none";
 		}
 		
-		document.getElementById("minusButton").onclick = function() {
-			document.getElementById("modal").style.display = "block";
-		}
-
 		document.getElementById("modal_close_btn").onclick = function() {
 			document.getElementById("modal").style.display = "none";
 		}
+			let memberNo = document.querySelectorAll("#memberNo");
+			let memberName = document.querySelectorAll("#memberName");
+			let permitName = document.querySelectorAll("#permitName");
+			let memberId = document.querySelectorAll("#memberId");
+			
+			let memberNoInput = document.getElementById("memberNoforUpdate");
+			let memberNameInput = document.getElementById("managementModalInputNameforUpdate");
+			let memberIdInput = document.getElementById("managementModalInputIdforUpdate");
+			let permitNameInput = document.getElementById("managementRoleforCreate");
+
+		if(document.querySelectorAll("#managementTable td")) {
+			const $tr = document.querySelectorAll("#managementTable td");
+			
+			
+			for(let i = 0; i < $tr.length; i++) {
+				
+				$tr[i].onmouseenter = function() {
+					console.log("돠ㅣ냐");
+					this.parentNode.style.cursor = "pointer";
+					
+				}
+				
+				$tr[i].onmouseout = function() {
+					this.parentNode.style.backgroundColor = "white";
+				}
+				
+					
+				$tr[i].onclick = function() {
+					console.log("뭐고");
+					document.getElementById("management-update-modal").style.display = "block";
+					console.log(memberNoInput.value);
+					console.log(memberNameInput.value);
+					console.log(memberIdInput.value);
+					console.log(permitNameInput);
+					console.log(memberNo);
+					console.log(permitName[i].innerText);
+					console.log(memberName[i].innerText);
+					
+					permitNameInput.value = permitName[i].innerText;
+					memberNoInput.value = memberNo[i].innerText;
+					memberNameInput.val = memberName[i].val;
+					memberIdInput.val = memberId[i].val;
+					console.log("여까지옴?");
+				}
+			}
+		}
+		
 		
 	</script>
 </body>

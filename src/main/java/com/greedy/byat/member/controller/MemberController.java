@@ -47,38 +47,48 @@ public class MemberController {
 	public String loginMember(@ModelAttribute MemberDTO member, Model model
 			, RedirectAttributes rttr) throws LoginFailedException {
 
-		/* 초기 계정인 경우 */
-		if(memberService.selectMember(member).equals("Y")) {
-
-			model.addAttribute("loginMember", memberService.initLogin(member));
-			
-			if(memberService.initLogin(member) != null) {
-				rttr.addFlashAttribute("message","로그인 성공!");
-				return "redirect:/home";
-				
-			} else {
-				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
-				return "redirect:/member/login";
-			}
-			
-
-		} else {
-
-			/* 초기 계정이 아닌 경우 */
-			model.addAttribute("loginMember", memberService.login(member));
-			
-			if(memberService.login(member) != null) {
-				rttr.addFlashAttribute("message","로그인 성공!");
-				return "redirect:/home";
-				
-			} else {
-				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
-				return "redirect:/member/login";
-			}
-
-
-		}
+		String result = memberService.selectMember(member, rttr, model);
+		
+		return result; 
+		
 	}
+//	혹시 모르니 일단 남겨두기
+//	@PostMapping("/login")
+//	public String loginMember(@ModelAttribute MemberDTO member, Model model
+//			, RedirectAttributes rttr) throws LoginFailedException {
+//		
+//		/* 초기 계정인 경우 */
+//		if(memberService.selectMember(member).equals("Y")) {
+//			
+//			model.addAttribute("loginMember", memberService.initLogin(member));
+//			
+//			if(memberService.initLogin(member) != null) {
+//				rttr.addFlashAttribute("message","로그인 성공!");
+//				return "redirect:/home";
+//				
+//			} else {
+//				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+//				return "redirect:/member/login";
+//			}
+//			
+//			
+//		} else {
+//			
+//			/* 초기 계정이 아닌 경우 */
+//			model.addAttribute("loginMember", memberService.login(member));
+//			
+//			if(memberService.login(member) != null) {
+//				rttr.addFlashAttribute("message","로그인 성공!");
+//				return "redirect:/home";
+//				
+//			} else {
+//				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+//				return "redirect:/member/login";
+//			}
+//			
+//			
+//		}
+//	}
 	
 	@GetMapping("emailduplicationcheckforinit")
 	@ResponseBody
@@ -230,15 +240,12 @@ public class MemberController {
 				.serializeNulls()
 				.disableHtmlEscaping()
 				.create();
-		System.out.println("이메일 : " + emailAddress + "폰 넘버 : " + phoneNumber + " 새 패스워드 : " + newPassword + "새 패스워드 확인 : " + newPasswordConfirm);
 		
 		if(!(newPassword.equals(newPasswordConfirm))) {
 			rttr.addFlashAttribute("message", "비밀번호가 일치하지 않습니다! 확인해주세요!");
 		} else {
 			result = memberService.initialInputInfo(emailAddress, phoneNumber, newPassword, inputNo);
 		}
-		
-		System.out.println("결과 뭐? : " + result );
 		
 		return result;
 	}

@@ -1,18 +1,15 @@
 package com.greedy.byat.member.model.service;
 
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.greedy.byat.common.exception.member.LoginFailedException;
 import com.greedy.byat.common.exception.member.NotexistEmailException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 
 public interface MemberService {
 
-	MemberDTO initLogin(MemberDTO member) throws LoginFailedException;
-
-	MemberDTO login(MemberDTO member) throws LoginFailedException;
-
-	String selectMember(MemberDTO member);
-
-	/* boolean emailduplicationCheck(int id); */
+	String selectMember(MemberDTO member, RedirectAttributes rttr, Model model);
 
 	int selectEmailById(String id) throws NotexistEmailException;
 

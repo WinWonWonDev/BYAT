@@ -365,7 +365,7 @@ html, body {
 
 					</div>
 					<br>
-						<div id="findPassword">비밀번호를잊으셨나요?</div>
+						<div id="findPassword">비밀번호를 잊으셨나요?</div>
 					<br><br><br>
 
 					<div class="btns" align="center">
@@ -569,7 +569,6 @@ html, body {
 								    				AuthTimer.timer = clearInterval(AuthTimer.timer);
 								    				console.log("아 지워져야하는데 이거 나와야됨 ㅠㅠ ");
 								    			}
-									    			
 		
 											} else {
 												alert("인증번호 재발송에 실패하였습니다.");
@@ -584,8 +583,6 @@ html, body {
 									});
 							});
 						}
-					  
-					  
 					} else {
 						alert("아이디를 찾을 수 없습니다.");
 						document.getElementById("inputIdModal").style.display="block";

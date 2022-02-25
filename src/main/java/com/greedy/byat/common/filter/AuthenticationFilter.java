@@ -116,7 +116,6 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/task/regist");
 		memberPermitList.add("/task/remove");
 		memberPermitList.add("/task/update");
-		memberPermitList.add("/task/manager");
 
 		memberPermitList.add("/mytask/list");
 		memberPermitList.add("/mytask/regist");

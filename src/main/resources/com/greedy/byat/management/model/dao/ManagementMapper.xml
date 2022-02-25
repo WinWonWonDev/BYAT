@@ -9,6 +9,8 @@
 	<result property="memberId" column="MEMBER_ID"/>
 	<result property="memberName" column="MEMBER_NAME"/>
 	<result property="permitName" column="PERMIT_NAME"/>
+	<result property="permitCode" column="PERMIT_CODE"/>
+	<result property="absenceYN" column="ABSENCE_YN"/>
 </resultMap> 
 
 <resultMap type="PermitDTO" id="permitResultMap">
@@ -28,16 +30,41 @@
  	</select> 
  	
  	<select id="selectManagementList" resultMap="managementResultMap">
-			SELECT
+		SELECT
  		       A.MEMBER_NO
  		     , A.MEMBER_NAME
  		     , B.PERMIT_NAME
+ 		     , A.PERMIT_CODE
  		     , A.MEMBER_ID
+ 		     , A.ABSENCE_YN
  		  FROM TBL_MEMBER A 
  		  JOIN TBL_PERMIT B ON (A.PERMIT_CODE = B.PERMIT_CODE)
  		 WHERE A.ABSENCE_YN = 'N'
  		   AND A.MEMBER_NO != 13
  	</select> 	
  	
+ 	<insert id="insertManagement" parameterType="hashmap">
+ 		INSERT
+ 		  INTO TBL_MEMBER A
+ 		 (
+ 		   A.MEMBER_NO
+ 		 , A.MEMBER_NAME
+ 		 , A.MEMBER_ID
+ 		 , A.MEMBER_PWD
+ 		 , A.PERMIT_CODE
+ 		 , A.ABSENCE_YN
+ 		 , A.INIT_PWD_YN
+ 		 )
+ 		VALUES
+ 		(
+ 		  SEQ_MEMBER_NO.NEXTVAL
+ 		, #{ name }
+ 		, #{ id }
+ 		, #{ pwd }
+ 		, #{ permitNo }
+ 		, 'N'
+ 		, 'Y'
+ 		)
+ 	</insert>
  	
  </mapper>
