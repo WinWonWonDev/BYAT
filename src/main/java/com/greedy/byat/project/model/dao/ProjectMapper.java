@@ -7,7 +7,6 @@ import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
-import com.greedy.byat.project.model.dto.ProjectPagingDTO;
 
 public interface ProjectMapper {
 
@@ -15,31 +14,31 @@ public interface ProjectMapper {
 
 	List<ProjectMembersDTO> selectProjectMembers(int code);
 
-	int registProject(ProjectDTO project);
+	int insertProject(ProjectDTO project);
 
-	int registProjectWriteMember(ProjectMembersDTO projectMembers);
+	int insertProjectWriteMember(ProjectMembersDTO projectMembers);
 
-	int registProjectFirstMemberRole(ProjectMembersDTO projectMembers);
+	int insertProjectFirstMemberRole(ProjectMembersDTO projectMembers);
 
-	int removeProject(int code);
+	int deleteProject(int code);
 
 	ProjectDTO selectProjectDetail(int code);
 
-	int modifyProject(ProjectDTO project);
+	int updateProject(ProjectDTO project);
 
 	List<MemberDTO> searchAddMemberList(String searchMember);
 
-	int registProjectMembers(ProjectMembersDTO registMember);
+	int insertProjectMembers(ProjectMembersDTO registMember);
 
-	int registProjectMemberRole(ProjectMembersDTO registMember);
+	int insertProjectMemberRole(ProjectMembersDTO registMember);
 
 	List<ProjectMembersDTO> selectProjectMemberList(int code);
 
-	int removeProjectMembers(ProjectMembersDTO removeMember);
+	int deleteProjectMembers(ProjectMembersDTO removeMember);
 
-	int modifyProjectMemberRole(ProjectMembersDTO projectMembersDTO);
+	int updateProjectMemberRole(ProjectMembersDTO projectMembersDTO);
 
-	int modifyProjectWriter(ProjectMembersDTO projectMembersDTO);
+	int updateProjectWriter(ProjectMembersDTO projectMembersDTO);
 
 	List<ProjectMembersDTO> selectProjectMemberNonParticipationList(int code);
 
@@ -48,6 +47,20 @@ public interface ProjectMapper {
 	int updateMemberRole(ProjectMembersDTO registMember);
 
 	int selectTotalCount(Map<String, String> searchMap);
+
+	int insertFirstVersionHistory(ProjectDTO project);
+
+	int insertFirstProgressHistory(ProjectDTO project);
+
+	int insertFirstMemberHistory(ProjectMembersDTO projectMembers);
+
+	int updateProjectVersion(ProjectDTO project);
+
+	int insertVersionHistory(ProjectDTO project);
+
+	int insertMemberHistory(ProjectMembersDTO registMember);
+
+	ProjectMembersDTO selectProjectMember(ProjectMembersDTO removeMember);
 
 
 }

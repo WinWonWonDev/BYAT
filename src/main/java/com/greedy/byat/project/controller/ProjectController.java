@@ -2,10 +2,8 @@ package com.greedy.byat.project.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,19 +26,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
+import com.greedy.byat.common.exception.project.ProjectProgressHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
+import com.greedy.byat.common.exception.project.ProjectVersionHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectWriterChangeException;
-import com.greedy.byat.common.paging.Pagenation;
-import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
-import com.greedy.byat.project.model.dto.ProjectPagingDTO;
 import com.greedy.byat.project.model.service.ProjectService;
 
 @Controller
@@ -61,25 +59,17 @@ public class ProjectController {
 		MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		
 		List<ProjectDTO> projectList = projectService.selectProjectList(member);
-		
-		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
-		
+
 		List<Integer> PmMemberNumber = new ArrayList<>();
 		
 		for(int i = 0; i < projectList.size(); i++) {
 			
 			projectList.get(i).setWriter(projectList.get(i).getWriter().substring(1, 3));
 			
-			projectMembers = projectService.selectProjectMembers(projectList.get(i).getCode());
-			
-			projectList.get(i).setProjectMembers(projectMembers);
-		
-			for(int j = 0; j < projectMembers.size(); j++) {
+			for(int j = 0; j < projectList.get(i).getProjectMembers().size(); j++) {
 				
-				if("PM".equals(projectMembers.get(j).getRoleName())) {
-					
-					PmMemberNumber.add(projectMembers.get(j).getNo());
-				}
+				PmMemberNumber.add(projectList.get(i).getProjectMembers().get(j).getNo());
+				
 			}
 			
 		}
@@ -94,7 +84,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/regist")
-	public String registProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistException {
+	public String registProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException {
 		
 		String memberName = ((MemberDTO) request.getSession().getAttribute("loginMember")).getName();
 		
@@ -102,7 +92,7 @@ public class ProjectController {
 		
 		project.setWriter(memberName);
 
-		projectService.registProject(project);
+		projectService.insertProject(project);
 		
 		rttr.addFlashAttribute("message", "프로젝트 생성 성공!");
 		
@@ -110,11 +100,13 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/remove")
-	public String removeProject(HttpServletRequest request, RedirectAttributes rttr) throws ProjectRemoveException {
+	public String removeProject(HttpServletRequest request, RedirectAttributes rttr) throws ProjectRemoveException, ProjectVersionHistoryRegistException {
 		
 		int code = Integer.parseInt(request.getParameter("code"));
 		
-		projectService.removeProject(code);
+		MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+		
+		projectService.deleteProject(code, member);
 		
 		rttr.addFlashAttribute("message", "프로젝트 삭제 성공!");
 		
@@ -130,22 +122,6 @@ public class ProjectController {
 		
 		ProjectDTO projectDetail = projectService.selectProjectDetail(code);
 		
-		/*projectDetail.setProjectMembers(projectService.selectProjectMembers(code));*/
-		
-		List<ProjectMembersDTO> projectMembers = projectService.selectProjectMembers(code);
-		
-		List<ProjectMembersDTO> projectPm = new ArrayList<>();
-		
-		for(int i = 0; i < projectMembers.size(); i++) {
-			if("PM".equals(projectMembers.get(i).getRoleName())) {
-				projectPm.add(projectMembers.get(i));
-			}
-		}
-		
-		projectDetail.setProjectMembers(projectPm);
-		
-		System.out.println(projectDetail);
-		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
 		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
@@ -157,15 +133,15 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/modify")
-	public String modifyProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectModifyException {
+	public String modifyProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectModifyException, ProjectVersionHistoryRegistException {
 
 		int code = Integer.parseInt(request.getParameter("code"));
 		
 		project.setCode(code);
 		
-		System.out.println(project);
+		MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		
-		projectService.modifyProject(project);
+		projectService.updateProject(project, member);
 		
 		rttr.addFlashAttribute("message", "프로젝트 수정 성공!");
 		
@@ -178,9 +154,6 @@ public class ProjectController {
 		
 		String searchMember = request.getParameter("searchValue");
 		
-		int code = Integer.parseInt(request.getParameter("code"));
-		System.out.println("PJcode : " + code);
-		
 		String[] selectMembers = null;
 		
 		String[] projectMembersList = request.getParameterValues("projectMembersList");
@@ -189,27 +162,9 @@ public class ProjectController {
 			
 			selectMembers = request.getParameterValues("selectMembers");
 			
-			for(int i = 0; i < selectMembers.length; i++) {
-				
-				System.out.print("selectMembers : " + selectMembers[i] + " ");
-				
-			}
-			
 		}
-		
-		System.out.println();
-		
-		for(int i = 0; i < projectMembersList.length; i++) {
-			
-			System.out.print("projectMembersList : " + projectMembersList[i] + " ");
-			
-		}
-		
-		System.out.println("\nsearchMember : " + searchMember);
 		
 		List<MemberDTO> memberList = projectService.searchAddMemberList(searchMember, projectMembersList, selectMembers);
-		
-		System.out.println("memberList : " + memberList);
 		
 		Gson gson = new Gson();
 		
@@ -217,27 +172,29 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/registmember")
-	public String registProjectMembers(@ModelAttribute ProjectMembersDTO registMember, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistMemberException {
+	public String registProjectMembers(@ModelAttribute ProjectMembersDTO registMember, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistMemberException, ProjectMemberHistoryRegistException {
 		
 		String[] projectCode = request.getParameterValues("code");
 		String[] memberNo = request.getParameterValues("no");
 		String[] memberRole = request.getParameterValues("role");
+		String[] name = request.getParameterValues("name");
 		
 		int code = Integer.parseInt(projectCode[0]);
 		
-		ProjectDTO projectDetail = projectService.selectProjectDetail(code);
+		String projectTitle = "";
 		
 		for(int i = 0; i < memberNo.length; i++) {
 		
 			registMember.setCode(code);
 			registMember.setNo(Integer.parseInt(memberNo[i]));
 			registMember.setRoleName(memberRole[i]);
+			registMember.setName(name[i]);
 			
-			projectService.registProjectMember(registMember);
+			projectTitle = projectService.insertProjectMember(registMember);
 			
 		}
 		
-		rttr.addFlashAttribute("message", projectDetail.getTitle() + " 프로젝트에 멤버 추가 성공!");
+		rttr.addFlashAttribute("message", projectTitle + " 프로젝트에 멤버 추가 성공!");
 		
 		return "redirect:/project/list";
 	}
@@ -260,7 +217,7 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/removemember")
-	public ModelAndView removeProjectMembers(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws ProjectMemberRemoveException {
+	public ModelAndView removeProjectMembers(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws ProjectMemberRemoveException, ProjectMemberHistoryRegistException {
 		
 		response.setContentType("application/json; charset=UTF-8");
 		
@@ -271,7 +228,7 @@ public class ProjectController {
 		removeMember.setCode(code);
 		removeMember.setNo(no);
 		
-		projectService.removeProjectMembers(removeMember);
+		projectService.deleteProjectMembers(removeMember);
 		
 		mv.setViewName("jsonView");
 		
@@ -302,7 +259,7 @@ public class ProjectController {
 		}
 		
 		
-		projectService.modifyProjectMemberRole(members);
+		projectService.updateProjectMemberRole(members);
 		
 		rttr.addFlashAttribute("message", "구성원 정보 수정 성공!");
 		
