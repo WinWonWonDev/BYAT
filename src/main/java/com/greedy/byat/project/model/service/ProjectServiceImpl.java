@@ -8,14 +8,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
+import com.greedy.byat.common.exception.project.ProjectProgressHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistMemberException;
 import com.greedy.byat.common.exception.project.ProjectRemoveException;
+import com.greedy.byat.common.exception.project.ProjectVersionHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectWriterChangeException;
-import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dao.ProjectMapper;
 import com.greedy.byat.project.model.dto.ProjectDTO;
@@ -32,10 +34,19 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectDTO> selectProjectList(MemberDTO member, SelectCriteria selectCriteria) {
+	public List<ProjectDTO> selectProjectList(MemberDTO member) {
 
-		List<ProjectDTO> projectList = mapper.selectProjectList(member, selectCriteria);
+		List<ProjectDTO> projectList = mapper.selectProjectList(member);
 
+		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
+		
+		for(int i = 0; i < projectList.size(); i++) {
+			
+			projectMembers = selectProjectMembers(projectList.get(i).getCode());
+			
+			projectList.get(i).setProjectMembers(projectMembers);
+		}
+		
 		return projectList;
 	}
 
@@ -83,40 +94,83 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void registProject(ProjectDTO project) throws ProjectRegistException {
+	public void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException {
 
-		int result = mapper.registProject(project);
+		int result = mapper.insertProject(project);
 
 		ProjectMembersDTO projectMembers = new ProjectMembersDTO();
 		projectMembers.setName(project.getWriter());
 		projectMembers.setNo(project.getWriterMember().getNo());
 		projectMembers.setRoleName("PM");
+		projectMembers.setCode(project.getCode());
 
+		project.setProgress("미진행");
+		project.setVersion(1);
+		
 		int projectMembersRegistResult = 0;
 		int projectRoleRegistResult = 0;
 
 		if (result > 0) {
-			projectMembersRegistResult = mapper.registProjectWriteMember(projectMembers);
+			projectMembersRegistResult = mapper.insertProjectWriteMember(projectMembers);
 		}
 
 		if (projectMembersRegistResult > 0) {
-			projectRoleRegistResult = mapper.registProjectFirstMemberRole(projectMembers);
+			projectRoleRegistResult = mapper.insertProjectFirstMemberRole(projectMembers);
 		}
 
 		if (!(result > 0 && projectMembersRegistResult > 0 && projectRoleRegistResult > 0)) {
 			throw new ProjectRegistException("프로젝트 생성 실패!");
+		} else {
+			project.setTitle("\'" + project.getTitle() + "\' 프로젝트 생성 (" + project.getTitle() + ")");
+			int historyResult = mapper.insertFirstVersionHistory(project);
+			int statusResult = mapper.insertFirstProgressHistory(project);
+			int memberHistoryResult = mapper.insertFirstMemberHistory(projectMembers);
+			
+			if(!(historyResult > 0)) {
+				
+				throw new ProjectVersionHistoryRegistException("프로젝트 생성 히스토리 생성 실패!");
+				
+			}
+			
+			if(!(statusResult > 0)) {
+				
+				throw new ProjectProgressHistoryRegistException("프로젝트 상태 변경 이력 생성 실패!");
+			}
+			
+			if(!(memberHistoryResult > 0)) {
+				
+				throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+			}
 		}
 
 	}
 
 	@Override
-	public void removeProject(int code) throws ProjectRemoveException {
+	public void deleteProject(int code, MemberDTO member) throws ProjectRemoveException, ProjectVersionHistoryRegistException {
 
-		int result = mapper.removeProject(code);
+		int result = mapper.deleteProject(code);
 
+		ProjectDTO project = mapper.selectProjectDetail(code);
+		project.setWriter(member.getName());
+		project.setVersion(project.getVersion() + 1);
+		project.setTitle("\'" + project.getTitle() + "\' 프로젝트 삭제 (" + project.getTitle() + ")");
+		
 		if (!(result > 0)) {
 			throw new ProjectRemoveException("프로젝트 삭제 실패");
+		} else {
+			
+			int updateResult = mapper.updateProjectVersion(project);
+			
+			int updateVersionHistory = mapper.insertVersionHistory(project);
+			
+			if(!(updateResult > 0 && updateVersionHistory > 0)) {
+				
+				throw new ProjectVersionHistoryRegistException("프로젝트 버전 업데이트 및 프로젝트 삭제 히스토리 생성 실패!");
+				
+			}
+			
 		}
+		
 
 	}
 
@@ -125,17 +179,49 @@ public class ProjectServiceImpl implements ProjectService {
 
 		ProjectDTO projectDetail = mapper.selectProjectDetail(code);
 
+		List<ProjectMembersDTO> projectMembers = mapper.selectProjectMembers(code);
+		
+		List<ProjectMembersDTO> projectPm = new ArrayList<>();
+		
+		for(int i = 0; i < projectMembers.size(); i++) {
+			if("PM".equals(projectMembers.get(i).getRoleName())) {
+				projectPm.add(projectMembers.get(i));
+			}
+		}
+		
+		projectDetail.setProjectMembers(projectPm);
+		
 		return projectDetail;
 	}
 
 	@Override
-	public void modifyProject(ProjectDTO project) throws ProjectModifyException {
+	public void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException {
 
-		int result = mapper.modifyProject(project);
-
+		int result = mapper.updateProject(project);
+		
+		ProjectDTO projectDetail = mapper.selectProjectDetail(project.getCode());
+		
+		project.setWriter(member.getName());
+		project.setVersion(projectDetail.getVersion() + 1);
+		project.setTitle("\'" + project.getTitle() + "\' 프로젝트 수정 (" + project.getTitle() + ")");
+		
+		
 		if (!(result > 0)) {
 			throw new ProjectModifyException("프로젝트 수정 실패");
+		} else {
+			
+			int updateResult = mapper.updateProjectVersion(project);
+			
+			int updateVersionHistory = mapper.insertVersionHistory(project);
+			
+			if(!(updateResult > 0 && updateVersionHistory > 0)) {
+				
+				throw new ProjectVersionHistoryRegistException("프로젝트 버전 업데이트 및 프로젝트 수정 히스토리 생성 실패!");
+				
+			}
+
 		}
+		
 
 	}
 
@@ -145,23 +231,15 @@ public class ProjectServiceImpl implements ProjectService {
 
 		List<MemberDTO> searchMemberList = mapper.searchAddMemberList(searchMember);
 
-		System.out.println("확인 출력용1");
-		
 		if (searchMemberList != null) {
 			
 			for (int i = 0; i < searchMemberList.size(); i++) {
 				
-				System.out.println(i + "??");
-				
 				for (int j = 0; j < projectMembersList.length; j++) {
 
-					System.out.println("???");
-					
 					if (searchMemberList.get(i).getNo() == Integer.parseInt(projectMembersList[j])) {
 
-						System.out.println("what? j : " + j + " i  : " + i);
 						searchMemberList.remove(i);
-						System.out.println("the j : " + j + " i  : " + i);
 					}
 
 				}
@@ -170,8 +248,6 @@ public class ProjectServiceImpl implements ProjectService {
 
 		}
 		
-		System.out.println("확인 출력용2");
-
 		if (selectMembers != null && searchMemberList != null) {
 
 			for (Iterator<MemberDTO> searchItem = searchMemberList.iterator(); searchItem.hasNext();) {
@@ -196,13 +272,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 		}
 		
-		System.out.println("확인 출력용3");
-
 		return searchMemberList;
 	}
 
 	@Override
-	public void registProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException {
+	public String insertProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException, ProjectMemberHistoryRegistException {
 
 		List<ProjectMembersDTO> projectAllMemberList = mapper.selectProjectMemberNonParticipationList(registMember.getCode());
 		
@@ -218,6 +292,8 @@ public class ProjectServiceImpl implements ProjectService {
 			
 		}
 		
+		registMember.setParticipationYn("Y");
+		
 		if(checkNonParticipationList) {
 			
 			int updateParticipationResult = mapper.updateMemberParticipation(registMember);
@@ -228,26 +304,44 @@ public class ProjectServiceImpl implements ProjectService {
 				
 				throw new ProjectRegistMemberException("프로젝트 구성원 추가 실패!");
 				
+			} else {
+				
+				int memberHistoryResult = mapper.insertMemberHistory(registMember);
+				
+				if(!(memberHistoryResult > 0)) {
+					
+					throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+				}
+				
 			}
 			
 		} else {
 			
-			int projectMembersRegistResult = mapper.registProjectMembers(registMember);
+			int projectMembersRegistResult = mapper.insertProjectMembers(registMember);
 			int projectRoleRegistResult = 0;
 			
 			if (projectMembersRegistResult > 0) {
-				projectRoleRegistResult = mapper.registProjectMemberRole(registMember);
+				projectRoleRegistResult = mapper.insertProjectMemberRole(registMember);
 			}
-			
+
 			if (!(projectMembersRegistResult > 0 && projectRoleRegistResult > 0)) {
 				
 				throw new ProjectRegistMemberException("프로젝트 구성원 추가 실패!");
 				
-			}			
+			} else {
+				
+				int memberHistoryResult = mapper.insertMemberHistory(registMember);
+				
+				if(!(memberHistoryResult > 0)) {
+					
+					throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+				}
+				
+			}
 			
 		}
 		
-		
+		return mapper.selectProjectDetail(registMember.getCode()).getTitle();
 
 	}
 
@@ -262,27 +356,41 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void removeProjectMembers(ProjectMembersDTO removeMember) throws ProjectMemberRemoveException {
+	public void deleteProjectMembers(ProjectMembersDTO removeMember) throws ProjectMemberRemoveException, ProjectMemberHistoryRegistException {
 		
-		int result = mapper.removeProjectMembers(removeMember);
+		int result = mapper.deleteProjectMembers(removeMember);
+
+		ProjectMembersDTO projectMemberDetail = new ProjectMembersDTO();
+		
+		projectMemberDetail = mapper.selectProjectMember(removeMember);
 		
 		if(!(result > 0)) {
 			
 			throw new ProjectMemberRemoveException("구성원 제외 실패!");
-		}
+		} /*
+			 * else {
+			 * 
+			 * int memberHistoryResult = mapper.insertMemberHistory(projectMemberDetail);
+			 * 
+			 * if(!(memberHistoryResult > 0)) {
+			 * 
+			 * throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!"); }
+			 * 
+			 * }
+			 */
 		
 	}
 
 	@Override
-	public void modifyProjectMemberRole(List<ProjectMembersDTO> members) throws ProjectMemberModifyRoleException, ProjectWriterChangeException {
+	public void updateProjectMemberRole(List<ProjectMembersDTO> members) throws ProjectMemberModifyRoleException, ProjectWriterChangeException {
 		
 		for(int i = 0; i < members.size(); i++) {
 			
-			int result = mapper.modifyProjectMemberRole(members.get(i));
+			int result = mapper.updateProjectMemberRole(members.get(i));
 			
 			if("PM".equals(members.get(i).getRoleName())) {
 				
-				int writerChangeResult = mapper.modifyProjectWriter(members.get(i));
+				int writerChangeResult = mapper.updateProjectWriter(members.get(i));
 				
 				if(!(writerChangeResult > 0)) {
 					
