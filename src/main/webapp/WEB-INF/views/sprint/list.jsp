@@ -624,7 +624,6 @@
 </style>
 </head>
 <body>
-	<input type="hidden" id="projectCode" value="${ requestScope.code }">
 	<div id="whiteBoard">
 		<div class="backlog-area">
 			<h2 class="backlog-head">BackLog</h2>
@@ -771,27 +770,25 @@
    
    		<div class="modal_content">
    			<form action="${ pageContext.servletContext.contextPath }/task/regist" method="post">
-			<div class="modal_head">
-				<h3>태스크 생성</h3>
-	    	</div>
-       		<div class="modal_content-box">
-       			<input type="text" class="title" name="title"  placeholder="Task Title">
+   				<input type="hidden" id="projectCode" name="projectCode" value="${ requestScope.code }">
+   				<input type="hidden" id="writer" name="memberNo" value="${ sessionScope.loginMember.no }">
+				<div class="modal_head">
+					<h3>태스크 생성</h3>
+	   	 		</div>
+       			<div class="modal_content-box">
+       				<input type="text" class="title" name="title"  placeholder="Task Title">
        			
-       			<select class="manager" id="taskManager" name="manager">
-
-					
-       			</select>
-				<h5>시작일</h5>
-				<h5>종료일</h5>
-       			<br clear="both">
-       			<input type='date' class="start-day" name='taskStartday'/>
-       			<input type='date' class="end-day" name='taskEndday'/>
-       			<textarea class="description" id="taskDescription" rows="13" cols="51" placeholder="Task Detail Description"></textarea>
-       		</div>
-       		<div class="modal_button">
-	        	<button type="submit" id="task-create">Ok</button>
-	        	<button type="button" id="task-close-btn1">Cancel</button>
-       		</div>
+					<h5>시작일</h5>
+					<h5>종료일</h5>
+       				<br clear="both">
+       				<input type='date' class="start-day" name='startDate'/>
+       				<input type='date' class="end-day" name='endDate'/>
+       				<textarea class="description" id="taskDescription" name="body" rows="13" cols="51" placeholder="Task Detail Description"></textarea>
+       			</div>
+       			<div class="modal_button">
+	        		<button type="submit" id="task-create">Ok</button>
+	        		<button type="button" id="task-close-btn1">Cancel</button>
+       			</div>
    			</form>
     	</div>
     	<div class="modal_layer"></div>
@@ -868,6 +865,7 @@
 					<h3 id="sprintTitle1"></h3>
 	    		</div>
        			<div class="modal_content-box" id="sprintUpdate">
+       				<input type="hidden" name="writer" value="${ sessionScope.loginMember.name }">
        				<input type="hidden" name="projectCode" value="${ requestScope.code }">
        				<input type="text" class="title" name="title" id="sprintTitle2" placeholder="Sprint Title">
        				<input type="text" class="sprint-code" name="code" id="sprintCode2" readonly="readonly">
@@ -1101,11 +1099,11 @@
 									}
 									
 									const $br = $("<br clear='both'>");
-									const $h5 = $("<h5>").html("기간:");
+									const $h5 = $("<h5 style='margin-bottom:5px;'>").html("기간:");
 									const $taskDateBox = $("<div class='task-date-box'>");
 									
-									const $taskStartDate = $("<div id='taskStartDate'>").text(data[i].startDate);
-									const $taskEndDate = $("<div id='taskEndDate'>").text("~" + data[i].endDate);
+									const $taskStartDate = $("<div id='taskStartDate' style='font-size:10px; width:70px;'>").text(data[i].startDate);
+									const $taskEndDate = $("<div id='taskEndDate' style='font-size:10px; width:70px;'>").text("~" + data[i].endDate);
 									
 									const $taskStatus = $("<select class='task-status' id='task-status' name='taskProgress' onchange='changeLangSelect()'>");
 									const $option1 = $("<option id='before' value='Before'>").text("진행전");
@@ -1144,31 +1142,6 @@
 	    }
     
     }
-    
-    const $taskManager = $("#taskManager");
-    
-    console.log($taskManager);
-    
-    $taskManger.onclick = function() {
-    	
-    	console.log("여기오나");
-    	
-    	const $projectCode = $("#projectCode").value;
-    	
-    	console.log($projectCode);
-    	
-    	$.ajax({
-			url: "/byat/task/manager",
-			type: "get",
-			data: { "projectCode": $projectCode },
-			success: function(data, status, xhr){
-				console.log(data);
-			},
-			error: function(xhr, status, error){
-				console.log(xhr);
-			}
-    }
-    
     
     /*태스크 상태 변경*/
     window.onload = function(){

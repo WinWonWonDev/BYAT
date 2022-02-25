@@ -20,7 +20,6 @@ public class TaskDTO {
 	
 	private int code;
 	private String title;
-	private String manager;
 	private java.sql.Date startDate;
 	private java.sql.Date endDate;
 	private String progress;

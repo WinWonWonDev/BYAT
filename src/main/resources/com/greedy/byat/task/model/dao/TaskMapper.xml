@@ -9,14 +9,13 @@
  		<result property="title" column="TASK_TITLE"/>
  		<result property="startDate" column="TASK_START_DATE"/>
  		<result property="endDate" column="TASK_END_DATE"/>
- 		<result property="manager" column="TASK_MANAGER"/>
  		<result property="progress" column="TASK_PROGRESS"/>
  		<result property="body" column="TASK_BODY"/>
  		<result property="version" column="TASK_VERSION"/>
  		<result property="deleteStatus" column="TASK_DELETE_STATUS"/>
- 		<result property="memberNo" column="MEMBER_NO"/>
  		<result property="backlogCode" column="BACKLOG_CODE"/>
  		<result property="sprintCode" column="SPRINT_CODE"/>
+ 		<result property="memberNo" column="MEMBER_NO"/>
  		<result property="projectCode" column="PROJECT_CODE"/>
  		
  		<collection property="membersRole" column="code" select="selectMembersRoleList"/>
@@ -27,6 +26,11 @@
  		<id property="taskCode" column="TASK_CODE"/>
  		<id property="memberNo" column="MEMBER_NO"/>
  		<result property="roleName" column="ROLE_NAME"/>
+ 	</resultMap>
+ 	
+ 	<resultMap type="MemberDTO" id="projectMembersResultMap">
+ 		<id property="id" column="MEMBER_ID"/>
+ 		<result property="name" column="MEMBER_NAME"/>
  	</resultMap>
  	
  	<select id="selectMembersRoleList" resultMap="taskMembersRoleResultMap">
@@ -49,7 +53,6 @@
  			 , A.TASK_TITLE
  			 , A.TASK_START_DATE
  			 , A.TASK_END_DATE
- 			 , A.TASK_MANAGER
  			 , A.TASK_PROGRESS
  			 , A.TASK_BODY
  			 , A.TASK_VERSION
@@ -62,6 +65,21 @@
  		 WHERE A.TASK_CODE = #{ code }
  	</select>
  
+ 	<select id="checkSprintProgress" parameterType="_int" resultType="_int">
+ 		SELECT
+ 			   COUNT(*)
+ 		  FROM TBL_SPRINT
+ 		 WHERE PROJECT_CODE = #{ projectCode }
+ 		   AND SPRINT_PROGRESS IN ('진행중', '진행전')
+ 	</select>
+ 	
+ 	<select id="selectSprintCode" resultType="_int">
+ 		SELECT
+ 			   A.SPRINT_CODE
+ 		  FROM TBL_SPRINT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 	</select>
+ 	
  	<insert id="insertTask" parameterType="TaskDTO">
  		INSERT
  		  INTO TBL_TASK A
@@ -70,13 +88,12 @@
  		, A.TASK_TITLE
  		, A.TASK_START_DATE
  		, A.TASK_END_DATE
- 		, A.TASK_MANAGER
  		, A.TASK_PROGRESS
  		, A.TASK_BODY
  		, A.TASK_VERSION
- 		, A.MEMBER_NO
  		, A.SPRINT_CODE
  		, A.PROJECT_CODE
+ 		, A.MEMBER_NO
  		)
  		VALUES
  		(
@@ -84,21 +101,29 @@
  		, #{ title }
  		, #{ startDate }
  		, #{ endDate }
- 		, #{ manager }
  		, '진행전'
  		, #{ body }
  		, 1
+ 		, #{ sprintCode }
+ 		, #{ projectCode }
  		, #{ memberNo }
- 		, (SELECT
-       			  B.SPRINT_CODE 
-  			 FROM TBL_SPRINT B
- 			WHERE B.SPRINT_PROGRESS IN ('진행전', '진행중')
-   			  AND B.PROJECT_CODE = #{ projectCode })
-   		, #{ projectCode }
- 		)
+ 		) 
  	</insert>
  	
+ 	<select id="selectSprintTitle" resultType="java.lang.String">
+		SELECT
+			   A.SPRINT_TITLE
+		  FROM TBL_SPRINT A
+		  JOIN TBL_TASK B ON (A.SPRINT_CODE = B.SPRINT_CODE)
+		 WHERE B.TASK_CODE = #{ code }
+ 	</select>
+ 	
  	<insert id="insertTaskVersionHistory">
+		<selectKey keyProperty="code" order="BEFORE" resultType="_int">
+		SELECT
+		 	   SEQ_TASK_CODE.currval
+		  FROM DUAL
+		</selectKey>
  		INSERT
  		  INTO TBL_TASK_VERSION_HISTORY A
  		(
@@ -112,25 +137,25 @@
  		)
  		VALUES
  		(
- 		  SEQ_TASK_VERSION_HISTORY_NO
- 		, CHR(39) || (SELECT
-						     B.TASK_TITLE
-				        FROM TBL_TASK B
-				       WHERE B.TASK_CODE = #{ code }
-				 	 ) || CHR(39) || ' 태스크 생성 ' || CHR(40) || (SELECT
-				   								    			  		C.PROJECT_TITLE 
-				   											 	   FROM TBL_PROJECT C 
-				   							   					  WHERE C.PROJECT_CODE = #{ projectCode }
-				   							 					) || CHR(41)
+ 		  SEQ_TASK_VERSION_HISTORY_NO.NEXTVAL
+ 		, #{ title }
 		, #{ body }
 		, 1
-		, #{ manager }
+		, (SELECT
+				  E.MEMBER_NAME
+			 FROM TBL_MEMBER E
+			WHERE E.MEMBER_NO = #{ memberNo })
 		, SYSDATE
-		, SEQ_TASK_CODE.CURRVAL
+		, #{ code }
  		)
  	</insert>
  	
  	<insert id="insertTaskProgressHistory">
+ 		<selectKey keyProperty="code" order="BEFORE" resultType="_int">
+ 			SELECT
+		 	   SEQ_TASK_CODE.currval
+		  FROM DUAL
+ 		</selectKey>
  		INSERT
  		  INTO TBL_TASK_PROGRESS_HISTORY A
  		(
@@ -143,30 +168,66 @@
  		)
  		VALUES
  		(
- 		  SEQ_TASK_PROGRESS_HISTORY_NO
+ 		  SEQ_TASK_PROGRESS_HISTORY_NO.NEXTVAL
  		, #{ startDate }
  		, #{ endDate }
  		, SYSDATE
- 		, #{ manager }
- 		, SEQ_TASK_CODE.CURRVAL
+ 		, (SELECT
+				  C.MEMBER_NAME
+			 FROM TBL_MEMBER C
+			WHERE C.MEMBER_NO = #{ memberNo })
+ 		, #{ code }
  		)
  	</insert>
  	
- 	<select id="checkSprintProgress" parameterType="_int">
- 		SELECT
- 			   COUNT(*)
- 		  FROM TBL_SPRINT
- 		 WHERE PROJECT_CODE = #{ projectCode }
- 		   AND SPRINT_PROGRESS IN ('진행중', '진행전')
- 	</select>
+ 	<insert id="insertTaskMembers" parameterType="TaskDTO">
+ 		INSERT
+ 		  INTO TBL_TASK_MEMBERS A
+ 		(
+ 		  A.TASK_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_CODE.CURRVAL
+ 		, (SELECT
+ 				  B.MEMBER_NO
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NAME = #{ manager })
+ 		, #{ sprintCode }
+ 		)
+ 	</insert>
  	
- 	<select id="selectProjectMembers">
- 		SELECT
- 			   A.MEMBER_ID
- 			   A.MEMBER_NAME
- 		  FROM TBL_MEMBER A
- 		  JOIN TBL_PROJECT_MEMBERS B ON (A.MEMBER_NO = B.MEMBER_NO)
- 		 WHERE B.PROJECT_CODE = #{ projectCode }
+ 	<insert id="insertSprintMembers" parameterType="TaskDTO">
+ 		INSERT
+ 		  INTO TBL_SPRINT_MEMBERS A
+ 		(
+ 		  A.MEMBER_NO
+ 		, A.PROJECT_CODE
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  (SELECT
+ 		  		  B.MEMBER_NO
+ 		  	 FROM TBL_MEMBER B
+ 		  	WHERE B.MEMBER_NAME = #{ manager })
+ 		, #{ projectCode }
+ 		, (SELECT
+ 		          C.SPRINT_CODE
+ 		     FROM TBL_TASK C
+ 		    WHERE C.TASK_TITLE = #{ title })
+ 		)
+ 	</insert>
  	
- 	</select>
+ 	<!-- <select id="selectProjectMembers" parameterType="_int" resultMap="projectMembersResultMap">
+ 		SELECT
+	   		   A.MEMBER_ID
+	 		 , A.MEMBER_NAME
+  		  FROM TBL_PROJECT_MEMBERS B
+  		  JOIN TBL_MEMBER A ON (A.MEMBER_NO = B.MEMBER_NO)
+		 WHERE B.PROJECT_CODE = #{ projectCode }
+		   AND B.PROJECT_PARTICIPATION_YN = 'Y'
+ 	</select> -->
  </mapper>

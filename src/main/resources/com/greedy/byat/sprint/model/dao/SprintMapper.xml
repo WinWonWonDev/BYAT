@@ -39,7 +39,6 @@
  		<result property="title" column="TASK_TITLE"/>
  		<result property="startDate" column="TASK_START_DATE"/>
  		<result property="endDate" column="TASK_END_DATE"/>
- 		<result property="manager" column="TASK_MANAGER"/>
  		<result property="progress" column="TASK_PROGRESS"/>
  		<result property="body" column="TASK_BODY"/>
  		<result property="version" column="TASK_VERSION"/>
@@ -57,7 +56,6 @@
  		SELECT
  			   A.TASK_CODE
  			 , A.TASK_TITLE
- 			 , A.TASK_MANAGER
  			 , A.TASK_START_DATE
  			 , A.TASK_END_DATE
  			 , A.TASK_PROGRESS
@@ -226,4 +224,39 @@
    		   AND SPRINT_PROGRESS IN ('진행전','진행중')
  	</select>
  	
+ 	<insert id="insertSprintVersionHistory2">
+ 		INSERT
+ 		  INTO TBL_SPRINT_VERSION_HISTORY A
+ 		(
+ 		  A.SPRINT_VERSION_HISTORY_NO
+ 		, A.SPRINT_VERSION_HISTORY_TITLE
+ 		, A.SPRINT_VERSION_HISTORY_BODY
+ 		, A.SPRINT_HISTORY_VERSION
+ 		, A.SPRINT_HISTORY_UPDATE_DATE
+ 		, A.SPRINT_HISTORY_UPDATE_MEMBER
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_VERSION_HISTORY_NO.NEXTVAL
+ 		, CHR(39) || (SELECT
+						     B.SPRINT_TITLE
+				        FROM TBL_SPRINT B
+				       WHERE B.SPRINT_CODE = #{ code }
+				 	 ) || CHR(39) || ' 스프린트 수정 ' || CHR(40) || (SELECT
+				   								    			  		C.PROJECT_TITLE 
+				   											 	   FROM TBL_PROJECT C 
+				   							   					  WHERE C.PROJECT_CODE = #{ projectCode }
+				   							 					) || CHR(41)
+		, #{ body }
+		, #{ version } + 1
+		, (SELECT
+				  D.SPRINT_VERSION
+			 FROM TBL_SPRINT D
+			WHERE D.SPRINT_CODE = #{ code }) + 1
+		, SYSDATE
+		, #{ writer }
+		, #{ code }
+ 		)
+ 	</insert>
  </mapper>
