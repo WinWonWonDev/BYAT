@@ -16,6 +16,5 @@ public class PermitDTO {
 	private int code;
 	private String name;
 	private String description;
-	private int memberNo;
 	
 }

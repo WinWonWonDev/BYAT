@@ -459,6 +459,9 @@
 	    }
 	}
 
+	//인증번호 한번 ok되면 여기에 1이 드가서 안되야 되는데 ㅋㅋㅋ 미치겟네..일ㄷ단...
+	 /* if($("#gotVerificate").val() != 1) {
+		 console.log("오냐? : " + $("#gotVerificate").val()); */
     $("#AuthenticationNumber").click(function () {
     	if($("#isDidDuplicate").val() == 2) { 
     		if($("#oneOrEmail").val() != 1) {
@@ -546,10 +549,8 @@
    			alert("중복체크 먼저 해주세요!");
    		}
     });
+/* 	 } */
 	    
-    
-
-	
 	
     $("#modalOkBtn2").click(function () {
     	$.ajax({
@@ -565,6 +566,7 @@
 					document.getElementById("initInfoSettingModal").style.display="block";
 					document.getElementById("inputEmailVeficationModal").style.display="none";
 					document.getElementById("gotVerificate").value = 1;
+					console.log("왜 안드갖? 1이 : " + $("#gotVerificate").val());
 				
     			} else {
     				alert("인증이 실패하였습니다! 다시 입력해주세요!");
