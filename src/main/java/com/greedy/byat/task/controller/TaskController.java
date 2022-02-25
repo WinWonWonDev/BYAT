@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.FieldNamingPolicy;
@@ -35,22 +37,13 @@ public class TaskController {
 	@PostMapping("/regist")
 	public String registTask(@ModelAttribute TaskDTO task, HttpServletRequest request, RedirectAttributes rttr) {
 		
-		MemberDTO writer = (MemberDTO) request.getSession().getAttribute("loginMember");
-		int projectCode = Integer.parseInt(request.getParameter("code"));
-		int writerMemberNo = writer.getNo();
-		String writerName = writer.getName();
-		
-		System.out.println("프로젝트 코드 : " + projectCode);
-		
-		task.setProjectCode(projectCode);
-		task.setMemberNo(writerMemberNo);
-		task.setManager(writerName);
+		System.out.println("프로젝트 코드 : " + task.getProjectCode());
 		
 		String message = taskService.registTask(task);
 		
 		rttr.addFlashAttribute("message", message);
 		
-		return "redirect:/sprint/list?=" + projectCode;
+		return "redirect:/sprint/list?code=" + task.getProjectCode();
 	}
 	
 	@GetMapping(value = "/detail", produces = "application/json; charset=UTF-8")
@@ -72,9 +65,14 @@ public class TaskController {
 	}
 	
 	@GetMapping(value = "/manager", produces = "application/json; charset=UTF-8")
+	@ResponseBody
 	public String selectProjectMembers(HttpServletRequest request) {
 		
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		
+		System.out.println("내가 바로 프로젝트 코드 " + projectCode);
+		
+		
 		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd")
@@ -84,7 +82,9 @@ public class TaskController {
 				.disableHtmlEscaping()
 				.create();
 		
-		List<String> projectMembers = taskService.selectProjectMembers(projectCode);
+		List<MemberDTO> projectMembers = taskService.selectProjectMembers(projectCode);
+		
+		System.out.println("프로젝트 구성원 : " + projectMembers);
 		
 		return gson.toJson(projectMembers);
 	}

@@ -63,7 +63,7 @@ public class SprintServiceImpl implements SprintService {
 		
 		int result1 = mapper.updateSprint(sprint);
 		
-		int result2 = mapper.insertSprintVersionHistory(sprint);
+		int result2 = mapper.insertSprintVersionHistory2(sprint);
 		
 		if(!(result1 > 0) && !(result2 > 0)) {
 			System.out.println("스프린트 수정 실패");
