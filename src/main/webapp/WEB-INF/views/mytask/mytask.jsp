@@ -29,59 +29,68 @@ p {
 	text-indent: 1ch;
 }
 
-.modal {
-
-	display: none; 
-    position: fixed; 
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-	width: 100%; 
-	height: 100%; 
-	overflow: auto; 
-	background-color: rgb(0,0,0);
-	background-color: rgba(0,0,0,0.4); 
-	overflow-y: hidden;
-	
+tr td {
+	text-align: center;
 }
+
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1; /* Sit on top */
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.4);
+	overflow-y: hidden;
+}
+
 .modal-content {
-	background-color:#3b60d0;
+	background-color: #3b60d0;
 	border-radius: 30px;
-	margin: 8% auto; 
+	margin: 8% auto;
 	padding: 10px;
 	border: 1px solid #888;
-    width: 40%;     
+	width: 40%;
 }
-.modal-content-white{
-	background-color:white;
+
+.modal-content-white {
+	background-color: white;
 	border-radius: 30px;
-	margin: 5% auto; 
+	margin: 5% auto;
 	padding: 20px;
 	border: 1px solid #888;
-    width: 80%; 
-    min-height: 200px;
+	width: 80%;
+	min-height: 200px;
 }
-.modal-content-gray{
-	background-color: rgb(242,242,242);
-	border-collapse: collapse;
+
+.modal-content-gray {
+	background-color: rgb(242, 242, 242);
 	border-radius: 30px;
-	padding: 10px;
+	padding: 15px;
 	border: 2px solid #000000;
-    width: 90%; 
-    min-height: 100px;
-    max-height:60%;
+	width: 90%;
+	min-height: 100px;
+	max-height: 60%;
+	overflow:scroll;
+	overflow-x: hidden;
+	text-align: center;
 }
-.ok-button{
-	width:30%;
-	cursor:pointer;
-	text-align:center;
-	color:white;
+
+.ok-button {
+	width: 30%;
+	cursor: pointer;
+	text-align: center;
+	color: white;
 	margin: 0 auto;
 	border-radius: 10px;
-	background-color:#172653;
+	background-color: #172653;
 	padding-bottom: 10px;
 	padding-top: 10px;
 }
+
 #myTaskWhiteBoard {
 	background: white;
 	position: absolute;
@@ -175,7 +184,7 @@ p {
 }
 
 #member1-circle {
- 	display: inline-block;
+	display: inline-block;
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
@@ -189,7 +198,7 @@ p {
 }
 
 #member2-circle {
- 	display: inline-block;
+	display: inline-block;
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
@@ -203,11 +212,11 @@ p {
 }
 
 #member3-circle {
- 	display: inline-block;
+	display: inline-block;
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
-	background-color:rgb(255,223,186);
+	background-color: rgb(255, 223, 186);
 	color: white;
 	font-size: 10px;
 	font-weight: bold;
@@ -217,10 +226,8 @@ p {
 }
 
 #myTaskProjectMemberBox {
-	width :100px;
+	width: 100px;
 }
-
-
 
 .myTaskDoToListInnerBox {
 	position: absolute;
@@ -276,14 +283,15 @@ p {
 	text-align: center;
 }
 
-#ToDoListCheckBox{
-	margin-right:10px;
+#ToDoListCheckBox {
+	margin-right: 10px;
 }
 
 #ToDoListText {
 	width: 80%;
 }
-.todolist{
+
+.todolist {
 	border: 1px solid black;
 	border-radius: 10%;
 }
@@ -292,7 +300,7 @@ p {
 	width: 60px;
 	height: 40px;
 	border-radius: 10%;
-	background-color:rgb(196, 196, 196);
+	background-color: rgb(196, 196, 196);
 	color: white;
 	font-size: 15px;
 	font-weight: bold;
@@ -300,11 +308,12 @@ p {
 	line-height: 40px;
 	text-align: center;
 }
+
 .projectstate2 {
 	width: 60px;
 	height: 40px;
 	border-radius: 10%;
-	background:rgb(78,115,223);
+	background: rgb(78, 115, 223);
 	color: white;
 	font-size: 15px;
 	font-weight: bold;
@@ -312,11 +321,12 @@ p {
 	line-height: 40px;
 	text-align: center;
 }
+
 .projectstate3 {
 	width: 60px;
 	height: 40px;
 	border-radius: 10%;
-	background-color:rgb(41, 60, 117);
+	background-color: rgb(41, 60, 117);
 	color: white;
 	font-size: 15px;
 	font-weight: bold;
@@ -352,12 +362,16 @@ p {
 	text-decoration: line-through;
 }
 
-.border{
-  	border: 1px solid black;
-  	height: 90px;
-  	
+.border {
+	border: 1px solid black;
+	height: 90px;
 }
-tbody:hover {background-color: skyblue;}
+
+tbody:hover {
+	background-color: skyblue;
+}
+/* 스클롤*/
+
 
 </style>
 <title>Insert title here</title>
@@ -399,7 +413,7 @@ tbody:hover {background-color: skyblue;}
                        			</td>
                         		<td>
                         			<input type="hidden" id=projectNum value="${project.code}"/>
-                        			<input id="membersModal" type="button" value="..."/>
+                        			<input id="membersModalButton" type="button" value="..."/>
                        			 </td>
                       			 <td id="myTaskPrjectDeadline">
                           			 <c:out value="${ project.startDate }"/> <br> ~ <c:out value="${ project.endDate }"/>
@@ -439,7 +453,7 @@ tbody:hover {background-color: skyblue;}
 			<p>나의 테스크</p>
 			<div id="myTaskListInnerBox">
 				<table class="myTaskList">
-					<%-- <c:forEach items="${ taskList }" var="member" varStatus="status">
+					<c:forEach items="${ taskList }" var="todolist" varStatus="status">
 						<tbody id="border">
 							<tr>
 								<td id="myTaskListProjectNmae"><c:out value="${ taskList.title }"/></td>
@@ -447,7 +461,7 @@ tbody:hover {background-color: skyblue;}
 								<td class="myTaskListProjectStateBox"><c:out value="${ taskList.progress }"/></td>
 							</tr>
 						</tbody>
-					</c:forEach> --%>
+						</c:forEach>
 				</table>
 			</div>
 		</div>
@@ -467,7 +481,7 @@ tbody:hover {background-color: skyblue;}
 									<tr id="todolist" class="todolist">
 										<td>
 											<input type ="hidden" id="toDoListNo" value="${todolist.no}"/>
-											<input type="checkbox" id="ToDoListCheckBox" name ="ToDoListText" ${todolist.checkStatus  eq "Y" ? "checked" : ""}/>
+											<input type="checkbox" id="ToDoListCheckBox" name ="ToDoListCheckBox" ${todolist.checkStatus  eq "Y" ? "checked" : ""}/>
 											<input type="text" id="ToDoListText" name="ToDoListText" value="${todolist.title}" ${todolist.checkStatus  eq "Y" ? "style=text-decoration:line-through;" : ""} />
 											</td>
 										</tr>
@@ -482,7 +496,7 @@ tbody:hover {background-color: skyblue;}
 								<tr id="todolist" class="todolist">
 									<td>
 										<input type ="hidden" id="toDoListNo" value="${todolist.no}"/>
-										<input type="checkbox" id="ToDoListCheckBox" name ="ToDoListText" ${todolist.checkStatus  eq "Y" ? "checked" : ""}/>
+										<input type="checkbox" id="ToDoListCheckBox" name ="ToDoListCheckBox" ${todolist.checkStatus  eq "Y" ? "checked" : ""}/>
 										<input type="text" id="ToDoListText" name="ToDoListText" value="${todolist.title}" ${todolist.checkStatus  eq "Y" ? "style=text-decoration:line-through;" : ""} />	
 									</td>
 								</tr>
@@ -499,13 +513,15 @@ tbody:hover {background-color: skyblue;}
       		<h2 style="color:white; text-align: center; margin-top:10px;"> 프로젝트 구성원</h2>
       		<div class="modal-content-white">
                 <h2 style="color:gray; margin-bottom:10px">팀원 목록</h2>
-                	<table class="modal-content-gray">
-                		<tr>
-                			<th>사번</th>
-                			<th>구성원 이름</th>
-                			<th>역할</th>
-                		</tr>
-
+                	<table id="modalTable" class="modal-content-gray">
+                		<thead>
+                			<tr>
+  	  							<th>사번</th>
+  	  							<th>구성원 이름</th>
+  	  							<th>역할</th>
+  	  						</tr>
+  	  					</thead>
+  	  					<tbody></tbody>
                 	</table>
            	</div>
             <div class="ok-button" onClick="close_pop();">
@@ -532,12 +548,14 @@ tbody:hover {background-color: skyblue;}
 	
 	<script>
 		let count = 0;
-		const $membersModal = document.querySelectorAll("#membersModal");
 		const $ToDoListCheckBox = document.querySelectorAll("#ToDoListCheckBox");
-		const $ToDoListText = document.querySelectorAll("#ToDoListText");
+		const ToDoListText = document.querySelectorAll("#ToDoListText");
 		const $todolist = document.querySelectorAll("#todolist");
 		const $toDoListNo = document.querySelectorAll("#toDoListNo");
-		const #projectNum = document.qerySelecttorAll("projectNum");
+		
+    	const $modalTable = document.querySelectorAll("#modalTable");
+		const $membersModalButton = document.querySelectorAll("#membersModalButton");
+		const $projectNum = document.querySelectorAll("#projectNum");
 		
 		google.charts.load('current', {'packages':['corechart']});
     	google.charts.setOnLoadCallback(drawChart);
@@ -562,19 +580,7 @@ tbody:hover {background-color: skyblue;}
         }
             
     	
-    	/* var timerID;
-    	$(document).ready(function () {
-    	    $('#execute').on('click',function(e){
-    	        e.preventDefault();
-    	        updateData();
-    	    });
-    	    $('#stop').on('click',function(e){
-    	        e.preventDefault();
-    	        clearTimeout(timerID); // 타이머 중지
-    	        $('#showtime').html('');S
-    	    });   
-    	}); */
-
+    	
 		
 		$('.img-button-minus').on("click", function () {
         	for(let i = 0; i < $ToDoListCheckBox.length; i++){
@@ -596,24 +602,45 @@ tbody:hover {background-color: skyblue;}
       	  		}
         	}
         });
-        
     	//모달 버튼
-        for(let i = 0; i < $membersModal.length; i++){
-        	membersModal[i].onclick = function() {
-        		$.ajax({
-  	  				url: "/byat/mytask/remove",
-  	  				type: "get",
+         for(let i = 0; i < $membersModalButton.length; i++){
+        	
+        	 $membersModalButton[i].onclick = function() {
+        		
+        		 $.ajax({
+  	  				url: "/byat/mytask/selectmembermodal",
+  	  				type: "post",
   	  				data: { "projectNum" : $projectNum[i].value},
   	  				success:function(data, status, xhr){
-  	  						$('#myModal').show();
+  	  					console.table(data);
+					
+						const $table = $("#modalTable tbody");
+						$table.html("");
+					
+						for(let index in data) {
+							const $tr = $("<tr>");
+							const $noTd = $("<td>").text(data[index].id);
+							const $nameTd = $("<td>").text(data[index].name);
+							const $roleNameTd = $("<td>").text(data[index].roleName);
+							
+						
+							$tr.append($noTd);
+							$tr.append($nameTd);
+							$tr.append($roleNameTd);
+						
+							$table.append($tr);
+  	  					}
+  	  					
+  	  					
+  	  					$('#myModal').show(); 
   	  				},
 					error: function(xhr, status, error) {
 					   console.log(xhr);
 					}
   	  			}); 
         		
-        	}
-        }
+         	}
+        } 
         
         let style ="";
         let checked="";
@@ -629,12 +656,12 @@ tbody:hover {background-color: skyblue;}
                 }
             	
             	 $.ajax({
-                     url : "/byat/mytask/modifytodoListstatus",      
+                     url : "/byat/mytask/modifytodoliststatus",      
                      type : "get",            
                      data : {"no"  : $toDoListNo[i].value
                     	 	,"checkStatus" : checked},           
                      success: function(data, status, xhr) {
-                    	 $ToDoListText[i].style=style;
+                    	 ToDoListText[i].style=style;
                      },
                      error: function(xhr, status, error) {
 						   console.log(xhr);
@@ -642,8 +669,64 @@ tbody:hover {background-color: skyblue;}
                   });
       		 }
         }
-       
-        
+     
+        //ToDoList 내용 수정 
+    	//check 상태도 여기에 포함시기자
+        	for(let i = 0; i < ToDoListText.length; i++){
+        		$(ToDoListText[i]).on("propertychange change keyup paste input", function() {
+        		 	$.ajax({
+                     	url : "/byat/mytask/modify",      
+                     	type : "post",            
+                    	 data : {"title"  : ToDoListText[i].value
+                    	 		, "no" : $toDoListNo[i].value },           
+                     	success: function(data, status, xhr) {
+                    	 	//ToDoListText[i].value = currentVal;
+                     	},
+                     	error: function(xhr, status, error) {
+						   	console.log(xhr);
+						 }
+                  	});
+        		});
+        	}
+    	
+        for(let i = 0; i < $membersModalButton.length; i++){
+       	
+       	/*  $membersModalButton[i].onclick = function() {
+       		
+       		 $.ajax({
+ 	  				url: "/byat/mytask/selectmembermodal",
+ 	  				type: "post",
+ 	  				data: { "projectNum" : $projectNum[i].value},
+ 	  				success:function(data, status, xhr){
+ 	  					console.table(data);
+					
+						const $table = $("#modalTable tbody");
+						$table.html("");
+					
+						for(let index in data) {
+							const $tr = $("<tr>");
+							const $noTd = $("<td id=myTaskListProjectNmae>").text(data[index].id);
+							const $nameTd = $("<td id=myTaskListProjectDeadLine>").text(data[index].name);
+							const $roleNameTd = $("<td class=myTaskListProjectStateBox>").text(data[index].roleName);
+							
+						
+							$tr.append($noTd);
+							$tr.append($nameTd);
+							$tr.append($roleNameTd);
+						
+							$table.append($tr);
+ 	  					}
+ 	  					
+ 	  					
+ 	  					$('#myModal').show(); 
+ 	  				},
+					error: function(xhr, status, error) {
+					   console.log(xhr);
+					}
+ 	  			}); 
+       		
+        	}
+       }  */
 	</script>
 </body>
 </html>

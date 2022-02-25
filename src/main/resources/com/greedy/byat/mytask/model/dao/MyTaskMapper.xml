@@ -31,6 +31,7 @@
 	<resultMap id ="projectMembersResultMap" type="ProjectMembersDTO">
  		<id property="code" column="PROJECT_CODE"/>
  		<id property="no" column="MEMBER_NO"/>
+ 		<result property="id" column="MEMBER_ID"/>
  		<result property="participationYn" column="PROJECT_PARTICIPATION_YN"/>
  		<result property="name" column="MEMBER_NAME"/>
  		<result property="roleName" column="ROLE_NAME"/>
@@ -44,27 +45,23 @@
        <result property="deleteStatus" column="TODOLIST_DELETESTATUS"/>
     </resultMap>
     
-    
- 	
- 	
- 	<!-- <resultMap id ="taskResultMap" type="TaskDTO">
- 		<id property="code" column="SPRINT_CODE"/>
- 		<id property="no" column="MEMBER_NO"/>
- 		<id property="code" column="PROJECT_CODE"/>
+    <resultMap id ="taskResultMap" type="TaskDTO">
  		<id property="code" column="TASK_CODE"/>
- 		<result property="version" column="TASK_VERSION"/>
  		<result property="title" column="TASK_TITLE"/>
  		<result property="startDate" column="TASK_START_DATE"/>
  		<result property="progress" column="TASK_PROGRESS"/>
- 		<result property="manager" column="TASK_MANAGER"/>
  		<result property="endDate" column="TASK_END_DATE"/>
  		<result property="deleteStatus" column="TASK_DELETE_STATUS"/>
- 		<result property="sprintCode" column="TASK_CODE"/>
  		<result property="projectCode" column="PROJECT_CODE"/>
- 		<result property="backLogCode" column="BACKLOG_CODE"/>
+ 		 		
+ 		<association property="taskMemberList" resultMap="memberResultMap"/>
+ 	</resultMap>
+ 	
+ 	<!-- <resultMap id ="taskMembersResultMap" type="TaskMembersDTO">
+ 		<result property="memberNo" column="MEMBER_NO"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
  		
  	</resultMap> -->
- 	
  	
   	<select id="selectMyTaskProjectList" resultMap="projectResultMap">
  		SELECT
@@ -113,23 +110,23 @@
          ORDER BY A.TODOLIST_NO DESC
     </select>
  	
- 	<!-- <select id="selectTaskList" resultMap="taskListResultMap">
+
+ 	<select id="selectTaskList" resultMap="taskResultMap">
         SELECT
              , A.TASK_CODE
              , A.TASK_TITLE
              , A.TASK_PROGRESS
-             , A.PROJECT_CODE
+             , B.PROJECT_CODE
              , A.TASK_DELETE_STATUS
-             , A.MEMBER_NO
-             , A.SPRING_CODE
              , A.TASK_STATRT_DATE
              , A.TASK_END_DATE
-          FROM TBL_TASK
-          JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
-          JOIN TBL_
+          FROM TBL_TASK A
+          JOIN TBL_TASK_MEMBERS ON(A.TASK_CODE= B.TASK_CODE )
          WHERE A.PROJECT_CODE = #{ projectCode }
-           AND A.MEMBER_NO = #{ memberNo }
-     </select> -->
+           AND B.MEMBER_NO = #{ memberNo }
+           AND TASK_DELETE_STATUS = 'N'
+         ORDER BY A.TASK_STATRT_DATE DESC
+     </select>
  	
  	<insert id = "reqistToDoList" parameterType="_int" >
         INSERT
@@ -168,4 +165,29 @@
  		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
  		 WHERE A.TODOLIST_NO = #{ no }
  	</update>
+ 	
+ 	<select id="selectMemberModal" resultMap="projectMembersResultMap">
+		SELECT
+		       A.PROJECT_CODE 
+		     , A.MEMBER_NO
+		     , A.PROJECT_PARTICIPATION_YN
+		     , B.MEMBER_NAME
+		     , B.MEMBER_ID
+		     , C.ROLE_NAME
+		  FROM TBL_PROJECT_MEMBERS A
+		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
+		  JOIN TBL_ROLE C ON(A.PROJECT_CODE = C.PROJECT_CODE)
+		 WHERE A.PROJECT_CODE = #{ code }
+		   AND B.MEMBER_NO = C.MEMBER_NO
+ 	</select>
+ 
+ 	
+ 	<update id = "modifyToDoList" >
+       UPDATE 
+ 		       TBL_TODOLIST A
+ 		   SET A.TODOLIST_TITLE = #{ title }
+ 		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
+ 		 WHERE A.TODOLIST_NO = #{ no }
+ 	</update>
+ 	
  </mapper>

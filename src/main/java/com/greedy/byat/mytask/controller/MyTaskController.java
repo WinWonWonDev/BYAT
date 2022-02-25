@@ -5,7 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,8 +75,7 @@ public class MyTaskController {
 			projectList.get(i).setProjectMembers(projectMembers);
 			System.out.println(projectMembers);
 
-			// taskList = mytaskService.selectTaskList(projectList.get(i).getCode(),
-			// member.getNo());
+			taskList = mytaskService.selectTaskList(projectList.get(i).getCode(),member.getNo());
 
 			if (projectList.get(i).getProgress().equals("진행중")) {
 				progressIng++;
@@ -109,13 +111,6 @@ public class MyTaskController {
 	}
 
 	
-	@PostMapping
-	("/modify") public String modifyToDoList(HttpServletRequest request, Model model) {
-	  
-		List<ToDoListDTO> toDoList = new ArrayList<>(); 
-	
-		return "/mytask/mytask"; 
-	}
 	 
 
 	@GetMapping("/remove")
@@ -128,7 +123,17 @@ public class MyTaskController {
 		return result;
 	}
 	
-	@GetMapping("/modifytodoListstatus")
+	@PostMapping("/modify")
+	public int modifyToDoList(@ModelAttribute ToDoListDTO todolist, HttpServletResponse response) {
+
+		response.setContentType("application/json; charset=UTF-8");
+
+		int result= mytaskService.modifyToDoList(todolist);
+
+		return result;
+	}
+	
+	@GetMapping("/modifytodoliststatus")
 	public int modifyToDoListStatus(@ModelAttribute ToDoListDTO todolist, HttpServletResponse response) {
 		
 		response.setContentType("application/json; charset=UTF-8");
@@ -140,6 +145,23 @@ public class MyTaskController {
 		System.out.println("@@@@@@@@@" + result);
 		
 		return result;
+		
+	}
+	
+
+	@PostMapping("/selectmembermodal")
+	@ResponseBody
+	public List<ProjectMembersDTO> selectMembersModal(int projectNum, HttpServletResponse response) {
+		
+		response.setContentType("application/json; charset=UTF-8");
+
+		System.out.println("@@@@@@@@@" +projectNum);
+
+		List<ProjectMembersDTO> projectMembers = mytaskService.selectMemberModal(projectNum);
+		
+		System.out.println("@@@@@@@@@" +projectMembers);
+		
+		return projectMembers;
 		
 	}
 }

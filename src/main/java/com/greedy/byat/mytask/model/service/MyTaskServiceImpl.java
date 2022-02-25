@@ -111,6 +111,21 @@ public class MyTaskServiceImpl implements MyTaskService {
 		return result;
 	}
 
+	@Override
+	public List<ProjectMembersDTO> selectMemberModal(int projectNum) {
+
+		List<ProjectMembersDTO> projectMembers= mapper.selectMemberModal(projectNum);
+		
+		return projectMembers;
+	}
+
+	@Override
+	public int modifyToDoList(ToDoListDTO todolist) {
+
+		int result =mapper.modifyToDoList(todolist);
+		return result;
+	}
+
 }
 
 

@@ -23,4 +23,8 @@ public interface MyTaskMapper {
 	int removeToDoList(int todolistNo);
 	
 	int modifyToDoListStatus(ToDoListDTO todolist);
+
+	List<ProjectMembersDTO> selectMemberModal(int projectNum);
+
+	int modifyToDoList(ToDoListDTO todolist);
 }
