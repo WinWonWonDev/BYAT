@@ -14,4 +14,9 @@ public interface ManagementMapper {
 
 	int insertManagement(Map<String, Object> map);
 
+	int updateManagement(ManagementDTO management);
+
+	int deleteManagement(int memberNo);
+
+
 }

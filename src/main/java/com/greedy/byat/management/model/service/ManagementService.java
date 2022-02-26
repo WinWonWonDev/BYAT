@@ -15,4 +15,10 @@ public interface ManagementService {
 
 	int registManagement(MemberDTO member, String managementRoleforCreate);
 
+	int modifyManagement(ManagementDTO management);
+
+	int removeManagement(int memberNo);
+
+
+
 }

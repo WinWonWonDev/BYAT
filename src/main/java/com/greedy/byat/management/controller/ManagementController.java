@@ -10,9 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.greedy.byat.management.model.dto.ManagementDTO;
 import com.greedy.byat.management.model.service.ManagementService;
 import com.greedy.byat.member.model.dto.MemberDTO;
@@ -58,4 +62,36 @@ public class ManagementController {
 		return "redirect:/management/list";
 		
 	}
+	
+	@PostMapping("modify")
+	public String modifyManagement(RedirectAttributes rttr, ManagementDTO management) {
+
+		int result = managementService.modifyManagement(management);
+		
+		if(result > 0) {
+			rttr.addFlashAttribute("message", "회원 계정 수정 성공!");
+		} else {
+			rttr.addFlashAttribute("message", "회원 계정 수정 실패! 다시 시도해주세요!");
+		}
+		
+		return "redirect:/management/list";
+	}
+
+	@GetMapping("remove") 
+	public String removeManagement(RedirectAttributes rttr, HttpServletRequest request) {
+		
+		int no = Integer.parseInt(request.getParameter("no"));
+		
+		int result = managementService.removeManagement(no);
+		
+		if(result > 0) {
+			rttr.addFlashAttribute("message", "회원 계정 삭제 성공!");
+		} else {
+			rttr.addFlashAttribute("message", "회원 계정 삭제 실패! 다시 시도해주세요!");
+		}
+		
+		return "redirect:/management/list";
+		
+	}
+	
 }

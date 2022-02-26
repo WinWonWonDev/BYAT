@@ -11,6 +11,8 @@
 	<result property="permitName" column="PERMIT_NAME"/>
 	<result property="permitCode" column="PERMIT_CODE"/>
 	<result property="absenceYN" column="ABSENCE_YN"/>
+	<result property="initPwdYN" column="INIT_PWD_YN"/>
+	
 </resultMap> 
 
 <resultMap type="PermitDTO" id="permitResultMap">
@@ -37,6 +39,7 @@
  		     , A.PERMIT_CODE
  		     , A.MEMBER_ID
  		     , A.ABSENCE_YN
+ 		     , A.INIT_PWD_YN
  		  FROM TBL_MEMBER A 
  		  JOIN TBL_PERMIT B ON (A.PERMIT_CODE = B.PERMIT_CODE)
  		 WHERE A.ABSENCE_YN = 'N'
@@ -66,5 +69,21 @@
  		, 'Y'
  		)
  	</insert>
+ 	
+ 	<update id="updateManagement">
+ 		UPDATE TBL_MEMBER A
+ 		   SET A.MEMBER_NAME = #{ memberName }
+ 		     , A.PERMIT_CODE = #{ permitCode }
+ 		     , A.MEMBER_ID = #{ memberId }
+ 		 WHERE A.MEMBER_NO = #{ memberNo }
+ 		   AND A.ABSENCE_YN = 'N'
+ 	</update>
+ 	
+ 	<update id="deleteManagement">
+ 		UPDATE TBL_MEMBER A
+ 		   SET A.ABSENCE_YN = 'Y'
+ 		 WHERE A.MEMBER_NO = #{ memberNo }
+ 	</update>
+ 	
  	
  </mapper>

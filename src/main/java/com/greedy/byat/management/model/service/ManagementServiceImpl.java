@@ -63,8 +63,29 @@ public class ManagementServiceImpl implements ManagementService {
 		return result;
 	}
 
-	
+	@Override
+	public int modifyManagement(ManagementDTO management) {
 
+		int permitCode = 0;
+		
+		if("PM".equals(management.getPermitName())) {
+			management.setPermitCode(2) ;
+		} else if("일반 멤버".equals(management.getPermitName())) {
+			management.setPermitCode(3);
+		}
+		
+		int result = mapper.updateManagement(management);
+		
+		return result;
+	}
+
+	@Override
+	public int removeManagement(int memberNo) {
+		
+		int result = mapper.deleteManagement(memberNo);
+		
+		return result;
+	}
 
 
 
