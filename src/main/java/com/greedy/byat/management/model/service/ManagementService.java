@@ -9,8 +9,6 @@ import com.greedy.byat.member.model.dto.MemberDTO;
 
 public interface ManagementService {
 
-	int selectTotalCount();
-
 	List<ManagementDTO> selectManagementList();
 
 	int registManagement(MemberDTO member, String managementRoleforCreate);
@@ -18,6 +16,9 @@ public interface ManagementService {
 	int modifyManagement(ManagementDTO management);
 
 	int removeManagement(int memberNo);
+
+	List<ManagementDTO> selectManagementRemovedList();
+
 
 
 

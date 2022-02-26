@@ -209,12 +209,12 @@
 	}
 	
 	.moveDeletedManagementButton {
-		background: url("/byat/resources/images/plusButton.png") no-repeat;
+		background: url("/byat/resources/images/recycleBin.png") no-repeat;
 		position: absolute;
 		width:40px;
 		height:40px;
-		top: 90%;
-		left: 96.5%;
+		top: 91.5%;
+		left: 97.5%;
 		border:none;
 	}
 	
@@ -288,7 +288,7 @@
 	}
 	
 	#management-update-close-btn {
-		right: 42%;
+		right: 17%;
 		top: 10%;
 	}
 	
@@ -303,7 +303,7 @@
 	}
 	
 	#management-delete {
-		right: 17%;
+		right: 42%;
 		top: 10%;
 	}
 	
@@ -518,7 +518,7 @@ $(document).ready(function() {
 				   </c:forEach>
 			   </tbody>
 			</table>
-			<input type="button" id="moveDeletedManagementList" class="moveDeletedManagementButton"/>
+			<input type="button" id="moveDeletedManagementList" class="moveDeletedManagementButton" onclick="location.href='${ pageContext.servletContext.contextPath }/management/removedList'"/>
 		</div>
 	</div>
 	
@@ -567,7 +567,7 @@ $(document).ready(function() {
 				<div class="modal_button">
 					<button type="submit" id="management-update">Ok</button>
 					<button type="button" id="management-update-close-btn">Cancel</button>
-					<button type="button" id="management-delete">계정 삭제</button>
+					<button type="button" id="management-delete">delete</button>
 				</div>
 			</form>
 		</div> 

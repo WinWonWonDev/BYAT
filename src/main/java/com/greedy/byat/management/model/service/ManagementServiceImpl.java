@@ -25,14 +25,6 @@ public class ManagementServiceImpl implements ManagementService {
 	}
 
 	@Override
-	public int selectTotalCount() {
-		
-		int result = mapper.selectTotalCount();
-		
-		return result;
-	}
-
-	@Override
 	public List<ManagementDTO> selectManagementList() {
 		
 		List<ManagementDTO> managementList = mapper.selectManagementList();
@@ -86,6 +78,15 @@ public class ManagementServiceImpl implements ManagementService {
 		
 		return result;
 	}
+
+	@Override
+	public List<ManagementDTO> selectManagementRemovedList() {
+
+		List<ManagementDTO> managementDeletedList = mapper.selectManagementDeletedList();
+		
+		return managementDeletedList;
+	}
+
 
 
 

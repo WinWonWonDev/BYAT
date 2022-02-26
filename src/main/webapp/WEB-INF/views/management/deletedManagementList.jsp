@@ -243,17 +243,7 @@
 		border-radius: 25px;
 	}
 	
-	#management-create-modal .modal_layer {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0, 0, 0, 0.5);
-		z-index: -1;
-	}
-	
-	#management-update-modal .modal_layer {
+	#restoreInfoModal .modal_layer {
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -365,24 +355,24 @@
 		left: 14.5%;
 	}
 	
-	#deleteInfoModal {
+	#restoreInfoModal {
 		position: relative;
 		width: 100%;
 		height: 100%;
 		z-index: 1050;
 	}
 	
-	#deleteInfoModal h2 {
+	#restoreInfoModal h2 {
 		margin: 0;
 	}
 	
-	#deleteInfoModal button {
+	#restoreInfoModal button {
 		display: inline-block;
 		width: 100px;
 		margin-left: calc(100% - 100px - 10px);
 	}
 	
-	#deleteInfoModal .modal_content2 {
+	#restoreInfoModal .modal_content2 {
 		position: absolute;
 		top: 5%;
 		left: 25%;
@@ -475,11 +465,8 @@ $(document).ready(function() {
 <body>
 	<div id="whiteBoard">
 		<div class="historyListHead">
-			<div id="managementTitle">멤버 목록</div>
+			<div id="managementTitle">삭제된 멤버 목록</div>
 			<div class="searchMember">
-				<div id="managementButtons">
-					<input type="button" id="plusButton" class="img-button plusButton">
-				</div>
 			</div>
 		</div>
 		<div class="managementListBox">
@@ -493,7 +480,7 @@ $(document).ready(function() {
 					</tr>	
 				</thead>
 				<tbody>
-					<c:forEach var="management" items="${ requestScope.managementList }">
+					<c:forEach var="management" items="${ requestScope.deletedManagementList }">
 						<tr>  
 							<td><div id="memberNo">${ management.memberNo }</div></td>
 							<c:if test="${ management.initPwdYN == 'Y' }">
@@ -512,7 +499,7 @@ $(document).ready(function() {
 	</div>
 	
 
-	<!-- 멤버 추가(+) 모달창 -->
+<%-- 	<!-- 멤버 추가(+) 모달창 -->
 	<div id="management-create-modal">
 		<div class="modal_content">
 			<form action="${ pageContext.servletContext.contextPath }/management/regist" method="post" name="createMember">
@@ -538,8 +525,8 @@ $(document).ready(function() {
 		</div>
 		<div class="modal_layer"></div>
 	</div>
-
-	<div id="management-update-modal" style="display:none;">
+ --%>
+	<%-- <div id="management-update-modal" style="display:none;">
 		<div class="modal_content">
 			<form action="${ pageContext.servletContext.contextPath }/management/modify" method="post">
 				<div class="modal_head">
@@ -559,9 +546,9 @@ $(document).ready(function() {
 					<button type="button" id="management-delete">계정 삭제</button>
 				</div>
 			</form>
-		</div> 
-		<div class="modal_layer"></div>
-		<div id="deleteInfoModal" style="display:none;">
+		</div> --%>
+
+		<div id="restoreInfoModal" style="display:none;">
 			<div class="modal_content2">
 				<div class="modal_head2">System Message</div>
 				<div class="modal_content_message">
@@ -572,8 +559,8 @@ $(document).ready(function() {
 					<button type="button" id="modal_close_btn">Cancel</button>
 				</div>
 			</div>
+		<div class="modal_layer"></div>
 		</div>
-	</div>
 
 
 	<script>
@@ -586,30 +573,19 @@ $(document).ready(function() {
 		arrayList.push("${ management.permitName }");
 	</c:forEach>
 	
-	
-		document.getElementById("plusButton").onclick = function() {
-			document.getElementById("management-create-modal").style.display = "block";
-		}
 
-		document.getElementById("management-close-btn").onclick = function() {
-			document.getElementById("management-create-modal").style.display = "none";
-		}
-
-		document.getElementById("management-update-close-btn").onclick = function() {
+/* 		document.getElementById("management-update-close-btn").onclick = function() {
 			document.getElementById("management-update-modal").style.display = "none";
 		}
 		
 		document.getElementById("modal_close_btn").onclick = function() {
-			document.getElementById("deleteInfoModal").style.display = "none";
+			document.getElementById("restoreInfoModal").style.display = "none";
 		}
-		
-		document.getElementById("management-delete").onclick = function() {
-			document.getElementById("deleteInfoModal").style.display = "block";
-		}
+ */		
 		
 	 	document.getElementById("modal_ok_btn").onclick = function() {
-	 		console.log(document.getElementById("memberNoforUpdate").value);
-			location.href="${ pageContext.servletContext.contextPath }/management/remove?no=" + document.getElementById("memberNoforUpdate").value;	
+
+	 		location.href="${ pageContext.servletContext.contextPath }/management/restore?no=" + document.getElementById("memberNoforUpdate").value;	
 		} 
 		
 			let $memberNo = document.querySelectorAll("#memberNo");
@@ -638,7 +614,7 @@ $(document).ready(function() {
 				
 					
 				$tr[i].onclick = function() {
-					document.getElementById("management-update-modal").style.display = "block";
+					document.getElementById("restoreInfoModal").style.display = "block";
 				
 					memberNameInput.value = $memberName[i].innerText;
 					memberNoInput.value = $memberNo[i].innerText;

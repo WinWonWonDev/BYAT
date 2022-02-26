@@ -8,8 +8,6 @@ import com.greedy.byat.member.model.dto.MemberDTO;
 
 public interface ManagementMapper {
 
-	int selectTotalCount();
-
 	List<ManagementDTO> selectManagementList();
 
 	int insertManagement(Map<String, Object> map);
@@ -17,6 +15,8 @@ public interface ManagementMapper {
 	int updateManagement(ManagementDTO management);
 
 	int deleteManagement(int memberNo);
+
+	List<ManagementDTO> selectManagementDeletedList();
 
 
 }

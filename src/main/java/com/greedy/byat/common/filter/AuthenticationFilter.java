@@ -91,6 +91,8 @@ public class AuthenticationFilter implements Filter {
 		adminPermitList.add("/management/regist");
 		adminPermitList.add("/management/modify");
 		adminPermitList.add("/management/remove");
+		adminPermitList.add("/management/removedList");
+		adminPermitList.add("/management/restore");
 
 		memberPermitList.add("/project/list");
 		memberPermitList.add("/project/regist");
@@ -117,6 +119,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/task/remove");
 		memberPermitList.add("/task/update");
 		memberPermitList.add("/task/detail");
+		memberPermitList.add("/task/participation");
 
 		memberPermitList.add("/mytask/list");
 		memberPermitList.add("/mytask/regist");
@@ -124,7 +127,6 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/mytask/modify");
 		memberPermitList.add("/mytask/modifytodoliststatus");
 		memberPermitList.add("/mytask/selectmembermodal");
-		
 		memberPermitList.add("/history/list");
 		
 		memberPermitList.add("/issue/list");

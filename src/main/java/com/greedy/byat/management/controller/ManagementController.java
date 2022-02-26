@@ -36,14 +36,10 @@ public class ManagementController {
 	@GetMapping("list")
 	public ModelAndView selectManagementList(HttpServletRequest request, ModelAndView mv) {
 		
-		int totalCount = managementService.selectTotalCount();
-		
 		List<ManagementDTO> managementList = managementService.selectManagementList();
 
 		mv.addObject("managementList", managementList);
 		mv.setViewName("/management/management");
-		
-		System.out.println("값 : " + managementList);
 		
 		return mv;
 	}
@@ -94,4 +90,15 @@ public class ManagementController {
 		
 	}
 	
+	@GetMapping("removedList")
+	public ModelAndView selectManagementRemovedList(ModelAndView mv) {
+		
+		List<ManagementDTO> deletedManagementList = managementService.selectManagementRemovedList();
+		
+		mv.addObject("deletedManagementList", deletedManagementList );
+		mv.setViewName("/management/deletedManagementList");
+		
+		return mv; 
+	}
+
 }
