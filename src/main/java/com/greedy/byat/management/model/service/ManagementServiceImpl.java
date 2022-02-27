@@ -87,6 +87,14 @@ public class ManagementServiceImpl implements ManagementService {
 		return managementDeletedList;
 	}
 
+	@Override
+	public int restoreManagement(int no) {
+		
+		int result = mapper.restoreManagement(no);
+		
+		return result;
+	}
+
 
 
 

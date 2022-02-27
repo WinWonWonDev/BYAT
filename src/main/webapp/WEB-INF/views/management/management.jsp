@@ -23,6 +23,12 @@
       background-color: var(--theadColor);
     }
 
+
+	a {
+	  text-decoration: none;
+	  color: #6A5ACD;	
+	}
+	
     thead > tr,
     thead > tr > th {
       background-color: transparent;

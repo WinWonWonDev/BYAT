@@ -255,7 +255,7 @@ form {
 </head>
 <body>
    <div id="whiteBoard">
-      <div id="calendarOwner">000의 일정</div>
+      <div id="calendarOwner">${ sessionScope.loginMember.name }의 일정</div>
       <table id="calendar" align="center" border="1"
          style="border-color: black">
          <tr>

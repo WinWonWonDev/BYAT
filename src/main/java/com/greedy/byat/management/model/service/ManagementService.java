@@ -19,6 +19,8 @@ public interface ManagementService {
 
 	List<ManagementDTO> selectManagementRemovedList();
 
+	int restoreManagement(int no);
+
 
 
 

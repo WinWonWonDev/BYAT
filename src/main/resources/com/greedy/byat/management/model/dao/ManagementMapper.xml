@@ -91,5 +91,10 @@
  		 WHERE A.MEMBER_NO = #{ memberNo }
  	</update>
  	
+ 	<update id="restoreManagement">
+ 		UPDATE TBL_MEMBER A
+ 		   SET A.ABSENCE_YN = 'N'
+ 		 WHERE A.MEMBER_NO = #{ no }
+ 	</update>
  	
  </mapper>

@@ -100,5 +100,21 @@ public class ManagementController {
 		
 		return mv; 
 	}
+	
+	@GetMapping("restore")
+	public String restoreManagement(RedirectAttributes rttr, HttpServletRequest request) {
+	
+		int no = Integer.parseInt(request.getParameter("no"));
+		
+		int result = managementService.restoreManagement(no);
+		
+		if(result > 0) {
+			rttr.addFlashAttribute("message", "회원 계정 복구 성공!");
+		} else {
+			rttr.addFlashAttribute("message", "회원계정 복구 실패! 다시 시도해주세요!");
+		}
+		
+		return "redirect:/management/removedList";
+	}
 
 }

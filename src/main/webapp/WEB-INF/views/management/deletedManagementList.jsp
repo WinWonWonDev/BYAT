@@ -22,6 +22,11 @@
     thead {
       background-color: var(--theadColor);
     }
+    
+    a {
+	  text-decoration: none;
+	  color: #6A5ACD;	
+	}
 
     thead > tr,
     thead > tr > th {
@@ -150,28 +155,10 @@
 		font-size: 35px;
 	}
 	
-	.historyListHead {
+	.deletedManagementListHead {
 		height: 15%;
 	}
 	
-	.historyListName {
-		margin-left: 3%;
-		margin-top: 1%;
-		font-size: 35px;
-		float: left;
-		display: inline;
-	}
-	
-	.searchMember {
-		float: right;
-		margin-right: 3%;
-		margin-top: 2%;
-	}
-	
-	.search-area {
-		margin-left: auto;
-		margin-right: auto;
-	}
 	
 	.managementListBox {
 		border: 1px solid black;
@@ -208,39 +195,14 @@
 		left: 91%;
 	}
 	
-	input.img-button {
-		width: 32px;
-		height: 32px;
-		border: none;
-		cursor: pointer;
-	}
-	
-	#management-create-modal {
-		display: none;
-		position: relative;
-		width: 100%;
-		height: 100%;
-		z-index: 1;
-	}
-	
-	#management-update-modal {
-		display: none;
-		position: relative;
-		width: 100%;
-		height: 100%;
-		z-index: 1;
-	}
-	
-	.modal_content {
+	.moveManagementList {
+		background: url("/byat/resources/images/moveManagementListButton.png") no-repeat;
 		position: absolute;
-		top: 6%;
-		left: 35%;
-		width: 400px;
-		height: 440px;
-		margin: 20px auto;
-		background: #29428C;
-		border: 1px solid black;
-		border-radius: 25px;
+		width:40px;
+		height:40px;
+		top: 91.5%;
+		left: 97%;
+		border:none;
 	}
 	
 	#restoreInfoModal .modal_layer {
@@ -253,107 +215,6 @@
 		z-index: -1;
 	}
 	
-	.modal_head {
-		margin-left: 25px;
-		margin-top:20px;
-		height: 35px;
-		color: white;
-		text-align: left;
-		font-size: 20px;
-	}
-	
-	#management-close-btn {
-		right: 30%;
-		top: 10%;
-	}
-	
-	#management-update-close-btn {
-		right: 42%;
-		top: 10%;
-	}
-	
-	#management-create {
-		right: 55%;
-		top: 10%;
-	}
-	
-	#management-update {
-		right: 67%;
-		top: 10%;
-	}
-	
-	#management-delete {
-		right: 17%;
-		top: 10%;
-	}
-	
-	.modal_content-box {
-		width: 84%;
-		height: 75%;
-		font-size: 40px;
-		text-align: center;
-		background: white;
-		border-radius: 25px;
-		margin-left: 28px;
-		margin-top:10px;
-	}
-	
-	.modal_button {
-		width: 100%;
-		height: 30%;
-		float: right;
-		position: relative;
-	}
-	
-	.modal_button button {
-		background-color: rgb(25, 25, 112);
-		color: white;
-		text-align: center;
-		cursor: pointer;
-		width: 80px;
-		height: 30px;
-		position: absolute;
-	}
-	
-	form {
-		height: 95%;
-	}
-	
-	.managementModalInputNameforCreate {
-		position: absolute;
-		width: 260px;
-		height: 47px;
-		top: 23%;
-		left: 15%;
-	}
-	.managementModalInputIdforCreate {
-		position: absolute;
-		width: 260px;
-		height: 47px;
-		top: 40%;
-		left: 15%;
-	}
-	.managementModalInputNameforUpdate {
-		position: absolute;
-		width: 260px;
-		height: 47px;
-		top: 23%;
-		left: 15%;
-	}
-	.managementModalInputIdforUpdate {
-		position: absolute;
-		width: 260px;
-		height: 47px;
-		top: 40%;
-		left: 15%;
-	}
-	.role {
-		position: absolute;
-		width: 270px;
-		height: 47px;
-		top: 58%;
-		left: 14.5%;
-	}
 	
 	#restoreInfoModal {
 		position: relative;
@@ -432,6 +293,7 @@
 		float: right;
 		position: relative;
 	}
+	
 </style>
 <title>Insert title here</title>
 <script>
@@ -464,10 +326,8 @@ $(document).ready(function() {
 </script>
 <body>
 	<div id="whiteBoard">
-		<div class="historyListHead">
+		<div class="deletedManagementListHead">
 			<div id="managementTitle">삭제된 멤버 목록</div>
-			<div class="searchMember">
-			</div>
 		</div>
 		<div class="managementListBox">
 			<table border="1" class="managementTable" id="managementTable">
@@ -481,6 +341,7 @@ $(document).ready(function() {
 				</thead>
 				<tbody>
 					<c:forEach var="management" items="${ requestScope.deletedManagementList }">
+						<input type="hidden" id="memberNoForRestore" name="no" value="${ management.memberNo }">
 						<tr>  
 							<td><div id="memberNo">${ management.memberNo }</div></td>
 							<c:if test="${ management.initPwdYN == 'Y' }">
@@ -495,64 +356,15 @@ $(document).ready(function() {
 				   </c:forEach>
 			   </tbody>
 			</table>
+			<input type="button" id="moveManagementList" class="moveManagementList" onclick="location.href='${ pageContext.servletContext.contextPath }/management/list'"/>
 		</div>
 	</div>
 	
-
-<%-- 	<!-- 멤버 추가(+) 모달창 -->
-	<div id="management-create-modal">
-		<div class="modal_content">
-			<form action="${ pageContext.servletContext.contextPath }/management/regist" method="post" name="createMember">
-				<div class="modal_head">
-					<h3>멤버계정 생성</h3>
-				</div>
-				<div class="modal_content-box">
-					<input type="text" class="managementModalInputNameforCreate" name="name" id="name" placeholder="멤버 이름"> 
-					<br> 
-					<input type="text" class="managementModalInputIdforCreate" name="id" id="id" placeholder="ID(사번)"> 
-					<br> 
-					
-					<select name="managementRoleforCreate" class="role">
-						<option value="PM">PM</option>
-						<option value="일반 멤버" selected="selected">일반 멤버</option>
-					</select>
-				</div>
-				<div class="modal_button">
-					<button type="submit" id="management-create" class="management-create">Ok</button>
-					<button type="button" id="management-close-btn">Cancel</button>
-				</div>
-			</form>
-		</div>
-		<div class="modal_layer"></div>
-	</div>
- --%>
-	<%-- <div id="management-update-modal" style="display:none;">
-		<div class="modal_content">
-			<form action="${ pageContext.servletContext.contextPath }/management/modify" method="post">
-				<div class="modal_head">
-					<h3>멤버계정 조회/수정</h3>
-				</div>
-				<div class="modal_content-box">
-						<input type="text" class="managementModalInputNameforUpdate" name="memberName" id="managementModalInputNameforUpdate" placeholder="멤버 이름"> 
-						<br> 
-						<input type="text" class="managementModalInputIdforUpdate" name="memberId" id="managementModalInputIdforUpdate" placeholder="ID(사번)"> 
-						<br> 
-						<input type="hidden" id="memberNoforUpdate" name="memberNo">
-						<select name="permitName" class="role" id="managementRoleforUpdate"></select>
-				</div>
-				<div class="modal_button">
-					<button type="submit" id="management-update">Ok</button>
-					<button type="button" id="management-update-close-btn">Cancel</button>
-					<button type="button" id="management-delete">계정 삭제</button>
-				</div>
-			</form>
-		</div> --%>
-
 		<div id="restoreInfoModal" style="display:none;">
 			<div class="modal_content2">
 				<div class="modal_head2">System Message</div>
 				<div class="modal_content_message">
-					<br>정말 삭제하시겠습니까? <br>삭제한 멤버의 정보는 복구할 수 없습니다.
+					<br><br>이 멤버의 정보를 복구하시겠습니까? 
 				</div>
 				<div class="modal_button2">
 					<button type="button" id="modal_ok_btn" class="modal_ok_btn">Ok</button>
@@ -560,44 +372,13 @@ $(document).ready(function() {
 				</div>
 			</div>
 		<div class="modal_layer"></div>
+		<input type="hidden" id="memberNoForRestore2">
 		</div>
 
 
 	<script>
 	
-	var permitName = document.querySelectorAll("#permitName");
-	var arrayList = new Array();
-	var managementforPermit = $("#managementRoleforUpdate");
 	
-	<c:forEach var="management" items="${ requestScope.managementList }" varStatus="status">
-		arrayList.push("${ management.permitName }");
-	</c:forEach>
-	
-
-/* 		document.getElementById("management-update-close-btn").onclick = function() {
-			document.getElementById("management-update-modal").style.display = "none";
-		}
-		
-		document.getElementById("modal_close_btn").onclick = function() {
-			document.getElementById("restoreInfoModal").style.display = "none";
-		}
- */		
-		
-	 	document.getElementById("modal_ok_btn").onclick = function() {
-
-	 		location.href="${ pageContext.servletContext.contextPath }/management/restore?no=" + document.getElementById("memberNoforUpdate").value;	
-		} 
-		
-			let $memberNo = document.querySelectorAll("#memberNo");
-			let $memberName = document.querySelectorAll("#memberName");
-			let $permitName = document.querySelectorAll("#permitName");
-			let $memberId = document.querySelectorAll("#memberId");
-			let memberNoInput = document.getElementById("memberNoforUpdate");
-			let memberNameInput = document.getElementById("managementModalInputNameforUpdate");
-			let memberIdInput = document.getElementById("managementModalInputIdforUpdate");
-			
-			
-			
 		if(document.querySelectorAll("#managementTable tbody tr")) {
 			const $tr = document.querySelectorAll("#managementTable tbody tr");
 			
@@ -613,46 +394,28 @@ $(document).ready(function() {
 				}
 				
 					
-				$tr[i].onclick = function() {
+				$tr[i].ondblclick = function() {
 					document.getElementById("restoreInfoModal").style.display = "block";
-				
-					memberNameInput.value = $memberName[i].innerText;
-					memberNoInput.value = $memberNo[i].innerText;
-					memberIdInput.value = $memberId[i].innerText;
-					
-					if(permitName[i].innerText == 'PM') {
-							
-						const option1 = document.createElement('option');
-						option1.setAttribute("selected","selected");
-						option1.setAttribute("value","PM");
-						option1.innerText = 'PM';
-						
-						const option2 = document.createElement('option');
-						option2.setAttribute("value","일반 멤버");
-						option2.innerText = '일반 멤버';
-						
-						managementforPermit.append(option1);
-						managementforPermit.append(option2);
-						
-					} else {
-
-						const option1 = document.createElement('option');
-						option1.setAttribute("value","PM");
-						option1.innerText = 'PM';
-						
-						const option2 = document.createElement('option');
-						option2.setAttribute("selected","selected");
-						option2.setAttribute("value","일반 멤버");
-						option2.innerText = '일반 멤버';
-						
-						managementforPermit.append(option1);
-						managementforPermit.append(option2);
-					}
-					
 				}
 				
 			}
 		}
+ 
+ 		var memberNoForRestore = document.getElementById("memberNoForRestore");
+ 		var memberNoForRestore2 = document.getElementById("memberNoForRestore2");
+ 		
+		if(memberNoForRestore.value != null) {
+			memberNoForRestore2.value = memberNoForRestore.value;
+			
+ 			document.getElementById("modal_ok_btn").onclick = function() {
+	 			location.href="${ pageContext.servletContext.contextPath }/management/restore?no=" + memberNoForRestore2.value;	
+			} 
+		}
+					
+	 	document.getElementById("modal_close_btn").onclick = function() {
+			document.getElementById("restoreInfoModal").style.display = "none";
+	 		
+	 	}
 		
 		
 	</script>

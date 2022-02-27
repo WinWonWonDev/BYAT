@@ -18,5 +18,7 @@ public interface ManagementMapper {
 
 	List<ManagementDTO> selectManagementDeletedList();
 
+	int restoreManagement(int no);
+
 
 }
