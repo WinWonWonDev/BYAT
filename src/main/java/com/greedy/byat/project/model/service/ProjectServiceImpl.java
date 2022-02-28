@@ -41,57 +41,54 @@ public class ProjectServiceImpl implements ProjectService {
 
 		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
 		
-		for(int i = 0; i < projectList.size(); i++) {
-			
-			projectMembers = mapper.selectProjectMembers(projectList.get(i).getCode());
-			
-			projectList.get(i).setProjectMembers(projectMembers);
-		}
-		
-		return projectList;
-	}
-
-	@Override
-	public List<ProjectMembersDTO> selectProjectMembers(int code) {
-
-		List<ProjectMembersDTO> projectMembers = mapper.selectProjectMembers(code);
-
 		List<ProjectMembersDTO> orderProjectMembers = new ArrayList<>();
-
+		
 		int memberCount = 0;
-
-		for (int i = 0; i < projectMembers.size(); i++) {
-			projectMembers.get(i).setName(projectMembers.get(i).getName().substring(1, 3));
-
-			if ("PM".equals(projectMembers.get(i).getRoleName())) {
-
-				orderProjectMembers.add(memberCount, projectMembers.get(i));
-				memberCount++;
+		
+		for(int i = 0; i < projectList.size(); i++) {
+		
+			projectMembers = mapper.selectProjectMembers(projectList.get(i).getCode());
+			orderProjectMembers = new ArrayList<>();
+			memberCount = 0;
+			
+			for(int j = 0; j < projectMembers.size(); j++) {
+				
+				if("PM".equals(projectMembers.get(j).getRoleName())) {
+		        
+					orderProjectMembers.add(memberCount, projectMembers.get(j));
+		            memberCount++;
+				
+				}
+				
 			}
-
-		}
-
-		for (int i = 0; i < projectMembers.size(); i++) {
-
-			if ("부PM".equals(projectMembers.get(i).getRoleName())) {
-
-				orderProjectMembers.add(memberCount, projectMembers.get(i));
-				memberCount++;
+			
+			for(int j = 0; j < projectMembers.size(); j++) {
+				
+				if("부PM".equals(projectMembers.get(j).getRoleName())) {
+		        
+					orderProjectMembers.add(memberCount, projectMembers.get(j));
+		            memberCount++;
+				
+				}
+				
 			}
-
-		}
-
-		for (int i = 0; i < projectMembers.size(); i++) {
-
-			if ("일반 멤버".equals(projectMembers.get(i).getRoleName())) {
-
-				orderProjectMembers.add(memberCount, projectMembers.get(i));
-				memberCount++;
+			
+			for(int j = 0; j < projectMembers.size(); j++) {
+				
+				if("일반 멤버".equals(projectMembers.get(j).getRoleName())) {
+		        
+					orderProjectMembers.add(memberCount, projectMembers.get(j));
+		            memberCount++;
+				
+				}
+				
 			}
-
+			
+			projectList.get(i).setProjectMembers(orderProjectMembers); 
+			
 		}
-
-		return orderProjectMembers;
+			
+		return projectList;
 	}
 
 	@Override

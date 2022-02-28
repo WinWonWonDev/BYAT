@@ -22,8 +22,6 @@ public interface ProjectService {
 
 	List<ProjectDTO> selectProjectList(MemberDTO member);
 
-	List<ProjectMembersDTO> selectProjectMembers(int code);
-
 	void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException;
 
 	void deleteProject(int code, MemberDTO member) throws ProjectRemoveException, ProjectVersionHistoryRegistException;

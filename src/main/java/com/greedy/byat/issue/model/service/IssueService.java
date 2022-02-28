@@ -13,4 +13,6 @@ public interface IssueService {
 
 	int updateIssueStatus(IssueDTO issue) throws IssueModifyStatusException, IssueRegistStatusHistoryException;
 
+	List<IssueDTO> selectIssueList(int code);
+
 }

@@ -67,6 +67,17 @@ public class IssueServiceImpl implements IssueService {
 		return result;
 	}
 
+	@Override
+	public List<IssueDTO> selectIssueList(int code) {
+
+		SprintDTO sprint = new SprintDTO();
+		sprint.setCode(code);
+		
+		List<IssueDTO> issueList = mapper.selectIssueList(sprint);
+		
+		return issueList;
+	}
+
 	
 
 

@@ -1,5 +1,6 @@
 package com.greedy.byat.issue.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,6 +68,25 @@ public class IssueController {
 		ObjectMapper objectMapper = new ObjectMapper();
 		
 		mv.addObject("result", objectMapper.writeValueAsString(result));
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	@GetMapping("issuelist")
+	public ModelAndView selectSprintIssueList(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int code = Integer.parseInt(request.getParameter("sprintCode"));
+		
+		List<IssueDTO> issueList = issueService.selectIssueList(code);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+		
+		mv.addObject("issueList", objectMapper.writeValueAsString(issueList));
 		mv.setViewName("jsonView");
 		
 		return mv;
