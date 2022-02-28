@@ -1,6 +1,8 @@
 package com.greedy.byat.task.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,9 +49,10 @@ public class TaskController {
 	}
 	
 	@GetMapping(value = "/detail", produces = "application/json; charset=UTF-8")
+	@ResponseBody
 	public String selectTaskDetail(HttpServletRequest request) {
 		
-		int taskCode = Integer.parseInt(request.getParameter("code"));
+		int taskCode = Integer.parseInt(request.getParameter("taskCode"));
 		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd")
@@ -60,6 +63,8 @@ public class TaskController {
 				.create();
 		
 		TaskDTO task = taskService.selectTaskDetail(taskCode);
+		
+		System.out.println(task);
 		
 		return gson.toJson(task);
 	}
@@ -88,4 +93,62 @@ public class TaskController {
 		
 		return gson.toJson(projectMembers);
 	}
+	
+	@GetMapping(value = "/selectparticipation", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String selectTaskParticipation(HttpServletRequest request, HttpServletResponse response) {
+		
+		int taskCode = Integer.parseInt(request.getParameter("taskCode"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
+		
+		System.out.println(taskCode);
+		System.out.println(memberNo);
+		
+		Map<String, Integer> taskParticipation = new HashMap<String, Integer>();
+		
+		taskParticipation.put("taskCode", taskCode);
+		taskParticipation.put("memberNo", memberNo);
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		String result = taskService.selectTaskParticipation(taskParticipation);
+		
+		System.out.println(result);
+		
+		return gson.toJson(result);
+	}
+	
+	@GetMapping(value = "/participation", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String registTaskMembers(HttpServletRequest request) {
+		
+		int taskCode = Integer.parseInt(request.getParameter("taskCode"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
+		
+		System.out.println("ㅋㅋ" + taskCode);
+		System.out.println(memberNo);
+		
+		Map<String, Integer> taskParticipation = new HashMap<String, Integer>();
+		taskParticipation.put("taskCode", taskCode);
+		taskParticipation.put("memberNo", memberNo);
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		int result = taskService.registTaskMembers(taskParticipation);
+		
+		return gson.toJson(result);
+	}
+	
 }

@@ -180,7 +180,24 @@
  		)
  	</insert>
  	
- 	<insert id="insertTaskMembers" parameterType="TaskDTO">
+ 	<select id="checkWasTaskMembers" parameterType="hashmap" resultType="_int">
+ 		SELECT
+ 			   COUNT(*)
+ 		  FROM TBL_TASK_MEMBERS
+ 		 WHERE TASK_CODE = #{ taskCode }
+ 		   AND MEMBER_NO = #{ memberNo }
+ 		   AND TASK_PARTICIPATION_YN = 'N'
+ 	</select>
+ 	
+ 	<update id="changeTaskMembersParticipation" parameterType="hashmap">
+ 		UPDATE
+ 		       TBL_TASK_MEMBERS A
+ 		   SET A.TASK_PARTICIPATION_YN = 'Y'
+ 		 WHERE A.TASK_CODE = #{ taskCode }
+ 		   AND A.MEMBER_NO = #{ memberNo }
+ 		   AND A.TASK_PARTICIPATION_YN = 'N'
+ 	</update>
+ 	<insert id="insertTaskMembers" parameterType="hashmap">
  		INSERT
  		  INTO TBL_TASK_MEMBERS A
  		(
@@ -190,16 +207,16 @@
  		)
  		VALUES
  		(
- 		  SEQ_TASK_CODE.CURRVAL
+ 		  #{ taskCode }
+ 		, #{ memberNo }
  		, (SELECT
- 				  B.MEMBER_NO
- 			 FROM TBL_MEMBER B
- 			WHERE B.MEMBER_NAME = #{ manager })
- 		, #{ sprintCode }
+ 			      B.SPRINT_CODE
+ 			 FROM TBL_TASK B
+ 			WHERE B.TASK_CODE = #{ taskCode })
  		)
  	</insert>
  	
- 	<insert id="insertSprintMembers" parameterType="TaskDTO">
+ 	<insert id="insertSprintMembers" parameterType="hashmap">
  		INSERT
  		  INTO TBL_SPRINT_MEMBERS A
  		(
@@ -209,25 +226,101 @@
  		)
  		VALUES
  		(
- 		  (SELECT
- 		  		  B.MEMBER_NO
- 		  	 FROM TBL_MEMBER B
- 		  	WHERE B.MEMBER_NAME = #{ manager })
- 		, #{ projectCode }
+ 		  #{ memberNo }
  		, (SELECT
- 		          C.SPRINT_CODE
+ 				  B.PROJECT_CODE
+ 		     FROM TBL_TASK B
+ 		    WHERE B.TASK_CODE = #{ taskCode })
+ 		, (SELECT
+ 				  C.SPRINT_CODE
  		     FROM TBL_TASK C
- 		    WHERE C.TASK_TITLE = #{ title })
+ 		    WHERE C.TASK_CODE = #{ taskCode })
  		)
  	</insert>
  	
- 	<!-- <select id="selectProjectMembers" parameterType="_int" resultMap="projectMembersResultMap">
+ 	<select id="checkWasSprintMembers" parameterType="hashmap" resultType="_int">
  		SELECT
-	   		   A.MEMBER_ID
-	 		 , A.MEMBER_NAME
-  		  FROM TBL_PROJECT_MEMBERS B
-  		  JOIN TBL_MEMBER A ON (A.MEMBER_NO = B.MEMBER_NO)
-		 WHERE B.PROJECT_CODE = #{ projectCode }
-		   AND B.PROJECT_PARTICIPATION_YN = 'Y'
- 	</select> -->
+ 		       COUNT(*)
+ 		  FROM TBL_SPRINT_MEMBERS
+ 		 WHERE MEMBER_NO = #{ memberNo }
+ 		   AND SPRINT_PARTICIPATION_YN = 'N'
+ 		   AND SPRINT_CODE = (SELECT
+ 		   							 A.SPRINT_CODE
+ 		   					    FROM TBL_TASK A
+ 		   					   WHERE A.TASK_CODE = #{ taskCode }) 
+ 	</select>
+ 	
+ 	<insert id="changeSprintMembersParticipation" parameterType="hashmap">
+ 		UPDATE
+ 			   TBL_SPRINT_MEMBERS A
+ 		   SET A.SPRINT_PARTICIPATION_YN = 'Y'
+ 		 WHERE A.MEMBER_NO = #{ memberNo }
+ 		   AND A.SPRINT_PARTICIPATION_YN = 'N'
+ 		   AND A.SPRINT_CODE = (SELECT
+ 		   							   B.SPRINT_CODE
+ 		   						  FROM TBL_TASK B
+ 		   						 WHERE B.TASK_CODE = #{ taskCode })
+ 	</insert>
+ 	
+ 	<select id="selectTaskParticipation" parameterType="hashmap" resultType="_int">
+ 		SELECT
+ 			   COUNT(*)
+ 		  FROM TBL_TASK_MEMBERS
+ 		 WHERE TASK_CODE = #{ taskCode }
+ 		   AND MEMBER_NO = #{ memberNo }
+ 		   AND TASK_PARTICIPATION_YN = 'Y'
+ 	</select>
+ 	
+ 	<insert id="insertTaskMembersHistory" parameterType="hashmap">
+ 		INSERT
+ 		  INTO TBL_TASK_MEMBERS_HISTORY A
+ 		(
+ 		  A.TASK_MEMBERS_HISTORY_NO
+ 		, A.MEMBER_NO
+ 		, A.TASK_MEMBERS_HISTORY_UPDATE_DATE
+ 		, A.TASK_MEMBERS_HISTORY_PARTICIPATION_YN
+ 		, A.TASK_CODE
+ 		, A.TASK_MEMBERS_HISTORY_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_MEMBERS_HISTORY_NO.NEXTVAL
+ 		, #{ memberNo }
+ 		, SYSDATE
+ 		, 'Y'
+ 		, #{ taskCode }
+ 		, (SELECT
+ 		          B.MEMBER_NAME
+ 		     FROM TBL_MEMBER B
+ 		    WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertSprintMembersHistory" parameterType="hashmap">
+ 		INSERT
+ 		  INTO TBL_SPRINT_MEMBERS_HISTORY A
+ 		(
+ 		  A.SPRINT_MEMBERS_HISTORY_NO
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_MEMBERS_HISTORY_UPDATE_DATE
+ 		, A.SPRINT_MEMBERS_HISTORY_PARTICIPATION_YN
+ 		, A.SPRINT_MEMBERS_HISTORY_MEMBER
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_MEMBERS_HISTORY_NO.NEXTVAL
+ 		, #{ memberNO }
+ 		, SYSDATE
+ 		, 'Y'
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 		     FROM TBL_MEMBER B
+ 		    WHERE B.MEMBER_NO = #{ memberNo })
+ 		, (SELECT
+ 				  C.SPRINT_CODE
+ 			 FROM TBL_TASK C
+ 			WHERE C.TASK_CODE = #{ taskCode })
+ 		)
+ 	</insert>
  </mapper>

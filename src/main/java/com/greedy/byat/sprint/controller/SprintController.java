@@ -155,7 +155,6 @@ public class SprintController {
 		
 		List<TaskDTO> taskList = sprintService.selectTaskList(sprintCode);
 		
-		
 		return gson.toJson(taskList);
 	}
 	
