@@ -55,6 +55,7 @@
 		overflow-y:scroll;
 		padding: none;
 	}
+	
 	.backlog-add {
 		background: url("/byat/resources/images/plusBlackButton.png") no-repeat;
 		position: absolute;
@@ -385,7 +386,7 @@
 		margin-top: 20px;
 		width: 400px;
 	}
-	.task-manager-box {
+	.task-participation-box {
 		border-radius: 20px;
 		border: 1px red solid;
 		width: 40px;
@@ -483,7 +484,7 @@
 		border-radius: 10px; 
 		position: relative;
 	}
-	.task-manager{
+	.task-participation{
 		color: white;
 		line-height: 5px;
 		margin-top: 15px;
@@ -621,6 +622,104 @@
 		color: #4FEA5E;
 		text-align: left;
 	}
+	#task-add-members-modal {
+		background:#29428C;
+		width: 400px;
+		height: 400px;
+		position: relative;
+		top: -80%;
+		left: 37%;
+		display: block;
+		border: 1px solid black;
+		border-radius: 20px;
+		z-index: 1050;
+		display: none;
+	}
+	.modal_content_box2  {
+		width:90%;
+		height:72%;
+		font-size:40px;
+		text-align:center;
+		background: white;
+		border-radius: 25px;
+		margin-left: 20px;
+	}
+	#task-members-list {
+		margin-left: 300px;
+		margin-bottom: 20px;
+		background: #191970;
+		height: 35px;
+		width:100px;
+		color: white;
+	}
+	#task-update {
+		background: #191970;
+		position: relative;
+		top: 4%;
+		left: 13%;
+		width: 100px;
+		height: 35px;
+		color: white;
+	}
+	#task-delete-open-btn {
+		background: #191970;
+		position: relative;
+		top: -10%;
+		left: 40%;
+		width: 100px;
+		height: 35px;
+		color: white;
+	}
+	#task-close-btn2 {
+		background: #191970;
+		position: relative;
+		top: -10%;
+		left: 47%;
+		width: 100px;
+		height: 35px;
+		color: white;
+	}
+	#projectMembers {
+		border: 2px solid black;
+		width: 320px;
+		height: 220px;
+		float: left;
+		margin-top:20px;
+		margin-left: 10px;
+		border-radius: 20px;
+		overflow: auto;
+	}
+	.rightPointer {
+		background: url("/byat/resources/images/rightPointer.png") no-repeat;
+		width: 40px;
+		height: 40px;
+		float: left;
+		margin-top: 100px;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	#taskMembers {
+		border: 2px solid black;
+		width: 320px;
+		height: 240px;
+		float: left;
+		border-radius: 20px;
+		margin-top: 20px;
+		overflow: auto;
+		margin-left: 19px;
+	}
+	.draggable dragging {
+  		opacity: 0.5;
+	}
+	#task-members-cloes {
+		width: 100px;
+		height: 35px;
+		color: white;
+		background: #191970;
+		position: relative;
+		left: 37%;
+		top: 5%;
+	}
 </style>
 </head>
 <body>
@@ -629,7 +728,6 @@
 			<h2 class="backlog-head">BackLog</h2>
 			<button class="backlog-add" id="backlog-create-open-btn"></button>
 			<div class="backlog-box">
-			
 			
 				<!-- c:foreach아니면 jsp로 -->
 				<div class="backlog-item" align="center">
@@ -712,7 +810,6 @@
 					<!-- c:foreach -->
 					
 					
-					
        			</select>
 				<h5>시작일</h5>
 				<h5>종료일</h5>
@@ -777,7 +874,7 @@
 	   	 		</div>
        			<div class="modal_content-box">
        				<input type="text" class="title" name="title"  placeholder="Task Title">
-       			
+       				
 					<h5>시작일</h5>
 					<h5>종료일</h5>
        				<br clear="both">
@@ -792,43 +889,51 @@
    			</form>
     	</div>
     	<div class="modal_layer"></div>
+		
 	</div>
 	
 	<!-- 태스크 수정 모달창 -->
 	<div id="task-update-modal">
    
    		<div class="modal_content">
-   			<form action="" method="post">
+   			<form action="${ pageContext.servletContext.contextPath }/task/modify" method="post">
+   			<input type="hidden" name="projectCode" id="projectCode" value="${ requestScope.code }">
+   			<input type="hidden" name="memberNo" id="memberNo" value="${ sessionScope.loginMember.no }">
+   			<input type="hidden" id="taskCode3">
 			<div class="modal_head">
 				<h3>태스크 수정</h3>
 	    	</div>
        		<div class="modal_content-box">
-       			<input type="text" class="title" name="taskTitle" placeholder="TaskTitle">
-       		
-       			<select class="manager" id="taskManager">
-					<option>Manager</option>
-					<!-- c:foreach -->
-					
-					
-					
-       			</select>
+       			<input type="text" class="title" name="title" id="taskTitle3" placeholder="TaskTitle">
+       			<button type="button" id="task-members-list">구성원 목록</button>
 				<h5>시작일</h5>
 				<h5>종료일</h5>
        			<br clear="both">
-       			<input type='date' class="start-day" name='taskStartday'/>
-       			<input type='date' class="end-day" name='taskEndday'/>
-       			<textarea class="description" id="taskDescription" rows="13" cols="51" placeholder="Task Detail Description"></textarea>
+       			<input type='date' class="start-day" name='startDate' id="taskStartDate3"/>
+       			<input type='date' class="end-day" name='endDate' id="taskEndDate3"/>
+       			<textarea class="description" id="taskDescription3" name="body"rows="13" cols="51" placeholder="Task Detail Description"></textarea>
        		</div>
-       		<div class="modal_button">
-	        	<button type="button" id="task-update">Ok</button>
-	        	<button type="button" id="task-delete-open-btn">delete</button>
-	        	<button type="button" id="task-close-btn2">Cancel</button>
-       		</div>
+	        	<button type="submit" id="task-update">Ok</button>
    			</form>
+	        	<button type="button" id="task-delete-open-btn">Delete</button>
+	        	<button type="button" id="task-close-btn2">Cancel</button>
     	</div>
     	<div class="modal_layer"></div>
+    	
+		<!-- 태스크 구성원 추가 모달창 -->
+		<div id="task-add-members-modal">
+			<div class="modal_head" style="margin-left: 10px;">
+				<h3>태스크 구성원 목록</h3>
+			</div>
+			<div class="modal_content_box2">
+				<div id="taskMembers">
+				</div>
+			</div>
+			<button type="button" id="task-members-cloes">Close</button>
+		</div>
 	</div>
 	
+
 	<!-- 스프린트 생성 모달창 -->
 	<div id="sprint-create-modal">
    
@@ -911,7 +1016,8 @@
     </div>
 	
 <script>
-
+	/* 인근이형이 추가하라고 한거 */
+	/* document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + ${ requestScope.code };*/
 	/*모달 키고 끄는 버튼*/
     document.getElementById("backlog-create-open-btn").onclick = function() {
 		
@@ -945,13 +1051,14 @@
 		document.getElementById("task-create-modal").style.display = "none";
     }
     
-    /* document.getElementById("task-item").onclick = function() {
-        document.getElementById("task-update-modal").style.display = "block";
-    } */
-    
     document.getElementById("task-close-btn2").onclick = function() {
 		document.getElementById("task-update-modal").style.display = "none";
     }
+    
+    //태스크 구성원 추가 모달 닫기
+    /* document.getElementById("task-close-btn3").onclick = function() {
+    	document.getElementById("add-task-members").style.display = "none"
+    } */
     
     document.getElementById("backlog-update-open-btn").onclick = function() {
         document.getElementById("backlog-update-modal").style.display = "block";
@@ -987,7 +1094,6 @@
     		
         	document.getElementById("sprint-create-modal").style.display = "block";
     	}
-    	
     }
     
     document.getElementById("sprint-close-btn1").onclick = function() {
@@ -1006,7 +1112,8 @@
     		$sprintUpdateButtons[i].onclick = function() {
     		
 	    		document.getElementById("sprint-update-modal").style.display = "block";
-    		
+    			
+	    		/* 스프린트 상세보기 */
 	    		$.ajax({
 	    			url: "/byat/sprint/detail",
 	    			type: "get",
@@ -1046,6 +1153,9 @@
     	document.getElementById("sprint-update-modal").style.display = "none";
     }
 
+    document.getElementById("task-members-cloes").onclick = function() {
+    	document.getElementById("task-add-members-modal").style.display = "none";
+    }
     
     if(document.querySelectorAll("#sprint-box div")){
     	
@@ -1063,6 +1173,7 @@
 			
 					console.log($sprintCodes[i].value);
 					
+					/* 태스크 목록 조회*/
 					$.ajax({
 						url: "/byat/sprint/selecttasks",
 						type: "get",
@@ -1070,67 +1181,125 @@
 						success: function(data, status, xhr){
 							console.table(data);
 							
-								const $taskBox = $("#task-box");
-								$taskBox.html("");
+							const $taskBox = $("#task-box");
+							$taskBox.html("");
+							
+							for(let i = 0; i < data.length; i++){
+							
+								const $taskDiv = $("<div class='task-div' id='task-div'>");
+								const $taskItem = $("<div class='task-item' id='task-item'>");
+								const $memberNo = $("<input type='hidden' name='memberNo' id='memberNo'>").val(data[i].memberNo);
+								const $taskCode = $("<input type='hidden' name='code' id='taskCode'>").val(data[i].code);
+								const $taskTitle = $("<div class='task-title' id='taskTitle' style='font-weight: normal;'>").text(data[i].title);
 								
-								for(let i = 0; i < data.length; i++){
+								/* const $taskCode2 = $("<input type='hidden' id='taskCode2'>").val(data[i].code); */
+								let $taskParticipation = $("<div class='task-participation-box'>").val(data[i].code);
 								
-									const $taskDiv = $("<div class='task-div'>");
-									const $taskItem = $("<div class='task-item' id='task-item'>");
-									const $memberNo = $("<input type='hidden' name='memberNo' id='memberNo'>").val(data[i].memberNo);
-									const $taskCode = $("<input type='hidden' name='code' id='taskCode'>").val(data[i].code);
-									const $taskTitle = $("<div class='task-title' id='taskTitle'>").text(data[i].title);
-									
-									const $taskManager = $("<div class='task-manager'>").text(data[i].manager);
-									let $taskManagerBox = null;
-									
-									if(data[i].managerRole.roleName == 'PM'){
+								const $br = $("<br clear='both'>");
+								const $h5 = $("<h5 style='margin-bottom:5px;'>").html("기간:");
+								const $taskDateBox = $("<div class='task-date-box'>");
+								
+								const $taskStartDate = $("<div id='taskStartDate' style='font-size:10px; width:70px;'>").text(data[i].startDate);
+								const $taskEndDate = $("<div id='taskEndDate' style='font-size:10px; width:70px;'>").text("~" + data[i].endDate);
+								
+								const $taskStatus = $("<select class='task-status' id='task-status' name='taskProgress' onchange='changeLangSelect()'>");
+								const $option1 = $("<option id='before' value='Before'>").text("진행전");
+								const $option2 = $("<option id='proceeding' value='Proceeding'>").text("진행중");
+								const $option3 = $("<option id='finish' value='Finish'>").text("완료");
+																	
+								$taskDiv.append($taskItem);
+								$taskItem.append($taskCode);
+								$taskItem.append($taskTitle);
+								/* $taskParticipation.append($taskCode2); */
+								
+								console.log(data[i].code);
+								
+								/* 태스크 참가 여부 조회 */
+								$.ajax({
+									url: "/byat/task/selectparticipation",
+									type: "get",
+									data: { "taskCode": data[i].code },
+									success: function(data, status, xhr){
+										console.table(data);
 										
-										$taskManagerBox = $("<div class='task-manager-box' style='background-color:red;'>");
-
-									} else if(data[i].managerRole.roleName == '부PM'){
+										if(data == 'Y'){
+											
+											$taskParticipation.css('background', 'red').css('color', 'white').text("참가완료");
+										} else if(data == 'N'){
+											
+											$taskParticipation.css('background', 'yellowgreen').css('color', 'white').text("참가하기");
+										}
 										
-										$taskManagerBox = $("<div class='task-manager-box' style='background-color:yellowgreen;'>");
+										$taskItem.append($taskParticipation);
+										$taskItem.append($br);
 										
-									} else if(data[i].managerRole.roleName == '일반 멤버'){
+										$taskItem.append($h5);
 										
-										$taskManagerBox = $("<div class='task-manager-box' style='background-color:#FFDFBA;'>");
+										$taskDateBox.append($taskStartDate);
+										$taskDateBox.append($taskEndDate);
+										$taskItem.append($taskDateBox);
 										
+										$taskStatus.append($option1);
+										$taskStatus.append($option2);
+										$taskStatus.append($option3);
+										$taskItem.append($taskStatus);
+										
+										$taskBox.append($taskDiv);
+										
+										const $tasks = document.querySelectorAll("#task-div");
+										console.log($tasks);
+										
+										for(let j = 0; j < $tasks.length; j++) {
+											
+											$tasks[i].onclick =  function(e){
+												
+												if(!$(e.target).hasClass("task-status") && !$(e.target).hasClass("task-participation-box") && !$(e.target).hasClass("task-participation")) {
+													
+													const $taskCodes = document.querySelectorAll("#taskCode");
+													
+													console.log($taskCodes[i].value);
+													
+													/* 태스크 상세 조회 */
+													$.ajax({
+														url: "/byat/task/detail",
+														type: "get",
+														data: { "taskCode": $taskCodes[i].value },
+														success: function(data, status, xhr){
+															console.table(data);
+															
+															document.getElementById("task-update-modal").style.display = "block";
+															
+															console.log(data.title);
+															const taskCode = $("#taskCode3")
+															const taskTitle = $("#taskTitle3");
+															const taskStartDate = $("#taskStartDate3");
+															const taskEndDate = $("#taskEndDate3");
+															const taskBody = $("#taskDescription3");
+															console.log(taskTitle);
+															
+															taskTitle.val(data.title);
+															taskStartDate.val(data.startDate);
+															taskEndDate.val(data.endDate);
+															taskBody.val(data.body);
+															
+														},
+														error: function(xhr, status, error){
+															console.log(xhr);
+														}
+													});
+												}
+											}
+										}
+										
+										
+									},
+									error: function(xhr, status, error){
+										console.log(xhr);
 									}
-									
-									const $br = $("<br clear='both'>");
-									const $h5 = $("<h5 style='margin-bottom:5px;'>").html("기간:");
-									const $taskDateBox = $("<div class='task-date-box'>");
-									
-									const $taskStartDate = $("<div id='taskStartDate' style='font-size:10px; width:70px;'>").text(data[i].startDate);
-									const $taskEndDate = $("<div id='taskEndDate' style='font-size:10px; width:70px;'>").text("~" + data[i].endDate);
-									
-									const $taskStatus = $("<select class='task-status' id='task-status' name='taskProgress' onchange='changeLangSelect()'>");
-									const $option1 = $("<option id='before' value='Before'>").text("진행전");
-									const $option2 = $("<option id='proceeding' value='Proceeding'>").text("진행중");
-									const $option3 = $("<option id='finish' value='Finish'>").text("완료");
-									
-									$taskDiv.append($taskItem);
-									$taskItem.append($taskCode);
-									$taskItem.append($taskTitle);
-
-									$taskManagerBox.append($taskManager);
-									$taskItem.append($taskManagerBox);
-									
-									$taskItem.append($br);
-									$taskItem.append($h5);
-									
-									$taskDateBox.append($taskStartDate);
-									$taskDateBox.append($taskEndDate);
-									$taskItem.append($taskDateBox);
-									
-									$taskStatus.append($option1);
-									$taskStatus.append($option2);
-									$taskStatus.append($option3);
-									$taskItem.append($taskStatus);
-									
-									$taskBox.append($taskDiv);
-								}
+								});
+							}
+							
+							
 						},
 						error: function(xhr, status, error){
 							console.log(xhr);
@@ -1140,8 +1309,61 @@
 				} 
 			});
 	    }
-    
     }
+    
+    /* 태스크 참가 */
+    $(document).ready(function() {
+	    
+		$(document).on("click", ".task-participation-box", function(event) {
+		    
+		    console.log($(this).val());
+		    console.log($(this).text());		
+		    console.log("여기에요 여기");
+		    
+		    if($(this).text() == '참가하기') {
+		    	
+		    	console.log("이겨도 와랑..");
+		    	
+	    		$.ajax({
+	    			url: "/byat/task/participation",
+	    			type: "get",
+	    			data: { "taskCode": $(this).val() },
+	    			success: function(data, status, xhr){
+	    				console.table(data);
+	    				
+	    				if(data == 1){
+	    					
+	    					this.css('background', 'red').css('color', 'white').text("참가완료");
+	    					
+	    				}
+	    				
+	    			},
+	    			error: function(xhr, status, error){
+						console.log(xhr);
+					}
+	    		});
+		    }
+		    
+		}); 	
+    });
+    
+    
+	/* 태스크 구성원 조회 모달*/
+	/* const $addTaskMembersBtn = document.getElementById("task-members-list");
+    
+    console.log($addTaskMembersBtn);
+   
+    $addTaskMembersBtn.onclick = function() {
+    	
+    	console.log("오냐");
+    	
+    	document.getElementById("task-add-members-modal").style.display = "block";
+    	
+    	const taskCodes = document.querySelectorAll("#taskCode3");
+    	
+    	console.log(taskCodes);
+    	
+    } */
     
     /*태스크 상태 변경*/
     window.onload = function(){

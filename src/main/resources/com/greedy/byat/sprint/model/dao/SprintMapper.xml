@@ -188,8 +188,8 @@
  		     , A.SPRINT_START_DATE = #{ startDate }
  		     , A.SPRINT_END_DATE = #{ endDate }
  		     , A.SPRINT_BODY = #{ body }
+ 		     , A.SPRINT_VERSION = #{ version } + 1
  		 WHERE A.SPRINT_CODE = #{ code }
- 	
  	</update>
  	
  	<select id="selectSprint" parameterType="_int"  resultMap="sprintResultMap">
@@ -249,11 +249,10 @@
 				   							   					  WHERE C.PROJECT_CODE = #{ projectCode }
 				   							 					) || CHR(41)
 		, #{ body }
-		, #{ version } + 1
 		, (SELECT
-				  D.SPRINT_VERSION
+				  D.SPRINT_VERSION + 1
 			 FROM TBL_SPRINT D
-			WHERE D.SPRINT_CODE = #{ code }) + 1
+			WHERE D.SPRINT_CODE = #{ code })
 		, SYSDATE
 		, #{ writer }
 		, #{ code }

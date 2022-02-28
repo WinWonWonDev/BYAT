@@ -1,6 +1,7 @@
 package com.greedy.byat.task.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -60,7 +61,6 @@ public class TaskServiceImpl implements TaskService {
 				
 				message = "태스크를 생성하였습니다.";
 			}
-			
 		} else {
 			
 			message = "진행중인 스프린트가 없습니다.";
@@ -83,6 +83,47 @@ public class TaskServiceImpl implements TaskService {
 		List<MemberDTO> projectMembers = mapper.selectProjectMembers(projectCode);
 		
 		return projectMembers;
+	}
+
+	@Override
+	public String selectTaskParticipation(Map<String, Integer> taskParticipation) {
+
+		int result = mapper.selectTaskParticipation(taskParticipation);
+		
+		return (result > 0)? "Y" : "N";
+	}
+
+	@Override
+	public int registTaskMembers(Map<String, Integer> taskParticipation) {
+
+		int resultTotal = 0;
+		
+		int checkResult1 = mapper.checkWasTaskMembers(taskParticipation);
+		int checkResult2 = mapper.checkWasSprintMembers(taskParticipation);
+		
+		int taskMemberResult = 0;
+		int sprintMembersResult = 0;
+		
+		if(checkResult1 > 0) {
+			taskMemberResult = mapper.changeTaskMembersParticipation(taskParticipation);
+		} else {
+			taskMemberResult = mapper.insertTaskMembers(taskParticipation);
+		}
+		
+		if(checkResult2 > 0) {
+			sprintMembersResult = mapper.changeSprintMembersParticipation(taskParticipation);
+		} else {
+			sprintMembersResult = mapper.insertSprintMembers(taskParticipation);
+		}
+
+		int historyResult2 = mapper.insertSprintMembersHistory(taskParticipation);
+		int historyResult1 = mapper.insertTaskMembersHistory(taskParticipation);
+		
+		if(sprintMembersResult > 0 && taskMemberResult > 0 && historyResult1 > 0 && historyResult2 > 0) {
+			resultTotal = 1;
+		}
+		
+		return resultTotal;
 	}
 
 
