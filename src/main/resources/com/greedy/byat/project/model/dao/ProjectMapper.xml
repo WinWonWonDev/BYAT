@@ -172,6 +172,7 @@
  		     , A.PROJECT_END_DATE
  		     , A.PROJECT_BODY
  		     , A.PROJECT_VERSION
+ 		     , A.PROJECT_WRITER
  		  FROM TBL_PROJECT A
  		 WHERE A.PROJECT_CODE = #{ code }
  	</select>
@@ -434,5 +435,33 @@
  	     WHERE A.PROJECT_CODE = #{ code }
  	       AND A.MEMBER_NO = #{ no }
  	</select>
+ 	
+ 	<insert id="insertCalendarProjectSchedule" parameterType="ProjectDTO">
+ 		INSERT
+ 		  INTO TBL_CALENDAR_SCHEDULE A
+ 		(
+ 		  A.SCHEDULE_CODE
+ 		, A.SCHEDULE_TITLE
+ 		, A.SCHEDULE_START_DATE
+ 		, A.SCHEDULE_END_DATE
+ 		, A.SCHEDULE_BODY
+ 		, A.MEMBER_NO
+ 		, A.SCHEDULE_WRITER
+ 		, A.CALENDAR_SCHEDULE_TYPE_CODE
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SCHEDULE_CODE.NEXTVAL
+ 		, #{ title }
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, #{ body }
+ 		, #{ writerMember.no }
+ 		, #{ writer }
+ 		, 1
+ 		, #{ code }
+ 		)
+ 	</insert>
  	
  </mapper>

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleException;
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
@@ -42,7 +43,7 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		for(int i = 0; i < projectList.size(); i++) {
 			
-			projectMembers = selectProjectMembers(projectList.get(i).getCode());
+			projectMembers = mapper.selectProjectMembers(projectList.get(i).getCode());
 			
 			projectList.get(i).setProjectMembers(projectMembers);
 		}
@@ -94,7 +95,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException {
+	public void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException {
 
 		int result = mapper.insertProject(project);
 
@@ -114,9 +115,7 @@ public class ProjectServiceImpl implements ProjectService {
 			projectMembersRegistResult = mapper.insertProjectWriteMember(projectMembers);
 		}
 
-		if (projectMembersRegistResult > 0) {
-			projectRoleRegistResult = mapper.insertProjectFirstMemberRole(projectMembers);
-		}
+		projectRoleRegistResult = mapper.insertProjectFirstMemberRole(projectMembers);
 
 		if (!(result > 0 && projectMembersRegistResult > 0 && projectRoleRegistResult > 0)) {
 			throw new ProjectRegistException("프로젝트 생성 실패!");
@@ -125,6 +124,8 @@ public class ProjectServiceImpl implements ProjectService {
 			int historyResult = mapper.insertFirstVersionHistory(project);
 			int statusResult = mapper.insertFirstProgressHistory(project);
 			int memberHistoryResult = mapper.insertFirstMemberHistory(projectMembers);
+			int calendarInsertResult = mapper.insertCalendarProjectSchedule(project);
+			
 			
 			if(!(historyResult > 0)) {
 				
@@ -140,6 +141,11 @@ public class ProjectServiceImpl implements ProjectService {
 			if(!(memberHistoryResult > 0)) {
 				
 				throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+			}
+			
+			if(!(calendarInsertResult > 0)) {
+				
+				throw new CalendatRegistProjectScheduleException("캘린더 프로젝트 일정 생성 실패!");
 			}
 		}
 
@@ -279,7 +285,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public String insertProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException, ProjectMemberHistoryRegistException {
+	public String insertProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException {
 
 		List<ProjectMembersDTO> projectAllMemberList = mapper.selectProjectMemberNonParticipationList(registMember.getCode());
 		
@@ -323,6 +329,14 @@ public class ProjectServiceImpl implements ProjectService {
 			int projectMembersRegistResult = mapper.insertProjectMembers(registMember);
 			int projectRoleRegistResult = 0;
 			
+			ProjectDTO project = mapper.selectProjectDetail(registMember.getCode());
+			
+			MemberDTO member = new MemberDTO();
+			
+			member.setNo(registMember.getNo());
+			
+			project.setWriterMember(member);
+			
 			if (projectMembersRegistResult > 0) {
 				
 				projectRoleRegistResult = mapper.insertProjectMemberRole(registMember);
@@ -337,9 +351,18 @@ public class ProjectServiceImpl implements ProjectService {
 				
 				int memberHistoryResult = mapper.insertMemberHistory(registMember);
 				
+				System.out.println("문제있니 ? : " + project);
+				
+				int calendarInsertResult = mapper.insertCalendarProjectSchedule(project);
+				
 				if(!(memberHistoryResult > 0)) {
 					
 					throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+				}
+				
+				if(!(calendarInsertResult > 0)) {
+					
+					throw new CalendatRegistProjectScheduleException("캘린더 프로젝트 일정 생성 실패!");
 				}
 				
 			}
@@ -396,7 +419,7 @@ public class ProjectServiceImpl implements ProjectService {
 			
 			ProjectMembersDTO projectMemberBeforeDetail = mapper.selectProjectMember(members.get(i));
 			
-			if(projectMemberBeforeDetail.getRoleName() != members.get(i).getRoleName()) {
+			if(!(members.get(i).getRoleName().equals(projectMemberBeforeDetail.getRoleName()))) {
 				
 				result = mapper.updateProjectMemberRole(members.get(i));
 				
@@ -418,11 +441,17 @@ public class ProjectServiceImpl implements ProjectService {
 				throw new ProjectMemberModifyRoleException("구성원 역할 변경 실패!");
 			} else {
 				
-				int memberHistoryResult = mapper.insertMemberHistory(members.get(i));
+				if(!(members.get(i).getRoleName().equals(projectMemberBeforeDetail.getRoleName()))) {
 				
-				if(!(memberHistoryResult > 0)) {
+					System.out.println(projectMemberBeforeDetail.getName() + "이전 " + projectMemberBeforeDetail.getRoleName());
+					System.out.println(members.get(i).getName() + "이전 " + members.get(i).getRoleName());
 					
-					throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+					int memberHistoryResult = mapper.insertMemberHistory(members.get(i));
+
+					if(!(memberHistoryResult > 0)) {
+						
+						throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+					}
 				}
 				
 			}

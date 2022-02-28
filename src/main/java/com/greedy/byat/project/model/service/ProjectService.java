@@ -3,6 +3,7 @@ package com.greedy.byat.project.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleException;
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
@@ -23,7 +24,7 @@ public interface ProjectService {
 
 	List<ProjectMembersDTO> selectProjectMembers(int code);
 
-	void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException;
+	void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException;
 
 	void deleteProject(int code, MemberDTO member) throws ProjectRemoveException, ProjectVersionHistoryRegistException;
 
@@ -33,7 +34,7 @@ public interface ProjectService {
 
 	List<MemberDTO> searchAddMemberList(String searchMember, String[] projectMembersList, String[] selectMembers);
 
-	String insertProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException, ProjectMemberHistoryRegistException;
+	String insertProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException;
 
 	List<ProjectMembersDTO> selectProjectMemberList(int code);
 

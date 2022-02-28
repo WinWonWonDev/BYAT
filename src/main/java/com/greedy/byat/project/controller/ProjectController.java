@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleException;
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
@@ -64,17 +65,29 @@ public class ProjectController {
 		
 		for(int i = 0; i < projectList.size(); i++) {
 			
-			projectList.get(i).setWriter(projectList.get(i).getWriter().substring(1, 3));
+			int writerLength = projectList.get(i).getWriter().length();
+			
+			projectList.get(i).setWriter(projectList.get(i).getWriter().substring(writerLength - 2, writerLength - 0));
 			
 			for(int j = 0; j < projectList.get(i).getProjectMembers().size(); j++) {
+
+				int nameLength = projectList.get(i).getProjectMembers().get(j).getName().length();
 				
-				PmMemberNumber.add(projectList.get(i).getProjectMembers().get(j).getNo());
+				projectList.get(i).getProjectMembers().get(j).setName(projectList.get(i).getProjectMembers().get(j).getName().substring(nameLength - 2, nameLength - 0));
+				
+				if("PM".equals(projectList.get(i).getProjectMembers().get(j).getRoleName())) {
+					
+					PmMemberNumber.add(projectList.get(i).getProjectMembers().get(j).getNo());
+				}
+				
 				
 			}
 			
 		}
 		
-		System.out.println(projectList);
+		System.out.println("projectList : " + projectList);
+		
+		System.out.println("PMLIST : " + PmMemberNumber);
 		
 		mv.addObject("projectList", projectList);
 		mv.addObject("PmMemberNumber", PmMemberNumber);
@@ -84,7 +97,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/regist")
-	public String registProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException {
+	public String registProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException {
 		
 		String memberName = ((MemberDTO) request.getSession().getAttribute("loginMember")).getName();
 		
@@ -172,7 +185,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/registmember")
-	public String registProjectMembers(@ModelAttribute ProjectMembersDTO registMember, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistMemberException, ProjectMemberHistoryRegistException {
+	public String registProjectMembers(@ModelAttribute ProjectMembersDTO registMember, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistMemberException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException {
 		
 		String[] projectCode = request.getParameterValues("code");
 		String[] memberNo = request.getParameterValues("no");

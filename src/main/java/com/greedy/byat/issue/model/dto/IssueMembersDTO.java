@@ -11,18 +11,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString 
-public class IssueDTO {
-
+public class IssueMembersDTO {
+	
 	private int code;
-	private String title;
-	private String body;
-	private java.sql.Date writingTime;
-	private String progress;
-	private int version;
-	private String deleteStatus;
-	private int writer;
+	private int no;
 	private int sprintCode;
-	private int projectCode;
+	private String participationYn;
 	private String name;
 	
 }
