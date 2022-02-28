@@ -23,6 +23,12 @@
       background-color: var(--theadColor);
     }
 
+
+	a {
+	  text-decoration: none;
+	  color: #6A5ACD;	
+	}
+	
     thead > tr,
     thead > tr > th {
       background-color: transparent;
@@ -208,11 +214,14 @@
 		left: 91%;
 	}
 	
-	.minusButton {
-		background: url("/byat/resources/images/minusButton.png") no-repeat;
+	.moveDeletedManagementButton {
+		background: url("/byat/resources/images/recycleBin.png") no-repeat;
 		position: absolute;
-		top: 9%;
-		left: 94%;
+		width:40px;
+		height:40px;
+		top: 91.5%;
+		left: 97.5%;
+		border:none;
 	}
 	
 	input.img-button {
@@ -285,7 +294,7 @@
 	}
 	
 	#management-update-close-btn {
-		right: 30%;
+		right: 17%;
 		top: 10%;
 	}
 	
@@ -295,7 +304,12 @@
 	}
 	
 	#management-update {
-		right: 55%;
+		right: 67%;
+		top: 10%;
+	}
+	
+	#management-delete {
+		right: 42%;
 		top: 10%;
 	}
 	
@@ -352,7 +366,7 @@
 		top: 23%;
 		left: 15%;
 	}
-	.managementModalInputIdforCreate {
+	.managementModalInputIdforUpdate {
 		position: absolute;
 		width: 260px;
 		height: 47px;
@@ -367,25 +381,24 @@
 		left: 14.5%;
 	}
 	
-	#modal {
-		display: none;
+	#deleteInfoModal {
 		position: relative;
 		width: 100%;
 		height: 100%;
-		z-index: 1;
+		z-index: 1050;
 	}
 	
-	#modal h2 {
+	#deleteInfoModal h2 {
 		margin: 0;
 	}
 	
-	#modal button {
+	#deleteInfoModal button {
 		display: inline-block;
 		width: 100px;
 		margin-left: calc(100% - 100px - 10px);
 	}
 	
-	#modal .modal_content2 {
+	#deleteInfoModal .modal_content2 {
 		position: absolute;
 		top: 5%;
 		left: 25%;
@@ -395,16 +408,6 @@
 		/* padding:20px 10px; */
 		background: #fff;
 		border: 2px solid #666;
-	}
-	
-	#modal .modal_layer {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0, 0, 0, 0.5);
-		z-index: -1;
 	}
 	
 	.modal_head2 {
@@ -457,6 +460,13 @@
 	}
 </style>
 <title>Insert title here</title>
+<script>
+	const message = '${ requestScope.message }';
+	if(message != null && message != '') {
+		alert(message);
+	}
+
+</script>
 </head>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -500,19 +510,21 @@ $(document).ready(function() {
 				</thead>
 				<tbody>
 					<c:forEach var="management" items="${ requestScope.managementList }">
-						<tr>
+						<tr>  
 							<td><div id="memberNo">${ management.memberNo }</div></td>
-							<td><div id="memberName">${ management.memberName }</div></td>
-							<td><div id="permitName">${ management.permitName }</div></td>
+							<c:if test="${ management.initPwdYN == 'Y' }">
+								<td><div id="memberName" style="color:orangered;">${ management.memberName }</div></td>
+							</c:if>
+							<c:if test="${management.initPwdYN == 'N' }">
+								<td><div id="memberName">${ management.memberName }</div></td>
+							</c:if>
+							<td><div id="permitName">${ management.permitName }</div></td> 
 							<td><div id="memberId">${ management.memberId }</div></td>
-<%-- 							<td><c:out value="${ management.memberNo }"/></td>
-							<td><c:out value="${ management.memberName }"/></td>
-							<td><c:out value="${ management.permitName }"/></td>
-							<td><c:out value="${ management.memberId }"/></td> --%>
 					   </tr>
 				   </c:forEach>
 			   </tbody>
 			</table>
+			<input type="button" id="moveDeletedManagementList" class="moveDeletedManagementButton" onclick="location.href='${ pageContext.servletContext.contextPath }/management/removedList'"/>
 		</div>
 	</div>
 	
@@ -546,60 +558,52 @@ $(document).ready(function() {
 
 	<div id="management-update-modal" style="display:none;">
 		<div class="modal_content">
-			<form action="" method="post">
+			<form action="${ pageContext.servletContext.contextPath }/management/modify" method="post">
 				<div class="modal_head">
 					<h3>멤버계정 조회/수정</h3>
 				</div>
 				<div class="modal_content-box">
-					<c:forEach var="management" items="${ requestScope.managementList }">
-						<input type="hidden" id="memberNoforUpdate">
-						<input type="text" class="managementModalInputNameforUpdate" name="name" id="managementModalInputNameforUpdate" placeholder="멤버 이름"> 
+						<input type="text" class="managementModalInputNameforUpdate" name="memberName" id="managementModalInputNameforUpdate" placeholder="멤버 이름"> 
 						<br> 
-						<input type="text" class="managementModalInputIdforUpdate" name="id" id="managementModalInputIdforUpdate" placeholder="ID(사번)"> 
+						<input type="text" class="managementModalInputIdforUpdate" name="memberId" id="managementModalInputIdforUpdate" placeholder="ID(사번)"> 
 						<br> 
-	
-						<c:if test="${ management.permitName eq 'PM'}">
-							<select name="managementRoleforCreate" class="role" id="managementRoleforCreate">
-								<option value="PM" selected="selected">PM</option>
-								<option value="일반 멤버">일반 멤버</option>
-							</select>
-						</c:if>
-	
-						<c:if test="${ management.permitName eq '일반 멤버'}">
-							<select name="managementRoleforCreate" class="role" id="managementRoleforCreate">
-								<option value="PM">PM</option>
-								<option value="일반 멤버"  selected="selected">일반 멤버</option>
-							</select>
-						</c:if>
-	
-					</c:forEach>
+						<input type="hidden" id="memberNoforUpdate" name="memberNo">
+						<select name="permitName" class="role" id="managementRoleforUpdate"></select>
 				</div>
 				<div class="modal_button">
-					<button type="button" id="management-update">Ok</button>
+					<button type="submit" id="management-update">Ok</button>
 					<button type="button" id="management-update-close-btn">Cancel</button>
+					<button type="button" id="management-delete">delete</button>
 				</div>
 			</form>
-		</div>
+		</div> 
 		<div class="modal_layer"></div>
+		<div id="deleteInfoModal" style="display:none;">
+			<div class="modal_content2">
+				<div class="modal_head2">System Message</div>
+				<div class="modal_content_message">
+					<br>정말 삭제하시겠습니까? <br>삭제한 멤버의 정보는 복구할 수 없습니다.
+				</div>
+				<div class="modal_button2">
+					<button type="button" id="modal_ok_btn" class="modal_ok_btn">Ok</button>
+					<button type="button" id="modal_close_btn">Cancel</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
-	<!-- 삭제하시겠습니까?시스템모달창, 일단 임시로 만들어둠(멤버정보가 들어와야 클릭해서 삭제하는기능아직구현 안함)  -->
-	<div id="modal">
-		<div class="modal_content2">
-			<div class="modal_head2">System Message</div>
-			<div class="modal_content_message">
-				<br>정말 삭제하시겠습니까? <br>삭제한 멤버의 정보는 복구할 수 없습니다.
-			</div>
-			<div class="modal_button2">
-				<button type="button" id="modal_ok_btn">Ok</button>
-				<button type="button" id="modal_close_btn">Cancel</button>
-			</div>
-		</div>
-		<div class="modal_layer"></div>
-	</div>
 
 	<script>
-		
+	
+	var permitName = document.querySelectorAll("#permitName");
+	var arrayList = new Array();
+	var managementforPermit = $("#managementRoleforUpdate");
+	
+	<c:forEach var="management" items="${ requestScope.managementList }" varStatus="status">
+		arrayList.push("${ management.permitName }");
+	</c:forEach>
+	
+	
 		document.getElementById("plusButton").onclick = function() {
 			document.getElementById("management-create-modal").style.display = "block";
 		}
@@ -613,26 +617,34 @@ $(document).ready(function() {
 		}
 		
 		document.getElementById("modal_close_btn").onclick = function() {
-			document.getElementById("modal").style.display = "none";
+			document.getElementById("deleteInfoModal").style.display = "none";
 		}
-			let memberNo = document.querySelectorAll("#memberNo");
-			let memberName = document.querySelectorAll("#memberName");
-			let permitName = document.querySelectorAll("#permitName");
-			let memberId = document.querySelectorAll("#memberId");
-			
+		
+		document.getElementById("management-delete").onclick = function() {
+			document.getElementById("deleteInfoModal").style.display = "block";
+		}
+		
+	 	document.getElementById("modal_ok_btn").onclick = function() {
+	 		console.log(document.getElementById("memberNoforUpdate").value);
+			location.href="${ pageContext.servletContext.contextPath }/management/remove?no=" + document.getElementById("memberNoforUpdate").value;	
+		} 
+		
+			let $memberNo = document.querySelectorAll("#memberNo");
+			let $memberName = document.querySelectorAll("#memberName");
+			let $permitName = document.querySelectorAll("#permitName");
+			let $memberId = document.querySelectorAll("#memberId");
 			let memberNoInput = document.getElementById("memberNoforUpdate");
 			let memberNameInput = document.getElementById("managementModalInputNameforUpdate");
 			let memberIdInput = document.getElementById("managementModalInputIdforUpdate");
-			let permitNameInput = document.getElementById("managementRoleforCreate");
-
-		if(document.querySelectorAll("#managementTable td")) {
-			const $tr = document.querySelectorAll("#managementTable td");
 			
+			
+			
+		if(document.querySelectorAll("#managementTable tbody tr")) {
+			const $tr = document.querySelectorAll("#managementTable tbody tr");
 			
 			for(let i = 0; i < $tr.length; i++) {
 				
 				$tr[i].onmouseenter = function() {
-					console.log("돠ㅣ냐");
 					this.parentNode.style.cursor = "pointer";
 					
 				}
@@ -643,22 +655,45 @@ $(document).ready(function() {
 				
 					
 				$tr[i].onclick = function() {
-					console.log("뭐고");
 					document.getElementById("management-update-modal").style.display = "block";
-					console.log(memberNoInput.value);
-					console.log(memberNameInput.value);
-					console.log(memberIdInput.value);
-					console.log(permitNameInput);
-					console.log(memberNo);
-					console.log(permitName[i].innerText);
-					console.log(memberName[i].innerText);
+				
+					memberNameInput.value = $memberName[i].innerText;
+					memberNoInput.value = $memberNo[i].innerText;
+					memberIdInput.value = $memberId[i].innerText;
 					
-					permitNameInput.value = permitName[i].innerText;
-					memberNoInput.value = memberNo[i].innerText;
-					memberNameInput.val = memberName[i].val;
-					memberIdInput.val = memberId[i].val;
-					console.log("여까지옴?");
+					if(permitName[i].innerText == 'PM') {
+							
+						managementforPermit.html("");
+						const option1 = document.createElement('option');
+						option1.setAttribute("selected","selected");
+						option1.setAttribute("value","PM");
+						option1.innerText = 'PM';
+						
+						const option2 = document.createElement('option');
+						option2.setAttribute("value","일반 멤버");
+						option2.innerText = '일반 멤버';
+						
+						managementforPermit.append(option1);
+						managementforPermit.append(option2);
+						
+					} else {
+
+						managementforPermit.html("");
+						const option1 = document.createElement('option');
+						option1.setAttribute("value","PM");
+						option1.innerText = 'PM';
+						
+						const option2 = document.createElement('option');
+						option2.setAttribute("selected","selected");
+						option2.setAttribute("value","일반 멤버");
+						option2.innerText = '일반 멤버';
+						
+						managementforPermit.append(option1);
+						managementforPermit.append(option2);
+					}
+					
 				}
+				
 			}
 		}
 		

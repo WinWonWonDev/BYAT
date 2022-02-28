@@ -11,6 +11,7 @@
 	<result property="permitName" column="PERMIT_NAME"/>
 	<result property="permitCode" column="PERMIT_CODE"/>
 	<result property="absenceYN" column="ABSENCE_YN"/>
+	<result property="initPwdYN" column="INIT_PWD_YN"/>
 </resultMap> 
 
 <resultMap type="PermitDTO" id="permitResultMap">
@@ -18,16 +19,6 @@
 	<result property="name" column="PERMIT_NAME"/>
 	<result property="description" column="PERMIT_DESCRIPTION"/>
 </resultMap>
-
- 	
- 	<select id="selectTotalCount" resultType="_int">
-  		SELECT
- 		       COUNT(*)
- 		  FROM TBL_MEMBER A
-		  JOIN TBL_PERMIT B ON (A.PERMIT_CODE = B.PERMIT_CODE)
-		 WHERE A.ABSENCE_YN = 'N'
-		   AND A.MEMBER_NO != 13
- 	</select> 
  	
  	<select id="selectManagementList" resultMap="managementResultMap">
 		SELECT
@@ -37,11 +28,28 @@
  		     , A.PERMIT_CODE
  		     , A.MEMBER_ID
  		     , A.ABSENCE_YN
+ 		     , A.INIT_PWD_YN
  		  FROM TBL_MEMBER A 
  		  JOIN TBL_PERMIT B ON (A.PERMIT_CODE = B.PERMIT_CODE)
  		 WHERE A.ABSENCE_YN = 'N'
  		   AND A.MEMBER_NO != 13
  	</select> 	
+ 	
+ 	<select id="selectManagementDeletedList" resultMap="managementResultMap">
+ 		SELECT
+ 		       A.MEMBER_NO
+ 		     , A.MEMBER_NAME
+ 		     , B.PERMIT_NAME
+ 		     , A.PERMIT_CODE
+ 		     , A.MEMBER_ID
+ 		     , A.ABSENCE_YN
+ 		     , A.INIT_PWD_YN
+ 		  FROM TBL_MEMBER A 
+ 		  JOIN TBL_PERMIT B ON (A.PERMIT_CODE = B.PERMIT_CODE)
+ 		 WHERE A.ABSENCE_YN = 'Y'
+ 		   AND A.MEMBER_NO != 13
+ 	</select>
+ 	
  	
  	<insert id="insertManagement" parameterType="hashmap">
  		INSERT
@@ -66,5 +74,34 @@
  		, 'Y'
  		)
  	</insert>
+ 	
+ 	<update id="updateManagement">
+ 		UPDATE TBL_MEMBER A
+ 		   SET A.MEMBER_NAME = #{ memberName }
+ 		     , A.PERMIT_CODE = #{ permitCode }
+ 		     , A.MEMBER_ID = #{ memberId }
+ 		 WHERE A.MEMBER_NO = #{ memberNo }
+ 		   AND A.ABSENCE_YN = 'N'
+ 	</update>
+ 	
+ 	<update id="deleteManagement">
+ 		UPDATE TBL_MEMBER A
+ 		   SET A.ABSENCE_YN = 'Y'
+ 		 WHERE A.MEMBER_NO NOT IN (SELECT C.MEMBER_NO 
+						 			FROM TBL_PROJECT_MEMBERS C
+									JOIN TBL_PROJECT D ON(C.PROJECT_CODE = D.PROJECT_CODE)
+									WHERE C.MEMBER_NO = #{ memberNo }
+									  AND D.PROJECT_PROGRESS = '진행중'
+								  )
+		   AND A.MEMBER_NO = #{ memberNo }
+ 		 
+ 	</update>
+ 	
+ 	
+ 	<update id="restoreManagement">
+ 		UPDATE TBL_MEMBER A
+ 		   SET A.ABSENCE_YN = 'N'
+ 		 WHERE A.MEMBER_NO = #{ no }
+ 	</update>
  	
  </mapper>

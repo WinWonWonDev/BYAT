@@ -15,11 +15,13 @@ import lombok.ToString;
 @ToString 
 public class ManagementDTO {
 	
-	private int memberNo; //멤버 번호
-	private int permitCode; //권한 넘버
-	private String permitName; //권한 이름
-	private String memberName; //멤버 이름
-	private String memberId; //멤버 id
-	private String absenceYN; // 멤버탈퇴여부
+	private int memberNo; 
+	private int permitCode; 
+	private String permitName; 
+	private String memberName; 
+	private String memberId; 
+	private String absenceYN; 
+	private String initPwdYN; 
+	
 	
 }

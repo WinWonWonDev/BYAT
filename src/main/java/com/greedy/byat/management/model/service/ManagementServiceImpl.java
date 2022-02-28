@@ -25,14 +25,6 @@ public class ManagementServiceImpl implements ManagementService {
 	}
 
 	@Override
-	public int selectTotalCount() {
-		
-		int result = mapper.selectTotalCount();
-		
-		return result;
-	}
-
-	@Override
 	public List<ManagementDTO> selectManagementList() {
 		
 		List<ManagementDTO> managementList = mapper.selectManagementList();
@@ -63,7 +55,45 @@ public class ManagementServiceImpl implements ManagementService {
 		return result;
 	}
 
-	
+	@Override
+	public int modifyManagement(ManagementDTO management) {
+
+		int permitCode = 0;
+		
+		if("PM".equals(management.getPermitName())) {
+			management.setPermitCode(2) ;
+		} else if("일반 멤버".equals(management.getPermitName())) {
+			management.setPermitCode(3);
+		}
+		
+		int result = mapper.updateManagement(management);
+		
+		return result;
+	}
+
+	@Override
+	public int removeManagement(int memberNo) {
+		
+		int result = mapper.deleteManagement(memberNo);
+		
+		return result;
+	}
+
+	@Override
+	public List<ManagementDTO> selectManagementRemovedList() {
+
+		List<ManagementDTO> managementDeletedList = mapper.selectManagementDeletedList();
+		
+		return managementDeletedList;
+	}
+
+	@Override
+	public int restoreManagement(int no) {
+		
+		int result = mapper.restoreManagement(no);
+		
+		return result;
+	}
 
 
 
