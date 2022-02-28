@@ -12,6 +12,19 @@ import com.greedy.byat.management.model.dao.ManagementMapper;
 import com.greedy.byat.management.model.dto.ManagementDTO;
 import com.greedy.byat.member.model.dto.MemberDTO;
 
+
+/* 
+* <pre>
+* Class : ManagementServiceImpl
+* Comment : ManagementController에 필요한 메소드들의 로직을 작성하는 Service입니다.
+* History
+* 2022/02/24 이소현  처음 작성
+* </pre>
+* @version 1.0.0
+* @author 이소현
+* @see ManagementService, ManagementController, ManagementDTO, PermitDTO, ManagementMapper  
+*
+*/
 @Service
 public class ManagementServiceImpl implements ManagementService {
  

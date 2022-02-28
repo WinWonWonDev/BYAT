@@ -21,6 +21,18 @@ import com.greedy.byat.management.model.dto.ManagementDTO;
 import com.greedy.byat.management.model.service.ManagementService;
 import com.greedy.byat.member.model.dto.MemberDTO;
 
+/* 
+* <pre>
+* Class : ManagementController
+* Comment : management관련 메소드들을 모아놓기 위한 Controller입니다.
+* History
+* 2022/02/24 이소현  처음 작성
+* </pre>
+* @version 1.1.0
+* @author 이소현
+* @see ManagementService, ManagementServiceImpl, ManagementDTO, PermitDTO, ManagementMapper  
+*
+*/
 @Controller
 @RequestMapping("/management")
 public class ManagementController {

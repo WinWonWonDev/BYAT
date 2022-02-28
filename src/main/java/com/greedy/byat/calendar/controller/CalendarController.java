@@ -16,6 +16,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.greedy.byat.calendar.model.dto.ScheduleDTO;
 import com.greedy.byat.calendar.model.service.CalendarService;
 
+/* 
+* <pre>
+* Class : CalendarController
+* Comment : Calendar관련 메소드들을 모아놓기 위한 Controller입니다.
+* History
+* 2022/02/25 이소현  처음 작성
+* </pre>
+* @version 1.1.0
+* @author 이소현
+* @see CalendarService, CalendarServiceImpl, ScheduleDTO, CalendarMapper  
+*
+*/
 @Controller
 @RequestMapping("/calendar")
 public class CalendarController {

@@ -8,8 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.greedy.byat.calendar.model.dao.CalendarMapper;
-import com.greedy.byat.calendar.model.dto.ScheduleDTO;
 
+/* 
+* <pre>
+* Class : CalendarServiceImpl
+* Comment : CalendarController에 필요한 메소드들의 로직을 작성하는 Service입니다.
+* History
+* 2022/02/25 이소현  처음 작성
+* </pre>
+* @version 1.0.0
+* @author 이소현
+* @see CalendarService, CalendarController, ScheduleDTO, CalendarMapper  
+*
+*/
 @Service
 public class CalendarServiceImpl implements CalendarService {
  
