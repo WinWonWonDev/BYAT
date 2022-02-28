@@ -62,5 +62,7 @@ public interface ProjectMapper {
 
 	ProjectMembersDTO selectProjectMember(ProjectMembersDTO removeMember);
 
+	int insertCalendarProjectSchedule(ProjectDTO project);
+
 
 }

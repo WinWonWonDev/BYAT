@@ -65,7 +65,7 @@
 				<!-- 이거 href경로 추가해서 적어줘야함 쿠쿠르삥뽕 -->
 				<li><a href="/byat/WEB-INF/views/sprint/ " class="subMenuATag">※ SPRINT</a></li>
 				<hr>
-				<li><a href="/byat/WEB-INF/views/issue/ " class="subMenuATag">※ ISSUE</a></li>
+				<li><a href="/byat/issue/list?code=" class="subMenuATag" id="selectIssueList">※ ISSUE</a></li>
 				<hr>
 				<li><a href="/byat/WEB-INF/views/retrospect/ " class="subMenuATag">※ RETROSPECET</a></li>
 				<hr>

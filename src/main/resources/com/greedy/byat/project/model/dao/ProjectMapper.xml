@@ -172,6 +172,7 @@
  		     , A.PROJECT_END_DATE
  		     , A.PROJECT_BODY
  		     , A.PROJECT_VERSION
+ 		     , A.PROJECT_WRITER
  		  FROM TBL_PROJECT A
  		 WHERE A.PROJECT_CODE = #{ code }
  	</select>
@@ -416,12 +417,12 @@
  		, #{ no }
  		, SYSDATE
  		, #{ roleName }
- 		, #{ participation }
+ 		, #{ participationYn }
  		, #{ name }
  		)
  	</insert>
  	
- 	<select id="selectProjectMember" resultType="ProjectMembersDTO">
+ 	<select id="selectProjectMember" resultMap="projectMembersResultMap">
  		SELECT
  		       A.PROJECT_CODE
  		     , A.MEMBER_NO
@@ -429,10 +430,38 @@
  		     , B.MEMBER_NAME
  		     , C.ROLE_NAME
  		  FROM TBL_PROJECT_MEMBERS A
- 		  JOIN TBL_MEMBER ON (A.MEMBER_NO = B.MEMBER_NO)
- 		  JOIN TBL_ROLE ON (A.PROJECT_CODE = C.PROJECT_CODE)
+ 		  JOIN TBL_MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
+ 		  JOIN TBL_ROLE C ON (A.PROJECT_CODE = C.PROJECT_CODE AND A.MEMBER_NO = C.MEMBER_NO)
  	     WHERE A.PROJECT_CODE = #{ code }
  	       AND A.MEMBER_NO = #{ no }
  	</select>
+ 	
+ 	<insert id="insertCalendarProjectSchedule" parameterType="ProjectDTO">
+ 		INSERT
+ 		  INTO TBL_CALENDAR_SCHEDULE A
+ 		(
+ 		  A.SCHEDULE_CODE
+ 		, A.SCHEDULE_TITLE
+ 		, A.SCHEDULE_START_DATE
+ 		, A.SCHEDULE_END_DATE
+ 		, A.SCHEDULE_BODY
+ 		, A.MEMBER_NO
+ 		, A.SCHEDULE_WRITER
+ 		, A.CALENDAR_SCHEDULE_TYPE_CODE
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SCHEDULE_CODE.NEXTVAL
+ 		, #{ title }
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, #{ body }
+ 		, #{ writerMember.no }
+ 		, #{ writer }
+ 		, 1
+ 		, #{ code }
+ 		)
+ 	</insert>
  	
  </mapper>

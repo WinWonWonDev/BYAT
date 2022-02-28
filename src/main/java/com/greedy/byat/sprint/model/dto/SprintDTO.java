@@ -2,6 +2,7 @@ package com.greedy.byat.sprint.model.dto;
 
 import java.util.List;
 
+import com.greedy.byat.issue.model.dto.IssueDTO;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 
@@ -29,5 +30,6 @@ public class SprintDTO {
 	private String writer;
 	private MemberDTO writerMember;
 	private List<TaskDTO> taskList;
+	private List<IssueDTO> issueList;
 	private int projectCode;
 }

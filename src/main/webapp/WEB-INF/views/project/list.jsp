@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/dataTables.jqueryui.min.css"/>  
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/dataTables.jqueryui.min.css"/>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
@@ -273,7 +273,6 @@
 	.projectTable td {
 		font-size:18px;
 		text-align:center;
-		height:70px;
 	}
 	
 	.projectAddMemberBtn {
@@ -342,19 +341,23 @@
 	
  	#projectMenuBox {
  		position:absolute;
- 		width:80px;
+ 		width:100px;
  		height:50px;
  		z-index:10;
+ 		right:20px;
  	}
  	
- 	#projectMenuTitles div {
-		background-color:white;
+ 	#projectMenuBox div {
+ 		
+ 		position:relative;
+ 		bottom:12px;
+ 		background-color:white;
 		border:1px solid black;
 		text-align:center;
 		font-weight:bold;
 		cursor:pointer;
-	}
-	
+ 	}
+
 	#projectUpdateModal {
 		display: none;
 		position:absolute;
@@ -846,12 +849,6 @@
 		position:relative;
 	}
 	
-	.searchProject {
-		position: absolute;
-		left : 850px;
-		top : 52px;
-	}
-	
 </style>
 <script>
    const message = '${ requestScope.message }';
@@ -950,17 +947,15 @@
 							</td>
 							<td>
 								<input type="button" class="projectEditBtn" id="projectEditBtn">
+								<div id="projectMenuBox" class="projectMenuBox" style="display:none"> 
+									<div id="updateAndSelectProject">조회/수정</div>
+									<c:if test="${ (sessionScope.loginMember.no eq PmMemberNumber[status.index]) or (sessionScope.loginMember.permitCode == 1)}">
+										<div id="deleteProject">삭제하기</div>			
+									</c:if>
+									<div id="deleteProject" style="display:none;"></div>
+								</div>
 							</td>
 						</tr>
-						<div id="projectMenuBox" class="projectMenuBox" style="display:none"> 
-							<div id="projectMenuTitles">
-								<div id="updateAndSelectProject">조회/수정</div>
-								<c:if test="${ (sessionScope.loginMember.no eq PmMemberNumber[status.index]) or (sessionScope.loginMember.permitCode == 1)}">
-									<div id="deleteProject">삭제하기</div>			
-								</c:if>
-								<div id="deleteProject" style="display:none;"></div>
-							</div>
-						</div>
 					</c:forEach>
       			</tbody>
       		</table>
@@ -970,7 +965,7 @@
 	<div id="projectCreateModal">
   
   		<div class="modal_content">
-	  		<form action="${ pageContext.servletContext.contextPath }/project/regist" method="post">
+	  		<form action="${ pageContext.servletContext.contextPath }/project/regist" id="projectCreateForm" method="post">
 				<div class="modal_head">
 					<h3>프로젝트 생성</h3>
 		    	</div>
@@ -981,14 +976,14 @@
 	      			<div class="projectStartDayTag">프로젝트 시작일자</div>
 	      			<div class="projectEndDayTag">프로젝트 종료일자</div>
 	       			<br clear="both">
-	       			<input type='date' class="start-day" name='startDate' required/>
-	       			<input type='date' class="end-day" name='endDate' required/>
+	       			<input type='date' class="start-day" id="createStartDate" name='startDate' required/>
+	       			<input type='date' class="end-day" id="createEndDate" name='endDate' required/>
 	       			<div class="projectDescriptionTag">프로젝트 상세 설명</div>
 	      			<textarea class="projectDescription" id="projectDescription" name="body" rows="13" cols="100" placeholder="상세내용을 입력해주세요" required></textarea>
 	      			<div class="prjectCodeMessage">프로젝트  코드는 자동으로 생성됩니다.</div>
 	      		</div>
 	      		<div class="modal_button">
-		        	<button type="submit" id="projectCreateBtn">Ok</button>
+		        	<button type="button" id="projectCreateBtn">Ok</button>
 		        	<button type="button" id="projectCreateModalCloseBtn">Cancel</button>
 	      		</div>
 			</form>
@@ -999,7 +994,7 @@
 	<div id="projectUpdateModal">
   
   		<div class="modal_content">
-	  		<form action="${ pageContext.servletContext.contextPath }/project/modify" method="post">
+	  		<form action="${ pageContext.servletContext.contextPath }/project/modify" id="updateProjectForm" method="post">
 				<div class="modal_head">
 					<h3>프로젝트 상세</h3>
 		    	</div>
@@ -1018,7 +1013,7 @@
 	      			<div class="prjectCodeMessage">프로젝트  코드는 자동으로 생성됩니다.</div>
 	      		</div>
 	      		<div class="modal_button">
-		        	<button type="submit" id="projectUpdateBtn">Ok</button>
+		        	<button type="button" id="projectUpdateBtn">Ok</button>
 		        	<button type="button" id="projectUpdateModalCloseBtn">Cancel</button>
 	      		</div>
 			</form>
@@ -1119,28 +1114,57 @@
 	
 	<script>
 	
-	$(document).ready(function() {
-        
-        $.extend( $.fn.dataTable.defaults, {
-           
-           language: {
-              url : "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Korean.json"
-           }
-        });
-        
-        $('#projectTable').DataTable({
-           
-        	lengthChange: false,
-			order: [],
-			ordering: false,
-			lengthMenu : [ 4 ],
-			columnDefs: [
-				{ targets: 6, width: 60 },
-				{ targets: 7, width: 40 }
-			]
-        });
-     });
-	
+		$(document).ready(function() {
+	        
+	        $.extend( $.fn.dataTable.defaults, {
+	           
+	           language: {
+	              url : "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Korean.json"
+	           }
+	        });
+	        
+	        $('#projectTable').DataTable({
+	           
+	        	lengthChange: false,
+				order: [],
+				ordering: false,
+				lengthMenu : [ 4 ],
+				columnDefs: [
+					{ targets: 6, width: 60 },
+					{ targets: 7, width: 40 }
+				]
+	        });
+	    });
+
+		document.getElementById("projectCreateBtn").onclick = function() {
+			
+			const createStartDate = document.getElementById("createStartDate");
+			const createEndDate = document.getElementById("createEndDate");
+			
+			if(createStartDate.value > createEndDate.value) {
+				alert("종료일자가 시작일자 전일 수 없습니다.");
+			} else {
+				
+				document.getElementById("projectCreateForm").submit();
+			}
+			
+		}
+		
+		document.getElementById("projectUpdateBtn").onclick = function() {
+
+			const updateStartDate = document.getElementById("updateStartDate");
+			const updateEndDate = document.getElementById("updateEndDate");
+			const date = getFormatDate(new Date());
+			
+			if(updateStartDate.value > updateEndDate.value) {
+				alert("종료일자가 시작일자 전일 수 없습니다.");
+			} else {
+				
+				document.getElementById("updateProjectForm").submit();
+			}
+			
+		}
+		
 		let projectCode;
 		let selectedMemberList = [];
 		let projectMembersList = [];
@@ -1438,10 +1462,10 @@
 				
 			}
 			
-			for(let i = 0; i < $proBox.length; i++) {
+			/* for(let i = 0; i < $proBox.length; i++) {
 				
-				$proBox[i].style.left = '1295px';
-			}
+				$proBox[i].style.left = '1470px';
+			} */
 			
 			for(let i = 0; i < $projectAddMemberBtn.length; i++) {
 		          
@@ -1453,25 +1477,18 @@
 					
 					projectCode = $code[i].value;
 					
-					console.log(projectCode);
-					
 					let memberListFlag = 0;
 					
 					<c:forEach items="${projectList}" var="project" varStatus="status">
-						<c:forEach items="${project.projectMembers}" var="member">
-							if(i == ${status.index}) {
-								
-								if(memberListFlag == 0) {
-									for(let k = 0; k < $projectRealMemberList[i].children.length - 1; k++) {
-										selectedMemberList.push($projectRealMemberList[i].children[k].children[0].value);
-									}
-								}
-								
-								memberListFlag++;
+						if(i == ${status.index}) {
+							for(let k = 0; k < $projectRealMemberList[i].children.length - 1; k++) {
+								selectedMemberList.push($projectRealMemberList[i].children[k].children[0].value);
 							}
-						</c:forEach>
+						}
 						projectMembersList = selectedMemberList;
 					</c:forEach>
+					
+					console.log(projectMembersList);
 					
 				}
 
@@ -1479,32 +1496,33 @@
    	
 					console.log($proBox[i].style.display);
 					
-					if(i === 0) {
+					/* if(i === 0) {
 					   
-					   $proBox[i].style.top = '247px';
+					   $proBox[i].style.top = '255px';
 					   
 					} else if(i === 1) {
 					   
-					   $proBox[i].style.top = '317px';
+					   $proBox[i].style.top = '342px';
 					   
 					} else if(i === 2) {
 					   
-					   $proBox[i].style.top = '387px';
+					   $proBox[i].style.top = '427px';
 					   
 					} else if(i === 3) {
 					   
-					   $proBox[i].style.top = '457px';
+					   $proBox[i].style.top = '512px';
 					
 					} else {
 					   
 					   $proBox[i].style.top = '527px';
 					
-					} 
+					}  */
 					
 					if($proBox[i].style.display =='none') {
-					   $proBox[i].style.display = 'block';
+						$proBox[i].style.marginBottom = "500px";
+				  		$proBox[i].style.display = 'block';
 					} else {
-					   $proBox[i].style.display = 'none';
+					   	$proBox[i].style.display = 'none';
 					}
    
 				}
@@ -1528,6 +1546,8 @@
 				$updateAndSelectProject[i].onclick = function() {
 					
 					$proBox[i].style.display = 'none';
+					
+					console.log($code[i].value);
 					
 					$.ajax({
 						url: "/byat/project/detail",
@@ -1622,6 +1642,8 @@
 					
 					selectMemberNo = ui.item.value.no;
 					
+					selectName = ui.item.value.name;
+					
 					selectMembers.push(selectMemberNo);
 					
 					console.log(selectMembers);
@@ -1644,6 +1666,11 @@
 			            hiddenProjectCode.setAttribute('type', 'hidden');
 			            hiddenProjectCode.setAttribute('name', 'code');
 			            hiddenProjectCode.value = projectCode;
+			            
+			            hiddenProjectMemberName = document.createElement('input');
+			            hiddenProjectMemberName.setAttribute('type', 'hidden');
+			            hiddenProjectMemberName.setAttribute('name', 'name');
+			            hiddenProjectMemberName.value = selectName;
 			            
 			            selectedMemberAreaDiv.setAttribute('class', 'selectedMemberArea');
 			            selectedMemberAreaDiv.setAttribute('id', 'selectedMemberArea');
@@ -1677,6 +1704,7 @@
 			            selectedMemberAreaDiv.appendChild(selectedMemberProjectRoleDiv);
 			            selectedMemberAreaDiv.appendChild(hiddenMemberNo);
 			            selectedMemberAreaDiv.appendChild(hiddenProjectCode);
+			            selectedMemberAreaDiv.appendChild(hiddenProjectMemberName);
 			            selectedMemberAreaDiv.appendChild(memberDeleteBtn);
 			            addMembersFormTag.appendChild(selectedMemberAreaDiv);
 	            		
