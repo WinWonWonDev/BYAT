@@ -284,6 +284,7 @@
 		</div>
 	</div>
 	<script>
+	
 		const kanbanArea = document.querySelectorAll('#kanbanArea');
 
 		const selectedTitle = document.getElementById("issueSelectBox");
