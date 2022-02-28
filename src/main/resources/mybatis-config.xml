@@ -9,7 +9,7 @@
 		<typeAlias alias="ProjectDTO" type="com.greedy.byat.project.model.dto.ProjectDTO"/>
 		<typeAlias alias="ProjectMembersDTO" type="com.greedy.byat.project.model.dto.ProjectMembersDTO"/>
 		<typeAlias alias="BacklogDTO" type="com.greedy.byat.backlog.model.dto.BacklogDTO"/>
-		<typeAlias alias="CalendarDTO" type="com.greedy.byat.calendar.model.dto.CalendarDTO"/>
+		<typeAlias alias="ScheduleDTO" type="com.greedy.byat.calendar.model.dto.ScheduleDTO"/>
 		<typeAlias alias="HistoryDTO" type="com.greedy.byat.history.model.dto.HistoryDTO"/>
 		<typeAlias alias="IssueDTO" type="com.greedy.byat.issue.model.dto.IssueDTO"/>
 		<typeAlias alias="ManagementDTO" type="com.greedy.byat.management.model.dto.ManagementDTO"/>
@@ -24,6 +24,7 @@
     	<typeAlias alias="TaskMembersDTO" type="com.greedy.byat.task.model.dto.TaskMembersDTO"/> 
  		<typeAlias alias="RoleDTO" type="com.greedy.byat.project.model.dto.RoleDTO"/> 
  		<typeAlias alias="PermitDTO" type="com.greedy.byat.management.model.dto.PermitDTO"/> 
+  		<typeAlias alias="IssueMembersDTO" type="com.greedy.byat.issue.model.dto.IssueMembersDTO"/>
   </typeAliases>
   
   </configuration>

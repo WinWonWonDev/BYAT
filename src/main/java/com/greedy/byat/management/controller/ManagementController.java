@@ -83,7 +83,7 @@ public class ManagementController {
 		if(result > 0) {
 			rttr.addFlashAttribute("message", "회원 계정 삭제 성공!");
 		} else {
-			rttr.addFlashAttribute("message", "회원 계정 삭제 실패! 다시 시도해주세요!");
+			rttr.addFlashAttribute("message", "회원 계정 삭제 실패! 담당중인 프로젝트가 있는 것 같습니다. 조치 후 다시 시도해주세요!");
 		}
 		
 		return "redirect:/management/list";

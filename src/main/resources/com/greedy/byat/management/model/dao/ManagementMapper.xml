@@ -12,7 +12,6 @@
 	<result property="permitCode" column="PERMIT_CODE"/>
 	<result property="absenceYN" column="ABSENCE_YN"/>
 	<result property="initPwdYN" column="INIT_PWD_YN"/>
-	
 </resultMap> 
 
 <resultMap type="PermitDTO" id="permitResultMap">
@@ -88,8 +87,16 @@
  	<update id="deleteManagement">
  		UPDATE TBL_MEMBER A
  		   SET A.ABSENCE_YN = 'Y'
- 		 WHERE A.MEMBER_NO = #{ memberNo }
+ 		 WHERE A.MEMBER_NO NOT IN (SELECT C.MEMBER_NO 
+						 			FROM TBL_PROJECT_MEMBERS C
+									JOIN TBL_PROJECT D ON(C.PROJECT_CODE = D.PROJECT_CODE)
+									WHERE C.MEMBER_NO = #{ memberNo }
+									  AND D.PROJECT_PROGRESS = '진행중'
+								  )
+		   AND A.MEMBER_NO = #{ memberNo }
+ 		 
  	</update>
+ 	
  	
  	<update id="restoreManagement">
  		UPDATE TBL_MEMBER A

@@ -120,6 +120,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/task/update");
 		memberPermitList.add("/task/detail");
 		memberPermitList.add("/task/participation");
+		memberPermitList.add("/task/selectparticipation");
 
 		memberPermitList.add("/mytask/list");
 		memberPermitList.add("/mytask/regist");
@@ -130,6 +131,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/history/list");
 		
 		memberPermitList.add("/issue/list");
+		memberPermitList.add("/issue/modifyissuestatus");
 		
 		memberPermitList.add("/calendar/list");
 		memberPermitList.add("/calendar/regist");

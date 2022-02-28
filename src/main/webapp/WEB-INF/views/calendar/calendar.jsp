@@ -10,243 +10,249 @@
 <script
    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <title>Insert title here</title>
+<script>
+	const message = '${ requestScope.message }';
+	if (message != null && message != '') {
+		alert(message);
+	}
+</script>
 <style>
-html {
-   width: 100%;	
-   height: 98%;
-   background: #D7E3FA;
-   background-size: cover;
-   position: relative;
-}
-
-* {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-}
-
-body {
-   padding: 0;
-   margin: 0;
-}
-
-#whiteBoard {
-   position: absolute;
-   background: white;
-   border: 1px solid black;
-   top: 15%;
-   left: 2%;
-   width: 95%;
-   height: 84%;
-}
-
-.searchCalendar {
-   float: right;
-   margin-right: 3%;
-   margin-top: 2%;
-}
-
-.search-area {
-   position: absolute;
-   top: 1.2%;
-   left: 80%;
-   margin-left: auto;
-   margin-right: auto;
-}
-
-.search-input {
-   width: 100px;
-}
-
-td {
-   width: 50px;
-   height: 50px;
-   text-align: center;
-   font-size: 20px;
-   font-family: 굴림;
-   border: 2px border-color:#3333FF;
-   border-radius: 8px; /*모서리 둥글게*/
-}
-
-#calendar {
-   border: 1px solid black;
-   position: absolute;
-   top: 7%;
-   left: 5%;
-   width: 90%;
-   height: 85%;
-}
-
-.plusButton {
-   background: url("/byat/resources/images/plusButton.png") no-repeat;
-   position: absolute;
-   top: 0%;
-   left: 91%;
-}
-
-input.img-button {
-   width: 32px;
-   height: 32px;
-   border: none;
-   cursor: pointer;
-}
-
-#calendarOwner {
-   position: absolute;
-   top: 2%;
-   left: 6%;
-   color: gray;
-}
-
-.onlyDate {
-   text-align: right;
-}
-
-.day {
-   width: 20px;
-   height: 30px;
-}
-
-#tbCalendarYM {
-   height: 5px;
-}
-
-#management-create-modal {
-   display: none;
-   position: relative;
-   width: 100%;
-   height: 100%;
-   z-index: 1;
-}
-
-#management-create-modal2 {
-   display: none;
-   position: relative;
-   width: 100%;
-   height: 100%;
-   z-index: 1;
-}
-
-.modal_content {
-   position: absolute;
-   top: 10%;
-   left: 35%;
-   width: 400px;
-   height: 440px;
-   margin: 20px auto;
-   background: #29428C;
-   border: 1px solid black;
-   border-radius: 25px;
-}
-
-#management-create-modal .modal_layer {
-   position: fixed;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   background: rgba(0, 0, 0, 0.5);
-   z-index: -1;
-}
-
-.modal_head {
-   margin-top: 5px; margin-left : 25px;
-   height: 55px;
-   color: white;
-   text-align: left;
-   font-size: 20px;
-   margin-left: 25px;
-}
-
-#management-close-btn {
-   right: 30%;
-   top: 10%;
-}
-
-#management-close-btn2 {
-   right: 30%;
-   top: 10%;
-}
-
-#management-create {
-   right: 55%;
-   top: 10%;
-}
-
-.modal_content-box {
-   width: 84%;
-   height: 75%;
-   background: white;
-   border-radius: 25px;
-   margin-left: 28px;
-}
-
-.modal_button {
-   width: 100%;
-   height: 30%;
-   float: right;
-   position: relative;
-}
-
-.modal_button button {
-   background-color: rgb(25, 25, 112);
-   color: white;
-   text-align: center;
-   cursor: pointer;
-   width: 80px;
-   height: 30px;
-   position: absolute;
-}
-
-form {
-   height: 95%;
-   text-align: center;
-}
-
-.managementModalInput {
-   position: absolute;
-   width: 260px;
-}
-
-.managementModalDateInput {
-   position:absolute;
-   width:130px;
-}
-
-.start-day {
-   top:30%;
-   left:15%;
-   
-}
-
-.end-day {
-   top:30%;
-   left:48%;
-
-}
-
-.title {
-   top: 16%;
-   left: 15%;
-   height: 47px;
-}
-
-.content {
-   height: 180px;
-   top: 40%;
-   left: 15%;
-   resize:none;
-}
-
-#modal .modal_layer {
-   position: fixed;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   background: rgba(0, 0, 0, 0.5);
-   z-index: -1;
-}
+	html {
+	   width: 100%;	
+	   height: 98%;
+	   background: #D7E3FA;
+	   background-size: cover;
+	   position: relative;
+	}
+	
+	* {
+	   margin: 0;
+	   padding: 0;
+	   box-sizing: border-box;
+	}
+	
+	body {
+	   padding: 0;
+	   margin: 0;
+	}
+	
+	#whiteBoard {
+	   position: absolute;
+	   background: white;
+	   border: 1px solid black;
+	   top: 15%;
+	   left: 2%;
+	   width: 95%;
+	   height: 84%;
+	}
+	
+	.searchCalendar {
+	   float: right;
+	   margin-right: 3%;
+	   margin-top: 2%;
+	}
+	
+	.search-area {
+	   position: absolute;
+	   top: 1.2%;
+	   left: 80%;
+	   margin-left: auto;
+	   margin-right: auto;
+	}
+	
+	.search-input {
+	   width: 100px;
+	}
+	
+	td {
+	   width: 50px;
+	   height: 50px;
+	   text-align: center;
+	   font-size: 20px;
+	   font-family: 굴림;
+	   border: 2px border-color:#3333FF;
+	   border-radius: 8px; /*모서리 둥글게*/
+	}
+	
+	#calendar {
+	   border: 1px solid black;
+	   position: absolute;
+	   top: 7%;
+	   left: 5%;
+	   width: 90%;
+	   height: 85%;
+	}
+	
+	.plusButton {
+	   background: url("/byat/resources/images/plusButton.png") no-repeat;
+	   position: absolute;
+	   top: 0%;
+	   left: 91%;
+	}
+	
+	input.img-button {
+	   width: 32px;
+	   height: 32px;
+	   border: none;
+	   cursor: pointer;
+	}
+	
+	#calendarOwner {
+	   position: absolute;
+	   top: 2%;
+	   left: 6%;
+	   color: gray;
+	}
+	
+	.onlyDate {
+	   text-align: right;
+	}
+	
+	.day {
+	   width: 20px;
+	   height: 30px;
+	}
+	
+	#tbCalendarYM {
+	   height: 5px;
+	}
+	
+	#management-create-modal {
+	   display: none;
+	   position: relative;
+	   width: 100%;
+	   height: 100%;
+	   z-index: 1;
+	}
+	
+	#management-create-modal2 {
+	   display: none;
+	   position: relative;
+	   width: 100%;
+	   height: 100%;
+	   z-index: 1;
+	}
+	
+	.modal_content {
+	   position: absolute;
+	   top: 10%;
+	   left: 35%;
+	   width: 400px;
+	   height: 440px;
+	   margin: 20px auto;
+	   background: #29428C;
+	   border: 1px solid black;
+	   border-radius: 25px;
+	}
+	
+	#management-create-modal .modal_layer {
+	   position: fixed;
+	   top: 0;
+	   left: 0;
+	   width: 100%;
+	   height: 100%;
+	   background: rgba(0, 0, 0, 0.5);
+	   z-index: -1;
+	}
+	
+	.modal_head {
+	   margin-top: 5px; margin-left : 25px;
+	   height: 55px;
+	   color: white;
+	   text-align: left;
+	   font-size: 20px;
+	   margin-left: 25px;
+	}
+	
+	#management-close-btn {
+	   right: 30%;
+	   top: 10%;
+	}
+	
+	#management-close-btn2 {
+	   right: 30%;
+	   top: 10%;
+	}
+	
+	#management-create {
+	   right: 55%;
+	   top: 10%;
+	}
+	
+	.modal_content-box {
+	   width: 84%;
+	   height: 75%;
+	   background: white;
+	   border-radius: 25px;
+	   margin-left: 28px;
+	}
+	
+	.modal_button {
+	   width: 100%;
+	   height: 30%;
+	   float: right;
+	   position: relative;
+	}
+	
+	.modal_button button {
+	   background-color: rgb(25, 25, 112);
+	   color: white;
+	   text-align: center;
+	   cursor: pointer;
+	   width: 80px;
+	   height: 30px;
+	   position: absolute;
+	}
+	
+	form {
+	   height: 95%;
+	   text-align: center;
+	}
+	
+	.managementModalInput {
+	   position: absolute;
+	   width: 260px;
+	}
+	
+	.managementModalDateInput {
+	   position:absolute;
+	   width:130px;
+	}
+	
+	.start-day {
+	   top:30%;
+	   left:15%;
+	   
+	}
+	
+	.end-day {
+	   top:30%;
+	   left:48%;
+	
+	}
+	
+	.title {
+	   top: 16%;
+	   left: 15%;
+	   height: 47px;
+	}
+	
+	.content {
+	   height: 180px;
+	   top: 40%;
+	   left: 15%;
+	   resize:none;
+	}
+	
+	#modal .modal_layer {
+	   position: fixed;
+	   top: 0;
+	   left: 0;
+	   width: 100%;
+	   height: 100%;
+	   background: rgba(0, 0, 0, 0.5);
+	   z-index: -1;
+	}
 
 
 
@@ -287,24 +293,25 @@ form {
    </div>
 
    <!-- 캘린더생성 모달창 -->
-
    <div id="management-create-modal">
-
       <div class="modal_content">
-         <form action="" method="post">
+         <form action="${ pageContext.servletContext.contextPath }/calendar/regist" method="post">
             <div class="modal_head">
                <h3>일정 생성</h3>
             </div>
             <div class="modal_content-box">
-               <input type="text" class="managementModalInput title"
-                  name="managementTitle" placeholder="Meeting Log Title"> <br>
-                      <input type='date' class="managementModalDateInput start-day" name='taskStartday'/>
-                      <input type='date' class="managementModalDateInput end-day" name='taskEndday'/> 
-                  <br> 
-                  <textarea class="managementModalInput content" name="managementNum" rows="13" cols="51" placeholder="상세내용을 입력해주세요"></textarea>
-            </div>
+               <input type="text" class="managementModalInput title" name="title" placeholder="Meeting Log Title" required="required"> 
+               <br>
+				<input type='date' class="managementModalDateInput start-day" name='startDate' required="required"/>
+				<input type='date' class="managementModalDateInput end-day" name='endDate' required="required"/> 
+				<input type="hidden" name="memberNo" value="${ sessionScope.loginMember.no }">
+				<input type="hidden" name="permitCode" value="${ sessionScope.loginMember.permitCode }">
+				<input type="hidden" name="memberName" value="${ sessionScope.loginMember.name }">
+				<br>
+				<textarea class="managementModalInput content" name="body" rows="13" cols="51" placeholder="상세내용을 입력해주세요"></textarea>
+             </div>
             <div class="modal_button">
-               <button type="button" id="management-create">Ok</button>
+               <button type="submit" id="management-create">Ok</button>
                <button type="button" id="management-close-btn">Cancel</button>
             </div>
          </form>
@@ -314,7 +321,6 @@ form {
 
    <!-- 캘린더 상세 보기 모달창  -->
    <div id="management-create-modal2">
-
       <div class="modal_content">
          <form action="" method="post">
             <div class="modal_head">

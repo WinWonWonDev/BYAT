@@ -4,5 +4,70 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.calendar.model.dao.CalendarMapper">
  
+    <select id="selectAllMemberNo" resultType="_int">
+ 		SELECT 
+ 		       MEMBER_NO
+ 	      FROM TBL_MEMBER 
+    	 WHERE ABSENCE_YN = 'N'
+ 	</select> 
+ 
+ 
+ 	<insert id="insertScheduleByMember">
+ 		INSERT
+ 		  INTO TBL_CALENDAR_SCHEDULE A 
+ 		(
+ 		  A.SCHEDULE_CODE 
+ 		, A.SCHEDULE_TITLE
+ 		, A.SCHEDULE_START_DATE
+ 		, A.SCHEDULE_END_DATE
+ 		, A.SCHEDULE_BODY
+ 		, A.MEMBER_NO
+ 		, A.SCHEDULE_WRITER
+ 		, A.CALENDAR_SCHEDULE_TYPE_CODE
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SCHEDULE_CODE.NEXTVAL
+ 		, #{ title }
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, #{ body }
+ 		, #{ memberNo }
+ 		, #{ memberName }
+ 		, 2
+ 		, 0
+ 		)
+ 	</insert> 
+ 	
+ 	<insert id="insertScheduleByAdmin">
+ 		INSERT 
+ 		  INTO TBL_CALENDAR_SCHEDULE A 
+ 		(
+ 		  A.SCHEDULE_CODE 
+ 		, A.SCHEDULE_TITLE
+ 		, A.SCHEDULE_START_DATE
+ 		, A.SCHEDULE_END_DATE
+ 		, A.SCHEDULE_BODY
+ 		, A.MEMBER_NO
+ 		, A.SCHEDULE_WRITER
+ 		, A.CALENDAR_SCHEDULE_TYPE_CODE
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SCHEDULE_CODE.NEXTVAL
+ 		, #{ title }
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, #{ body }
+ 		, #{ memberNo }
+ 		, #{ memberName }
+ 		, 3
+ 		, 0
+ 		)
+ 	
+ 	</insert>
+ 	
  	
  </mapper>

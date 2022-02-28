@@ -663,6 +663,7 @@ $(document).ready(function() {
 					
 					if(permitName[i].innerText == 'PM') {
 							
+						managementforPermit.html("");
 						const option1 = document.createElement('option');
 						option1.setAttribute("selected","selected");
 						option1.setAttribute("value","PM");
@@ -677,6 +678,7 @@ $(document).ready(function() {
 						
 					} else {
 
+						managementforPermit.html("");
 						const option1 = document.createElement('option');
 						option1.setAttribute("value","PM");
 						option1.innerText = 'PM';
