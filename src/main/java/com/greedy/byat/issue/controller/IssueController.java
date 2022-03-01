@@ -1,6 +1,7 @@
 package com.greedy.byat.issue.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,17 +10,25 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greedy.byat.common.exception.issue.IssueInsertMemberHistoryException;
+import com.greedy.byat.common.exception.issue.IssueInsertVersionHistoryException;
+import com.greedy.byat.common.exception.issue.IssueModifyMemberException;
 import com.greedy.byat.common.exception.issue.IssueModifyStatusException;
 import com.greedy.byat.common.exception.issue.IssueRegistStatusHistoryException;
+import com.greedy.byat.common.exception.issue.IssueUpdateContentException;
 import com.greedy.byat.issue.model.dto.IssueDTO;
+import com.greedy.byat.issue.model.dto.IssueMembersDTO;
 import com.greedy.byat.issue.model.service.IssueService;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
+import com.greedy.byat.sprint.model.dto.SprintMembersDTO;
 
 @Controller
 @RequestMapping("/issue")
@@ -40,8 +49,6 @@ public class IssueController {
 		
 		List<SprintDTO> sprintList = issueService.selectSprintList(projectCode);
 
-		System.out.println(sprintList);
-		
 		mv.addObject("sprintList", sprintList);
 		mv.setViewName("/issue/list");
 		
@@ -90,6 +97,71 @@ public class IssueController {
 		mv.setViewName("jsonView");
 		
 		return mv;
+	}
+	
+	@PostMapping("sprintmemberlist")
+	public ModelAndView selectSprintMembers(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int code = Integer.parseInt(request.getParameter("sprintCode"));
+
+		List<SprintMembersDTO> sprintMemberList = issueService.selectSprintMembers(code);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		System.out.println(sprintMemberList);
+		
+		mv.addObject("sprintMemberList", objectMapper.writeValueAsString(sprintMemberList));
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	@PostMapping("modify")
+	public String modifyIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueModifyMemberException, IssueUpdateContentException, IssueInsertVersionHistoryException, IssueInsertMemberHistoryException {
+		
+		MemberDTO changeMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+		
+		String title = request.getParameter("issueModifyTitle");
+		String body = request.getParameter("issueModifyBody");
+		String[] memberInfo = request.getParameterValues("issueMemberBody");
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
+		int issueCode = Integer.parseInt(request.getParameter("issueCode"));
+		
+		List<IssueMembersDTO> issueMemberList = new ArrayList<>();
+		
+		for(int i = 0; i < memberInfo.length; i++) {
+			
+			IssueMembersDTO member = new IssueMembersDTO();
+			
+			String[] memberInfoSplit = memberInfo[i].split(" ");
+			
+			member.setId(memberInfoSplit[0]);
+			member.setName(memberInfoSplit[1]);
+			member.setNo(Integer.parseInt(memberInfoSplit[2]));
+			member.setCode(issueCode);
+			member.setChangeMemberNo(changeMember.getNo());
+			
+			issueMemberList.add(i, member);
+			
+		}
+		
+		IssueDTO modifyIssue = new IssueDTO();
+		modifyIssue.setTitle(title);
+		modifyIssue.setBody(body);
+		modifyIssue.setCode(issueCode);
+		modifyIssue.setIssueMemberList(issueMemberList);
+		modifyIssue.setProjectCode(projectCode);
+		modifyIssue.setSprintCode(sprintCode);
+		modifyIssue.setWriter(changeMember.getNo());
+		
+		issueService.updateIssue(modifyIssue);
+		
+		rttr.addFlashAttribute("message", "이슈 수정 및 담당자 변경 성공!");
+		
+		return "redirect:/issue/list?code=" + projectCode;
 	}
 	
 }

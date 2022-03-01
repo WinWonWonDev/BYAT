@@ -44,6 +44,25 @@
  		<association property="writerMember" resultMap="memberResultMap"/>
  	</resultMap>
  	
+ 	<resultMap type="IssueMembersDTO" id="issueMembersResultMap">
+ 		<id property="code" column="ISSUE_CODE"/>
+ 		<id property="no" column="MEMBER_NO"/>
+ 		<result property="sprintCode" column="SPRINT_CODE"/>
+ 		<result property="participationYn" column="ISSUE_PARTICIPATION_YN"/>
+ 		<result property="name" column="MEMBER_NAME"/>
+ 		<result property="id" column="MEMBER_ID"/>
+ 		<result property="changeMemberNo" column="MEMBER_NO"/>
+ 	</resultMap>
+ 	
+ 	<resultMap type="SprintMembersDTO" id="sprintMembersResultMap">
+ 		<id property="no" column="MEMBER_NO"/>
+ 		<id property="sprintCode" column="SPRINT_CODE"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		<result property="participationYn" column="SPRINT_PARTICIPATION_YN"/>
+ 		<result property="id" column="MEMBER_ID"/>
+ 		<result property="name" column="MEMBER_NAME"/>
+ 	</resultMap>
+ 	
  	<select id="selectSprintList" resultMap="sprintResultMap" parameterType="_int">
  		SELECT
  		       A.SPRINT_CODE
@@ -105,5 +124,33 @@
  		, #{ name }
  		)
  	</insert>
+ 	
+ 	<select id="selectIssueMemberList" resultMap="issueMembersResultMap" parameterType="_int">
+		SELECT 
+		       A.ISSUE_CODE
+		     , A.MEMBER_NO
+		     , B.MEMBER_ID
+		     , B.MEMBER_NAME
+		     , A.SPRINT_CODE
+		     , A.ISSUE_PARTICIPATION_YN
+		  FROM TBL_ISSUE_MEMBERS A
+		  JOIN TBL_MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
+		 WHERE A.ISSUE_CODE = #{ code } 	
+		   AND ISSUE_PARTICIPATION_YN = 'Y'
+ 	</select>
+ 	
+ 	<select id="selectSprintMembers" parameterType="_int" resultMap="sprintMembersResultMap">
+		SELECT
+		       A.MEMBER_NO
+		     , A.PROJECT_CODE
+		     , A.SPRINT_CODE
+		     , A.SPRINT_PARTICIPATION_YN
+	         , B.MEMBER_ID
+		     , B.MEMBER_NAME 
+	      FROM TBL_SPRINT_MEMBERS A
+	      JOIN TBL_MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
+	     WHERE A.SPRINT_CODE = #{ code }
+	       AND A.SPRINT_PARTICIPATION_YN = 'Y'
+ 	</select>
  	
  </mapper>
