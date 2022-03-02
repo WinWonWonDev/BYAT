@@ -214,6 +214,7 @@
 	
 	.projectDescription {
 		margin-top:2%;
+		resize: none;
 	}
 	
 	.projectTitleTag {
@@ -1154,7 +1155,6 @@
 
 			const updateStartDate = document.getElementById("updateStartDate");
 			const updateEndDate = document.getElementById("updateEndDate");
-			const date = getFormatDate(new Date());
 			
 			if(updateStartDate.value > updateEndDate.value) {
 				alert("종료일자가 시작일자 전일 수 없습니다.");

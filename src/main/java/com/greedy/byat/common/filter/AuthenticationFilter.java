@@ -132,6 +132,10 @@ public class AuthenticationFilter implements Filter {
 		
 		memberPermitList.add("/issue/list");
 		memberPermitList.add("/issue/modifyissuestatus");
+		memberPermitList.add("/issue/issuelist");
+		memberPermitList.add("/issue/sprintmemberlist");
+		memberPermitList.add("/issue/modify");
+		memberPermitList.add("/issue/removeissuemember");
 		
 		memberPermitList.add("/calendar/list");
 		memberPermitList.add("/calendar/regist");
