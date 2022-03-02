@@ -3,16 +3,16 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.mytask.model.dao.MyTaskMapper">
- 	<resultMap id="memberResultMap" type="MemberDTO">
- 		<id property="no" column="MEMBER_NO"/>
- 		<result property="permit" column="MEMBER_PERMIT"/>
- 		<result property="id" column="MEMBER_ID"/>
- 		<result property="name" column="MEMBER_NAME"/>
- 		<result property="pwd" column="MEMBER_PWD"/>
- 		<result property="phone" column="MEMBER_PHONE"/>
- 		<result property="email" column="MEMBER_EMAIL"/>
- 	</resultMap>
  	
+ 	<resultMap id="memberResultMap" type="MemberDTO">
+ 		<id property="memberNo" column="MEMBER_NO"/>
+ 		<result property="permitCode" column="PERMIT_CODE"/>
+ 		<result property="memberId" column="MEMBER_ID"/>
+ 		<result property="memberName" column="MEMBER_NAME"/>
+ 		<result property="memberPwd" column="MEMBER_PWD"/>
+ 		<result property="memberPhone" column="MEMBER_PHONE"/>
+ 		<result property="memberEmail" column="MEMBER_EMAIL"/>
+ 	</resultMap>
  	
  	<resultMap id="projectResultMap" type="ProjectDTO">
  		<id property="code" column="PROJECT_CODE"/>
@@ -43,6 +43,7 @@
        <result property="title" column="TODOLIST_TITLE"/>
        <result property="checkStatus" column="TODOLIST_CHECK_STATUS"/>
        <result property="deleteStatus" column="TODOLIST_DELETESTATUS"/>
+       <result property="memberNo" column="MEMBER_NO"/>
     </resultMap>
     
     <resultMap id ="taskResultMap" type="TaskDTO">
@@ -53,15 +54,17 @@
  		<result property="endDate" column="TASK_END_DATE"/>
  		<result property="deleteStatus" column="TASK_DELETE_STATUS"/>
  		<result property="projectCode" column="PROJECT_CODE"/>
- 		 		
- 		<association property="taskMemberList" resultMap="memberResultMap"/>
- 	</resultMap>
+ 		<result property="memberNo" column="MEMBER_NO"/>
+ 		
+  	</resultMap>
  	
- 	<!-- <resultMap id ="taskMembersResultMap" type="TaskMembersDTO">
+ 	<resultMap id ="taskMembersResultMap" type="TaskMembersDTO">
+ 		
+ 		<id property="taskCode" column="TASK_CODE"/>
  		<result property="memberNo" column="MEMBER_NO"/>
  		<result property="projectCode" column="PROJECT_CODE"/>
- 		
- 	</resultMap> -->
+ 		<result property="rolName" column="ROLE_NAME"/>
+ 	</resultMap>
  	
   	<select id="selectMyTaskProjectList" resultMap="projectResultMap">
  		SELECT
@@ -77,9 +80,8 @@
 		  FROM TBL_PROJECT A
 		  JOIN TBL_MEMBER B ON(A.PROJECT_WRITER = B.MEMBER_NAME)
 		  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
-		 WHERE C.MEMBER_NO = #{ no }
+		 WHERE C.MEMBER_NO = #{memberNumber}
 		   AND A.PROJECT_DELETE_STATUS = 'N'
-		 ORDER BY PROJECT_CODE DESC
  	</select>
  	
  	<select id="selectMyTaskProjectMembers" resultMap="projectMembersResultMap">
@@ -92,9 +94,38 @@
 		  FROM TBL_PROJECT_MEMBERS A
 		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
 		  JOIN TBL_ROLE C ON(A.PROJECT_CODE = C.PROJECT_CODE)
-		 WHERE A.PROJECT_CODE = #{ code }
+		 WHERE A.PROJECT_CODE = #{projectCode}
 		   AND B.MEMBER_NO = C.MEMBER_NO
- 	</select>
+		 	</select>
+ 	
+ 	<select id="selectTaskList" resultMap="taskResultMap">
+        SELECT
+               A.TASK_CODE
+             , A.TASK_TITLE
+             , A.TASK_START_DATE
+             , A.TASK_PROGRESS
+             , A.TASK_END_DATE
+             , A.TASK_DELETE_STATUS
+             , A.PROJECT_CODE
+          FROM TBL_TASK A
+         WHERE A.MEMBER_NO = #{memberNo}
+           AND A.TASK_DELETE_STATUS = 'N'
+     </select>
+     
+     <select id="selectTaskListForProject" resultMap="taskResultMap">
+        SELECT
+               A.TASK_CODE
+             , A.TASK_TITLE
+             , A.TASK_START_DATE
+             , A.TASK_PROGRESS
+             , A.TASK_END_DATE
+             , A.TASK_DELETE_STATUS
+             , A.PROJECT_CODE
+          FROM TBL_TASK A
+         WHERE A.MEMBER_NO = #{memberNo}
+           AND A.PROJECT_CODE = #{projectCode}
+           AND A.TASK_DELETE_STATUS = 'N'
+     </select>
  	
  	<select id="selectMyTaskToDoList" resultMap="toDoListResultMap">
         SELECT
@@ -105,30 +136,11 @@
              , A.TODOLIST_DELETE_STATUS
              , A.MEMBER_NO
           FROM TBL_TODOLIST A
-         WHERE A.MEMBER_NO= #{ memberNo }
+         WHERE A.MEMBER_NO = #{memberNumber}
            AND A.TODOLIST_DELETE_STATUS = 'N'
-         ORDER BY A.TODOLIST_NO DESC
     </select>
- 	
 
- 	<select id="selectTaskList" resultMap="taskResultMap">
-        SELECT
-             , A.TASK_CODE
-             , A.TASK_TITLE
-             , A.TASK_PROGRESS
-             , B.PROJECT_CODE
-             , A.TASK_DELETE_STATUS
-             , A.TASK_STATRT_DATE
-             , A.TASK_END_DATE
-          FROM TBL_TASK A
-          JOIN TBL_TASK_MEMBERS ON(A.TASK_CODE= B.TASK_CODE )
-         WHERE A.PROJECT_CODE = #{ projectCode }
-           AND B.MEMBER_NO = #{ memberNo }
-           AND TASK_DELETE_STATUS = 'N'
-         ORDER BY A.TASK_STATRT_DATE DESC
-     </select>
- 	
- 	<insert id = "reqistToDoList" parameterType="_int" >
+ 	<insert id = "registToDoList" parameterType="int" >
         INSERT
           INTO TBL_TODOLIST A
         (
@@ -142,28 +154,27 @@
  		VALUES
  		(
  		  SEQ_PROJECT_NO.NEXTVAL
- 		, TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
+ 		, TO_DATE(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
  		, NULL
  		, 'N'
  		, 'N'
- 		, #{ memberNo }
+ 		, #{ memberNumber }
  		)
  	</insert>
  	
- 	
- 	<update id = "removeToDoList" parameterType="_int">
-       UPDATE 
+ 	<update id = "removeToDoList" parameterType="int">
+       UPDATE
  		       TBL_TODOLIST A
  		   SET A.TODOLIST_DELETE_STATUS= 'Y'
- 		 WHERE A.TODOLIST_NO = #{ todolistNo }
+ 		 WHERE A.TODOLIST_NO = #{todoListNumber}
  	</update>
 
- 	<update id = "modifyToDoListStatus" >
+ 	<update id = "modifyToDoListStatus" parameterType="ToDoListDTO">
        UPDATE 
  		       TBL_TODOLIST A
- 		   SET A.TODOLIST_CHECK_STATUS = #{ checkStatus }
- 		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
- 		 WHERE A.TODOLIST_NO = #{ no }
+ 		   SET A.TODOLIST_CHECK_STATUS = #{checkStatus}
+ 		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+ 		 WHERE A.TODOLIST_NO = #{toDoListNo}
  	</update>
  	
  	<select id="selectMemberModal" resultMap="projectMembersResultMap">
@@ -177,17 +188,16 @@
 		  FROM TBL_PROJECT_MEMBERS A
 		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
 		  JOIN TBL_ROLE C ON(A.PROJECT_CODE = C.PROJECT_CODE)
-		 WHERE A.PROJECT_CODE = #{ code }
+		 WHERE A.PROJECT_CODE = #{projectNum}
 		   AND B.MEMBER_NO = C.MEMBER_NO
  	</select>
- 
  	
- 	<update id = "modifyToDoList" >
+ 	<update id ="modifyToDoList"  parameterType="ToDoListDTO">
        UPDATE 
  		       TBL_TODOLIST A
- 		   SET A.TODOLIST_TITLE = #{ title }
- 		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
- 		 WHERE A.TODOLIST_NO = #{ no }
+ 		   SET A.TODOLIST_TITLE = #{title}
+ 		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+ 		 WHERE A.TODOLIST_NO = #{toDoListNo}
  	</update>
  	
  </mapper>

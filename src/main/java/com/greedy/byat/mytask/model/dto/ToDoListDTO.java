@@ -14,9 +14,10 @@ import lombok.ToString;
 @ToString 
 public class ToDoListDTO {
 
+	private int no;
 	private java.sql.Date writingTime;
 	private String title;
 	private String checkStatus;
 	private String deleteStatus;
-	private int no;
+	private int memberNo;
 }
