@@ -22,6 +22,7 @@ import com.greedy.byat.common.exception.issue.IssueInsertVersionHistoryException
 import com.greedy.byat.common.exception.issue.IssueModifyMemberException;
 import com.greedy.byat.common.exception.issue.IssueModifyStatusException;
 import com.greedy.byat.common.exception.issue.IssueRegistStatusHistoryException;
+import com.greedy.byat.common.exception.issue.IssueRemoveMemberException;
 import com.greedy.byat.common.exception.issue.IssueUpdateContentException;
 import com.greedy.byat.issue.model.dto.IssueDTO;
 import com.greedy.byat.issue.model.dto.IssueMembersDTO;
@@ -165,7 +166,7 @@ public class IssueController {
 	}
 	
 	@PostMapping("removeissuemember")
-	public ModelAndView removeIssueMember(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView removeIssueMember(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws IssueRemoveMemberException, IssueInsertMemberHistoryException {
 		
 		response.setContentType("application/json; charset=UTF-8");
 		
@@ -181,6 +182,8 @@ public class IssueController {
 		removeMember.setSprintCode(sprintCode);
 		removeMember.setParticipationYn("N");
 		removeMember.setChangeMemberNo(changeMember.getNo());
+		
+		int result = issueService.deleteIssueMember(removeMember);
 		
 		mv.setViewName("jsonView");
 		
