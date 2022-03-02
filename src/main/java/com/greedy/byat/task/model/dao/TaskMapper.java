@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
+import com.greedy.byat.task.model.dto.TaskMembersDTO;
 
 public interface TaskMapper {
 
@@ -41,4 +42,38 @@ public interface TaskMapper {
 	int insertTaskMembersHistory(Map<String, Integer> taskParticipation);
 
 	int insertSprintMembersHistory(Map<String, Integer> taskParticipation);
+
+	int checkIsSprintMembers(Map<String, Integer> taskParticipation);
+
+	List<TaskMembersDTO> selectTaskMembers(int taskCode);
+
+	int updateTask(TaskDTO task);
+
+	int insertTaskVersionHistory2(TaskDTO task);
+
+	int deleteTask(Map<String, Integer> map);
+
+	int insertTaskVersionHistory3(TaskDTO task);
+
+	int deleteTaskMembers(Map<String, Integer> map);
+
+	List<Integer> selectTaskMembersList(Map<String, Integer> map);
+
+	int insertTaskMembersHistory2(Map<String, Integer> map);
+
+	String selectTaskBody(Map<String, Object> map);
+
+	TaskDTO selectTask2(Map<String, Integer> map);
+
+	int deleteTaskMembers2(Map<String, Integer> map);
+
+	int checkOtherTaskMembers(Map<String, Integer> map);
+
+	int deleteSprintMembers(Map<String, Integer> map);
+
+	int insertTaskMembersHistory3(Map<String, Integer> map);
+
+	int insertSprintMembersHistory2(Map<String, Integer> map);
+
+	List<TaskDTO> selectTaskList(int projectCode);
 }

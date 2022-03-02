@@ -130,7 +130,7 @@ public class SprintController {
 		System.out.println("프로젝토 꼬드 : " + projectCode);
 		System.out.println("스뿌린뜨 꼬드 : " + sprintCode);
 		
-		sprintService.deleteSprint(sprintCode);
+		sprintService.removeSprint(sprintCode);
 		
 		rttr.addFlashAttribute("message", "스프린트 삭제 완료");
 		
@@ -140,8 +140,6 @@ public class SprintController {
 	@GetMapping(value = "/selecttasks", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public String selectTaskList(HttpServletRequest request) {
-		
-		System.out.println("씨익");
 		
 		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
 		
@@ -158,4 +156,15 @@ public class SprintController {
 		return gson.toJson(taskList);
 	}
 	
+	@GetMapping("/start")
+	public String startSprint(HttpServletRequest request, RedirectAttributes rttr) {
+		
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		
+		sprintService.startSprint(projectCode);
+		
+		rttr.addFlashAttribute("message", "스프린트가 시작되었습니다.");
+		
+		return "redirect:/sprint/list?code=" + projectCode;
+	}
 }

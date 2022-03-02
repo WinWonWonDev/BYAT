@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
+import com.greedy.byat.task.model.dto.TaskMembersDTO;
 
 public interface TaskService {
 
@@ -16,6 +17,16 @@ public interface TaskService {
 
 	String selectTaskParticipation(Map<String, Integer> taskParticipation);
 
-	int registTaskMembers(Map<String, Integer> taskParticipation);
+	String registTaskMembers(Map<String, Integer> taskParticipation);
+
+	List<TaskMembersDTO> selectTaskMembers(int taskCode);
+
+	String modifyTask(TaskDTO task);
+
+	String removeTask(Map<String, Integer> map);
+
+	String removeTaskMembers(Map<String, Integer> map);
+
+	List<TaskDTO> selectTaskList(int projectCode);
 
 }
