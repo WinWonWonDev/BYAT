@@ -11,11 +11,13 @@ import com.greedy.byat.task.model.dto.TaskDTO;
 
 public interface MyTaskService {
 
-	List<ProjectDTO> selectMyTaskProjectList(MemberDTO member);
-	List<ProjectMembersDTO> selectMyTaskProjectMembers(int projectCode);
-	List<TaskDTO> selectTaskList(int projectCode, int i);
-	List<ToDoListDTO> selectMyTaskToDoList(int memberNo);
+	MyTaskDTO selectmyTaskList(MemberDTO member);
 	void registToDoList(int memberNo);
-	int removeToDoList(int todolistNo);
-	int modifyToDoListStatus(ToDoListDTO todolist);
+	int removeToDoList(int toDoListNumber);
+	int modifyToDoListStatus(ToDoListDTO todoList);
+	List<ProjectMembersDTO> selectMemberModal(int projectNum);
+	int modifyToDoList(ToDoListDTO todoList);
+	List<TaskDTO> selectTaskList(int memberNo);
+	List<TaskDTO> selectTaskListForProject(int memberNo, int ProjectCode);
+	
 }

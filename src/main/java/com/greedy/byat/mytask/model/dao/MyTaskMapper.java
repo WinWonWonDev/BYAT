@@ -2,25 +2,33 @@ package com.greedy.byat.mytask.model.dao;
 
 import java.util.List;
 
-import com.greedy.byat.member.model.dto.MemberDTO;
+import org.apache.ibatis.annotations.Param;
+
 import com.greedy.byat.mytask.model.dto.ToDoListDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
-import com.greedy.byat.task.model.dto.TaskDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;			
 
 public interface MyTaskMapper {
 
-	List<ProjectDTO> selectMyTaskProjectList(MemberDTO member);
+	List<ProjectDTO> selectMyTaskProjectList(int memberNumber);
 	
-	List<ProjectMembersDTO> selectMyTaskProjectMembers(int code);
+	List<ProjectMembersDTO> selectMyTaskProjectMembers(int projectCode);
 
-	List<TaskDTO> selectTaskList(int projectCode, int memberNo);
+	List<TaskDTO> selectTaskList(int memberNo);
 
-	List<ToDoListDTO> selectMyTaskToDoList(int memberNo);
+	List<ToDoListDTO> selectMyTaskToDoList(int memberNumber);
 
-	void reqistToDoList(int memberNo);
+	void registToDoList(int memberNumber);
 
-	int removeToDoList(int todolistNo);
+	int removeToDoList(int todoListNumber);
 	
-	int modifyToDoListStatus(ToDoListDTO todolist);
+	int modifyToDoListStatus(ToDoListDTO toDoList);
+
+	List<ProjectMembersDTO> selectMemberModal(int projectNum);
+
+	int modifyToDoList(ToDoListDTO todoList);
+
+
+	List<TaskDTO> selectTaskListForProject(TaskDTO task);
 }
