@@ -3,6 +3,81 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.meetinglog.model.dao.MeetinglogMapper">
- 
+ 	
+ <!-- 	<resultMap id ="meetinglogResultMap" type="MeetinglogDTO">
+ 		<id property="code" column="MEETINGLOG_CODE"/>
+ 		<result property="title" column="MEETINGLOG_TITLE"/>
+ 		<result property="body" column="MEETINGLOG_BODY"/>
+ 		<reuslt property="writingDate" column="MEETINGLOG_WRITING_DATE"/>
+ 		<result property="version" column="MEETINGLOG_VERSION"/>
+ 		<result property="deleteSatus" column="MEETINGLOG_DELETE_STATUS"/>
+ 		<result property="writer" column="MEETINGLOG_WRITER"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 	</resultMap> -->
+ 	
+ 	<!-- <select id="selectMeetingLogList" resultMap = meetinglogResultMap>
+ 		SELECT
+			   A.MEETINGLOG_CODE
+			 , A.MEETINGLOG_TITLE
+			 , A.MEETINGLOG_BODY
+			 , A.MEETINGLOG_WRITING_DATE
+			 , A.MEETINGLOG_VERSION
+			 , A.MEETINGLOG_DELETE_STATUS
+			 , A.MEETINGLOG_WRITER
+			 , A.PROJECT_CODE
+		  FROM TBL_MEETINGLOG A
+		 WHERE A.PROJECT_CODE = #{ projectCode }
+		   AND A.MEETRINGLOG_DELETE_STATUS = 'N'
+		 ORDER BY MEETINGLOG_CODE DESC
+ 	</select> -->
+ 	
+ 	<!-- <select id="selectMeetinglogDetail" resultMap = meetinglogResultMap>
+ 		SELECT
+			   A.MEETINGLOG_CODE
+			 , A.MEETINGLOG_TITLE
+			 , A.MEETINGLOG_BODY
+			 , A.MEETINGLOG_WRITING_DATE
+			 , A.MEETINGLOG_VERSION
+			 , A.MEETINGLOG_WRITER
+		  FROM TBL_MEETINGLOG A
+		 WHERE A.MEETINGLOG_CODE = #{ code }
+		   AND A.MEETRINGLOG_DELETE_STATUS = 'N'
+		 ORDER BY MEETINGLOG_CODE DESC
+ 	</select>
+ 	
+ 	<insert id="registMeetinglog" parameterType="MeetinglogDTO">
+ 		INSERT
+ 		  INTO TBL_MEETINGLOG A
+ 		(
+ 		 	A.MEETINGLOG_CODE
+		, A.MEETINGLOG_TITLE
+		, A.MEETINGLOG_BODY
+		, A.MEETINGLOG_WRITING_DATE
+		, A.MEETINGLOG_VERSION
+		, A.MEETINGLOG_DELETE_STATUS
+		, A.MEETINGLOG_WRITER
+		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_NO.NEXTVAL
+ 		, #{ title } 
+ 		, #{ body }
+ 		, #{ writingDate }
+ 		, 1
+ 		, 'N'
+ 		, #{ writer }
+ 		, #{ projectCode }
+ 		)
+ 	</insert>
+
+ 	<update id="modifyMeetinglog" parameterType="MeetinglogDTO">
+ 		UPDATE
+ 		       TBL_MEETINGLOG A
+ 		   SET A.PROJECT_TITLE = #{ title }
+			 , A.MEETINGLOG_WRITING_DATE = TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
+ 		     , A.MEETINGLOG_BODY = #{ body }
+ 		 WHERE A.MEETINGLOG_CODE = #{ code }
+ 	</update> -->
  	
  </mapper>
