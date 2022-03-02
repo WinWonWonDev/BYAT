@@ -32,6 +32,19 @@
  		<id property="id" column="MEMBER_ID"/>
  		<result property="name" column="MEMBER_NAME"/>
  	</resultMap>
+
+	<resultMap type="TaskMembersDTO" id="taskMembersResultMap">
+		<id property="memberName" column="MEMBER_NAME"/>
+		<result property="permitName" column="PERMIT_NAME"/>
+		<result property="memberId" column="MEMBER_ID"/>
+	</resultMap>
+ 	
+ 	<resultMap type="TaskDTO" id="taskResultMap">
+ 		<id property="title" column="TASK_TITLE"/>
+ 		<result property="startDate" column="TASK_START_DATE"/>
+ 		<result property="endDate" column="TASK_END_DATE"/>
+ 		<result property="body" column="TASK_BODY"/>
+ 	</resultMap>
  	
  	<select id="selectMembersRoleList" resultMap="taskMembersRoleResultMap">
  		SELECT
@@ -110,7 +123,7 @@
  		) 
  	</insert>
  	
- 	<select id="selectSprintTitle" resultType="java.lang.String">
+ 	<select id="selectSprintTitle" parameterType="TaskDTO" resultType="java.lang.String">
 		SELECT
 			   A.SPRINT_TITLE
 		  FROM TBL_SPRINT A
@@ -121,7 +134,7 @@
  	<insert id="insertTaskVersionHistory">
 		<selectKey keyProperty="code" order="BEFORE" resultType="_int">
 		SELECT
-		 	   SEQ_TASK_CODE.currval
+		 	   SEQ_TASK_CODE.CURRVAL
 		  FROM DUAL
 		</selectKey>
  		INSERT
@@ -186,7 +199,7 @@
  		  FROM TBL_TASK_MEMBERS
  		 WHERE TASK_CODE = #{ taskCode }
  		   AND MEMBER_NO = #{ memberNo }
- 		   AND TASK_PARTICIPATION_YN = 'N'
+ 		   AND TASK_PARTICIPATION_YN = 'Y'
  	</select>
  	
  	<update id="changeTaskMembersParticipation" parameterType="hashmap">
@@ -238,12 +251,23 @@
  		)
  	</insert>
  	
+ 	<select id="checkIsSprintMembers" parameterType="hashmap" resultType="_int">
+ 		SELECT
+ 			   COUNT(*)
+ 		  FROM TBL_SPRINT_MEMBERS
+ 		 WHERE MEMBER_NO = #{ memberNo }
+ 		   AND SPRINT_CODE = (SELECT
+ 		   							 A.SPRINT_CODE
+ 		   					    FROM TBL_TASK A
+ 		   					   WHERE A.TASK_CODE = #{ taskCode })
+ 	</select>
+ 	
  	<select id="checkWasSprintMembers" parameterType="hashmap" resultType="_int">
  		SELECT
  		       COUNT(*)
  		  FROM TBL_SPRINT_MEMBERS
  		 WHERE MEMBER_NO = #{ memberNo }
- 		   AND SPRINT_PARTICIPATION_YN = 'N'
+ 		   AND SPRINT_PARTICIPATION_YN = 'Y'
  		   AND SPRINT_CODE = (SELECT
  		   							 A.SPRINT_CODE
  		   					    FROM TBL_TASK A
@@ -310,7 +334,7 @@
  		VALUES
  		(
  		  SEQ_SPRINT_MEMBERS_HISTORY_NO.NEXTVAL
- 		, #{ memberNO }
+ 		, #{ memberNo }
  		, SYSDATE
  		, 'Y'
  		, (SELECT
@@ -323,4 +347,276 @@
  			WHERE C.TASK_CODE = #{ taskCode })
  		)
  	</insert>
+ 	
+ 	<select id="selectTaskMembers" resultMap="taskMembersResultMap">
+ 		SELECT
+ 			   C.MEMBER_ID
+ 			 , C.MEMBER_NAME
+ 			 , B.PERMIT_NAME
+ 		  FROM TBL_TASK_MEMBERS A
+ 		  JOIN TBL_MEMBER C ON (A.MEMBER_NO = C.MEMBER_NO)
+ 		  JOIN TBL_PERMIT B ON (B.PERMIT_CODE = C.PERMIT_CODE)
+ 		 WHERE A.TASK_CODE = #{ taskCode }
+ 	</select>
+ 	
+ 	<update id="updateTask">
+ 		UPDATE
+ 		       TBL_TASK A
+ 		   SET A.TASK_TITLE = #{ title }
+ 		     , A.TASK_START_DATE = #{ startDate }
+ 		     , A.TASK_END_DATE = #{ endDate}
+ 		     , A.TASK_BODY = #{ body }
+ 		   	 , A.TASK_VERSION = (SELECT
+ 		   	 						    B.TASK_VERSION + 1
+ 		   	 					   FROM TBL_TASK B
+ 		   	 					  WHERE B.TASK_CODE = #{ code })
+ 		 WHERE A.TASK_CODE = #{ code }
+ 	</update>
+ 	
+ 	<insert id="insertTaskVersionHistory2">
+ 		INSERT
+ 		  INTO TBL_TASK_VERSION_HISTORY A
+ 		(
+ 		  A.TASK_VERSION_HISTORY_NO
+ 		, A.TASK_VERSION_HISTORY_TITLE
+ 		, A.TASK_VERSION_HISTORY_BODY
+ 		, A.TASK_VERSION_HISTORY_VERSION
+ 		, A.TASK_VERSION_HISTORY_UPDATE_MEMBER
+ 		, A.TASK_CODE
+ 		, A.TASK_VERSION_HISTORY_UPDATE_DATE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_VERSION_HISTORY_NO.NEXTVAL
+ 		, CHR(39) || (SELECT
+ 							 F.TASK_TITLE
+ 					    FROM TBL_TASK F
+ 					   WHERE F.TASK_CODE = #{ code }
+ 					 ) || CHR(39) || ' 태스크 수정 ' || CHR(40) || (SELECT
+						    										   C.SPRINT_TITLE
+				        		        						  FROM TBL_TASK B
+				        										  JOIN TBL_SPRINT C ON (B.SPRINT_CODE = C.SPRINT_CODE)
+				       											 WHERE B.TASK_CODE = #{ code }
+				 	 										   ) || CHR(41)
+		, #{ body }
+		, (SELECT
+				  D.TASK_VERSION
+			 FROM TBL_TASK D
+			WHERE D.TASK_CODE = #{ code })
+		, (SELECT
+				  E.MEMBER_NAME
+			 FROM TBL_MEMBER E
+			WHERE E.MEMBER_NO = #{ memberNo })
+		, #{ code }
+		, SYSDATE
+ 		)
+ 	</insert>
+ 	
+ 	<update id="deleteTask" parameterType="hashmap">
+ 		UPDATE
+ 			   TBL_TASK A
+ 		   SET A.TASK_VERSION = (SELECT
+ 		   								B.TASK_VERSION + 1
+ 		   						   FROM TBL_TASK B
+ 		   						  WHERE B.TASK_CODE = #{ taskCode })
+ 		   	 , A.TASK_DELETE_STATUS = 'Y'
+ 		 WHERE A.TASK_CODE = #{ taskCode }
+ 	</update>
+ 	
+	<select id="selectTaskBody" parameterType="hashmap" resultType="java.lang.String">
+		SELECT
+			   A.TASK_BODY
+		  FROM TBL_TASK A
+		 WHERE A.TASK_CODE = #{ taskCode }
+	</select>
+	
+	<insert id="insertTaskVersionHistory3" parameterType="hashmap">
+		INSERT
+		  INTO TBL_TASK_VERSION_HISTORY A
+		(
+		  A.TASK_VERSION_HISTORY_NO
+		, A.TASK_VERSION_HISTORY_TITLE
+		, A.TASK_VERSION_HISTORY_BODY
+		, A.TASK_VERSION_HISTORY_VERSION
+		, A.TASK_VERSION_HISTORY_UPDATE_MEMBER
+		, A.TASK_CODE
+		, A.TASK_VERSION_HISTORY_UPDATE_DATE
+		)
+		VALUES
+		(
+		  SEQ_TASK_VERSION_HISTORY_NO.NEXTVAL
+		, CHR(39) || (SELECT
+ 							 B.TASK_TITLE
+ 					    FROM TBL_TASK B
+ 					   WHERE B.TASK_CODE = #{ code }
+ 					 ) || CHR(39) || ' 태스크 수정 ' || CHR(40) || (SELECT
+						    										   C.SPRINT_TITLE
+				        		        						  FROM TBL_TASK G
+				        										  JOIN TBL_SPRINT C ON (G.SPRINT_CODE = C.SPRINT_CODE)
+				       											 WHERE G.TASK_CODE = #{ code }
+				 	 										   ) || CHR(41)
+		, #{ body }
+		, (SELECT
+				  E.TASK_VERSION
+			 FROM TBL_TASK E
+			WHERE E.TASK_CODE = #{ code })
+		, (SELECT
+				  F.MEMBER_NAME
+			 FROM TBL_MEMBER F
+			WHERE F.MEMBER_NO = #{ updateMemberNo })
+		, #{ code }
+		, SYSDATE
+		)
+	</insert>
+	
+	<select id="selectTaskMembersList" parameterType="hashmap" resultType="_int">
+		SELECT
+			   A.MEMBER_NO
+		  FROM TBL_TASK_MEMBERS A
+		 WHERE A.TASK_CODE = #{ taskCode }
+		   AND A.TASK_PARTICIPATION_YN = 'Y'	
+	</select>
+	
+	<update id="deleteTaskMembers" parameterType="hashmap">
+		UPDATE
+		       TBL_TASK_MEMBERS A
+		   SET A.TASK_PARTICIPATION_YN = 'N'
+		 WHERE A.TASK_CODE = #{ taskCode }
+	</update>	
+	
+	<insert id="insertTaskMembersHistory2" parameterType="hashmap">
+		INSERT
+		  INTO TBL_TASK_MEMBERS_HISTORY A
+		(
+		  A.TASK_MEMBERS_HISTORY_NO
+		, A.MEMBER_NO
+		, A.TASK_MEMBERS_HISTORY_UPDATE_DATE
+		, A.TASK_MEMBERS_HISTORY_PARTICIPATION_YN
+		, A.TASK_CODE
+		, A.TASK_MEMBERS_HISTORY_MEMBER
+		)
+		VALUES
+		(
+		  SEQ_TASK_MEMBERS_HISTORY_NO.NEXTVAL
+		, #{ memberNo }
+		, SYSDATE
+		, 'N'
+		, #{ taskCode }
+		, (SELECT
+				  B.MEMBER_NAME
+			 FROM TBL_MEMBER B
+			WHERE B.MEMBER_NO = #{ updateMemberNo })
+		)
+	</insert>
+	
+	<update id="deleteTaskMembers2" parameterType="hashmap">
+		UPDATE
+			   TBL_TASK_MEMBERS A
+		   SET A.TASK_PARTICIPATION_YN = 'N'
+		 WHERE A.TASK_CODE = #{ taskCode }
+		   AND A.MEMBER_NO = #{ memberNo }
+	</update>
+	
+	<select id="checkOtherTaskMembers" parameterType="hashmap" resultType="_int">
+		SELECT
+			   COUNT(*)
+		  FROM TBL_TASK_MEMBERS
+		 WHERE SPRINT_CODE = (SELECT
+		 							 A.SPRINT_CODE
+		 						FROM TBL_TASK A
+		 					   WHERE A.TASK_CODE = #{ taskCode })
+		   AND MEMBER_NO = #{ memberNo }
+		   AND TASK_PARTICIPATION_YN = 'Y'
+	</select>
+	
+	<update id="deleteSprintMembers">
+		UPDATE
+			   TBL_SPRINT_MEMBERS A
+		   SET A.SPRINT_PARTICIPATION_YN = 'N'
+		 WHERE A.SPRINT_CODE = (SELECT
+		 							   B.SPRINT_CODE
+		 						  FROM TBL_TASK B
+		 						 WHERE B.TASK_CODE = #{ taskCode })
+		   AND A.MEMBER_NO = #{ memberNo }
+	</update>
+	
+	<insert id="insertSprintMembersHistory2" parameterType="hashmap">
+		INSERT
+		  INTO TBL_SPRINT_MEMBERS_HISTORY A
+		(
+		  A.SPRINT_MEMBERS_HISTORY_NO
+		, A.MEMBER_NO
+		, A.SPRINT_MEMBERS_HISTORY_UPDATE_DATE
+		, A.SPRINT_MEMBERS_HISTORY_PARTICIPATION_YN
+		, A.SPRINT_MEMBERS_HISTORY_MEMBER
+		, A.SPRINT_CODE
+		)
+		VALUES
+		(
+		  SEQ_SPRINT_MEMBERS_HISTORY_NO.NEXTVAL
+		, #{ memberNo }
+		, SYSDATE
+		, 'N'
+		, (SELECT
+				  B.MEMBER_NAME
+			 FROM TBL_MEMBER B
+			WHERE B.MEMBER_NO = #{ memberNo })
+		, (SELECT
+				  C.SPRINT_CODE
+			 FROM TBL_TASK C
+			WHERE C.TASK_CODE = #{ taskCode })
+		)
+	</insert>
+	
+	<insert id="insertTaskMembersHistory3" parameterType="hashmap">
+		INSERT
+		  INTO TBL_TASK_MEMBERS_HISTORY A
+		(
+		  A.TASK_MEMBERS_HISTORY_NO
+		, A.MEMBER_NO
+		, A.TASK_MEMBERS_HISTORY_UPDATE_DATE
+		, A.TASK_MEMBERS_HISTORY_PARTICIPATION_YN
+		, A.TASK_CODE
+		, A.TASK_MEMBERS_HISTORY_MEMBER
+		)
+		VALUES
+		(
+		  SEQ_TASK_MEMBERS_HISTORY_NO.NEXTVAL
+		, #{ memberNo }
+		, SYSDATE
+		, 'N'
+		, #{ taskCode }
+		, (SELECT
+				  B.MEMBER_NAME
+			 FROM TBL_MEMBER B
+			WHERE B.MEMBER_NO = #{ memberNo })
+		)
+	</insert>
+	
+	<select id="selectTaskList" resultMap="taskResultMap">
+		SELECT
+			   A.TASK_TITLE
+			 , A.TASK_START_DATE
+			 , A.TASK_END_DATE
+			 , A.TASK_BODY
+		  FROM TBL_TASK A
+		 WHERE A.SPRINT_CODE = (SELECT
+		 							   B.SPRINT_CODE
+		 						  FROM TBL_SPRINT B
+		 						 WHERE B.PROJECT_CODE = #{ projectCode}
+		 						   AND B.SPRINT_PROGRESS IN ('진행전','진행중'))
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
  </mapper>

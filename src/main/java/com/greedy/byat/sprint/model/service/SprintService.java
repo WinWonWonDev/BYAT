@@ -14,12 +14,14 @@ public interface SprintService {
 
 	SprintDTO selectSprint(int sprintCode);
 
-	void deleteSprint(int sprintCode);
+	void removeSprint(int sprintCode);
 
 	String selectProjectProgress(int projectCode);
 
 	void modifySprint(SprintDTO sprint);
 
 	List<TaskDTO> selectTaskList(int sprintCode);
+
+	void startSprint(int projectCode);
 
 }

@@ -79,7 +79,7 @@ public class SprintServiceImpl implements SprintService {
 	}
 	
 	@Override
-	public void deleteSprint(int sprintCode) {
+	public void removeSprint(int sprintCode) {
 		
 		int result = mapper.deleteSprint(sprintCode);
 		
@@ -101,9 +101,24 @@ public class SprintServiceImpl implements SprintService {
 		
 		List<TaskDTO> taskList = mapper.selectTaskList(sprintCode);
 		
-		System.out.println("asdf"+taskList);
-		
 		return taskList;
+	}
+
+	@Override
+	public void startSprint(int projectCode) {
+		
+//		int result1 = mapper.updateSprintProgress(projectCode);
+//		
+//		int result2 = mapper.insertSprintProgressHistory3(projectCode);
+//		
+//		int result3 = mapper.updateTaskProgress(projectCode);
+//		
+//		int result4 = mapper.insertTaskProgressHistory(projectCode);
+//		
+//		int result5 = mapper.backlogProgressHistroy
+//		if(!(result1 > 0)) {
+//			System.out.println("스프린트 시작 실패");
+//		}
 	}
 
 

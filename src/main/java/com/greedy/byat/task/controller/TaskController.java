@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
+import com.greedy.byat.task.model.dto.TaskMembersDTO;
 import com.greedy.byat.task.model.service.TaskService;
 
 @Controller
@@ -77,8 +78,6 @@ public class TaskController {
 		
 		System.out.println("내가 바로 프로젝트 코드 " + projectCode);
 		
-		
-		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd")
 				.setPrettyPrinting()
@@ -124,19 +123,32 @@ public class TaskController {
 		return gson.toJson(result);
 	}
 	
-	@GetMapping(value = "/participation", produces = "application/json; charset=UTF-8")
-	@ResponseBody
-	public String registTaskMembers(HttpServletRequest request) {
+	@GetMapping("/participation")
+	public String registTaskMembers(HttpServletRequest request, RedirectAttributes rttr) {
 		
 		int taskCode = Integer.parseInt(request.getParameter("taskCode"));
 		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		
-		System.out.println("ㅋㅋ" + taskCode);
+		System.out.println(taskCode);
 		System.out.println(memberNo);
 		
 		Map<String, Integer> taskParticipation = new HashMap<String, Integer>();
 		taskParticipation.put("taskCode", taskCode);
 		taskParticipation.put("memberNo", memberNo);
+		
+		String message = taskService.registTaskMembers(taskParticipation);
+		
+		rttr.addFlashAttribute("message", message);
+		
+		return "redirect:/sprint/list?code=" + projectCode;
+	}
+	
+	@GetMapping(value = "/members", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String selectTaskMembersList(HttpServletRequest request) {
+		
+		int taskCode = Integer.parseInt(request.getParameter("taskCode"));
 		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd")
@@ -146,9 +158,80 @@ public class TaskController {
 				.disableHtmlEscaping()
 				.create();
 		
-		int result = taskService.registTaskMembers(taskParticipation);
+		List<TaskMembersDTO> taskMembers = taskService.selectTaskMembers(taskCode);
 		
-		return gson.toJson(result);
+		return gson.toJson(taskMembers);
 	}
 	
+	@PostMapping("/modify")
+	public String modifyTask(@ModelAttribute TaskDTO task, HttpServletRequest request, RedirectAttributes rttr) {
+		
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
+		
+		task.setMemberNo(memberNo);
+		
+		String message = taskService.modifyTask(task);
+		
+		rttr.addFlashAttribute("message", message);
+		
+		return "redirect:/sprint/list?code=" + task.getProjectCode();
+	}
+	
+	@GetMapping("/remove")
+	public String removeTask(HttpServletRequest request, RedirectAttributes rttr) {
+		
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		int taskCode = Integer.parseInt(request.getParameter("taskCode"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
+		
+		System.out.println(projectCode);
+		
+		Map<String, Integer> map = new HashMap<>();
+		
+		map.put("taskCode", taskCode);
+		map.put("updateMemberNo", memberNo);
+		
+		String message = taskService.removeTask(map);
+		
+		rttr.addFlashAttribute("message", message);
+		
+		return "redirect:/sprint/list?code=" + projectCode; 
+	}
+	
+	@GetMapping("/giveup")
+	public String removeTaskMembers(HttpServletRequest request, RedirectAttributes rttr) {
+		
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		int taskCode = Integer.parseInt(request.getParameter("taskCode"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
+		
+		Map<String, Integer> map = new HashMap<>();
+		
+		map.put("taskCode", taskCode);
+		map.put("memberNo", memberNo);
+		
+		String message = taskService.removeTaskMembers(map);
+		
+		rttr.addFlashAttribute("message", message);
+		
+		return "redirect:/sprint/list?code=" + projectCode; 
+	}
+	
+	@GetMapping("/check")
+	public String selectTaskList(HttpServletRequest request) {
+		
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		List<TaskDTO> taskList = taskService.selectTaskList(projectCode);
+		
+		return gson.toJson(taskList);
+	}
 }
