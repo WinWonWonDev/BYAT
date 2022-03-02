@@ -26,6 +26,8 @@
  		<typeAlias alias="PermitDTO" type="com.greedy.byat.management.model.dto.PermitDTO"/> 
   		<typeAlias alias="IssueMembersDTO" type="com.greedy.byat.issue.model.dto.IssueMembersDTO"/>
   		<typeAlias alias="SprintMembersDTO" type="com.greedy.byat.sprint.model.dto.SprintMembersDTO"/>
+  		<typeAlias alias="MeetinglogDTO" type="com.greedy.byat.meetinglog.model.dto.MeetinglogDTO"/>
+  		<typeAlias alias="AttachmentDTO" type="com.greedy.byat.management.model.dto.AttachmentDTO"/>
   </typeAliases>
   
   </configuration>
