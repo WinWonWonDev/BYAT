@@ -427,6 +427,7 @@
 						<input type="hidden" id="projectCode" value="${ sprintList.projectCode }">					
 					</c:if>
 				</c:forEach>
+				<input type="hidden" name="sprintProgress" id="headSprintProgress">
 			</div>
 			<div class="selectArea">
 				<select class="issueSelectBox" id="issueSelectBox" onchange="changeTitleSelection()">
@@ -478,6 +479,7 @@
 						</div>
 					</form>
 				</div>
+				<input type="hidden" id="kanbanIndex"> 
 				<div class="modal_button"> 
 		        	<button type="button" id="issueModifyBtn" class="issueModifyBtn">Ok</button>
 		        	<button type="button" id="issueModifyModalCloseBtn" class="issueModifyModalCloseBtn">Cancel</button>
@@ -502,318 +504,449 @@
 		<c:forEach items="${sprintList}" var="sprintList" varStatus="status">
 			if("${sprintList.title}" == selectedOption) {
 				
-				<c:forEach items="${sprintList.issueList}" var="issue" varStatus="issueStatus">
-					if("${issue.progress}" == "해결전") {
-						
-						memberCount = 0;
-						
-						kanbanBox = document.createElement('div');
-						kanbanBox.setAttribute('id', 'issueKanban');
-						kanbanBox.setAttribute('class', 'issueKanban');
-						kanbanBox.setAttribute('draggable', 'true');
-						
-						issueStatusBox = document.createElement('div');
-						issueStatusBox.setAttribute('id', 'issueStatusBox');
-						issueStatusBox.setAttribute('class', 'issueStatusBox');
-						issueStatusBox.setAttribute('style', 'background-color:red');
-						
-						issueCode = document.createElement('input');
-						issueCode.setAttribute('type', 'hidden');
-						issueCode.setAttribute('value', "${issue.code}");
-						issueCode.setAttribute('name', 'issueCode');
-						
-						issueTitle = document.createElement('div');
-						issueTitle.setAttribute('id', 'issueTitle');
-						issueTitle.setAttribute('class', 'issueTitle');
-						issueTitle.setAttribute('name', 'title');
-						issueTitle.innerText = "${issue.title}";
-						
-						issueEditBtn = document.createElement('button');
-						issueEditBtn.setAttribute('id', 'issueEditBtn');
-						issueEditBtn.setAttribute('class', 'issueEditBtn');
-						
-						issueEditBox = document.createElement('div');
-						issueEditBox.setAttribute('id', 'issueEditBox');
-						issueEditBox.setAttribute('class', 'issueEditBox');
-						issueEditBox.setAttribute('style', 'display:none');
-						
-						issueSelectAndEditBtn = document.createElement('div');
-						issueSelectAndEditBtn.setAttribute('id', 'issueSelectAndEditBtn');
-						issueSelectAndEditBtn.setAttribute('class', 'issueSelectAndEditBtn');
-						issueSelectAndEditBtn.innerText = '조회/수정';
-						
-						issueDeleteBtn = document.createElement('div');
-						issueDeleteBtn.setAttribute('id', 'issueDeleteBtn');
-						issueDeleteBtn.setAttribute('class', 'issueDeleteBtn');
-						issueDeleteBtn.innerText = '삭제';
-						
-						issueEditBox.appendChild(issueSelectAndEditBtn);
-						issueEditBox.appendChild(issueDeleteBtn);
-						
-						issueWriter = document.createElement('div');
-						issueWriter.setAttribute('id', 'issueWriter');
-						issueWriter.setAttribute('class', 'issueWriter');
-						issueWriter.setAttribute('name', 'writerName');
-						issueWriter.innerText = "제기자 : " + "${issue.name}";
-						
-						issueWriteDate = document.createElement('div');
-						issueWriteDate.setAttribute('id', 'issueWriteDate');
-						issueWriteDate.setAttribute('class', 'issueWriteDate');
-						issueWriteDate.setAttribute('name', 'writeTime');
-						issueWriteDate.innerText = "제기일자 : " + "${issue.writingTime}";
-						
-						issueBody = document.createElement('input');
-						issueBody.setAttribute('type', 'hidden');
-						issueBody.setAttribute('id', 'issueBody');
-						issueBody.setAttribute('name', 'body');
-						issueBody.setAttribute('value', "${issue.body}");
-						
-						sprintCode = document.createElement('input');
-						sprintCode.setAttribute('type', 'hidden');
-						sprintCode.setAttribute('id', 'sprintCode');
-						sprintCode.setAttribute('class', 'sprintCode');
-						sprintCode.setAttribute('name', 'sprintCode');
-						sprintCode.setAttribute('value', '${sprintList.code}');
-						
-						kanbanBox.appendChild(issueStatusBox);
-						kanbanBox.appendChild(issueCode);
-						kanbanBox.appendChild(issueTitle);
-						kanbanBox.appendChild(issueEditBtn);
-						kanbanBox.appendChild(issueEditBox);
-						kanbanBox.appendChild(issueWriter);
-						kanbanBox.appendChild(issueWriteDate);
-						kanbanBox.appendChild(issueBody);
-						kanbanBox.appendChild(sprintCode);
-						
-						<c:forEach items="${issue.issueMemberList}" var="issueMemberList">
-							issueMembersList = document.createElement('input');
-							issueMembersList.setAttribute('type', 'hidden');
-							issueMembersList.setAttribute('id', 'issueMembersList');
-							issueMembersList.setAttribute('class', 'issueMembersList');
-							issueMembersList.setAttribute('name', 'issueModifyMemberInfo');
-							issueMembersList.setAttribute('value', '${issueMemberList.id}' + ' ' + '${issueMemberList.name}' + ' ' + '${issueMemberList.no}');
-							kanbanBox.appendChild(issueMembersList);
-							memberCount++;
-							
-						</c:forEach>
-						
-						issueMembersCount = document.createElement('input');
-						issueMembersCount.setAttribute('type', 'hidden');
-						issueMembersCount.setAttribute('id', 'issueMembersCount');
-						issueMembersCount.setAttribute('class', 'issueMembersCount');
-						issueMembersCount.setAttribute('value', memberCount);
-						
-						kanbanBox.appendChild(issueMembersCount);
-						
-						kanbanArea[0].appendChild(kanbanBox);
-					} else if("${issue.progress}" == "해결중") {
-						
-						memberCount = 0;
-						
-						kanbanBox = document.createElement('div');
-						kanbanBox.setAttribute('id', 'issueKanban');
-						kanbanBox.setAttribute('class', 'issueKanban');
-						kanbanBox.setAttribute('draggable', 'true');
-						
-						issueStatusBox = document.createElement('div');
-						issueStatusBox.setAttribute('id', 'issueStatusBox');
-						issueStatusBox.setAttribute('class', 'issueStatusBox');
-						issueStatusBox.setAttribute('style', 'background-color:#FBC254');
-	
-						issueCode = document.createElement('input');
-						issueCode.setAttribute('type', 'hidden');
-						issueCode.setAttribute('value', "${issue.code}");
-						issueCode.setAttribute('name', 'issueCode');
-						
-						issueTitle = document.createElement('div');
-						issueTitle.setAttribute('id', 'issueTitle');
-						issueTitle.setAttribute('class', 'issueTitle');
-						issueTitle.setAttribute('name', 'title');
-						issueTitle.innerText = "${issue.title}";
-						
-						issueEditBtn = document.createElement('button');
-						issueEditBtn.setAttribute('id', 'issueEditBtn');
-						issueEditBtn.setAttribute('class', 'issueEditBtn');
-						
-						issueEditBox = document.createElement('div');
-						issueEditBox.setAttribute('id', 'issueEditBox');
-						issueEditBox.setAttribute('class', 'issueEditBox');
-						issueEditBox.setAttribute('style', 'display:none');
-						
-						issueSelectAndEditBtn = document.createElement('div');
-						issueSelectAndEditBtn.setAttribute('id', 'issueSelectAndEditBtn');
-						issueSelectAndEditBtn.setAttribute('class', 'issueSelectAndEditBtn');
-						issueSelectAndEditBtn.innerText = '조회/수정';
-						
-						issueDeleteBtn = document.createElement('div');
-						issueDeleteBtn.setAttribute('id', 'issueDeleteBtn');
-						issueDeleteBtn.setAttribute('class', 'issueDeleteBtn');
-						issueDeleteBtn.innerText = '삭제';
-						
-						issueEditBox.appendChild(issueSelectAndEditBtn);
-						issueEditBox.appendChild(issueDeleteBtn);
-						
-						issueWriter = document.createElement('div');
-						issueWriter.setAttribute('id', 'issueWriter');
-						issueWriter.setAttribute('class', 'issueWriter');
-						issueWriter.setAttribute('name', 'writerName');
-						issueWriter.innerText = "제기자 : " + "${issue.name}";
-						
-						issueWriteDate = document.createElement('div');
-						issueWriteDate.setAttribute('id', 'issueWriteDate');
-						issueWriteDate.setAttribute('class', 'issueWriteDate');
-						issueWriteDate.setAttribute('name', 'writeTime');
-						issueWriteDate.innerText = "제기일자 : " + "${issue.writingTime}";
-						
-						issueBody = document.createElement('input');
-						issueBody.setAttribute('type', 'hidden');
-						issueBody.setAttribute('id', 'issueBody');
-						issueBody.setAttribute('name', 'body');
-						issueBody.setAttribute('value', "${issue.body}");
-						
-						sprintCode = document.createElement('input');
-						sprintCode.setAttribute('type', 'hidden');
-						sprintCode.setAttribute('id', 'sprintCode');
-						sprintCode.setAttribute('class', 'sprintCode');
-						sprintCode.setAttribute('name', 'sprintCode');
-						sprintCode.setAttribute('value', '${sprintList.code}');
-						
-						kanbanBox.appendChild(issueStatusBox);
-						kanbanBox.appendChild(issueCode);
-						kanbanBox.appendChild(issueTitle);
-						kanbanBox.appendChild(issueEditBtn);
-						kanbanBox.appendChild(issueEditBox);
-						kanbanBox.appendChild(issueWriter);
-						kanbanBox.appendChild(issueWriteDate);
-						kanbanBox.appendChild(issueBody);
-						kanbanBox.appendChild(sprintCode);
-						
-						<c:forEach items="${issue.issueMemberList}" var="issueMemberList">
-							issueMembersList = document.createElement('input');
-							issueMembersList.setAttribute('type', 'hidden');
-							issueMembersList.setAttribute('id', 'issueMembersList');
-							issueMembersList.setAttribute('class', 'issueMembersList');
-							issueMembersList.setAttribute('name', 'issueModifyMemberInfo');
-							issueMembersList.setAttribute('value', '${issueMemberList.id}' + ' ' + '${issueMemberList.name}' + ' ' + '${issueMemberList.no}');
-							kanbanBox.appendChild(issueMembersList);
-							memberCount++;
-						</c:forEach>
-						
-						issueMembersCount = document.createElement('input');
-						issueMembersCount.setAttribute('type', 'hidden');
-						issueMembersCount.setAttribute('id', 'issueMembersCount');
-						issueMembersCount.setAttribute('class', 'issueMembersCount');
-						issueMembersCount.setAttribute('value', memberCount);
-						
-						kanbanBox.appendChild(issueMembersCount);
-						
-						kanbanArea[1].appendChild(kanbanBox);
-					} else {
-						
-						memberCount = 0;
-						
-						kanbanBox = document.createElement('div');
-						kanbanBox.setAttribute('id', 'issueKanban');
-						kanbanBox.setAttribute('class', 'issueKanban');
-						kanbanBox.setAttribute('draggable', 'true');
-						
-						issueStatusBox = document.createElement('div');
-						issueStatusBox.setAttribute('id', 'issueStatusBox');
-						issueStatusBox.setAttribute('class', 'issueStatusBox');
-						issueStatusBox.setAttribute('style', 'background-color:#2EE957');
-						
-						issueCode = document.createElement('input');
-						issueCode.setAttribute('type', 'hidden');
-						issueCode.setAttribute('value', "${issue.code}");
-						issueCode.setAttribute('name', 'issueCode');
-						
-						issueTitle = document.createElement('div');
-						issueTitle.setAttribute('id', 'issueTitle');
-						issueTitle.setAttribute('class', 'issueTitle');
-						issueTitle.setAttribute('name', 'title');
-						issueTitle.innerText = "${issue.title}";
-						
-						issueEditBtn = document.createElement('button');
-						issueEditBtn.setAttribute('id', 'issueEditBtn');
-						issueEditBtn.setAttribute('class', 'issueEditBtn');
-						
-						issueEditBox = document.createElement('div');
-						issueEditBox.setAttribute('id', 'issueEditBox');
-						issueEditBox.setAttribute('class', 'issueEditBox');
-						issueEditBox.setAttribute('style', 'display:none');
-						
-						issueSelectAndEditBtn = document.createElement('div');
-						issueSelectAndEditBtn.setAttribute('id', 'issueSelectAndEditBtn');
-						issueSelectAndEditBtn.setAttribute('class', 'issueSelectAndEditBtn');
-						issueSelectAndEditBtn.innerText = '조회/수정';
-						
-						issueDeleteBtn = document.createElement('div');
-						issueDeleteBtn.setAttribute('id', 'issueDeleteBtn');
-						issueDeleteBtn.setAttribute('class', 'issueDeleteBtn');
-						issueDeleteBtn.innerText = '삭제';
-						
-						issueEditBox.appendChild(issueSelectAndEditBtn);
-						issueEditBox.appendChild(issueDeleteBtn);
-						
-						issueWriter = document.createElement('div');
-						issueWriter.setAttribute('id', 'issueWriter');
-						issueWriter.setAttribute('class', 'issueWriter');
-						issueWriter.setAttribute('name', 'writerName');
-						issueWriter.innerText = "제기자 : " + "${issue.name}";
-						
-						issueWriteDate = document.createElement('div');
-						issueWriteDate.setAttribute('id', 'issueWriteDate');
-						issueWriteDate.setAttribute('class', 'issueWriteDate');
-						issueWriteDate.setAttribute('name', 'writeTime');
-						issueWriteDate.innerText = "제기일자 : " + "${issue.writingTime}";
-						
-						issueBody = document.createElement('input');
-						issueBody.setAttribute('type', 'hidden');
-						issueBody.setAttribute('id', 'issueBody');
-						issueBody.setAttribute('name', 'body');
-						issueBody.setAttribute('value', "${issue.body}");
-						
-						sprintCode = document.createElement('input');
-						sprintCode.setAttribute('type', 'hidden');
-						sprintCode.setAttribute('id', 'sprintCode');
-						sprintCode.setAttribute('class', 'sprintCode');
-						sprintCode.setAttribute('name', 'sprintCode');
-						sprintCode.setAttribute('value', '${sprintList.code}');
-						
-						kanbanBox.appendChild(issueStatusBox);
-						kanbanBox.appendChild(issueCode);
-						kanbanBox.appendChild(issueTitle);
-						kanbanBox.appendChild(issueEditBtn);
-						kanbanBox.appendChild(issueEditBox);
-						kanbanBox.appendChild(issueWriter);
-						kanbanBox.appendChild(issueWriteDate);
-						kanbanBox.appendChild(issueBody);
-						kanbanBox.appendChild(sprintCode);
-						
-						<c:forEach items="${issue.issueMemberList}" var="issueMemberList">
-							issueMembersList = document.createElement('input');
-							issueMembersList.setAttribute('type', 'hidden');
-							issueMembersList.setAttribute('id', 'issueMembersList');
-							issueMembersList.setAttribute('class', 'issueMembersList');
-							issueMembersList.setAttribute('name', 'issueModifyMemberInfo');
-							issueMembersList.setAttribute('value', '${issueMemberList.id}' + ' ' + '${issueMemberList.name}' + ' ' + '${issueMemberList.no}');
-							kanbanBox.appendChild(issueMembersList);
-							memberCount++;
-						</c:forEach>
-						
-						issueMembersCount = document.createElement('input');
-						issueMembersCount.setAttribute('type', 'hidden');
-						issueMembersCount.setAttribute('id', 'issueMembersCount');
-						issueMembersCount.setAttribute('class', 'issueMembersCount');
-						issueMembersCount.setAttribute('value', memberCount);
-						
-						kanbanBox.appendChild(issueMembersCount);
-						
-						kanbanArea[2].appendChild(kanbanBox);
-					}
-					
+				document.getElementById("headSprintProgress").value = "${sprintList.progress}";
 				
-				</c:forEach>
+				$.ajax({
+					url : "/byat/issue/issuelist",
+					type : "get",
+					data : {
+						sprintCode : "${sprintList.code}",
+					},
+					success : function(data, status, xhr) {
+						
+						const sprintIssueList = JSON.parse(data.issueList);
+						
+						for(let i in sprintIssueList) {
+							
+							if(sprintIssueList[i].progress == "해결전") {
+								
+								memberCount = 0;
+								
+								kanbanBox = document.createElement('div');
+								kanbanBox.setAttribute('id', 'issueKanban');
+								kanbanBox.setAttribute('class', 'issueKanban');
+								kanbanBox.setAttribute('draggable', 'true');
+								
+								issueStatusBox = document.createElement('div');
+								issueStatusBox.setAttribute('id', 'issueStatusBox');
+								issueStatusBox.setAttribute('class', 'issueStatusBox');
+								issueStatusBox.setAttribute('style', 'background-color:red');
+								
+								issueCode = document.createElement('input');
+								issueCode.setAttribute('type', 'hidden');
+								issueCode.setAttribute('value', sprintIssueList[i].code);
+								issueCode.setAttribute('name', 'issueCode');
+								
+								issueTitle = document.createElement('div');
+								issueTitle.setAttribute('id', 'issueTitle');
+								issueTitle.setAttribute('class', 'issueTitle');
+								issueTitle.setAttribute('name', 'title');
+								issueTitle.innerText = sprintIssueList[i].title;
+								
+								issueEditBtn = document.createElement('button');
+								issueEditBtn.setAttribute('id', 'issueEditBtn');
+								issueEditBtn.setAttribute('class', 'issueEditBtn');
+								
+								issueEditBox = document.createElement('div');
+								issueEditBox.setAttribute('id', 'issueEditBox');
+								issueEditBox.setAttribute('class', 'issueEditBox');
+								issueEditBox.setAttribute('style', 'display:none');
+								
+								issueSelectAndEditBtn = document.createElement('div');
+								issueSelectAndEditBtn.setAttribute('id', 'issueSelectAndEditBtn');
+								issueSelectAndEditBtn.setAttribute('class', 'issueSelectAndEditBtn');
+								issueSelectAndEditBtn.innerText = '조회/수정';
+								
+								issueDeleteBtn = document.createElement('div');
+								issueDeleteBtn.setAttribute('id', 'issueDeleteBtn');
+								issueDeleteBtn.setAttribute('class', 'issueDeleteBtn');
+								issueDeleteBtn.innerText = '삭제';
+								
+								issueEditBox.appendChild(issueSelectAndEditBtn);
+								issueEditBox.appendChild(issueDeleteBtn);
+								
+								issueWriter = document.createElement('div');
+								issueWriter.setAttribute('id', 'issueWriter');
+								issueWriter.setAttribute('class', 'issueWriter');
+								issueWriter.setAttribute('name', 'writerName');
+								issueWriter.innerText = "제기자 : " + sprintIssueList[i].name;
+								
+								issueWriteDate = document.createElement('div');
+								issueWriteDate.setAttribute('id', 'issueWriteDate');
+								issueWriteDate.setAttribute('class', 'issueWriteDate');
+								issueWriteDate.setAttribute('name', 'writeTime');
+								issueWriteDate.innerText = "제기일자 : " + sprintIssueList[i].writingTime;
+								
+								issueBody = document.createElement('input');
+								issueBody.setAttribute('type', 'hidden');
+								issueBody.setAttribute('id', 'issueBody');
+								issueBody.setAttribute('name', 'body');
+								issueBody.setAttribute('value', sprintIssueList[i].body);
+								
+								sprintCode = document.createElement('input');
+								sprintCode.setAttribute('type', 'hidden');
+								sprintCode.setAttribute('id', 'sprintCode');
+								sprintCode.setAttribute('class', 'sprintCode');
+								sprintCode.setAttribute('name', 'sprintCode');
+								sprintCode.setAttribute('value', sprintIssueList[i].sprintCode);
+								
+								kanbanBox.appendChild(issueStatusBox);
+								kanbanBox.appendChild(issueCode);
+								kanbanBox.appendChild(issueTitle);
+								kanbanBox.appendChild(issueEditBtn);
+								kanbanBox.appendChild(issueEditBox);
+								kanbanBox.appendChild(issueWriter);
+								kanbanBox.appendChild(issueWriteDate);
+								kanbanBox.appendChild(issueBody);
+								kanbanBox.appendChild(sprintCode);
+								
+								for(let t in sprintIssueList[i].issueMemberList) {
+									
+									issueMembersList = document.createElement('input');
+									issueMembersList.setAttribute('type', 'hidden');
+									issueMembersList.setAttribute('id', 'issueMembersList');
+									issueMembersList.setAttribute('class', 'issueMembersList');
+									issueMembersList.setAttribute('name', 'issueModifyMemberInfo');
+									issueMembersList.setAttribute('value', sprintIssueList[i].issueMemberList[t].id + ' ' + sprintIssueList[i].issueMemberList[t].name + ' ' + sprintIssueList[i].issueMemberList[t].no);
+									memberCount++;
+									kanbanBox.appendChild(issueMembersList);
+								}
+								
+								issueMembersCount = document.createElement('input');
+								issueMembersCount.setAttribute('type', 'hidden');
+								issueMembersCount.setAttribute('id', 'issueMembersCount');
+								issueMembersCount.setAttribute('class', 'issueMembersCount');
+								issueMembersCount.setAttribute('value', memberCount);
+								
+								kanbanBox.appendChild(issueMembersCount);
+								
+								kanbanArea[0].appendChild(kanbanBox);
+								
+							} else if(sprintIssueList[i].progress == "해결중") {
+								
+								memberCount = 0;
+								
+								kanbanBox = document.createElement('div');
+								kanbanBox.setAttribute('id', 'issueKanban');
+								kanbanBox.setAttribute('class', 'issueKanban');
+								kanbanBox.setAttribute('draggable', 'true');
+								
+								issueStatusBox = document.createElement('div');
+								issueStatusBox.setAttribute('id', 'issueStatusBox');
+								issueStatusBox.setAttribute('class', 'issueStatusBox');
+								issueStatusBox.setAttribute('style', 'background-color:#FBC254');
+		
+								issueCode = document.createElement('input');
+								issueCode.setAttribute('type', 'hidden');
+								issueCode.setAttribute('value', sprintIssueList[i].code);
+								issueCode.setAttribute('name', 'issueCode');
+								
+								issueTitle = document.createElement('div');
+								issueTitle.setAttribute('id', 'issueTitle');
+								issueTitle.setAttribute('class', 'issueTitle');
+								issueTitle.setAttribute('name', 'title');
+								issueTitle.innerText = sprintIssueList[i].title;
+								
+								issueEditBtn = document.createElement('button');
+								issueEditBtn.setAttribute('id', 'issueEditBtn');
+								issueEditBtn.setAttribute('class', 'issueEditBtn');
+								
+								issueEditBox = document.createElement('div');
+								issueEditBox.setAttribute('id', 'issueEditBox');
+								issueEditBox.setAttribute('class', 'issueEditBox');
+								issueEditBox.setAttribute('style', 'display:none');
+								
+								issueSelectAndEditBtn = document.createElement('div');
+								issueSelectAndEditBtn.setAttribute('id', 'issueSelectAndEditBtn');
+								issueSelectAndEditBtn.setAttribute('class', 'issueSelectAndEditBtn');
+								issueSelectAndEditBtn.innerText = '조회/수정';
+								
+								issueDeleteBtn = document.createElement('div');
+								issueDeleteBtn.setAttribute('id', 'issueDeleteBtn');
+								issueDeleteBtn.setAttribute('class', 'issueDeleteBtn');
+								issueDeleteBtn.innerText = '삭제';
+								
+								issueEditBox.appendChild(issueSelectAndEditBtn);
+								issueEditBox.appendChild(issueDeleteBtn);
+								
+								issueWriter = document.createElement('div');
+								issueWriter.setAttribute('id', 'issueWriter');
+								issueWriter.setAttribute('class', 'issueWriter');
+								issueWriter.setAttribute('name', 'writerName');
+								issueWriter.innerText = "제기자 : " + sprintIssueList[i].name;
+								
+								issueWriteDate = document.createElement('div');
+								issueWriteDate.setAttribute('id', 'issueWriteDate');
+								issueWriteDate.setAttribute('class', 'issueWriteDate');
+								issueWriteDate.setAttribute('name', 'writeTime');
+								issueWriteDate.innerText = "제기일자 : " + sprintIssueList[i].writingTime;
+								
+								issueBody = document.createElement('input');
+								issueBody.setAttribute('type', 'hidden');
+								issueBody.setAttribute('id', 'issueBody');
+								issueBody.setAttribute('name', 'body');
+								issueBody.setAttribute('value', sprintIssueList[i].body);
+								
+								sprintCode = document.createElement('input');
+								sprintCode.setAttribute('type', 'hidden');
+								sprintCode.setAttribute('id', 'sprintCode');
+								sprintCode.setAttribute('class', 'sprintCode');
+								sprintCode.setAttribute('name', 'sprintCode');
+								sprintCode.setAttribute('value', sprintIssueList[i].sprintCode);
+								
+								kanbanBox.appendChild(issueStatusBox);
+								kanbanBox.appendChild(issueCode);
+								kanbanBox.appendChild(issueTitle);
+								kanbanBox.appendChild(issueEditBtn);
+								kanbanBox.appendChild(issueEditBox);
+								kanbanBox.appendChild(issueWriter);
+								kanbanBox.appendChild(issueWriteDate);
+								kanbanBox.appendChild(issueBody);
+								kanbanBox.appendChild(sprintCode);
+								
+								for(let t in sprintIssueList[i].issueMemberList) {
+									
+									issueMembersList = document.createElement('input');
+									issueMembersList.setAttribute('type', 'hidden');
+									issueMembersList.setAttribute('id', 'issueMembersList');
+									issueMembersList.setAttribute('class', 'issueMembersList');
+									issueMembersList.setAttribute('name', 'issueModifyMemberInfo');
+									issueMembersList.setAttribute('value', sprintIssueList[i].issueMemberList[t].id + ' ' + sprintIssueList[i].issueMemberList[t].name + ' ' + sprintIssueList[i].issueMemberList[t].no);
+									memberCount++;
+									kanbanBox.appendChild(issueMembersList);
+								}
+								
+								issueMembersCount = document.createElement('input');
+								issueMembersCount.setAttribute('type', 'hidden');
+								issueMembersCount.setAttribute('id', 'issueMembersCount');
+								issueMembersCount.setAttribute('class', 'issueMembersCount');
+								issueMembersCount.setAttribute('value', memberCount);
+								
+								kanbanBox.appendChild(issueMembersCount);
+								
+								kanbanArea[1].appendChild(kanbanBox);
+								
+							} else {
+								
+								memberCount = 0;
+								
+								kanbanBox = document.createElement('div');
+								kanbanBox.setAttribute('id', 'issueKanban');
+								kanbanBox.setAttribute('class', 'issueKanban');
+								kanbanBox.setAttribute('draggable', 'true');
+								
+								issueStatusBox = document.createElement('div');
+								issueStatusBox.setAttribute('id', 'issueStatusBox');
+								issueStatusBox.setAttribute('class', 'issueStatusBox');
+								issueStatusBox.setAttribute('style', 'background-color:#2EE957');
+								
+								issueCode = document.createElement('input');
+								issueCode.setAttribute('type', 'hidden');
+								issueCode.setAttribute('value', sprintIssueList[i].code);
+								issueCode.setAttribute('name', 'issueCode');
+								
+								issueTitle = document.createElement('div');
+								issueTitle.setAttribute('id', 'issueTitle');
+								issueTitle.setAttribute('class', 'issueTitle');
+								issueTitle.setAttribute('name', 'title');
+								issueTitle.innerText = sprintIssueList[i].title;
+								
+								issueEditBtn = document.createElement('button');
+								issueEditBtn.setAttribute('id', 'issueEditBtn');
+								issueEditBtn.setAttribute('class', 'issueEditBtn');
+								
+								issueEditBox = document.createElement('div');
+								issueEditBox.setAttribute('id', 'issueEditBox');
+								issueEditBox.setAttribute('class', 'issueEditBox');
+								issueEditBox.setAttribute('style', 'display:none');
+								
+								issueSelectAndEditBtn = document.createElement('div');
+								issueSelectAndEditBtn.setAttribute('id', 'issueSelectAndEditBtn');
+								issueSelectAndEditBtn.setAttribute('class', 'issueSelectAndEditBtn');
+								issueSelectAndEditBtn.innerText = '조회/수정';
+								
+								issueDeleteBtn = document.createElement('div');
+								issueDeleteBtn.setAttribute('id', 'issueDeleteBtn');
+								issueDeleteBtn.setAttribute('class', 'issueDeleteBtn');
+								issueDeleteBtn.innerText = '삭제';
+								
+								issueEditBox.appendChild(issueSelectAndEditBtn);
+								issueEditBox.appendChild(issueDeleteBtn);
+								
+								issueWriter = document.createElement('div');
+								issueWriter.setAttribute('id', 'issueWriter');
+								issueWriter.setAttribute('class', 'issueWriter');
+								issueWriter.setAttribute('name', 'writerName');
+								issueWriter.innerText = "제기자 : " + sprintIssueList[i].name;
+								
+								issueWriteDate = document.createElement('div');
+								issueWriteDate.setAttribute('id', 'issueWriteDate');
+								issueWriteDate.setAttribute('class', 'issueWriteDate');
+								issueWriteDate.setAttribute('name', 'writeTime');
+								issueWriteDate.innerText = "제기일자 : " + sprintIssueList[i].writingTime;
+								
+								issueBody = document.createElement('input');
+								issueBody.setAttribute('type', 'hidden');
+								issueBody.setAttribute('id', 'issueBody');
+								issueBody.setAttribute('name', 'body');
+								issueBody.setAttribute('value', sprintIssueList[i].body);
+								
+								sprintCode = document.createElement('input');
+								sprintCode.setAttribute('type', 'hidden');
+								sprintCode.setAttribute('id', 'sprintCode');
+								sprintCode.setAttribute('class', 'sprintCode');
+								sprintCode.setAttribute('name', 'sprintCode');
+								sprintCode.setAttribute('value', sprintIssueList[i].sprintCode);
+								
+								kanbanBox.appendChild(issueStatusBox);
+								kanbanBox.appendChild(issueCode);
+								kanbanBox.appendChild(issueTitle);
+								kanbanBox.appendChild(issueEditBtn);
+								kanbanBox.appendChild(issueEditBox);
+								kanbanBox.appendChild(issueWriter);
+								kanbanBox.appendChild(issueWriteDate);
+								kanbanBox.appendChild(issueBody);
+								kanbanBox.appendChild(sprintCode);
+								
+								for(let t in sprintIssueList[i].issueMemberList) {
+									
+									issueMembersList = document.createElement('input');
+									issueMembersList.setAttribute('type', 'hidden');
+									issueMembersList.setAttribute('id', 'issueMembersList');
+									issueMembersList.setAttribute('class', 'issueMembersList');
+									issueMembersList.setAttribute('name', 'issueModifyMemberInfo');
+									issueMembersList.setAttribute('value', sprintIssueList[i].issueMemberList[t].id + ' ' + sprintIssueList[i].issueMemberList[t].name + ' ' + sprintIssueList[i].issueMemberList[t].no);
+									memberCount++;
+									kanbanBox.appendChild(issueMembersList);
+								}
+								
+								issueMembersCount = document.createElement('input');
+								issueMembersCount.setAttribute('type', 'hidden');
+								issueMembersCount.setAttribute('id', 'issueMembersCount');
+								issueMembersCount.setAttribute('class', 'issueMembersCount');
+								issueMembersCount.setAttribute('value', memberCount);
+								
+								kanbanBox.appendChild(issueMembersCount);
+								
+								kanbanArea[2].appendChild(kanbanBox);
+								
+							}
+							
+						}
+						
+						issueKanban = document.querySelectorAll('#issueKanban');
+						
+						for(let k = 0; k < issueKanban.length; k++) {
+							const item = issueKanban[k];
+							
+							item.addEventListener('dragstart', function() {
+								draggedItem = item;
+								setTimeout(function() {
+									item.style.display = 'none';
+								}, 0);
+							});
+							
+							item.addEventListener('dragend', function() {
+								setTimeout(function() {
+									draggedItem.style.display = 'inline-block';
+									draggedItem = null;
+								}, 0);
+							});
+							
+						}
+						
+						for(let j = 0; j < kanbanArea.length; j++) {
+							const list = kanbanArea[j];
+							
+							list.addEventListener('dragover', function(e) {
+								e.preventDefault();
+							});
+							
+							list.addEventListener('dragenter', function(e) {
+								e.preventDefault();
+							});
+							
+							list.addEventListener('dragleave', function(e) {
+								
+							});
+							
+							list.addEventListener('drop', function(e) {
+								
+								if(j == 0) {  //해결전
+									draggedItem.children[0].style.backgroundColor = 'red';
+								
+									issueAjaxCode = draggedItem.children[1].value;
+									
+									$.ajax({
+										url : "/byat/issue/modifyissuestatus",
+										type : "get",
+										data : {
+											issueCode : issueAjaxCode,
+											progress : "해결전"
+										},
+										success : function(data, status, xhr) {
+											console.log(xhr);
+										},
+										error : function(xhr, status, error) {
+											console.log(xhr);
+										}
+									});
+									
+									
+									
+								} else if(j == 1) { //해결중
+
+									draggedItem.children[0].style.backgroundColor = '#FBC254';
+								
+									issueAjaxCode = draggedItem.children[1].value;
+									
+									 $.ajax({
+										url : "/byat/issue/modifyissuestatus",
+										type : "get",
+										data : {
+											issueCode : issueAjaxCode,
+											progress : "해결중"
+										},
+										success : function(data, status, xhr) {
+											console.log(xhr);
+										},
+										error : function(xhr, status, error) {
+											console.log(xhr);
+										}
+									});
+									
+									
+								} else { //완료
+								
+									draggedItem.children[0].style.backgroundColor = '#2EE957';
+									
+									issueAjaxCode = draggedItem.children[1].value;
+
+									$.ajax({
+										url : "/byat/issue/modifyissuestatus",
+										type : "get",
+										data : {
+											issueCode : issueAjaxCode,
+											progress : "완료"
+										},
+										success : function(data, status, xhr) {
+											console.log(xhr);
+										},
+										error : function(xhr, status, error) {
+											console.log(xhr);
+										}
+									});
+								}
+								
+								this.append(draggedItem);
+							});
+						}
+						
+					},
+					error : function(xhr, status, error) {
+						console.log(xhr);
+					}
+				});
 				
 			}
 		</c:forEach>
@@ -847,6 +980,8 @@
 			
 			<c:forEach items="${sprintList}" var="sprintList" varStatus="status">
 				if("${sprintList.title}" == selectedOption) {
+					
+					document.getElementById("headSprintProgress").value = "${sprintList.progress}";
 					
 					titleFont.innerText = selectedOption;
 					
@@ -1405,6 +1540,8 @@
 			
 		}
 		
+		let removeResult = 0;
+		
 		$(document).ready(function() {
         	$(document).on("click", "#issueEditBtn", function(event) {
         		
@@ -1464,7 +1601,7 @@
         			memberCountIndex *= 1;
         			memberListStartIndex *= 1;
         			
-        			console.log($(this).parent('div').parent('div'));
+        			console.log($(this).parent('div').parent('div')[0].children[8].value);
         			
         			let lastCount = 0;
         			lastCount = (memberCountIndex + memberListStartIndex);
@@ -1486,7 +1623,7 @@
         				issueMemberBody.setAttribute('id', 'issueMemberBody');
         				issueMemberBody.setAttribute('class', 'issueMemberBody');
         				issueMemberBody.setAttribute('name', 'issueMemberBody');
-        				issueMemberBody.value = $(this).parent('div').parent('div')[0].children[index].value;
+        				issueMemberBody.setAttribute('value', $(this).parent('div').parent('div')[0].children[index].value);
         				
         				thisSprintProjectCode = document.createElement('input');
         				thisSprintProjectCode.setAttribute('type', 'hidden');
@@ -1496,12 +1633,12 @@
         				thisSprintCode = document.createElement('input');
         				thisSprintCode.setAttribute('type', 'hidden');
         				thisSprintCode.setAttribute('name', 'sprintCode');
-        				thisSprintCode.setAttribute('value', document.getElementById("SprintCode").value);
+        				thisSprintCode.setAttribute('value', $(this).parent('div').parent('div')[0].children[8].value);
         				
         				thisIssueCode = document.createElement('input');
         				thisIssueCode.setAttribute('type', 'hidden');
         				thisIssueCode.setAttribute('name', 'issueCode');
-        				thisIssueCode.setAttribute('value', document.getElementById("issueKanban").children[1].value);
+        				thisIssueCode.setAttribute('value', $(this).parent('div').parent('div')[0].children[1].value);
         				
         				removeIssueMemberBtn = document.createElement('input');
         				removeIssueMemberBtn.setAttribute('type', 'button');
@@ -1519,6 +1656,8 @@
         				issueModifyMemberList.appendChild(issueMemberDiv);
         			}
         			
+					document.getElementById("kanbanIndex").value = $(this).parent('div').parent('div').index();
+        			
         			if(issueModifyModal.style.display == 'none') {
         				issueModifyModal.style.display = 'block';
         				editBox.style.display = 'none';
@@ -1532,6 +1671,8 @@
         	
         	$("#modifyMemberSelectBox").on('change', function() {
 
+        		console.log(this);
+        		
 				const $alreadyissueMember = document.querySelectorAll("#issueMemberInfo");
 				
 				let checkAlreadyIssueMember = false;
@@ -1569,7 +1710,7 @@
         				issueMemberBody.setAttribute('id', 'issueMemberBody');
         				issueMemberBody.setAttribute('class', 'issueMemberBody');
         				issueMemberBody.setAttribute('name', 'issueMemberBody');
-        				issueMemberBody.innerText = this.value;
+        				issueMemberBody.setAttribute('value', this.value);
         				
         				thisSprintProjectCode = document.createElement('input');
         				thisSprintProjectCode.setAttribute('type', 'hidden');
@@ -1579,7 +1720,7 @@
         				thisSprintCode = document.createElement('input');
         				thisSprintCode.setAttribute('type', 'hidden');
         				thisSprintCode.setAttribute('name', 'sprintCode');
-        				thisSprintCode.setAttribute('value', document.getElementById("SprintCode").value);
+        				thisSprintCode.setAttribute('value', document.getElementById("issueKanban").children[8].value);
         				
         				thisIssueCode = document.createElement('input');
         				thisIssueCode.setAttribute('type', 'hidden');
@@ -1605,6 +1746,73 @@
 				}
 				
 			});
+        	
+        	$(document).on("click", "#issueModifyBtn", function(event) { 
+        		
+        		modifyMemberSelectBox = document.getElementById("issueModifyMemberList");
+    			
+    			if(modifyMemberSelectBox.children.length == 0) {
+    				
+    				alert("이슈 담당자를 지정해야합니다.");
+    				
+    			} else if(document.getElementById("headSprintProgress").value == "완료") {
+    				
+    				alert("완료된 이슈는 내용을 변경하실 수 없습니다.");
+    				
+    			} else {
+    				
+    				document.getElementById("issueDetailAndModifyForm").submit();
+    			}
+        		
+        	});
+        	
+        	$(document).on("click", "#removeIssueMember", function(event) { 
+        		
+        		console.log($(this).parent('div').parent('div'));
+        		
+        		if($(this).parent('div').parent('div')[0].children.length == 1) {
+        			
+        			alert("담당자는 반드시 1명 이상이여야 합니다. 담당자 추가 후 제외시켜주시기 바랍니다.");
+        		} else {
+        			
+        			$.ajax({
+						url : "/byat/issue/removeissuemember",
+						type : "post",
+						data : {
+							info : $(this).parent('div')[0].children[1].value,
+							sprintCode : $(this).parent('div')[0].children[3].value,
+							issueCode : $(this).parent('div')[0].children[4].value
+						},
+						async : false,
+						success : function(data, status, xhr) {
+							
+							removeResult = 1;
+							
+						},
+						error : function(xhr, status, error) {
+							console.log(xhr);
+						}
+	        		});
+        			
+        			
+        			if(removeResult == 1) {
+        				alert("담당자 제외에 성공하셨습니다!");
+        				$(this).parent('div').remove();
+        				
+        				const deleteMemberKanbanIndex = document.getElementById("kanbanIndex").value;
+        				
+        				const kanbanCheck = document.querySelectorAll("#issueKanban");
+        				
+        				
+        				
+        			} else {
+        				alert("담당자 제외에 실패하셨습니다!");
+        			}
+        			
+        		}
+        		
+        		
+        	});
         	
         });
 
@@ -1635,22 +1843,7 @@
 			boxFirstElement.innerText = "----------";
 			
 			modifyMemberSelectBox.appendChild(boxFirstElement);
-			
-		}
-		
-		document.getElementById("issueModifyBtn").onclick = function() {
-			
-			modifyMemberSelectBox = document.getElementById("issueModifyMemberList");
-			
-			if(modifyMemberSelectBox.children.length == 0) {
-				
-				alert("이슈 담당자를 지정해야합니다.");
-				
-			} else {
-				
-				document.getElementById("issueDetailAndModifyForm").submit();
-			}
-			
+			document.getElementById("kanbanIndex").value = "";
 		}
 		
 	</script>

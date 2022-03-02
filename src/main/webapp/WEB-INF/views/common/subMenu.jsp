@@ -29,7 +29,7 @@
  		background:#4E73DF;
  		width:220px;
  		height:195px;
- 		z-index: 1;
+ 		z-index: 1100;
  	}
  	
 	.subMenuUlTag {
@@ -69,7 +69,7 @@
 				<hr>
 				<li><a href="/byat/WEB-INF/views/retrospect/ " class="subMenuATag">※ RETROSPECET</a></li>
 				<hr>
-				<li><a href="/byat/WEB-INF/views/meetingLog/ " class="subMenuATag">※ MEETING LOG</a></li>
+				<li><a href="/byat/meetinglog/list?code=" class="subMenuATag" id="selectMeetingLogList">※ MEETING LOG</a></li>
 				<hr>
 			</ul>
 		

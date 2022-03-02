@@ -153,4 +153,121 @@
 	       AND A.SPRINT_PARTICIPATION_YN = 'Y'
  	</select>
  	
+ 	<select id="selectIssue" parameterType="_int" resultMap="issueResultMap">
+ 		SELECT
+ 		       A.ISSUE_CODE
+ 		     , A.ISSUE_TITLE
+ 		     , A.ISSUE_BODY
+ 		     , A.ISSUE_WRITING_TIME
+ 		     , A.ISSUE_PROGRESS
+ 		     , A.ISSUE_VERSION
+ 		     , A.ISSUE_DELETE_STATUS
+ 		     , A.ISSUE_WRITER
+ 		     , A.SPRINT_CODE
+ 		     , A.PROJECT_CODE
+ 		  FROM TBL_ISSUE A
+ 		 WHERE A.ISSUE_CODE = #{ code }
+ 	</select>
+ 	
+ 	<update id="updateIssue" parameterType="IssueDTO">
+ 		UPDATE
+ 		       TBL_ISSUE A
+ 		   SET A.ISSUE_TITLE = #{ title }
+ 		     , A.ISSUE_BODY = #{ body }
+ 		     , A.ISSUE_VERSION = #{ version }
+ 		 WHERE A.ISSUE_CODE = #{ code }
+ 	</update>
+ 	
+ 	<insert id="insertIssueVersionHistory" parameterType="IssueDTO">
+ 		INSERT
+ 		  INTO TBL_ISSUE_VERSION_HISTORY A
+ 		(
+ 		  A.ISSUE_VERSION_HISTORY_NO
+ 		, A.ISSUE_VERSION_HISTORY_TITLE
+ 		, A.ISSUE_VERSION_HISTORY_BODY
+ 		, A.ISSUE_VERSION_HISTORY_VERSION
+ 		, A.ISSUE_CODE
+ 		, A.ISSUE_VERSION_HISTORY_UPDATE_MEMBER
+ 		, A.ISSUE_VERSION_HISTORY_UPDATE_DATE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_VERSION_HISTORY_NO.NEXTVAL
+ 		, #{ title }
+ 		, #{ body }
+ 		, #{ version }
+ 		, #{ code }
+ 		, (SELECT
+ 			      B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ writer })
+ 		, SYSDATE
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertIssueMember" parameterType="IssueMembersDTO">
+ 		INSERT
+ 		  INTO TBL_ISSUE_MEMBERS A
+ 		(
+ 		  A.ISSUE_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		, A.ISSUE_PARTICIPATION_YN
+ 		)
+ 		VALUES
+ 		(
+ 		  #{ code }
+ 		, #{ no }
+ 		, #{ sprintCode }
+ 		, 'Y'
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertIssueMembersHistory" parameterType="IssueMembersDTO">
+ 		INSERT
+ 		  INTO TBL_ISSUE_MEMBERS_HISTORY A
+ 		(
+ 		  A.ISSUE_CODE
+ 		, A.MEMBER_NO
+ 		, A.ISSUE_MEMBERS_HISTORY_PARTICIPATION_YN
+ 		, A.ISSUE_MEMBERS_HISTORY_MEMBER
+ 		, A.ISSUE_MEMBERS_HISTORY_NO
+ 		)
+ 		VALUES
+ 		(
+ 		  #{ code }
+ 		, #{ no }
+ 		, #{ participationYn }
+ 		, (SELECT
+ 		          B.MEMBER_NAME
+ 		     FROM TBL_MEMBER B
+ 		    WHERE B.MEMBER_NO = #{ changeMemberNo })
+ 		, SEQ_ISSUE_MEMBERS_HISTORY_NO.NEXTVAL
+ 		)
+ 	</insert>
+ 	
+ 	<select id="checkBeforeIssueMember" resultType="_int" parameterType="IssueMembersDTO">
+ 		SELECT
+ 		       COUNT(A.MEMBER_NO)
+ 		  FROM TBL_ISSUE_MEMBERS A
+ 		 WHERE A.ISSUE_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }
+ 	</select>
+ 	
+ 	<update id="updateIssueMember" parameterType="IssueMembersDTO">
+ 		UPDATE
+ 		       TBL_ISSUE_MEMBERS A
+ 		   SET A.ISSUE_PARTICIPATION_YN = 'Y'
+ 		 WHERE A.ISSUE_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }
+ 	</update>
+ 	
+ 	<update id="deleteIssueMember" parameterType="IssueMembersDTO">
+ 		UPDATE
+ 		       TBL_ISSUE_MEMBERS A
+ 		   SET A.ISSUE_PARTICIPATION_YN = 'N'
+ 		 WHERE A.ISSUE_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }
+ 	</update>
+ 	
  </mapper>

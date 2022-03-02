@@ -23,12 +23,18 @@ public interface IssueMapper {
 
 	int updateIssue(IssueDTO modifyIssue);
 
-	int updateIssueMember(List<IssueMembersDTO> newIssueMemberList);
-
-	int insertIssueMembersHistory(List<IssueMembersDTO> newIssueMemberList);
+	int insertIssueMembersHistory(IssueMembersDTO issueMembersDTO);
 
 	int insertIssueVersionHistory(IssueDTO modifyIssue);
 
 	IssueDTO selectIssue(int code);
+
+	int insertIssueMember(IssueMembersDTO issueMembersDTO);
+
+	int checkBeforeIssueMember(IssueMembersDTO issueMembersDTO);
+
+	int updateIssueMember(IssueMembersDTO issueMembersDTO);
+
+	int deleteIssueMember(IssueMembersDTO removeMember);
 
 }
