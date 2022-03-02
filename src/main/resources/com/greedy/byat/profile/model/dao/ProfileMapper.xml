@@ -2,7 +2,41 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.greedy.byat.profile.model.dao.ProfileMapper">
- 
- 	
- </mapper>
+<mapper namespace="com.greedy.byat.profile.model.dao.ProfileMapper">
+	<resultMap type="ProfileDTO" id="profileResultMap">
+		<id property="no" column="MEMBER_NO"/>
+		<result property="id" column="MEMBER_ID"/>
+		<result property="pwd" column="MEMBER_PWD"/>
+		<result property="name" column="MEMBER_NAME"/>
+		<result property="phone" column="MEMBER_PHONE"/>
+		<result property="email" column="MEMBER_EMAIL"/>
+	</resultMap>
+	
+	<select id="selectProfile" resultMap="profileReulstMap">
+        SELECT
+               A.MEMBER_NO
+             , A.MEMBER_ID
+             , A.MEMBER_PWD
+             , A.NICKNAME
+             , A.PHONE
+             , A.EMAIL
+          FROM TBL_MEMBER A
+         WHERE A.MEMBER_NO = #{ no }
+	</select>
+	
+	<update id="updateProfile">
+        UPDATE
+               TBL_MEMBER A
+           SET A.MEMBER_NAME = #{ name }
+             , A.MEMBER_EMAIL = #{ email }
+             , A.MEMBER_PHONE = #{ phone }
+         WHERE A.MEMBER_ID = #{ id }
+	</update>
+	
+	<update id="updatePassword">
+        UPDATE
+               TBL_MEMBER A
+           SET A.MEMBER_PWD = #{ pwd }
+         WHERE A.MEMBER_ID = #{ id }
+	</update>
+</mapper>

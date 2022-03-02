@@ -12,13 +12,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString 
-public class ProfileDTO implements java.io.Serializable  {
+public class AttachmentDTO {
 	
-	/* Profile TBL이 따로 있는 게 아닌, TBL_MEMBER에서 해당 회원과 일치하는 value 추출하기 */
-	private int no;
-	private String id;
-	private String pwd;
-	private String name;
-	private String phone;
-	private String email;
+	private int code;
+	private String orgName;
+	private String savedName;
+	private String path;
+	private String thumbnailPath;
+	private String status;
+	private int memberNo;
 }
