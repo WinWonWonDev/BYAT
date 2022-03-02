@@ -164,4 +164,26 @@ public class IssueController {
 		return "redirect:/issue/list?code=" + projectCode;
 	}
 	
+	@PostMapping("removeissuemember")
+	public ModelAndView removeIssueMember(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		MemberDTO changeMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+		
+		String[] memberInfo = request.getParameter("info").split(" ");
+		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
+		int issueCode = Integer.parseInt(request.getParameter("issueCode"));
+		
+		IssueMembersDTO removeMember = new IssueMembersDTO();
+		removeMember.setCode(issueCode);
+		removeMember.setNo(Integer.parseInt(memberInfo[2]));
+		removeMember.setSprintCode(sprintCode);
+		removeMember.setParticipationYn("N");
+		removeMember.setChangeMemberNo(changeMember.getNo());
+		
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
 }

@@ -12,7 +12,7 @@
 		<result property="email" column="MEMBER_EMAIL"/>
 	</resultMap>
 	
-	<select id="selectProfile" resultMap="profileReulstMap">
+	<select id="selectProfile" resultMap="profileResultMap">
         SELECT
                A.MEMBER_NO
              , A.MEMBER_ID
