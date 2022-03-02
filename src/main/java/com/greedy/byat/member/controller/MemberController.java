@@ -52,7 +52,7 @@ public class MemberController {
 
 	@GetMapping("/login")
 	public void goLogin() {
-
+		
 	}
 
 	@PostMapping("/login")
