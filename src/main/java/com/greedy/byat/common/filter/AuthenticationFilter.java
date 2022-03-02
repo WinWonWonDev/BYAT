@@ -121,6 +121,9 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/task/detail");
 		memberPermitList.add("/task/participation");
 		memberPermitList.add("/task/selectparticipation");
+		memberPermitList.add("/task/members");
+		memberPermitList.add("/task/giveup");
+		memberPermitList.add("/task/check");
 
 		memberPermitList.add("/mytask/list");
 		memberPermitList.add("/mytask/regist");
@@ -128,6 +131,9 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/mytask/modify");
 		memberPermitList.add("/mytask/modifytodoliststatus");
 		memberPermitList.add("/mytask/selectmembermodal");
+		memberPermitList.add("/mytask/selecttasklist");
+		memberPermitList.add("/mytask/selecttasklistforproject");
+		
 		memberPermitList.add("/history/list");
 		
 		memberPermitList.add("/issue/list");
@@ -150,7 +156,12 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/member/checkverificationforinit");
 		memberPermitList.add("/member/initialinputinfo");
 		
-		
+		memberPermitList.add("meetinglog/list");
+        memberPermitList.add("meetinglog/regist");
+        memberPermitList.add("meetinglog/modify");
+        memberPermitList.add("meetinglog/detail");
+        memberPermitList.add("meetinglog/remove");
+	
 	    allPermitList.add("/member/login");
 	    allPermitList.add("/member/selectemail");
 		allPermitList.add("/member/checkverification");

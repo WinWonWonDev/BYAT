@@ -25,6 +25,18 @@ import com.greedy.byat.common.exception.member.NotexistEmailException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.member.model.service.MemberService;
 
+/* 
+* <pre>
+* Class : MemberController
+* Comment : Member관련 메소드를 모아놓기 위한 Controller입니다.
+* History
+* 2022/02/17 이소현  처음 작성
+* </pre>
+* @version 1.0.0
+* @author 이소현
+* @see MemberDTO, MemberService, MemberServiceImpl, MemberMapper.java 
+*
+*/
 @Controller
 @RequestMapping("/member")
 @SessionAttributes("loginMember")
@@ -40,7 +52,7 @@ public class MemberController {
 
 	@GetMapping("/login")
 	public void goLogin() {
-
+		
 	}
 
 	@PostMapping("/login")
