@@ -372,7 +372,6 @@ $(document).ready(function() {
 				</div>
 			</div>
 		<div class="modal_layer"></div>
-		<input type="hidden" id="memberNoForRestore2">
 		</div>
 
 
@@ -381,6 +380,8 @@ $(document).ready(function() {
 	
 		if(document.querySelectorAll("#managementTable tbody tr")) {
 			const $tr = document.querySelectorAll("#managementTable tbody tr");
+	 		var memberNoForRestore = document.querySelectorAll("#memberNoForRestore");
+	
 			
 			for(let i = 0; i < $tr.length; i++) {
 				
@@ -396,21 +397,18 @@ $(document).ready(function() {
 					
 				$tr[i].ondblclick = function() {
 					document.getElementById("restoreInfoModal").style.display = "block";
+					document.getElementById("modal_ok_btn").value = memberNoForRestore[i].value;
 				}
 				
 			}
 		}
- 
- 		var memberNoForRestore = document.getElementById("memberNoForRestore");
- 		var memberNoForRestore2 = document.getElementById("memberNoForRestore2");
+ 		 		
  		
-		if(memberNoForRestore.value != null) {
-			memberNoForRestore2.value = memberNoForRestore.value;
-			
- 			document.getElementById("modal_ok_btn").onclick = function() {
-	 			location.href="${ pageContext.servletContext.contextPath }/management/restore?no=" + memberNoForRestore2.value;	
-			} 
-		}
+		var Okbutton = document.getElementById("modal_ok_btn");
+		
+		Okbutton.onclick = function() {
+ 			location.href="${ pageContext.servletContext.contextPath }/management/restore?no=" + Okbutton.value;	
+		} 
 					
 	 	document.getElementById("modal_close_btn").onclick = function() {
 			document.getElementById("restoreInfoModal").style.display = "none";
