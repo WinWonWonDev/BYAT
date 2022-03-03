@@ -436,131 +436,131 @@ form {
 		 
 		 
 		 
-      	/*달력 출력*/
-	 	//만약에  넘어온 startDate ~ endDate 사이의 그 날짜가  = 돌릴때 i랑 일치하면 -> <div> + gavedTitle + </div> 하면ㄷ 될거같은데
-        // else 일치하지 않으면 그냥 밑에처럼 셀 만들어질 수 있게 ㅇㅇ
-		//var gavedStartDate = document.getElementById("gavedStartDate").value; //2022-03-01
-		//var gavedEndDate = document.getElementById("gavedEndDate").value; //2022-03-04
-		//var gavedTitle = document.getElementById("gavedTitle").value;
-		
-		var resultList = [];
-    	var goDateOfYear = [];
-    	var goDateOfMonth = [];
-    	var goDateOfDate = [];
-    	
-			
-		var gavedEndDates = document.querySelectorAll("#gavedEndDate"); // 0, 1, 2, 3 드가있을거잖아? 
-		var gavedStartDates = document.querySelectorAll("#gavedStartDate"); // 0, 1, 2, 3 드가있을거잖아? 
-		console.log(gavedEndDates);
-		console.log(gavedStartDates);
-		
-   		for(let i = 0; i < gavedEndDates.length; i++) {
-			//반복해서 enddate 여러개 드가있을 거잖슴? 그걸 각 그기에 춝력
-			var endDates = gavedEndDates[i].value; 
-			var startDates = gavedStartDates[i].value; 
+	       
+         /*달력 출력*/
+      var endDates = [];
+      var startDates = [];
+      var titles = [];
+      var resultList = [];
 
-			dateList(startDates, endDates);
-    		
-    		
-		}	
+         
+      var gavedEndDates = document.querySelectorAll("#gavedEndDate"); // 0, 1, 2, 3 드가있을거잖아? 
+      var gavedStartDates = document.querySelectorAll("#gavedStartDate"); // 0, 1, 2, 3 드가있을거잖아? 
+      var gavedTitles = document.querySelectorAll("#gavedTitle"); // 0, 1, 2, 3 드가있을거잖아? 
+      console.log(gavedEndDates);
+      console.log(gavedStartDates);
+      console.log(gavedTitles);
+      
+         for(let i = 0; i < gavedEndDates.length; i++) {
+         //반복해서 enddate 여러개 드가있을 거잖슴? 그걸 각 그기에 춝력
+         var endDates = gavedEndDates[i].value; 
+         var startDates = gavedStartDates[i].value; 
+         var titles = gavedTitles[i].value;
+         dateList(startDates, endDates);
+          
+         console.log("끝나는날 : "  + endDates);
+         console.log(" 시작하는 날 : " + startDates);
+         console.log("타이틀들 : " + titles);
+         console.log("");
+         
+      }   
 
-   		// [이벤트 함수 호출]
+         // [이벤트 함수 호출]
 
-   	/* [이벤트 함수 정의] */    	
-   	function dateList(startDate, EndDate){
-   		// 두 날짜 차이 계산 실시
-   		const date1 = new Date(startDate);
-   		const date2 = new Date(EndDate);
-   		const elapsedMSec = date2.getTime() - date1.getTime();
-   		const elapsedDay = elapsedMSec / 1000 / 60 / 60 / 24;
-   		var dateTerm = Number(elapsedDay) + 1;
-   		var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);	
-   		var result = [];	
-   		var curDate = new Date(startDate);
+      /* [이벤트 함수 정의] */       
+      function dateList(startDate, EndDate){
+         // 두 날짜 차이 계산 실시
+         const date1 = new Date(startDate);
+         const date2 = new Date(EndDate);
+         const elapsedMSec = date2.getTime() - date1.getTime();
+         const elapsedDay = elapsedMSec / 1000 / 60 / 60 / 24;
+         var dateTerm = Number(elapsedDay) + 1;
+         var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);   
+         var result = [];   
+         var curDate = new Date(startDate);
 
-   		
-   		while(curDate <= new Date(EndDate)) {
-   			var date = curDate.toISOString().split("T")[0];    			
-   			result.push(date);
-   			curDate.setDate(curDate.getDate() + 1);
-   		}	
+         
+         while(curDate <= new Date(EndDate)) {
+            var date = curDate.toISOString().split("T")[0];             
+            result.push(date);
+            curDate.setDate(curDate.getDate() + 1);
+         }   
 
 
-   		resultList.push(result);
-   		
-   	};
-   	
-   	for(j = 0; j < resultList.length; j++) {
-		for(i = 0; i < resultList[j].length; i++) {
-			var goDate = new Date(resultList[j][i]);
-			
-			goDateOfYear = goDate.getFullYear(); // 모든 일정의 년도 
-		 	goDateOfMonth = goDate.getMonth() + 1; //모든 일정의 월
-			goDateOfDate = goDate.getDate(); //모든 일정의 일
-
-			console.log(goDateOfYear);
-			console.log(goDateOfMonth);
-			console.log(goDateOfDate);
-	
-			/* if (goDateOfYear == date.getFullYear()
-			         && goDateOfMonth == date.getMonth()
-			         && goDateOfDate == date.getDate()) {
-			          //달력에 있는 년,달과 내 컴퓨터의 로컬 년,달이 같고, 일이 오늘의 일과 같으면
-			        cell.bgColor = "red";//셀의 배경색을 노랑으로 
-	       } */
-			
-		}
-   	}
-   	
-   	
-   		
-		/* console.log(resultList[0]);
-		console.log(resultList[0].length);
-		console.log(resultList[1]);
-		console.log(resultList[1].length);
-		console.log(resultList[2]);
-		console.log(resultList[2].length);
-		console.log(resultList[3]);
-		console.log(resultList[3].length); */
-		
-		
-	for (i=1; i<=lastDate.getDate(); i++) { 
-		
-			console.log("여기는 나오려나 ? : " + goDateOfYear[i]);
-		
+         resultList.push(result);
+         
+      };
+     
+      
+      
+         
+ /*      for(j = 0; j < resultList.length; j++) {
+      for(k = 0; i < resultList[j].length; k++) {
+         var goDate = new Date(resultList[j][k]);
+         
+         goDateOfYear = goDate.getFullYear(); // 모든 일정의 년도 
+          goDateOfMonth = goDate.getMonth() + 1; //모든 일정의 월
+         goDateOfDate = goDate.getDate(); //모든 일정의 일
+         
+      console.log(resultList[0]);
+      console.log(resultList[0].length);
+      console.log(resultList[1]);
+      console.log(resultList[1].length);
+      console.log(resultList[2]);
+      console.log(resultList[2].length);
+      console.log(resultList[3]);
+      console.log(resultList[3].length);
+         if (goDateOfYear == date.getFullYear()
+                  && goDateOfMonth == date.getMonth()
+                  && goDateOfDate == date.getDate()) {
+                   //달력에 있는 년,달과 내 컴퓨터의 로컬 년,달이 같고, 일이 오늘의 일과 같으면
+                 cell.bgColor = "red";//셀의 배경색을 노랑으로 
+          } 
+         
+      }
+      } */
+      
+      
+   for (i=1; i<=lastDate.getDate(); i++) { 
+      
+      for(let i = 0; i < resultList.length; i++) {
+          //반복해서 enddate 여러개 드가있을 거잖슴? 그걸 각 그기에 춝력
+           
+        console.log("ㅇㅇ : " + resultList[i]);
+          
+       }   
       //1일부터 마지막 일까지 돌림
-	   cell = row.insertCell();//열 한칸한칸 계속 만들어주는 역할
-	   cell.innerHTML = "<p class='onlyDate'>" + i + "<div>" + gavedTitle + "</div>" + "<div>&nbsp;</div>";//셀을 1부터 마지막 day까지 HTML 문법에 넣어줌
-	   cnt = cnt + 1;//열의 갯수를 계속 다음으로 위치하게 해주는 역할
-	          
-	      if (cnt % 7 == 1) {/*일요일 계산*/
-	          //1주일이 7일 이므로 일요일 구하기
-	          //월화수목금토일을 7로 나눴을때 나머지가 1이면 cnt가 1번째에 위치함을 의미한다
-	        cell.innerHTML = "<p style='text-align:right'>" + "<font color=#F79DC2>" + i + "<div>&nbsp;</div>" + "<div>&nbsp;</div>";
-	        //1번째의 cell에만 색칠
-	    }    
-	      if (cnt%7 == 0){/* 1주일이 7일 이므로 토요일 구하기*/
-	          //월화수목금토일을 7로 나눴을때 나머지가 0이면 cnt가 7번째에 위치함을 의미한다
-	          cell.innerHTML = "<p style='text-align:right'>" + "<font color=skyblue>" + i +  "<div>&nbsp;</div>" + "<div>&nbsp;</div>";
-	          //7번째의 cell에만 색칠
-	           row = calendar.insertRow();
-	           //토요일 다음에 올 셀을 추가
-	      }
-	      
-	      
-	      
-	      /*오늘의 날짜에 노란색 칠하기*/
-	      if (today.getFullYear() == date.getFullYear()
-	         && today.getMonth() == date.getMonth()
-	         && i == date.getDate()) {
-	          //달력에 있는 년,달과 내 컴퓨터의 로컬 년,달이 같고, 일이 오늘의 일과 같으면
-	        cell.bgColor = "#FAF58C";//셀의 배경색을 노랑으로 
-	       }
-		}
-	
+      cell = row.insertCell();//열 한칸한칸 계속 만들어주는 역할
+      cell.innerHTML = "<p class='onlyDate'>" + i + "<div>" + titles[i] + "</div>" + "<div>&nbsp;</div>";//셀을 1부터 마지막 day까지 HTML 문법에 넣어줌
+      cnt = cnt + 1;//열의 갯수를 계속 다음으로 위치하게 해주는 역할
+             
+         if (cnt % 7 == 1) {/*일요일 계산*/
+             //1주일이 7일 이므로 일요일 구하기
+             //월화수목금토일을 7로 나눴을때 나머지가 1이면 cnt가 1번째에 위치함을 의미한다
+           cell.innerHTML = "<p style='text-align:right'>" + "<font color=#F79DC2>" + i + "<div>&nbsp;</div>" + "<div>&nbsp;</div>";
+           //1번째의 cell에만 색칠
+       }    
+         if (cnt%7 == 0){/* 1주일이 7일 이므로 토요일 구하기*/
+             //월화수목금토일을 7로 나눴을때 나머지가 0이면 cnt가 7번째에 위치함을 의미한다
+             cell.innerHTML = "<p style='text-align:right'>" + "<font color=skyblue>" + i +  "<div>&nbsp;</div>" + "<div>&nbsp;</div>";
+             //7번째의 cell에만 색칠
+              row = calendar.insertRow();
+              //토요일 다음에 올 셀을 추가
+         }
+         
+         
+         /*오늘의 날짜에 노란색 칠하기*/
+         if (today.getFullYear() == date.getFullYear()
+            && today.getMonth() == date.getMonth()
+            && i == date.getDate()) {
+             //달력에 있는 년,달과 내 컴퓨터의 로컬 년,달이 같고, 일이 오늘의 일과 같으면
+           cell.bgColor = "#FAF58C";//셀의 배경색을 노랑으로 
+          }
+      }
+   
   }
-	
-		 
+   
+       
    <!-- 캘린더 상세 보기  자바스크립트 (ㄱㄷㄱㄷ)-->
    //만약에  그.. 각 .. 네모를 클릭을 하면 
    //그... 모달창이 뜨도록.. ; (너무어렵다..생각해보자)
@@ -568,15 +568,14 @@ form {
       
    </script>
 
-	<script language="javascript" type="text/javascript">
-		buildCalendar();
-	</script>
+   <script language="javascript" type="text/javascript">
+      buildCalendar();
+   </script>
 
-	<script>
+   <script>
 
 <!-- 캘린더 일정 보기 모달창용 스크립트 -->
 
-	</script>
-
+   </script>
 </body>
 </html>

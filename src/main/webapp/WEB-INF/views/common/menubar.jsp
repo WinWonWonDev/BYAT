@@ -513,8 +513,13 @@
 		    
 	    /* 결계 만들어야 함 ㄱㄷ */
 	    $profileName.onclick = function() {
-			document.getElementById("profileAndLogoutModal").style.display="block";
-			
+	    	if(document.getElementById("profileAndLogoutModal").style.display == 'none'){
+	    		
+	    		document.getElementById("profileAndLogoutModal").style.display = 'block';
+	    	}else{
+	    		document.getElementById("profileAndLogoutModal").style.display = 'none';
+	    	}
+						
 		} 
 	    
 	    $logoutArea.onclick = function() {
