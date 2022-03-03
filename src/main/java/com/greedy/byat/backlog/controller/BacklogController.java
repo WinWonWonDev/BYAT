@@ -48,6 +48,7 @@ public class BacklogController {
 		
 		System.out.println("writer : " + writer);
 		System.out.println("projectCode : " + projectCode);
+		System.out.println("backlog : " + backlog);
 		
 		backlog.setWriter(writer.getName());
 		backlog.setProjectCode(projectCode);

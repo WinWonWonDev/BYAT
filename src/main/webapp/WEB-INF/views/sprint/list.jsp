@@ -841,28 +841,19 @@
 	<div id="backlog-create-modal">
    
    		<div class="modal_content">
-   			<form action="" method="post">
+   			<form action="${ pageContext.servletContext.contextPath }/backlog/regist" method="post">
 			<div class="modal_head">
 				<h3>백로그 생성</h3>
 	    	</div>
        		<div class="modal_content-box">
-       			<input type="text" class="title" name="backlogTitle" placeholder="BacklogTitle">
-       		
-       			<select class="manager" id="backlogManager">
-					<option>Manager</option>
-					<!-- c:foreach -->
-					
-					
-       			</select>
-				<h5>시작일</h5>
-				<h5>종료일</h5>
+       			<input type="text" class="title" name="title" placeholder="BacklogTitle">
+       			<input type="hidden" id="projectCode" name="projectCode" value="${ requestScope.code }">
+       			
        			<br clear="both">
-       			<input type='date' class="start-day" name='backlogStartday'/>
-       			<input type='date' class="end-day" name='backlogEndday'/>
-       			<textarea class="description" id="backlogDescription" rows="13" cols="51" placeholder="BackLog Detail Description"></textarea>
+       			<textarea class="description" id="backlogDescription" name="body" rows="13" cols="51" placeholder="BackLog Detail Description"></textarea>
        		</div>
        		<div class="modal_button">
-	        	<button type="button" id="backlog-create">Ok</button>
+	        	<button type="submit" id="backlog-create">Ok</button>
 	        	<button type="button" id="backlog-close-btn1">Cancel</button>
        		</div>
    			</form>
@@ -874,32 +865,21 @@
 	<div id="backlog-update-modal">
    
    		<div class="modal_content">
-   			<form action="" method="post">
-			<div class="modal_head">
-				<h3>백로그 수정</h3>
-	    	</div>
-       		<div class="modal_content-box">
-       			<input type="text" class="title" name="backlogTitle" placeholder="BacklogTitle">
-       		
-       			<select class="manager" id=" backlogManager">
-					<option>Manager</option>
-					<!-- c:foreach -->
-					
-					
-					
-       			</select>
-       		
-				<h5>시작일</h5>
-				<h5>종료일</h5>
-       			<br clear="both">
-       			<input type='date' class="start-day" name='backlogStartday'/>
-       			<input type='date' class="end-day" name='backlogEndday'/>
-       			<textarea class="description" id="backlogDescription" rows="13" cols="51" placeholder="BackLog Detail Description"></textarea>
-       		</div>
-       		<div class="modal_button">
-	        	<button type="button" id="backlog-update">Ok</button>
-	        	<button type="button" id="backlog-close-btn2">Cancel</button>
-       		</div>
+   			<form action="${ pageContext.servletContext.contextPath }/backlog/modify" method="post">
+				<div class="modal_head">
+					<h3>백로그 수정</h3>
+		    	</div>
+       			<div class="modal_content-box">
+       				<input type="text" class="title" name="backlogTitle" placeholder="BacklogTitle">
+       				<input type="hidden" id="projectCode" name="projectCode" value="${ requestScope.code }">
+
+       				<br clear="both">
+       				<textarea class="description" id="backlogDescription" rows="13" cols="51" placeholder="BackLog Detail Description"></textarea>
+       			</div>
+       			<div class="modal_button">
+	        		<button type="button" id="backlog-update">Ok</button>
+	        		<button type="button" id="backlog-close-btn2">Cancel</button>
+       			</div>
    			</form>
     	</div>
     	<div class="modal_layer"></div>
