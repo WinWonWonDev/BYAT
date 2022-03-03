@@ -11,11 +11,11 @@ public interface BacklogService {
 
 	List<BacklogDTO> selectBacklogList(int projectCode);
 	
-	void registBacklog(BacklogDTO backlog) throws BacklogRegistException;
+	String registBacklog(BacklogDTO backlog);
 	
 	BacklogDTO selectBacklogDetail(int code);
 	
-	void modifyBacklog(BacklogDTO backlog) throws BacklogModifyException;
+	String modifyBacklog(BacklogDTO backlog);
 	
-	void removeBacklog(int code) throws BacklogRemoveException;
+	String removeBacklog(int code);
 }
