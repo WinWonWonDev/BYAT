@@ -124,6 +124,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/task/members");
 		memberPermitList.add("/task/giveup");
 		memberPermitList.add("/task/check");
+		memberPermitList.add("/task/modify");
 
 		memberPermitList.add("/mytask/list");
 		memberPermitList.add("/mytask/regist");
@@ -136,12 +137,17 @@ public class AuthenticationFilter implements Filter {
 		
 		memberPermitList.add("/history/list");
 		
+		memberPermitList.add("/backlog/regist");
+		memberPermitList.add("/backlog/modify");
+		memberPermitList.add("/backlog/remove");
+		
 		memberPermitList.add("/issue/list");
 		memberPermitList.add("/issue/modifyissuestatus");
 		memberPermitList.add("/issue/issuelist");
 		memberPermitList.add("/issue/sprintmemberlist");
 		memberPermitList.add("/issue/modify");
 		memberPermitList.add("/issue/removeissuemember");
+		memberPermitList.add("/issue/remove");
 		
 		memberPermitList.add("/calendar/list");
 		memberPermitList.add("/calendar/regist");
@@ -156,11 +162,11 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/member/checkverificationforinit");
 		memberPermitList.add("/member/initialinputinfo");
 		
-		memberPermitList.add("meetinglog/list");
-        memberPermitList.add("meetinglog/regist");
-        memberPermitList.add("meetinglog/modify");
-        memberPermitList.add("meetinglog/detail");
-        memberPermitList.add("meetinglog/remove");
+		memberPermitList.add("/meetinglog/list");
+        memberPermitList.add("/meetinglog/regist");
+        memberPermitList.add("/meetinglog/modify");
+        memberPermitList.add("/meetinglog/detail");
+        memberPermitList.add("/meetinglog/remove");
 	
 	    allPermitList.add("/member/login");
 	    allPermitList.add("/member/selectemail");

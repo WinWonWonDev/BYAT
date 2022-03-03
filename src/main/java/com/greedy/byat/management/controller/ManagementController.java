@@ -116,6 +116,7 @@ public class ManagementController {
 	@GetMapping("restore")
 	public String restoreManagement(RedirectAttributes rttr, HttpServletRequest request) {
 	
+		
 		int no = Integer.parseInt(request.getParameter("no"));
 		
 		int result = managementService.restoreManagement(no);
