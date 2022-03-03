@@ -792,17 +792,18 @@
 			<h2 class="backlog-head">BackLog</h2>
 			<button class="backlog-add" id="backlog-create-open-btn"></button>
 			<div class="backlog-box">
-			
-				<!-- c:foreach아니면 jsp로 -->
-				<div class="backlog-item" align="center">
-					<h4 class="backlog-item-title">크큭</h4>
-					<div class="backlog-status" id="backlog-status" name="backlogStatus" onchange="chageLangSelect()"></div>
-					<input type="button" class="backlog-update-modal-open" id="backlog-update-open-btn" value="조회  / 수정">
-					<input type="button" class="backlog-delete-modal-open" id="backlog-delete-open-btn" value="삭제">
-				</div>
-				
-			
-			
+
+				<c:forEach items="${ backlogList }" var="backlog">
+					<div class="backlog-item" align="center">
+						<h4 class="backlog-item-title">${ backlog.title }</h4>
+						<input type="hidden" name="projectCode" id="projectCode" value="${ requestScope.code }">
+						<input type="hidden" name="code"  id="backlogCode" value="${ backlog.code }">
+						<div class="backlog-status" id="backlog-status">${ backlog.progress }</div>
+						<input type="button" class="backlog-update-modal-open" id="backlog-update-open-btn" value="조회  / 수정">
+						<input type="button" class="backlog-delete-modal-open" id="backlog-delete-open-btn" value="삭제">
+					</div>
+				</c:forEach>
+
 			</div>
 		</div>
 		<div class="sprint-area">

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.greedy.byat.member.model.dto.MemberDTO;
@@ -106,8 +105,10 @@ public class TaskServiceImpl implements TaskService {
 		int taskMemberResult = 0;
 		int sprintMembersResult = 0;
 		
-		if(checkResult3 == 0) {																	//처음 참가 하는 거라면
+		/* 이미 스프린트 구성원인지 확인한다*/
+		if(checkResult3 == 0) {			 //1														//처음 참가 하는 거라면
 			
+			/* 새로 스프린트 구성원으로 등록한다.*/
 			sprintMembersResult = mapper.insertSprintMembers(taskParticipation);
 		} else {
 			
@@ -121,8 +122,10 @@ public class TaskServiceImpl implements TaskService {
 		}
 		
 		if(checkResult1 > 0) {
+			
 			taskMemberResult = mapper.changeTaskMembersParticipation(taskParticipation);
 		} else {
+			
 			taskMemberResult = mapper.insertTaskMembers(taskParticipation);
 		}
 
@@ -135,8 +138,10 @@ public class TaskServiceImpl implements TaskService {
 		System.out.println(historyResult2);
 		
 		if(sprintMembersResult > 0 && taskMemberResult > 0 && historyResult1 > 0 && historyResult2 > 0) {
+			
 			message = "태스크에 참가하셨습니다.";
 		} else {
+			
 			message = "참가 실패";
 		}
 		
@@ -278,5 +283,3 @@ public class TaskServiceImpl implements TaskService {
 
 
 }
-
-

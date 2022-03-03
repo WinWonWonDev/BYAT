@@ -2,6 +2,7 @@ package com.greedy.byat.sprint.model.service;
 
 import java.util.List;
 
+import com.greedy.byat.backlog.model.dto.BacklogDTO;
 import com.greedy.byat.common.exception.sprint.RegistSprintException;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
@@ -23,5 +24,7 @@ public interface SprintService {
 	List<TaskDTO> selectTaskList(int sprintCode);
 
 	void startSprint(int projectCode);
+
+	List<BacklogDTO> selectBacklogList(int projectCode);
 
 }

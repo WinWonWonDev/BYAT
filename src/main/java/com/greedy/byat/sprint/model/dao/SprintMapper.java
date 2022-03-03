@@ -2,6 +2,7 @@ package com.greedy.byat.sprint.model.dao;
 
 import java.util.List;
 
+import com.greedy.byat.backlog.model.dto.BacklogDTO;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 
@@ -30,5 +31,7 @@ public interface SprintMapper {
 	int insertSprintVersionHistory2(SprintDTO sprint);
 
 	int insertSprintProgressHistory2(SprintDTO sprint);
+
+	List<BacklogDTO> selectBacklogList(int projectCode);
 	
 }

@@ -199,7 +199,6 @@
  		  FROM TBL_TASK_MEMBERS
  		 WHERE TASK_CODE = #{ taskCode }
  		   AND MEMBER_NO = #{ memberNo }
- 		   AND TASK_PARTICIPATION_YN = 'Y'
  	</select>
  	
  	<update id="changeTaskMembersParticipation" parameterType="hashmap">
@@ -267,11 +266,11 @@
  		       COUNT(*)
  		  FROM TBL_SPRINT_MEMBERS
  		 WHERE MEMBER_NO = #{ memberNo }
- 		   AND SPRINT_PARTICIPATION_YN = 'Y'
  		   AND SPRINT_CODE = (SELECT
  		   							 A.SPRINT_CODE
  		   					    FROM TBL_TASK A
  		   					   WHERE A.TASK_CODE = #{ taskCode }) 
+ 		   AND SPRINT_PARTICIPATION_YN = 'Y'
  	</select>
  	
  	<insert id="changeSprintMembersParticipation" parameterType="hashmap">
@@ -357,6 +356,7 @@
  		  JOIN TBL_MEMBER C ON (A.MEMBER_NO = C.MEMBER_NO)
  		  JOIN TBL_PERMIT B ON (B.PERMIT_CODE = C.PERMIT_CODE)
  		 WHERE A.TASK_CODE = #{ taskCode }
+ 		   AND A.TASK_PARTICIPATION_YN = 'Y'
  	</select>
  	
  	<update id="updateTask">
