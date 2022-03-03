@@ -33,5 +33,9 @@ public interface SprintMapper {
 	int insertSprintProgressHistory2(SprintDTO sprint);
 
 	List<BacklogDTO> selectBacklogList(int projectCode);
+
+	int updateSprintProgress(int projectCode);
+
+	int insertSprintProgressHistory3(int projectCode);
 	
 }
