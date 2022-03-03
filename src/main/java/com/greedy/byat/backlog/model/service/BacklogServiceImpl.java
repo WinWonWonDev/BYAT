@@ -32,13 +32,19 @@ public class BacklogServiceImpl implements BacklogService {
 	
 	/* Backlog 생성용 메서드 */
 	@Override
-	public void registBacklog(BacklogDTO backlog) throws BacklogRegistException {
+	public String registBacklog(BacklogDTO backlog) {
 		
 		int result = mapper.insertBacklog(backlog);
 		
+		String message = null;
+		
 		if(!(result > 0)) {
-			throw new BacklogRegistException("Backlog 생성에 실패하셨습니다.");
+			message = "백로그 생성 실패 ...";
+		} else {
+			message = "백로그 생성 성공 !!!"; 
 		}
+		
+		return message;
 	}
 	
 	/* Backlog 상세 조회용 메서드 */
@@ -52,25 +58,34 @@ public class BacklogServiceImpl implements BacklogService {
 	
 	/* Backlog 수정용 메서드 */
 	@Override
-	public void modifyBacklog(BacklogDTO backlog) throws BacklogModifyException {
+	public String modifyBacklog(BacklogDTO backlog) {
 		
 		int result = mapper.updateBacklog(backlog);
+		String message = null;
 		
 		if(!(result > 0)) {
-			throw new BacklogModifyException("Backlog 수정에 실패하셨습니다.");
+			message = "백로그 수정 실패 ...";
+		} else {
+			message = "백로그 수정 성공 !!!";
 		}
+		
+		return message;
 	}
 	
 	/* Backlog 삭제용 메서드 */
 	@Override
-	public void removeBacklog(int code) throws BacklogRemoveException {
+	public String removeBacklog(int code) {
 		
 		int result = mapper.deleteBacklog(code);
+		String message = null;
 		
 		if(!(result > 0)) {
-			throw new BacklogRemoveException("Backlog 삭제에 실패하셨습니다.");
+			message = "백로그 삭제 실패 ...";
+		} else {
+			message = "백로그 삭제 성공 !!!";
 		}
 		
+		return message;
 	}
 
 	

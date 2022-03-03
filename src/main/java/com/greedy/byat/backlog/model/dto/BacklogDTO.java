@@ -1,5 +1,7 @@
 package com.greedy.byat.backlog.model.dto;
 
+import com.greedy.byat.member.model.dto.MemberDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +26,5 @@ public class BacklogDTO {
 	private int version;
 	private String deleteStatus;
 	private String writer;
+	private MemberDTO writerMember;
 }
