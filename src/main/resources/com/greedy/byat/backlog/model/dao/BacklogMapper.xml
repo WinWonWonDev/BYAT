@@ -26,7 +26,6 @@
              , A.PROJECT_CODE
              , A.BACKLOG_VERSION
              , A.BACKLOG_DELETE_STATUS
-             , A.BACKLOG_DELETE_STATUS
              , A.BACKLOG_WRITER
           FROM TBL_BACKLOG A
          WHERE A.BACKLOG_DELETE_STAUTS = 'N'
@@ -66,7 +65,8 @@
         UPDATE /* com.greedy.byat.backlog.model.dao.BacklogMapper#deleteBacklog() */
                TBL_BACKLOG A
            SET A.BACKLOG_DELETE_STATUS = 'N'
-         WHERE A.BACKLOG_CODE = #{ code }
+         WHERE A.PROJECT_CODE = #{ projectCode }
+           AND A.BACKLOG_CODE = #{ code }
  	</delete>
  	
  	<update id="updateBacklogTasklize" parameterType="BacklogDTO">

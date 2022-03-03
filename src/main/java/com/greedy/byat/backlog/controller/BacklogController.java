@@ -82,4 +82,10 @@ public class BacklogController {
 		
 		return "redirect:/sprint/list?code=" + projectCode;
 	}
+	
+	@GetMapping("/detail")
+	public String showBacklogDetail() {
+		
+		return "";
+	}
 }

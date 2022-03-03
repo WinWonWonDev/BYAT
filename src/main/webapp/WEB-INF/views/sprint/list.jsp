@@ -797,10 +797,10 @@
 					<div class="backlog-item" align="center">
 						<h4 class="backlog-item-title">${ backlog.title }</h4>
 						<input type="hidden" name="projectCode" id="projectCode" value="${ requestScope.code }">
-						<input type="hidden" name="code"  id="backlogCode" value="${ backlog.code }">
+						<input type="hidden" name="backlogCode"  id="backlogCode" value="${ backlog.code }">
 						<div class="backlog-status" id="backlog-status">${ backlog.progress }</div>
 						<input type="button" class="backlog-update-modal-open" id="backlog-update-open-btn" value="조회  / 수정">
-						<input type="button" class="backlog-delete-modal-open" id="backlog-delete-open-btn" value="삭제">
+						<button type="button" class="backlog-delete-modal-open" id="backlog-delete-open-btn" onclick="location.href='${ pageContext.servletContext.contextPath }/backlog/remove?projectCode=${ requestScope.code }&code=${ backlog.code }'">삭제</button>
 					</div>
 				</c:forEach>
 
@@ -1079,7 +1079,7 @@
 <script>
 
 	/* 인근이형이 추가하라고 한거 */
-	/* document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + ${ requestScope.code };*/
+	document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + ${ requestScope.code };
 	
 	/* 수빈이형이 추가하라고 한거*/
 	/* document.getElementById("selectMeetingLogList").href = document.getElementById("selectMeetingLogList").href + ${ requestScope.code }; */
@@ -1559,6 +1559,59 @@
 		location.href = "${ pageContext.servletContext.contextPath }/task/remove?taskCode=" + $taskDeleteBtn.value + "&projectCode=" + $projectCode;
 	}
 	
+	/* 백로그 관련 JS */
+	if(document.querySelectorAll(".backlog-item")) {
+		
+		const $backlogUpdateBtns = document.querySelectorAll("#backlog-update-open-btn");
+		const $backlogCodes = document.querySelectorAll("#backlogCode");
+		const $backlogDeleteBtns = document.querySelectorAll("#backlog-delete-open-btn");
+		
+		console.log($backlogDeleteBtns);
+		
+		/* 백로그 수정 & 조회 */
+		for(let i = 0; i < $backlogUpdateBtns.length; i++) {
+			
+			$backlogUpdateBtns[i].onclick = function() {
+				
+				document.getElementById("backlog-update-modal").style.display = "block";
+				
+				$.ajax({
+					url: "/byat/backlog/detail",
+					type: "get",
+					data: { "backlogCode": $backlogCodes[i].value },
+					dataType: "json",
+					success: function(data, status, xhr) {
+						
+						console.table(data);
+						console.log(data.title);
+						
+						const projectCode = $("#projectCode");
+						const backlogTitle = $("[name='backlogTitle']");
+						const backlogBody = $("#backlogDescription");
+						
+						projectCode.val(data.projectCode);
+						backlogTitle.val(data.backlogTitle);
+						backlogBody.val(data.backlogBody);
+					},
+					error: function(xhr, status, error) {
+						console.log(xhr);
+					}
+				});
+			}
+		}
+		
+		for(let i = 0; i < $backlogDeleteBtns.length; i++) {
+			
+			const backlogDeleteModalBtn = document.getquerySelectorAll("#backlog-delete");
+			
+			$backlogDeleteModalBtn[i].onclick = function() {
+				
+				const $projectCode = $("#projectCode").val();
+				
+				location.href = "${ pageContext.servletContext.contextPath }/backlog/remove?backlogCode=" + $backlogCodes.value + "&projectCode=" + $projectCode;
+			}
+		}
+	}
 	
 </script>
 </body>
