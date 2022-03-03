@@ -1756,6 +1756,8 @@
         		
         		editBox.children[1].onclick = function() {
         			
+        			const thisKanban = $(this).parent('div').parent('div');
+        			
         			if(!(document.getElementById("headSprintProgress").value == "완료")){
         				
         				document.getElementById("delete_modal").style.display="block";
@@ -1767,7 +1769,7 @@
                        
 						document.getElementById("delete_modal_ok_btn").onclick = function() {
 						   
-						   location.href = "${ pageContext.servletContext.contextPath }/issue/remove?code=" + $(this).parent('div').parent('div').children[1].value;                        
+						   location.href = "${ pageContext.servletContext.contextPath }/issue/remove?code=" + thisKanban[0].children[1].value;
 						}
         				
         			} else {

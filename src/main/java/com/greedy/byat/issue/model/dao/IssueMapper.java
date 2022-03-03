@@ -37,4 +37,6 @@ public interface IssueMapper {
 
 	int deleteIssueMember(IssueMembersDTO removeMember);
 
+	int deleteIssue(int code);
+
 }

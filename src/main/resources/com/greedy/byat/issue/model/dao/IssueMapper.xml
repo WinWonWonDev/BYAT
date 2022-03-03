@@ -270,4 +270,11 @@
  		   AND A.MEMBER_NO = #{ no }
  	</update>
  	
+ 	<update id="deleteIssue" parameterType="_int">
+		UPDATE
+		       TBL_ISSUE A
+		   SET A.ISSUE_DELETE_STATUS = 'Y'
+		 WHERE A.ISSUE_CODE = #{ code }
+ 	</update>
+ 	
  </mapper>

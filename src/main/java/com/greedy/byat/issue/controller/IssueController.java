@@ -22,6 +22,7 @@ import com.greedy.byat.common.exception.issue.IssueInsertVersionHistoryException
 import com.greedy.byat.common.exception.issue.IssueModifyMemberException;
 import com.greedy.byat.common.exception.issue.IssueModifyStatusException;
 import com.greedy.byat.common.exception.issue.IssueRegistStatusHistoryException;
+import com.greedy.byat.common.exception.issue.IssueRemoveException;
 import com.greedy.byat.common.exception.issue.IssueRemoveMemberException;
 import com.greedy.byat.common.exception.issue.IssueUpdateContentException;
 import com.greedy.byat.issue.model.dto.IssueDTO;
@@ -188,5 +189,19 @@ public class IssueController {
 		mv.setViewName("jsonView");
 		
 		return mv;
+	}
+	
+	@GetMapping
+	public String removeIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueRemoveException, IssueInsertVersionHistoryException {
+		
+		MemberDTO changeMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+		
+		int code = Integer.parseInt(request.getParameter("code"));
+		
+		int projectCode = issueService.deleteIssue(code, changeMember.getNo());
+		
+		rttr.addFlashAttribute("message", "이슈 삭제 성공!");
+		
+		return "redirect:/issue/list?code=" + projectCode;
 	}
 }

@@ -13,6 +13,7 @@ import com.greedy.byat.common.exception.issue.IssueInsertVersionHistoryException
 import com.greedy.byat.common.exception.issue.IssueModifyMemberException;
 import com.greedy.byat.common.exception.issue.IssueModifyStatusException;
 import com.greedy.byat.common.exception.issue.IssueRegistStatusHistoryException;
+import com.greedy.byat.common.exception.issue.IssueRemoveException;
 import com.greedy.byat.common.exception.issue.IssueRemoveMemberException;
 import com.greedy.byat.common.exception.issue.IssueUpdateContentException;
 import com.greedy.byat.issue.model.dao.IssueMapper;
@@ -233,6 +234,33 @@ public class IssueServiceImpl implements IssueService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public int deleteIssue(int code, int changeMemberNo) throws IssueRemoveException, IssueInsertVersionHistoryException {
+		
+		int result = mapper.deleteIssue(code);
+		
+		IssueDTO issue = new IssueDTO();
+		
+		if(!(result > 0)) {
+			
+			throw new IssueRemoveException("이슈 삭제 실패!");
+		} else {
+			
+			issue = mapper.selectIssue(code);
+			issue.setWriter(changeMemberNo);
+			issue.setVersion(issue.getVersion() + 1);
+			
+			int versionHistoryInsertResult = mapper.insertIssueVersionHistory(issue);
+			
+			if(!(versionHistoryInsertResult > 0)) {
+				
+				throw new IssueInsertVersionHistoryException("이슈 삭제 버전 히스토리 생성 실패!");
+			}
+		}
+		
+		return issue.getProjectCode();
 	}
 
 }
