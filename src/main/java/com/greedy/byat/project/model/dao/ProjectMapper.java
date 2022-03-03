@@ -64,5 +64,7 @@ public interface ProjectMapper {
 
 	int insertCalendarProjectSchedule(ProjectDTO project);
 
+	int selectSprintProceedingCount(ProjectMembersDTO projectMembers);
+
 
 }

@@ -41,6 +41,7 @@ import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
 import com.greedy.byat.project.model.service.ProjectService;
+import com.greedy.byat.sprint.model.dto.SprintDTO;
 
 @Controller
 @RequestMapping("/project")
@@ -278,4 +279,27 @@ public class ProjectController {
 		
 		return "redirect:/project/list";
 	}
+	
+	@PostMapping("/selectsprintmember")
+	public ModelAndView selectSprintMember(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int code = Integer.parseInt(request.getParameter("code"));
+		int no = Integer.parseInt(request.getParameter("no"));
+
+		System.out.println("code : " + code);
+		System.out.println("no : " + no);
+		
+		int count = projectService.selectSprintProceedingCount(code, no);
+		
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		mv.addObject("count", objectMapper.writeValueAsString(count));
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
 }

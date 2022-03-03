@@ -195,6 +195,7 @@
  		  FROM TBL_MEMBER A
  		 WHERE A.MEMBER_NAME LIKE '%' || #{ searchMember } || '%'
  		   AND A.PERMIT_CODE != 1
+ 		   AND A.ABSENCE_YN = 'N'
  	</select>
  	
  	<insert id="insertProjectMembers" parameterType="ProjectMembersDTO">
@@ -463,5 +464,16 @@
  		, #{ code }
  		)
  	</insert>
+ 	
+ 	<select id="selectSprintProceedingCount" parameterType="ProjectMembersDTO" resultType="_int">
+ 		SELECT
+		       COUNT(A.SPRINT_CODE)
+		  FROM TBL_SPRINT A
+		  JOIN TBL_SPRINT_MEMBERS B ON(A.SPRINT_CODE = B.SPRINT_CODE)
+		 WHERE A.PROJECT_CODE = #{ code }
+		   AND B.MEMBER_NO = #{ no }
+		   AND (A.SPRINT_PROGRESS = '진행전'
+		    OR A.SPRINT_PROGRESS = '진행중')
+ 	</select>
  	
  </mapper>

@@ -1339,14 +1339,36 @@
 								
 								$memberListDeleteMember[i].onclick = function() {
 									
+									let sprintProceedingCount = 0;
+									console.log(removeMemberProjectCode);
+									console.log(memberList[i].no);
+									
+									$.ajax({
+										url:"/byat/project/selectsprintmember",
+										type:"post",
+										data: { code : removeMemberProjectCode,
+												no : memberList[i].no	
+										},
+										async : false,
+										success: function(data, status, xhr) {
+											
+											sprintProceedingCount = JSON.parse(data.count);
+											console.log("! : " + sprintProceedingCount);
+										},
+										error: function(xhr, status, error) {
+											alert("참여중인 스프린트의 상태 확인 실패!");
+										}
+									});
+									
+									console.log("! : " + sprintProceedingCount);
 									
 									if(i == 0) {
 										alert("관리자 또는 PM은 삭제하실 수 없습니다.");
 									} else if(${ sessionScope.loginMember.id } != memberList[0].id) {
 										alert("권한이 없습니다.");
+									} else if(sprintProceedingCount >= 1) {
+										alert("진행중인 스프린트에 속한 멤버입니다. 진행중인 스프린트에서 제외 후 진행해주세요.");
 									} else {
-										
-										console.log("오냐?");
 										
 										document.getElementById("delete_member_modal").style.display = "block";
 										
@@ -1462,11 +1484,6 @@
 				
 			}
 			
-			/* for(let i = 0; i < $proBox.length; i++) {
-				
-				$proBox[i].style.left = '1470px';
-			} */
-			
 			for(let i = 0; i < $projectAddMemberBtn.length; i++) {
 		          
 				$projectAddMemberBtn[i].onclick = function() {
@@ -1494,30 +1511,6 @@
 
 				$projectEditBtn[i].onclick = function() {
    	
-					console.log($proBox[i].style.display);
-					
-					/* if(i === 0) {
-					   
-					   $proBox[i].style.top = '255px';
-					   
-					} else if(i === 1) {
-					   
-					   $proBox[i].style.top = '342px';
-					   
-					} else if(i === 2) {
-					   
-					   $proBox[i].style.top = '427px';
-					   
-					} else if(i === 3) {
-					   
-					   $proBox[i].style.top = '512px';
-					
-					} else {
-					   
-					   $proBox[i].style.top = '527px';
-					
-					}  */
-					
 					if($proBox[i].style.display =='none') {
 						$proBox[i].style.marginBottom = "500px";
 				  		$proBox[i].style.display = 'block';

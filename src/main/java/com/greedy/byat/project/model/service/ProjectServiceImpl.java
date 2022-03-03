@@ -23,6 +23,7 @@ import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dao.ProjectMapper;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
+import com.greedy.byat.sprint.model.dto.SprintDTO;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -410,15 +411,37 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		int result = 0;
 		
+		ProjectMembersDTO newMember = new ProjectMembersDTO();
+		
 		for(int i = 0; i < members.size(); i++) {
 			
 			members.get(i).setParticipationYn("Y");
+			
+			System.out.println("! : " + members.get(i));
 			
 			ProjectMembersDTO projectMemberBeforeDetail = mapper.selectProjectMember(members.get(i));
 			
 			if(!(members.get(i).getRoleName().equals(projectMemberBeforeDetail.getRoleName()))) {
 				
-				result = mapper.updateProjectMemberRole(members.get(i));
+				newMember = members.get(i);
+				result = mapper.updateProjectMemberRole(newMember);
+				
+				if(!(result > 0)) {
+					
+					throw new ProjectMemberModifyRoleException("구성원 역할 변경 실패!");
+				} else {
+					
+					if(!(members.get(i).getRoleName().equals(projectMemberBeforeDetail.getRoleName()))) {
+					
+						int memberHistoryResult = mapper.insertMemberHistory(newMember);
+
+						if(!(memberHistoryResult > 0)) {
+							
+							throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
+						}
+					}
+					
+				}
 				
 			}
 			
@@ -433,36 +456,20 @@ public class ProjectServiceImpl implements ProjectService {
 				}
 			}
 			
-			if(!(result > 0)) {
-				
-				throw new ProjectMemberModifyRoleException("구성원 역할 변경 실패!");
-			} else {
-				
-				if(!(members.get(i).getRoleName().equals(projectMemberBeforeDetail.getRoleName()))) {
-				
-					System.out.println(projectMemberBeforeDetail.getName() + "이전 " + projectMemberBeforeDetail.getRoleName());
-					System.out.println(members.get(i).getName() + "이전 " + members.get(i).getRoleName());
-					
-					int memberHistoryResult = mapper.insertMemberHistory(members.get(i));
-
-					if(!(memberHistoryResult > 0)) {
-						
-						throw new ProjectMemberHistoryRegistException("프로젝트 구성원 변경 이력 생성 실패!");
-					}
-				}
-				
-			}
-			
 		}
 		
 	}
 
 	@Override
-	public int selectTotalCount(Map<String, String> searchMap) {
-
-		int result = mapper.selectTotalCount(searchMap);
+	public int selectSprintProceedingCount(int code, int no) {
 		
-		return result;
+		ProjectMembersDTO projectMembers = new ProjectMembersDTO();
+		projectMembers.setCode(code);
+		projectMembers.setNo(no);
+		
+		int count = mapper.selectSprintProceedingCount(projectMembers);
+		
+		return count;
 	}
 
 }
