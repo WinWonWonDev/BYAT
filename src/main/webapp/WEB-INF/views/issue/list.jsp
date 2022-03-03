@@ -404,6 +404,78 @@
 		margin-left:35px;
 	}
 	
+	#delete_modal {
+		display: none;
+		position:relative;
+		width:100%;
+		height:100%;
+		z-index:2000;
+	}
+	
+	#delete_modal button {
+		display:inline-block;
+		width:100px;
+		margin-left:calc(100% - 100px - 10px);
+	}
+	
+	#delete_modal .delete_modal_content {
+		width:700px;
+		height:300px;
+		margin:100px auto;
+		/* padding:20px 10px; */
+		background:#fff;
+		border:2px solid #666;
+	}
+	
+	.delete_modal_head {
+		width:100.1%;
+		height:35px;
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		font-size:20px;
+		float:right;
+	}
+	
+	#delete_modal_close_btn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:80px;
+		height:50px;
+		position:absolute;
+		right:30%;
+		top:20%;
+	}
+	
+	#delete_modal_ok_btn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:80px;
+		height:50px;
+		position:absolute;
+		right:55%;
+		top:20%;
+	}
+	
+	.delete_modal_content_message {
+		width:100%;
+		height:50%;
+		float:right;
+		font-size:30px;
+		text-align:center;
+	}
+	
+	.delete_modal_button {
+		width:100%;
+		height:30%;
+		float:right;
+		position:relative;
+	}
+	
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
@@ -479,7 +551,6 @@
 						</div>
 					</form>
 				</div>
-				<input type="hidden" id="kanbanIndex"> 
 				<div class="modal_button"> 
 		        	<button type="button" id="issueModifyBtn" class="issueModifyBtn">Ok</button>
 		        	<button type="button" id="issueModifyModalCloseBtn" class="issueModifyModalCloseBtn">Cancel</button>
@@ -487,7 +558,21 @@
 		</div>
 		<div class="modal_layer"></div>
 	</div>
-	
+	<div id="delete_modal">
+		<div class="delete_modal_content">
+		    <div class="delete_modal_head">
+		    	Alert Message
+		    </div>
+	       	<div class="delete_modal_content_message">
+	  	   		<br>삭제한 이슈는 <font style="color:red;">복구</font>하실 수 없습니다. <br>정말 삭제하시겠습니까?
+	       	</div>
+	       	<div class="delete_modal_button">
+		        <button type="button" id="delete_modal_ok_btn">Ok</button>
+		        <button type="button" id="delete_modal_close_btn">Cancel</button>
+	       	</div>
+	    </div>
+		<div class="modal_layer"></div>
+	</div>
 	
 	<script>
 	
@@ -1315,110 +1400,114 @@
 							
 							issueKanban = document.querySelectorAll('#issueKanban');
 							
-							for(let k = 0; k < issueKanban.length; k++) {
-								const item = issueKanban[k];
+							if("${sprintList.progress}" != "완료") {
 								
-								item.addEventListener('dragstart', function() {
-									draggedItem = item;
-									setTimeout(function() {
-										item.style.display = 'none';
-									}, 0);
-								});
-								
-								item.addEventListener('dragend', function() {
-									setTimeout(function() {
-										draggedItem.style.display = 'inline-block';
-										draggedItem = null;
-									}, 0);
-								});
-								
-							}
-							
-							for(let j = 0; j < kanbanArea.length; j++) {
-								const list = kanbanArea[j];
-								
-								list.addEventListener('dragover', function(e) {
-									e.preventDefault();
-								});
-								
-								list.addEventListener('dragenter', function(e) {
-									e.preventDefault();
-								});
-								
-								list.addEventListener('dragleave', function(e) {
+								for(let k = 0; k < issueKanban.length; k++) {
+									const item = issueKanban[k];
 									
-								});
+									item.addEventListener('dragstart', function() {
+										draggedItem = item;
+										setTimeout(function() {
+											item.style.display = 'none';
+										}, 0);
+									});
+									
+									item.addEventListener('dragend', function() {
+										setTimeout(function() {
+											draggedItem.style.display = 'inline-block';
+											draggedItem = null;
+										}, 0);
+									});
+									
+								}
 								
-								list.addEventListener('drop', function(e) {
+								for(let j = 0; j < kanbanArea.length; j++) {
+									const list = kanbanArea[j];
 									
-									if(j == 0) {  //해결전
-										draggedItem.children[0].style.backgroundColor = 'red';
+									list.addEventListener('dragover', function(e) {
+										e.preventDefault();
+									});
 									
-										issueAjaxCode = draggedItem.children[1].value;
+									list.addEventListener('dragenter', function(e) {
+										e.preventDefault();
+									});
+									
+									list.addEventListener('dragleave', function(e) {
 										
-										$.ajax({
-											url : "/byat/issue/modifyissuestatus",
-											type : "get",
-											data : {
-												issueCode : issueAjaxCode,
-												progress : "해결전"
-											},
-											success : function(data, status, xhr) {
-												console.log(xhr);
-											},
-											error : function(xhr, status, error) {
-												console.log(xhr);
-											}
-										});
+									});
+									
+									list.addEventListener('drop', function(e) {
 										
+										if(j == 0) {  //해결전
+											draggedItem.children[0].style.backgroundColor = 'red';
 										
-										
-									} else if(j == 1) { //해결중
+											issueAjaxCode = draggedItem.children[1].value;
+											
+											$.ajax({
+												url : "/byat/issue/modifyissuestatus",
+												type : "get",
+												data : {
+													issueCode : issueAjaxCode,
+													progress : "해결전"
+												},
+												success : function(data, status, xhr) {
+													console.log(xhr);
+												},
+												error : function(xhr, status, error) {
+													console.log(xhr);
+												}
+											});
+											
+											
+											
+										} else if(j == 1) { //해결중
 
-										draggedItem.children[0].style.backgroundColor = '#FBC254';
-									
-										issueAjaxCode = draggedItem.children[1].value;
+											draggedItem.children[0].style.backgroundColor = '#FBC254';
 										
-										 $.ajax({
-											url : "/byat/issue/modifyissuestatus",
-											type : "get",
-											data : {
-												issueCode : issueAjaxCode,
-												progress : "해결중"
-											},
-											success : function(data, status, xhr) {
-												console.log(xhr);
-											},
-											error : function(xhr, status, error) {
-												console.log(xhr);
-											}
-										});
+											issueAjaxCode = draggedItem.children[1].value;
+											
+											 $.ajax({
+												url : "/byat/issue/modifyissuestatus",
+												type : "get",
+												data : {
+													issueCode : issueAjaxCode,
+													progress : "해결중"
+												},
+												success : function(data, status, xhr) {
+													console.log(xhr);
+												},
+												error : function(xhr, status, error) {
+													console.log(xhr);
+												}
+											});
+											
+											
+										} else { //완료
 										
-										
-									} else { //완료
-									
-										draggedItem.children[0].style.backgroundColor = '#2EE957';
-										
-										issueAjaxCode = draggedItem.children[1].value;
+											draggedItem.children[0].style.backgroundColor = '#2EE957';
+											
+											issueAjaxCode = draggedItem.children[1].value;
 
-										$.ajax({
-											url : "/byat/issue/modifyissuestatus",
-											type : "get",
-											data : {
-												issueCode : issueAjaxCode,
-												progress : "완료"
-											},
-											success : function(data, status, xhr) {
-												console.log(xhr);
-											},
-											error : function(xhr, status, error) {
-												console.log(xhr);
-											}
-										});
-									}
-									
-									this.append(draggedItem);
-								});
+											$.ajax({
+												url : "/byat/issue/modifyissuestatus",
+												type : "get",
+												data : {
+													issueCode : issueAjaxCode,
+													progress : "완료"
+												},
+												success : function(data, status, xhr) {
+													console.log(xhr);
+												},
+												error : function(xhr, status, error) {
+													console.log(xhr);
+												}
+											});
+										}
+										
+										this.append(draggedItem);
+									});
+								}
+								
 							}
 							
 						},
@@ -1656,13 +1745,37 @@
         				issueModifyMemberList.appendChild(issueMemberDiv);
         			}
         			
-					document.getElementById("kanbanIndex").value = $(this).parent('div').parent('div').index();
-        			
         			if(issueModifyModal.style.display == 'none') {
         				issueModifyModal.style.display = 'block';
         				editBox.style.display = 'none';
         			} else {
         				issueModifyModal.style.display = 'none';
+        			}
+        			
+        		}
+        		
+        		editBox.children[1].onclick = function() {
+        			
+        			const thisKanban = $(this).parent('div').parent('div');
+        			
+        			if(!(document.getElementById("headSprintProgress").value == "완료")){
+        				
+        				document.getElementById("delete_modal").style.display="block";
+        				editBox.style.display = 'none';
+        				
+        				document.getElementById("delete_modal_close_btn").onclick = function() {
+                            document.getElementById("delete_modal").style.display="none";
+                        }
+                       
+						document.getElementById("delete_modal_ok_btn").onclick = function() {
+						   
+						   location.href = "${ pageContext.servletContext.contextPath }/issue/remove?code=" + thisKanban[0].children[1].value;
+						}
+        				
+        			} else {
+        				
+        				alert("완료된 스프린트의 이슈는 삭제하실 수 없습니다.");
+        				
         			}
         			
         		}
@@ -1757,7 +1870,7 @@
     				
     			} else if(document.getElementById("headSprintProgress").value == "완료") {
     				
-    				alert("완료된 이슈는 내용을 변경하실 수 없습니다.");
+    				alert("완료된 스프린트의 이슈는 변경하실 수 없습니다.");
     				
     			} else {
     				
@@ -1767,8 +1880,6 @@
         	});
         	
         	$(document).on("click", "#removeIssueMember", function(event) { 
-        		
-        		console.log($(this).parent('div').parent('div'));
         		
         		if($(this).parent('div').parent('div')[0].children.length == 1) {
         			
@@ -1799,11 +1910,26 @@
         				alert("담당자 제외에 성공하셨습니다!");
         				$(this).parent('div').remove();
         				
-        				const deleteMemberKanbanIndex = document.getElementById("kanbanIndex").value;
-        				
         				const kanbanCheck = document.querySelectorAll("#issueKanban");
         				
-        				
+        				for(let i = 0; i < kanbanCheck.length; i++) {
+
+        					if(kanbanCheck[i].children[1].value == $(this).parent('div')[0].children[4].value) {
+        						
+        						for(let j = 0; j < kanbanCheck[i].children.length; j++) {
+        							
+        							if(kanbanCheck[i].children[j].value == $(this).parent('div')[0].children[1].value) {
+        								
+        								kanbanCheck[i].children[j].remove();
+        								kanbanCheck[i].children[kanbanCheck[i].children.length - 1].value -= 1;
+        								console.log("성공!");
+        							}
+        							
+        						}
+        						
+        					}
+        					
+        				}
         				
         			} else {
         				alert("담당자 제외에 실패하셨습니다!");
@@ -1843,7 +1969,6 @@
 			boxFirstElement.innerText = "----------";
 			
 			modifyMemberSelectBox.appendChild(boxFirstElement);
-			document.getElementById("kanbanIndex").value = "";
 		}
 		
 	</script>
