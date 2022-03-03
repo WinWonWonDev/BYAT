@@ -54,8 +54,6 @@
  	<resultMap type="BacklogDTO" id="generalBacklogResultMap">
  		<id property="code" column="BACKLOG_NO"/>
  		<result property="title" column="BACKLOG_TITLE"/>
- 		<result property="startDate" column="BACKLOG_START_DATE"/>
- 		<result property="endDate" column="BACKLOG_END_DATE"/>
  		<result property="progress" column="BACKLOG_PROGRESS"/>
  		<result property="body" column="BACKLOG_BODY"/>
  		<result property="projectCode" column="PROJECT_CODE"/>
@@ -93,8 +91,6 @@
         SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectAllBacklogList() */
                A.BACKLOG_CODE
              , A.BACKLOG_TITLE
-             , A.BACKLOG_START_DATE
-             , A.BACKLOG_END_DATE
              , A.BACKLOG_PROGRESS
              , A.BACKLOG_BODY
              , A.PROJECT_CODE
@@ -287,6 +283,35 @@
 		, SYSDATE
 		, #{ writer }
 		, #{ code }
+ 		)
+ 	</insert>
+ 	
+ 	<!-- 스프린트 상태를 진행중으로 변경 -->
+ 	<update id="updateSprintProgress">
+ 		UPDATE
+ 		       TBL_SPRINT A
+ 		   SET A.SPRINT_PROGRESS = '진행중'
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 	</update>
+ 	
+ 	<!-- 스프린트 상태 변경이력에 추가 -->
+ 	<insert id="insertSprintProgressHistory3">
+ 		INSERT
+ 		  INTO TBL_SPRINT_PROGRESS_HISTORY A
+ 		(
+ 		  A.SPRINT_PROGRESS_HISTORY_NO
+ 		, A.SPRINT_PROGRESS
+ 		, A.SPRINT_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_START_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_END_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, '진행중'
+ 		, 
  		)
  	</insert>
  </mapper>
