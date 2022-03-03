@@ -54,13 +54,12 @@ public class SprintController {
 		
 		String projectProgress = sprintService.selectProjectProgress(projectCode);
 		List<SprintDTO> sprintList = sprintService.selectSprintList(projectCode);
-		/*
-		 * List<BacklogDTO> backlogList = backlogService.selectBacklogList(projectCode);
-		 */
+		List<BacklogDTO> backlogList = sprintService.selectBacklogList(projectCode);
 		
 		System.out.println(projectProgress);
 		System.out.println(sprintList);
 		
+		mv.addObject("backlogList", backlogList);
 		mv.addObject("sprintList", sprintList);
 		mv.addObject("projectProgress", projectProgress);
 		mv.addObject("code", projectCode);

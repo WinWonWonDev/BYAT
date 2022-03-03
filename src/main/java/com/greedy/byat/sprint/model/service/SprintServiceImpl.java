@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.backlog.model.dto.BacklogDTO;
 import com.greedy.byat.common.exception.sprint.RegistSprintException;
 import com.greedy.byat.sprint.model.dao.SprintMapper;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
@@ -26,6 +27,14 @@ public class SprintServiceImpl implements SprintService {
 		List<SprintDTO> sprintList = mapper.selectSprintList(projectNo);
 		
 		return sprintList;
+	}
+	
+	@Override
+	public List<BacklogDTO> selectBacklogList(int projectCode) {
+		
+		List<BacklogDTO> backlogList = mapper.selectBacklogList(projectCode);
+		
+		return backlogList;
 	}
 
 	@Override
@@ -107,15 +116,28 @@ public class SprintServiceImpl implements SprintService {
 	@Override
 	public void startSprint(int projectCode) {
 		
+//		/* 스프린트 상태 진행중으로 변경 */
 //		int result1 = mapper.updateSprintProgress(projectCode);
 //		
+//		/* 스프린트 상태 변경 이력 추가 */
 //		int result2 = mapper.insertSprintProgressHistory3(projectCode);
 //		
-//		int result3 = mapper.updateTaskProgress(projectCode);
+//		/* 스프린트의 태스크 중에 백로그 코드를 가진 태스크가 있으면 백로그 코드를 가진 백로그의 상태도 변경해줘야 하기 때문에 태스크의 백로그 코드들을 가져온다.*/
+//		List<Integer> backlogCodeList = mapper.selectTaskBacklogCode(projectCode);
 //		
-//		int result4 = mapper.insertTaskProgressHistory(projectCode);
+//		for(int i = 0; i < backlogCodeList.size; i++){
+//			
+//		}
 //		
-//		int result5 = mapper.backlogProgressHistroy
+//		int result3 = mapper.backlogProgressHistroy(projectCode);
+//				
+//		/* 태스크 상태 진행중으로 변경 */
+//		int result4 = mapper.updateTaskProgress(projectCode);
+//		
+//		/* 태스크 상태 변경 이력 추가*/
+//		int result5 = mapper.insertTaskProgressHistory(projectCode);
+//		
+//				
 //		if(!(result1 > 0)) {
 //			System.out.println("스프린트 시작 실패");
 //		}
