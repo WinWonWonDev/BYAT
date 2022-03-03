@@ -487,13 +487,16 @@
    }   
 </script>
 </head>
-<body style="overflow-x: hidden;">
+<body style="overflow-x: hidden; overflow-y:hidden;">
 	<div id="whiteBoard">
 		<div class="issueListHead">
 			<div class="issueListName" id="issueListName">
 				<c:forEach items="${ sprintList }" var="sprintList" varStatus="firstStatus">
 					<c:if test="${ sprintList.progress eq '진행전'}">
-						<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font>의 Issue
+						<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font>의 Issue <font id="titleProgress">(진행전)</font>
+					</c:if>
+					<c:if test="${ sprintList.progress eq '진행중'}">
+						<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font>의 Issue <font id="titleProgress">(진행중)</font>
 					</c:if>
 					<c:if test="${ firstStatus.index eq 0 }">
 						<input type="hidden" id="projectCode" value="${ sprintList.projectCode }">					
@@ -1059,6 +1062,8 @@
 			
 			const titleFont = document.getElementById("titleFont");
 			
+			const titleProgress = document.getElementById("titleProgress");
+			
 			const selectedTitle = document.getElementById("issueSelectBox");
 			
 			const selectedOption = selectedTitle.options[selectedTitle.selectedIndex].text;
@@ -1067,6 +1072,18 @@
 				if("${sprintList.title}" == selectedOption) {
 					
 					document.getElementById("headSprintProgress").value = "${sprintList.progress}";
+					
+					if("${sprintList.progress}" == "진행전") {
+						
+						titleProgress.innerText = "(진행전)";
+					} else if("${sprintList.progress}" == "진행중") {
+						
+						titleProgress.innerText = "(진행중)";
+					} else {
+						
+						titleProgress.innerText = "(완료)";
+					}
+					
 					
 					titleFont.innerText = selectedOption;
 					
