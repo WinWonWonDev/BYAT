@@ -1163,7 +1163,7 @@
 			if(updateStartDate.value > updateEndDate.value) {
 				alert("종료일자가 시작일자 전일 수 없습니다.");
 			} else if(writerCheck) {
-				alert("권한이 없습니다!");s
+				alert("권한이 없습니다!");
 			} else if(document.getElementById("updateModalProjectProgress").value == "완료"){
 				alert("완료된 프로젝트는 수정하실 수 없습니다.");
 			} else {
