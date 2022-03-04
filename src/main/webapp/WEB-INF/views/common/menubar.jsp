@@ -330,7 +330,70 @@
 		cursor: pointer;
 	}
 
+	.notificationBox {
+		width:300px;
+		height:310px;
+		border-radius:18px;
+		background-color:rgb(25, 25, 112);
+		position:relative;
+		margin-left:900px;
+		z-index:1500;
+		bottom:5px;
+	}	
 	
+	.notificationContentBox {
+		background-color:white;
+		border-radius:18px;
+		width:280px;
+		height:250px;
+		position:relative;
+		margin-left:10px;
+		margin-top:10px;
+	}
+	
+	.alreadyConfirmNoticeRemoveBtn {
+		position:relative;
+		border:none;
+		color:white;
+		font-size:12px;
+		font-weight:bold;
+		cursor:pointer;	
+		background-color:transparent;
+		margin-left:10px;
+		margin-top:8px;
+	}
+	
+	.notificationSettingBtn {
+		background: url("/byat/resources/images/noticeSettingGearBtn.png") no-repeat;
+		position:relative;
+		border:none;
+		background-color:transparent;
+		width:32px;
+		height:20px;
+		margin-left:20px;
+		margin-top:2px;
+		cursor:pointer;
+	}
+	
+	.notification {
+		position:relative;
+		border:none;
+		border-bottom:2px solid black;
+		width:100%;
+		height:40px;
+	}
+	
+	.moreNoticeBtn {
+		position:absolute;
+		border:none;
+		background-color:transparent;
+		color:white;
+		font-size:12px;
+		cursor:pointer;
+		left:240px;
+		font-weight:bold;
+		padding-top:6px;
+	}
 	
 </style>
 </head>
@@ -392,6 +455,7 @@
 
 
             <input type="button" class="noticeButtonImg" onclick="noticeDisplay();">
+            
             <!-- 알림 갯수에 따라 숫자 나오게 하는거 ㅋㅋ ㄱㄷ... -->
 			<div class="note-num">3</div>
 			<div class="profile-area" id="profileName">
@@ -427,10 +491,36 @@
 		        <button type="button" id="logoutModalCloseButton">Cancel</button>
 	       	</div>
 	    </div>
-    <div class="modal_layer"></div>
-</div>
-    
+    	<div class="modal_layer"></div>
+	</div>
+	<div class="notificationBox" id="notificationBox" style="display:none">
+		<button type="button" class="alreadyConfirmNoticeRemoveBtn" id="alreadyConfirmNoticeRemoveBtn">조회한 알림 삭제</button>
+		<div class="notificationContentBox" id="notificationContentBox">
+			<div class="notification" id="notification"></div>
+			<div class="notification" id="notification"></div>
+			<div class="notification" id="notification"></div>
+			<div class="notification" id="notification"></div>
+			<div class="notification" id="notification"></div>
+			<div class="notification" id="notification" style="border-bottom:none"></div>
+		</div>
+		<button type="button" class="notificationSettingBtn" id="notificationSettingBtn"></button>
+		<button type="button" class="moreNoticeBtn" id="moreNoticeBtn">더보기</button>
+		
+	</div>
+
+
     <script>
+    
+    	function noticeDisplay() {
+    		
+    		const notificationBox = document.getElementById("notificationBox");
+    		if(notificationBox.style.display == 'none') {
+    			notificationBox.style.display = 'block';
+    		} else {
+    			notificationBox.style.display = 'none';
+    		}
+    		
+    	}
     
 	    function test() {
 	    	var tabsNewAnim = $('#navbarSupportedContent');

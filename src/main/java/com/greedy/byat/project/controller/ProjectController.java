@@ -56,7 +56,7 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/list")
-	public ModelAndView selectProjectList(ModelAndView mv, HttpServletRequest request) {
+	public ModelAndView selectProjectList(ModelAndView mv, HttpServletRequest request) throws ProjectProgressHistoryRegistException {
 		
 		MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		
@@ -85,11 +85,7 @@ public class ProjectController {
 			}
 			
 		}
-		
-		System.out.println("projectList : " + projectList);
-		
-		System.out.println("PMLIST : " + PmMemberNumber);
-		
+
 		mv.addObject("projectList", projectList);
 		mv.addObject("PmMemberNumber", PmMemberNumber);
 		mv.setViewName("/project/list");

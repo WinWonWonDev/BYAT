@@ -492,10 +492,18 @@
 		<div class="issueListHead">
 			<div class="issueListName" id="issueListName">
 				<c:forEach items="${ sprintList }" var="sprintList" varStatus="firstStatus">
-					<c:if test="${ sprintList.progress eq '진행전'}">
-						<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font>의 Issue
-					</c:if>
 					<c:if test="${ firstStatus.index eq 0 }">
+						<c:choose>
+							<c:when test="${ sprintList.progress eq '진행전'}">
+								<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font><font id="titleProgressArea">의 Issue</font>
+							</c:when>
+							<c:when test="${ sprintList.progress eq '진행중'}">
+								<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font><font id="titleProgressArea">의 Issue</font>
+							</c:when>
+							<c:when test="${ sprintList.progress eq '완료'}">
+								<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font><font id="titleProgressArea">의 Issue</font>
+							</c:when>
+						</c:choose>
 						<input type="hidden" id="projectCode" value="${ sprintList.projectCode }">					
 					</c:if>
 				</c:forEach>
@@ -506,6 +514,9 @@
 					<c:forEach items="${ sprintList }" var="sprintList">
 						<c:choose>
 							<c:when test="${ sprintList.progress eq '진행전' }">
+								<option selected="selected">${ sprintList.title }</option>
+							</c:when>
+							<c:when test="${ sprintList.progress eq '진행중' }">
 								<option selected="selected">${ sprintList.title }</option>
 							</c:when>
 							<c:otherwise>
@@ -576,6 +587,8 @@
 	
 	<script>
 	
+		document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + "${pjCode}";
+	
 		let checkFirst = 0;
 		let newProgress = "";
 		let memberCount = 0;
@@ -584,12 +597,18 @@
 
 		const selectedTitle = document.getElementById("issueSelectBox");
 		
-		const selectedOption = selectedTitle.options[selectedTitle.selectedIndex].text;
+		let selectedOption = "";
+		
+		if(selectedTitle.selectedIndex >= 0) {
+			selectedOption = selectedTitle.options[selectedTitle.selectedIndex].text;
+		}
 
 		<c:forEach items="${sprintList}" var="sprintList" varStatus="status">
 			if("${sprintList.title}" == selectedOption) {
 				
 				document.getElementById("headSprintProgress").value = "${sprintList.progress}";
+				
+				document.getElementById("titleProgressArea").innerText = "의 Issue (${sprintList.progress})"
 				
 				$.ajax({
 					url : "/byat/issue/issuelist",
@@ -921,110 +940,114 @@
 						
 						issueKanban = document.querySelectorAll('#issueKanban');
 						
-						for(let k = 0; k < issueKanban.length; k++) {
-							const item = issueKanban[k];
+						if("${sprintList.progress}" != "완료") {
 							
-							item.addEventListener('dragstart', function() {
-								draggedItem = item;
-								setTimeout(function() {
-									item.style.display = 'none';
-								}, 0);
-							});
-							
-							item.addEventListener('dragend', function() {
-								setTimeout(function() {
-									draggedItem.style.display = 'inline-block';
-									draggedItem = null;
-								}, 0);
-							});
-							
-						}
-						
-						for(let j = 0; j < kanbanArea.length; j++) {
-							const list = kanbanArea[j];
-							
-							list.addEventListener('dragover', function(e) {
-								e.preventDefault();
-							});
-							
-							list.addEventListener('dragenter', function(e) {
-								e.preventDefault();
-							});
-							
-							list.addEventListener('dragleave', function(e) {
+							for(let k = 0; k < issueKanban.length; k++) {
+								const item = issueKanban[k];
 								
-							});
+								item.addEventListener('dragstart', function() {
+									draggedItem = item;
+									setTimeout(function() {
+										item.style.display = 'none';
+									}, 0);
+								});
+								
+								item.addEventListener('dragend', function() {
+									setTimeout(function() {
+										draggedItem.style.display = 'inline-block';
+										draggedItem = null;
+									}, 0);
+								});
+								
+							}
 							
-							list.addEventListener('drop', function(e) {
+							for(let j = 0; j < kanbanArea.length; j++) {
+								const list = kanbanArea[j];
 								
-								if(j == 0) {  //해결전
-									draggedItem.children[0].style.backgroundColor = 'red';
+								list.addEventListener('dragover', function(e) {
+									e.preventDefault();
+								});
 								
-									issueAjaxCode = draggedItem.children[1].value;
+								list.addEventListener('dragenter', function(e) {
+									e.preventDefault();
+								});
+								
+								list.addEventListener('dragleave', function(e) {
 									
-									$.ajax({
-										url : "/byat/issue/modifyissuestatus",
-										type : "get",
-										data : {
-											issueCode : issueAjaxCode,
-											progress : "해결전"
-										},
-										success : function(data, status, xhr) {
-											console.log(xhr);
-										},
-										error : function(xhr, status, error) {
-											console.log(xhr);
-										}
-									});
+								});
+								
+								list.addEventListener('drop', function(e) {
 									
+									if(j == 0) {  //해결전
+										draggedItem.children[0].style.backgroundColor = 'red';
 									
-									
-								} else if(j == 1) { //해결중
+										issueAjaxCode = draggedItem.children[1].value;
+										
+										$.ajax({
+											url : "/byat/issue/modifyissuestatus",
+											type : "get",
+											data : {
+												issueCode : issueAjaxCode,
+												progress : "해결전"
+											},
+											success : function(data, status, xhr) {
+												console.log(xhr);
+											},
+											error : function(xhr, status, error) {
+												console.log(xhr);
+											}
+										});
+										
+										
+										
+									} else if(j == 1) { //해결중
 
-									draggedItem.children[0].style.backgroundColor = '#FBC254';
-								
-									issueAjaxCode = draggedItem.children[1].value;
+										draggedItem.children[0].style.backgroundColor = '#FBC254';
 									
-									 $.ajax({
-										url : "/byat/issue/modifyissuestatus",
-										type : "get",
-										data : {
-											issueCode : issueAjaxCode,
-											progress : "해결중"
-										},
-										success : function(data, status, xhr) {
-											console.log(xhr);
-										},
-										error : function(xhr, status, error) {
-											console.log(xhr);
-										}
-									});
+										issueAjaxCode = draggedItem.children[1].value;
+										
+										 $.ajax({
+											url : "/byat/issue/modifyissuestatus",
+											type : "get",
+											data : {
+												issueCode : issueAjaxCode,
+												progress : "해결중"
+											},
+											success : function(data, status, xhr) {
+												console.log(xhr);
+											},
+											error : function(xhr, status, error) {
+												console.log(xhr);
+											}
+										});
+										
+										
+									} else { //완료
 									
-									
-								} else { //완료
-								
-									draggedItem.children[0].style.backgroundColor = '#2EE957';
-									
-									issueAjaxCode = draggedItem.children[1].value;
+										draggedItem.children[0].style.backgroundColor = '#2EE957';
+										
+										issueAjaxCode = draggedItem.children[1].value;
 
-									$.ajax({
-										url : "/byat/issue/modifyissuestatus",
-										type : "get",
-										data : {
-											issueCode : issueAjaxCode,
-											progress : "완료"
-										},
-										success : function(data, status, xhr) {
-											console.log(xhr);
-										},
-										error : function(xhr, status, error) {
-											console.log(xhr);
-										}
-									});
-								}
-								
-								this.append(draggedItem);
-							});
+										$.ajax({
+											url : "/byat/issue/modifyissuestatus",
+											type : "get",
+											data : {
+												issueCode : issueAjaxCode,
+												progress : "완료"
+											},
+											success : function(data, status, xhr) {
+												console.log(xhr);
+											},
+											error : function(xhr, status, error) {
+												console.log(xhr);
+											}
+										});
+									}
+									
+									this.append(draggedItem);
+								});
+							}
+							
 						}
 						
 					},
@@ -1069,6 +1092,8 @@
 					document.getElementById("headSprintProgress").value = "${sprintList.progress}";
 					
 					titleFont.innerText = selectedOption;
+					
+					document.getElementById("titleProgressArea").innerText = "의 Issue (${sprintList.progress})"
 					
 					$.ajax({
 						url : "/byat/issue/issuelist",

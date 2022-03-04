@@ -52,7 +52,10 @@ public class IssueController {
 		List<SprintDTO> sprintList = issueService.selectSprintList(projectCode);
 
 		mv.addObject("sprintList", sprintList);
+		mv.addObject("pjCode", projectCode);
 		mv.setViewName("/issue/list");
+
+		System.out.println("sprintList : " + sprintList);
 		
 		return mv;
 	}

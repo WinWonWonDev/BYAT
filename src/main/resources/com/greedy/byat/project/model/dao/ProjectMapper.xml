@@ -423,6 +423,30 @@
  		)
  	</insert>
  	
+ 	<insert id="insertProgressHistory" parameterType="ProjectDTO">
+ 		INSERT
+ 		  INTO TBL_PROJECT_PROGRESS_HISTORY A
+ 		(
+ 		  A.PROJECT_PROGRESS_HISTORY_NO
+ 		, A.PROJECT_CODE
+ 		, A.PROJECT_PROGRESS_HISTORY_STATUS
+ 		, A.PROJECT_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.PROJECT_PROGRESS_HISTORY_START_DATE
+ 		, A.PROJECT_PROGRESS_HISTORY_END_DATE
+ 		, A.PROJECT_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, #{ code }
+ 		, #{ progress }
+ 		, SYSDATE
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, #{ writer }
+ 		)
+ 	</insert>
+ 	
  	<select id="selectProjectMember" resultMap="projectMembersResultMap">
  		SELECT
  		       A.PROJECT_CODE
@@ -475,5 +499,12 @@
 		   AND (A.SPRINT_PROGRESS = '진행전'
 		    OR A.SPRINT_PROGRESS = '진행중')
  	</select>
+ 	
+ 	<update id="updateProjectProgress" parameterType="ProjectDTO">
+ 		UPDATE
+ 		       TBL_PROJECT A
+ 		   SET A.PROJECT_PROGRESS = #{ progress }
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 	</update>
  	
  </mapper>

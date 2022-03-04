@@ -39,4 +39,6 @@ public interface IssueMapper {
 
 	int deleteIssue(int code);
 
+	String selectProjectTitle(int projectCode);
+
 }

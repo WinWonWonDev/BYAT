@@ -21,7 +21,7 @@ import com.greedy.byat.sprint.model.dto.SprintDTO;
 
 public interface ProjectService {
 
-	List<ProjectDTO> selectProjectList(MemberDTO member);
+	List<ProjectDTO> selectProjectList(MemberDTO member) throws ProjectProgressHistoryRegistException;
 
 	void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException;
 

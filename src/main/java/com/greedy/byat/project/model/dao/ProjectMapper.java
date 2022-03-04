@@ -66,5 +66,9 @@ public interface ProjectMapper {
 
 	int selectSprintProceedingCount(ProjectMembersDTO projectMembers);
 
+	int updateProjectProgress(ProjectDTO projectDTO);
+
+	int insertProgressHistory(ProjectDTO projectDTO);
+
 
 }

@@ -852,10 +852,11 @@
 	
 </style>
 <script>
-   const message = '${ requestScope.message }';
-   if(message != null && message != '') {
-      alert(message);
-   }   
+	const message = '${ requestScope.message }';
+	if(message != null && message != '') {
+	   alert(message);
+	}   
+   
 </script>
 <title>Insert title here</title>
 </head>
@@ -926,17 +927,17 @@
 							<td><c:out value="${ project.endDate }" /></td>
 							<td style="padding-left:15px;">
 								<c:if test="${ project.progress eq '진행중' }">
-									<div class="projectRealProgress">
+									<div class="projectRealProgress" id="projectRealProgress">
 										<c:out value="${ project.progress }" />
 									</div>								
 								</c:if>
 								<c:if test="${ project.progress eq '완료' }">
-									<div class="projectRealProgress" style="background-color:rgb(41, 60, 117)">
+									<div class="projectRealProgress" id="projectRealProgress" style="background-color:rgb(41, 60, 117)">
 										<c:out value="${ project.progress }" />
 									</div>		
 								</c:if>
 								<c:if test="${ project.progress eq '미진행' }">
-									<div class="projectRealProgress" style="background-color:rgb(196, 196, 196)">
+									<div class="projectRealProgress" id="projectRealProgress" style="background-color:rgb(196, 196, 196)">
 										<c:out value="${ project.progress }" />
 									</div>		
 								</c:if>
@@ -977,8 +978,8 @@
 	      			<div class="projectStartDayTag">프로젝트 시작일자</div>
 	      			<div class="projectEndDayTag">프로젝트 종료일자</div>
 	       			<br clear="both">
-	       			<input type='date' class="start-day" id="createStartDate" name='startDate' required/>
-	       			<input type='date' class="end-day" id="createEndDate" name='endDate' required/>
+	       			<input type='date' class="start-day" id="createStartDate" max="9999-12-31" name='startDate' required/>
+	       			<input type='date' class="end-day" id="createEndDate" max="9999-12-31" name='endDate' required/>
 	       			<div class="projectDescriptionTag">프로젝트 상세 설명</div>
 	      			<textarea class="projectDescription" id="projectDescription" name="body" rows="13" cols="100" placeholder="상세내용을 입력해주세요" required></textarea>
 	      			<div class="prjectCodeMessage">프로젝트  코드는 자동으로 생성됩니다.</div>
@@ -995,6 +996,7 @@
 	<div id="projectUpdateModal">
   
   		<div class="modal_content">
+  			<input type="hidden" id="updateModalProjectProgress">
 	  		<form action="${ pageContext.servletContext.contextPath }/project/modify" id="updateProjectForm" method="post">
 				<div class="modal_head">
 					<h3>프로젝트 상세</h3>
@@ -1007,8 +1009,8 @@
 	      			<div class="projectStartDayTag">프로젝트 시작일자</div>
 	      			<div class="projectEndDayTag">프로젝트 종료일자</div>
 	       			<br clear="both">
-	       			<input type='date' class="start-day" name='startDate' id="updateStartDate" required/>
-	       			<input type='date' class="end-day" name='endDate' id="updateEndDate" required/>
+	       			<input type='date' class="start-day" name='startDate' max="9999-12-31" id="updateStartDate" required/>
+	       			<input type='date' class="end-day" name='endDate' max="9999-12-31" id="updateEndDate" required/>
 	       			<div class="projectDescriptionTag">프로젝트 상세 설명</div>
 	      			<textarea class="projectDescription" id="projectUpdateDescription" name="body" rows="13" cols="100" required></textarea>
 	      			<div class="prjectCodeMessage">프로젝트  코드는 자동으로 생성됩니다.</div>
@@ -1114,7 +1116,9 @@
 	</div>
 	
 	<script>
-	
+		
+		let writerCheck = false;
+		
 		$(document).ready(function() {
 	        
 	        $.extend( $.fn.dataTable.defaults, {
@@ -1158,8 +1162,11 @@
 			
 			if(updateStartDate.value > updateEndDate.value) {
 				alert("종료일자가 시작일자 전일 수 없습니다.");
+			} else if(writerCheck) {
+				alert("권한이 없습니다!");
+			} else if(document.getElementById("updateModalProjectProgress").value == "완료"){
+				alert("완료된 프로젝트는 수정하실 수 없습니다.");
 			} else {
-				
 				document.getElementById("updateProjectForm").submit();
 			}
 			
@@ -1231,6 +1238,7 @@
 			const $deleteProject = document.querySelectorAll("#deleteProject");
 			const $projectRealMemberList = document.querySelectorAll("#projectRealMemberList");
 			const $projectRealMemberListBtn = document.querySelectorAll("#projectRealMemberListBtn");
+			const $projectRealProgress = document.querySelectorAll("#projectRealProgress");
 			
 			const $memberDeleteBtn = document.querySelectorAll("#memberDeleteBtn");
 			const $selectedMemberArea = document.querySelectorAll("#selectedMemberArea");
@@ -1511,6 +1519,9 @@
 
 				$projectEditBtn[i].onclick = function() {
    	
+					let updateModalProjectProgress = document.getElementById("updateModalProjectProgress");
+					updateModalProjectProgress.value = $projectRealProgress[i].innerText;
+					
 					if($proBox[i].style.display =='none') {
 						$proBox[i].style.marginBottom = "500px";
 				  		$proBox[i].style.display = 'block';
@@ -1540,8 +1551,6 @@
 					
 					$proBox[i].style.display = 'none';
 					
-					console.log($code[i].value);
-					
 					$.ajax({
 						url: "/byat/project/detail",
 						type: 'get',
@@ -1569,14 +1578,15 @@
 								projectUpdateDescription.readOnly = true;
 								updateStartDate.readOnly = true;
 								updateEndDate.readOnly = true;
-							
+								writerCheck = true;
+								
 							} else {
 								
 								projectUpdateModalTitle.readOnly = false;
 								projectUpdateDescription.readOnly = false;
 								updateStartDate.readOnly = false;
 								updateEndDate.readOnly = false;
-								
+								writerCheck = false;
 							}
 				   
 						},

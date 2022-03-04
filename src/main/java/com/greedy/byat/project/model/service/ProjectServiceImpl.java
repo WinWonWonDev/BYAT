@@ -1,5 +1,7 @@
 package com.greedy.byat.project.model.service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +38,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectDTO> selectProjectList(MemberDTO member) {
+	public List<ProjectDTO> selectProjectList(MemberDTO member) throws ProjectProgressHistoryRegistException {
 
 		List<ProjectDTO> projectList = mapper.selectProjectList(member);
 
@@ -85,6 +87,35 @@ public class ProjectServiceImpl implements ProjectService {
 				
 			}
 			
+			long miliseconds = System.currentTimeMillis();
+	        Date today = new Date(miliseconds);
+			
+	        int progressUpdateResult = 0;
+	        
+	        if(today.compareTo(projectList.get(i).getStartDate()) < 0) {
+	        	projectList.get(i).setProgress("미진행");
+	        	progressUpdateResult = mapper.updateProjectProgress(projectList.get(i));
+	        } else if(today.compareTo(projectList.get(i).getStartDate()) >= 0 && today.compareTo(projectList.get(i).getEndDate()) < 0) {
+	        	projectList.get(i).setProgress("진행중");
+	        	progressUpdateResult = mapper.updateProjectProgress(projectList.get(i));
+	        } else {
+	        	projectList.get(i).setProgress("완료");
+	        	progressUpdateResult = mapper.updateProjectProgress(projectList.get(i));
+	        }
+	        
+	        System.out.println("progressUpdateResult : " + progressUpdateResult);
+	        System.out.println("projectList : " + projectList.get(i));
+	        
+	        int statusResult = 0;
+	        
+	        if(progressUpdateResult > 0) {
+	        	statusResult = mapper.insertProgressHistory(projectList.get(i));
+	        }
+	        
+	        if(!(statusResult > 0)) {
+	        	throw new ProjectProgressHistoryRegistException("프로젝트 상태 변경 이력 생성 실패!");
+	        }
+	        
 			projectList.get(i).setProjectMembers(orderProjectMembers); 
 			
 		}
