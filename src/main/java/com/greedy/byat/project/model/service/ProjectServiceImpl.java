@@ -22,6 +22,7 @@ import com.greedy.byat.common.exception.project.ProjectRemoveException;
 import com.greedy.byat.common.exception.project.ProjectVersionHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectWriterChangeException;
 import com.greedy.byat.member.model.dto.MemberDTO;
+import com.greedy.byat.notice.model.dto.NoticeDTO;
 import com.greedy.byat.project.model.dao.ProjectMapper;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
@@ -140,6 +141,13 @@ public class ProjectServiceImpl implements ProjectService {
 		int projectMembersRegistResult = 0;
 		int projectRoleRegistResult = 0;
 
+		NoticeDTO notice = new NoticeDTO();
+		notice.setBody(project.getBody());
+		notice.setUrl("/project/list");
+		notice.setStatus("N");
+		notice.setCategory(1);
+		notice.setNo(project.getWriterMember().getNo());
+		
 		if (result > 0) {
 			projectMembersRegistResult = mapper.insertProjectWriteMember(projectMembers);
 		}
