@@ -141,13 +141,6 @@ public class ProjectServiceImpl implements ProjectService {
 		int projectMembersRegistResult = 0;
 		int projectRoleRegistResult = 0;
 
-		NoticeDTO notice = new NoticeDTO();
-		notice.setBody(project.getBody());
-		notice.setUrl("/project/list");
-		notice.setStatus("N");
-		notice.setCategory(1);
-		notice.setNo(project.getWriterMember().getNo());
-		
 		if (result > 0) {
 			projectMembersRegistResult = mapper.insertProjectWriteMember(projectMembers);
 		}
