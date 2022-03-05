@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.greedy.byat.common.paging.SelectCriteria;
 import com.greedy.byat.member.model.dto.MemberDTO;
+import com.greedy.byat.notice.model.dto.NoticeDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
 
@@ -69,6 +70,10 @@ public interface ProjectMapper {
 	int updateProjectProgress(ProjectDTO projectDTO);
 
 	int insertProgressHistory(ProjectDTO projectDTO);
+
+	int insertNoticeFisrtProjectRegist(NoticeDTO notice);
+
+	int insertNoticeProjectRegist(NoticeDTO notice);
 
 
 }

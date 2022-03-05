@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
 <title>Insert title here</title>
 <style>
 	@import url('https://fonts.googleapis.com/css?family=Roboto');
@@ -210,6 +211,7 @@
 		display: inline-block;
 		color:white;
 		border:none;
+		font-size:10px;
 	}
 	
 	.user-name {
@@ -381,6 +383,25 @@
 		border-bottom:2px solid black;
 		width:100%;
 		height:40px;
+		cursor:pointer;
+	}
+	
+	.notification:last-child {
+		
+		border-bottom-left-radius: 18px;
+		border-bottom-right-radius: 18px;
+	}
+	
+	.notification:first-child {
+		border-top-left-radius: 18px;
+		border-top-right-radius: 18px;
+	}
+	
+	.notificationText {
+		font-size : 11px;
+		position:relative;
+		left: 7px;
+		top: 5px;
 	}
 	
 	.moreNoticeBtn {
@@ -457,7 +478,7 @@
             <input type="button" class="noticeButtonImg" onclick="noticeDisplay();">
             
             <!-- 알림 갯수에 따라 숫자 나오게 하는거 ㅋㅋ ㄱㄷ... -->
-			<div class="note-num">3</div>
+			<div class="note-num" id="note-num">0</div>
 			<div class="profile-area" id="profileName">
 			<div class="user-name">
 				${ sessionScope.loginMember.name }
@@ -496,22 +517,132 @@
 	<div class="notificationBox" id="notificationBox" style="display:none">
 		<button type="button" class="alreadyConfirmNoticeRemoveBtn" id="alreadyConfirmNoticeRemoveBtn">조회한 알림 삭제</button>
 		<div class="notificationContentBox" id="notificationContentBox">
-			<div class="notification" id="notification"></div>
-			<div class="notification" id="notification"></div>
-			<div class="notification" id="notification"></div>
-			<div class="notification" id="notification"></div>
-			<div class="notification" id="notification"></div>
-			<div class="notification" id="notification" style="border-bottom:none"></div>
+			<div class="notification" id="notification"><div class="notificationText" id="notificationText"></div></div>
+			<div class="notification" id="notification"><div class="notificationText" id="notificationText"></div></div>
+			<div class="notification" id="notification"><div class="notificationText" id="notificationText"></div></div>
+			<div class="notification" id="notification"><div class="notificationText" id="notificationText"></div></div>
+			<div class="notification" id="notification"><div class="notificationText" id="notificationText"></div></div>
+			<div class="notification" id="notification" style="border-bottom:none"><div class="notificationText" id="notificationText"></div></div>
 		</div>
 		<button type="button" class="notificationSettingBtn" id="notificationSettingBtn"></button>
 		<button type="button" class="moreNoticeBtn" id="moreNoticeBtn">더보기</button>
 		
 	</div>
-
+	
 
     <script>
     
-    	function noticeDisplay() {
+		const $notificationText = document.querySelectorAll("#notificationText");
+		const noteNum = document.getElementById("note-num");
+		const $notification = document.querySelectorAll("#notification");
+
+		let alreadyConfirmCount = 0;
+		
+		let sock = new SockJS("http://localhost:8001/byat/echo-ws/");
+		sock.onmessage = onMessage;
+		sock.onclose = onClose;
+
+		window.onload = function() {
+			
+			$.ajax({
+				url:"/byat/notice/list",
+				type: 'post',
+				data: { no : "${sessionScope.loginMember.no}" },
+				success: function(data, status, xhr) {
+					
+					const notice = JSON.parse(data.noticeList);
+					
+					let noticeCount = 0;
+					
+					if(notice.length == 0) {
+						noteNum.innerText = noticeCount;
+					}
+					
+					for(let i in notice) {
+						
+						if(notice[i].status != "Y") {
+							noticeCount++;
+						}
+						
+					}
+					
+					noteNum.innerText = noticeCount + "+";
+				},
+				error: function(xhr, status, error) {
+					console.log(xhr);
+				}
+			});
+			
+		}
+		
+		// 서버로부터 메시지를 받았을 때
+		function onMessage(msg) {
+			var data = msg.data;
+			
+			noteNum.innerText = "";
+			
+			$.ajax({
+				url:"/byat/notice/list",
+				type: 'post',
+				data: { no : data },
+				success: function(data, status, xhr) {
+					
+					const notice = JSON.parse(data.noticeList);
+					
+					let noticeCount = 0;
+					
+					if(notice.length == 0) {
+						noteNum.innerText = noticeCount;
+					}
+					
+					for(let i in notice) {
+						
+						if(notice[i].status != "Y") {
+							noticeCount++;
+						} else {
+							alreadyConfirmCount++;
+						}
+						
+						if(i < 6) {
+							$notificationText[i].innerText = notice[i].body;
+							
+							if(notice[i].status == "Y") {
+								$notification[i].style.background  = "#C2C2C2";
+							}
+							
+							$notification[i].onclick = function() {
+								
+								$.ajax({
+									url:"/byat/notice/select",
+									type: "post",
+									data:{ 
+										code : notice[i].code,
+										no : notice[i].no	
+									}
+								});
+								
+								location.href = '${ pageContext.servletContext.contextPath }' + notice[i].url;
+								
+							}
+						}
+						
+					}
+					noteNum.innerText = noticeCount + "+";
+				},
+				error: function(xhr, status, error) {
+					console.log(xhr);
+				}
+			});
+			
+		}
+		// 서버와 연결을 끊었을 때
+		function onClose(evt) {
+			alert("실시간 통신 연결이 끊겼습니다!");
+		}
+		
+		function noticeDisplay() {
+    		
+    		sock.send("${sessionScope.loginMember.no}");
     		
     		const notificationBox = document.getElementById("notificationBox");
     		if(notificationBox.style.display == 'none') {
@@ -521,7 +652,7 @@
     		}
     		
     	}
-    
+		
 	    function test() {
 	    	var tabsNewAnim = $('#navbarSupportedContent');
 	    	var selectorNewAnim = $('#navbarSupportedContent').find('li').length;
@@ -587,12 +718,11 @@
 	    jQuery(document).ready(function($){
 	    	// Get current path and find target link
 	    	var path = window.location.pathname.split("/").pop();
-	
 	    	// Account for home page with empty path
 	    	if ( path == '' ) {
 	    		path = 'index.html';
 	    	}
-	
+
 	    	var target = $('#navbarSupportedContent ul li a[href="'+path+'"]');
 	    	// Add active class to target link
 	    	target.parent().addClass('active');
@@ -622,6 +752,88 @@
 	    	document.getElementById("profileAndLogoutModal").style.display="none";
 	    }
 	    
+		document.getElementById("alreadyConfirmNoticeRemoveBtn").onclick = function() {
+			
+			if(alreadyConfirmCount == 0) {
+				alert("조회한 알림이 없습니다.");
+			} else {
+				for(let i = 0; i < $notificationText.length; i++) {
+					$notificationText[i].innerText = "";
+					$notification[i].style.background  = "white";
+				}
+				
+				$.ajax({
+					url: "/byat/notice/removeconfirmnotice",
+					data: { no: "${ sessionScope.loginMember.no }" },
+					type: "post",
+					success: function(data, status, xhr) {
+						
+						alert("조회한 알림 삭제 완료!");
+						
+						noteNum.innerText = "";
+						
+						$.ajax({
+							url:"/byat/notice/list",
+							type: 'post',
+							data: { no : "${ sessionScope.loginMember.no }" },
+							success: function(data, status, xhr) {
+								
+								const notice = JSON.parse(data.noticeList);
+								
+								let noticeCount = 0;
+								
+								if(notice.length == 0) {
+									noteNum.innerText = noticeCount;
+								}
+								
+								for(let i in notice) {
+									
+									if(notice[i].status != "Y") {
+										noticeCount++;
+									} else {
+										alreadyConfirmCount++;
+									}
+									
+									if(i < 6) {
+										$notificationText[i].innerText = notice[i].body;
+										
+										if(notice[i].status == "Y") {
+											$notification[i].style.background  = "#C2C2C2";
+										}
+										
+										$notification[i].onclick = function() {
+											
+											$.ajax({
+												url:"/byat/notice/select",
+												type: "post",
+												data:{ 
+													code : notice[i].code,
+													no : notice[i].no	
+												}
+											});
+											
+											location.href = '${ pageContext.servletContext.contextPath }' + notice[i].url;
+											
+										}
+									}
+									
+								}
+								noteNum.innerText = noticeCount + "+";
+								alreadyConfirmCount = 0;
+							},
+							error: function(xhr, status, error) {
+								console.log(xhr);
+							}
+						});
+					},
+					error: function(xhr, status, error) {
+						console.log(xhr);
+					}
+				});
+				
+			}
+
+		}
 	    
 	    
     </script>

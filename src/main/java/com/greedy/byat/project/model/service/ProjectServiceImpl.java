@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.common.exception.notice.NoticeInsertException;
 import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleException;
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
@@ -22,6 +23,7 @@ import com.greedy.byat.common.exception.project.ProjectRemoveException;
 import com.greedy.byat.common.exception.project.ProjectVersionHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectWriterChangeException;
 import com.greedy.byat.member.model.dto.MemberDTO;
+import com.greedy.byat.notice.model.dto.NoticeDTO;
 import com.greedy.byat.project.model.dao.ProjectMapper;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
@@ -124,7 +126,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException {
+	public void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException, NoticeInsertException {
 
 		int result = mapper.insertProject(project);
 
@@ -140,8 +142,23 @@ public class ProjectServiceImpl implements ProjectService {
 		int projectMembersRegistResult = 0;
 		int projectRoleRegistResult = 0;
 
+		NoticeDTO notice = new NoticeDTO();
+		notice.setBody("\'" + project.getTitle() + "\' 프로젝트가 생성되었습니다.");
+		notice.setUrl("/project/list");
+		notice.setStatus("N");
+		notice.setCategory(1);
+		notice.setNo(project.getWriterMember().getNo());
+		
+		int noticeInsertResult = 0;
+		
 		if (result > 0) {
 			projectMembersRegistResult = mapper.insertProjectWriteMember(projectMembers);
+			noticeInsertResult = mapper.insertNoticeFisrtProjectRegist(notice);
+			
+			if(!(noticeInsertResult > 0)) {
+				
+				throw new NoticeInsertException("프로젝트 알림 생성 실패!");
+			}
 		}
 
 		projectRoleRegistResult = mapper.insertProjectFirstMemberRole(projectMembers);
@@ -181,11 +198,28 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void deleteProject(int code, MemberDTO member) throws ProjectRemoveException, ProjectVersionHistoryRegistException {
+	public void deleteProject(int code, MemberDTO member) throws ProjectRemoveException, ProjectVersionHistoryRegistException, NoticeInsertException {
 
 		int result = mapper.deleteProject(code);
 
 		ProjectDTO project = mapper.selectProjectDetail(code);
+		
+		List<ProjectMembersDTO> projectMembers = mapper.selectProjectMemberList(code);
+		
+		NoticeDTO notice = new NoticeDTO();
+		notice.setBody("\'" + project.getTitle() + "\' 프로젝트가 삭제되었습니다.");
+		notice.setCategory(1);
+		notice.setProjectCode(project.getCode());
+		notice.setUrl("/project/list");
+		notice.setStatus("N");
+		
+		int insertNoticeProjectRegistResult = 0;
+		
+		for(int i = 0; i < projectMembers.size(); i++) {
+			notice.setNo(projectMembers.get(i).getNo());
+			insertNoticeProjectRegistResult = mapper.insertNoticeProjectRegist(notice);
+		}
+		
 		project.setWriter(member.getName());
 		project.setVersion(project.getVersion() + 1);
 		project.setTitle("\'" + project.getTitle() + "\' 프로젝트 삭제 (" + project.getTitle() + ")");
@@ -193,6 +227,11 @@ public class ProjectServiceImpl implements ProjectService {
 		if (!(result > 0)) {
 			throw new ProjectRemoveException("프로젝트 삭제 실패");
 		} else {
+			
+			if(!(insertNoticeProjectRegistResult > 0)) {
+							
+				throw new NoticeInsertException("프로젝트 알림 생성 실패!");
+			}
 			
 			int updateResult = mapper.updateProjectVersion(project);
 			
@@ -230,11 +269,28 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException {
+	public void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException {
 
 		int result = mapper.updateProject(project);
 		
 		ProjectDTO projectDetail = mapper.selectProjectDetail(project.getCode());
+
+		List<ProjectMembersDTO> projectMembers = mapper.selectProjectMemberList(project.getCode());
+		
+		NoticeDTO notice = new NoticeDTO();
+		notice.setBody("\'" + project.getTitle() + "\' 프로젝트가 수정되었습니다.");
+		notice.setCategory(1);
+		notice.setProjectCode(project.getCode());
+		notice.setUrl("/project/list");
+		notice.setStatus("N");
+		
+		int insertNoticeProjectRegistResult = 0;
+		
+		for(int i = 0; i < projectMembers.size(); i++) {
+			notice.setNo(projectMembers.get(i).getNo());
+			insertNoticeProjectRegistResult = mapper.insertNoticeProjectRegist(notice);
+		}
+		
 		
 		project.setWriter(member.getName());
 		project.setVersion(projectDetail.getVersion() + 1);
@@ -244,6 +300,11 @@ public class ProjectServiceImpl implements ProjectService {
 		if (!(result > 0)) {
 			throw new ProjectModifyException("프로젝트 수정 실패");
 		} else {
+			
+			if(!(insertNoticeProjectRegistResult > 0)) {
+				
+				throw new NoticeInsertException("프로젝트 알림 생성 실패!");
+			}
 			
 			int updateResult = mapper.updateProjectVersion(project);
 			

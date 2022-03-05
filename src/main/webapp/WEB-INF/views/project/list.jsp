@@ -974,7 +974,7 @@
 	      		<div class="modal_content-box">
 	      			<div style="height:30px;"></div>
 	      			<div class="projectTitleTag">프로젝트 명</div>
-	      			<input type="text" class="projectModalTitle" name="title" placeholder="ProjectTitle" required>
+	      			<input type="text" class="projectModalTitle" id="projectModalTitle" name="title" placeholder="ProjectTitle" required>
 	      			<div class="projectStartDayTag">프로젝트 시작일자</div>
 	      			<div class="projectEndDayTag">프로젝트 종료일자</div>
 	       			<br clear="both">
@@ -997,6 +997,7 @@
   
   		<div class="modal_content">
   			<input type="hidden" id="updateModalProjectProgress">
+  			<input type="hidden" id="updateModalProjectIndex">
 	  		<form action="${ pageContext.servletContext.contextPath }/project/modify" id="updateProjectForm" method="post">
 				<div class="modal_head">
 					<h3>프로젝트 상세</h3>
@@ -1145,11 +1146,12 @@
 			
 			const createStartDate = document.getElementById("createStartDate");
 			const createEndDate = document.getElementById("createEndDate");
+			const projectModalTitle = document.getElementById("projectModalTitle");
 			
-			if(createStartDate.value > createEndDate.value) {
+			if(createStartDate.value >= createEndDate.value) {
 				alert("종료일자가 시작일자 전일 수 없습니다.");
 			} else {
-				
+				sock.send("${sessionScope.loginMember.no}");
 				document.getElementById("projectCreateForm").submit();
 			}
 			
@@ -1167,6 +1169,17 @@
 			} else if(document.getElementById("updateModalProjectProgress").value == "완료"){
 				alert("완료된 프로젝트는 수정하실 수 없습니다.");
 			} else {
+				
+				let projectUpdateIndex = document.getElementById("updateModalProjectIndex");
+				
+				<c:forEach items="${ projectList }" var="project" varStatus="status">
+					<c:forEach items="${project.projectMembers}" var="projectMembers">
+						if(projectUpdateIndex == "${status.index}") {
+							sock.send("${projectMembers.no}");
+						}
+					</c:forEach>
+				</c:forEach>
+				
 				document.getElementById("updateProjectForm").submit();
 			}
 			
@@ -1368,8 +1381,6 @@
 										}
 									});
 									
-									console.log("! : " + sprintProceedingCount);
-									
 									if(i == 0) {
 										alert("관리자 또는 PM은 삭제하실 수 없습니다.");
 									} else if(${ sessionScope.loginMember.id } != memberList[0].id) {
@@ -1520,7 +1531,9 @@
 				$projectEditBtn[i].onclick = function() {
    	
 					let updateModalProjectProgress = document.getElementById("updateModalProjectProgress");
+					let updateModalProjectIndex = document.getElementById("updateModalProjectIndex");
 					updateModalProjectProgress.value = $projectRealProgress[i].innerText;
+					updateModalProjectIndex.value = i;
 					
 					if($proBox[i].style.display =='none') {
 						$proBox[i].style.marginBottom = "500px";
@@ -1542,7 +1555,17 @@
                     
                     document.getElementById("delete_modal_ok_btn").onclick = function() {
                        
-                       location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;                        
+               			let projectUpdateIndex = document.getElementById("updateModalProjectIndex");
+        				
+        				<c:forEach items="${ projectList }" var="project" varStatus="status">
+        					<c:forEach items="${project.projectMembers}" var="projectMembers">
+        						if(projectUpdateIndex == "${status.index}") {
+        							sock.send("${projectMembers.no}");
+        						}
+        					</c:forEach>
+        				</c:forEach>
+                    	
+                       	location.href = "${ pageContext.servletContext.contextPath }/project/remove?code=" + $code[i].value;                        
                     }
 					
 				}				

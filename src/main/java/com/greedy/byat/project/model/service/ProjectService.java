@@ -3,6 +3,7 @@ package com.greedy.byat.project.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.greedy.byat.common.exception.notice.NoticeInsertException;
 import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleException;
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
@@ -23,13 +24,13 @@ public interface ProjectService {
 
 	List<ProjectDTO> selectProjectList(MemberDTO member) throws ProjectProgressHistoryRegistException;
 
-	void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException;
+	void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException, NoticeInsertException;
 
-	void deleteProject(int code, MemberDTO member) throws ProjectRemoveException, ProjectVersionHistoryRegistException;
+	void deleteProject(int code, MemberDTO member) throws ProjectRemoveException, ProjectVersionHistoryRegistException, NoticeInsertException;
 
 	ProjectDTO selectProjectDetail(int code);
 
-	void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException;
+	void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException;
 
 	List<MemberDTO> searchAddMemberList(String searchMember, String[] projectMembersList, String[] selectMembers);
 

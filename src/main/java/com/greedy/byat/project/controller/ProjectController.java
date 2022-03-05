@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.greedy.byat.common.exception.notice.NoticeInsertException;
 import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleException;
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
@@ -94,7 +95,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/regist")
-	public String registProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException {
+	public String registProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException, NoticeInsertException {
 		
 		String memberName = ((MemberDTO) request.getSession().getAttribute("loginMember")).getName();
 		
@@ -110,7 +111,7 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/remove")
-	public String removeProject(HttpServletRequest request, RedirectAttributes rttr) throws ProjectRemoveException, ProjectVersionHistoryRegistException {
+	public String removeProject(HttpServletRequest request, RedirectAttributes rttr) throws ProjectRemoveException, ProjectVersionHistoryRegistException, NoticeInsertException {
 		
 		int code = Integer.parseInt(request.getParameter("code"));
 		
@@ -132,6 +133,7 @@ public class ProjectController {
 		
 		ProjectDTO projectDetail = projectService.selectProjectDetail(code);
 		
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
 		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
@@ -143,7 +145,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/modify")
-	public String modifyProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectModifyException, ProjectVersionHistoryRegistException {
+	public String modifyProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException {
 
 		int code = Integer.parseInt(request.getParameter("code"));
 		
