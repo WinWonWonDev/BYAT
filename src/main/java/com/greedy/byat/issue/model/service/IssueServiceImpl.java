@@ -153,7 +153,10 @@ public class IssueServiceImpl implements IssueService {
 			throw new IssueUpdateContentException("이슈 내용 변경 실패!");
 		} else {
 			
-			int issueVersionHistoryResult = mapper.insertIssueVersionHistory(modifyIssue); //만들어야함
+			String projectTitle = mapper.selectProjectTitle(modifyIssue.getProjectCode());
+			
+			modifyIssue.setTitle("\'" + modifyIssue.getTitle() + "\' 이슈 수정 (" + projectTitle + ")");
+			int issueVersionHistoryResult = mapper.insertIssueVersionHistory(modifyIssue);
 			
 			if(!(issueVersionHistoryResult > 0)) {
 				

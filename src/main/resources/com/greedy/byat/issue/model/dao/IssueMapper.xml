@@ -78,6 +78,7 @@
  		JOIN TBL_PROJECT B ON(A.PROJECT_CODE = B.PROJECT_CODE)
  	   WHERE B.PROJECT_CODE = #{ no }
  	     AND A.SPRINT_DELETE_STATUS = 'N'
+ 	   ORDER BY A.SPRINT_CODE DESC
  	</select>
  	
  	<select id="selectIssueList" resultMap="issueResultMap" parameterType="SprintDTO">
@@ -282,5 +283,12 @@
 		                         )
 		 WHERE A.ISSUE_CODE = #{ code }
  	</update>
+ 	
+ 	<select id="selectProjectTitle" parameterType="_int" resultType="java.lang.String">
+ 		SELECT
+ 		       A.PROJECT_TITLE
+ 		  FROM TBL_PROJECT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 	</select>
  	
  </mapper>
