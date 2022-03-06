@@ -1,5 +1,7 @@
 package com.greedy.byat.calendar.model.service;
 
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +80,39 @@ public class CalendarServiceImpl implements CalendarService {
 		}
 		
 		return totalCalendarList;
+	}
+
+	@Override
+	public int registSchedule(List<Map<String, Object>> calendarList) {
+		
+//		List<ScheduleDTO> scheduleInfo = null;
+
+		int result = 0;
+		
+		// string형으로 들어가니까 각자 
+		for(Map<String, Object> calendarListInfo : calendarList) { 
+			// 들어온 일정만큼 돌려서
+			Date calendarStartDate = (Date)calendarListInfo.get("startDate");
+			Date calendarEndDate = (Date)calendarListInfo.get("endDate");
+			System.out.println("start가 date형식으로 됨? : " + calendarStartDate);
+			System.out.println("end가 date형식으로 됨? : " + calendarEndDate);
+			String title = (String)calendarListInfo.get("title");
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("title", title);
+			map.put("startDate", calendarStartDate);
+			map.put("endDate", calendarEndDate);
+			
+			result = mapper.insertSchedule(map);
+			
+		}
+			
+		if(result > 0) {
+			return 1;
+		} else {
+			return 0;
+		}
+		
 	}
 
 

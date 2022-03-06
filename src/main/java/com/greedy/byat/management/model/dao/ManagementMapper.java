@@ -20,5 +20,7 @@ public interface ManagementMapper {
 
 	int restoreManagement(int no);
 
+	int insertNoticeSettingByOneMember();
+
 
 }

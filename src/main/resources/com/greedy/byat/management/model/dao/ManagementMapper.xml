@@ -104,4 +104,29 @@
  		 WHERE A.MEMBER_NO = #{ no }
  	</update>
  	
+ 	
+ 	<insert id="insertNoticeSettingByOneMember">
+ 		INSERT
+ 		  INTO TBL_NOTIFICATION_BY_MEMBER A
+ 		(
+ 		  A.MEMBER_NO
+ 		, A.PROJECT_NOTIFICATION_SETTING
+ 		, A.ISSUE_NOTIFICATION_SETTING
+ 		, A.SPRINT_NOTIFICATION_SETTING
+ 		, A.CALENDAR_NOTIFICATION_SETTING
+ 		, MEETINGLOG_NOTIFICATION_SETTING
+ 		, BACKLOG_NOTIFICATION_SETTING
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_MEMBER_NO.CURRVAL
+ 		, 'Y'
+ 		, 'Y'
+ 		, 'Y'
+ 		, 'Y'
+ 		, 'Y'
+ 		, 'Y'
+ 		)
+ 	</insert>
+ 	
  </mapper>

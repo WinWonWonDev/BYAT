@@ -104,6 +104,12 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/project/projectmemberlist");
 		memberPermitList.add("/project/removemember");
 		memberPermitList.add("/project/modifyrole");
+		memberPermitList.add("/project/selectsprintmember");
+
+		memberPermitList.add("/retrospective/regist");
+		memberPermitList.add("/retrospective/modify");
+		memberPermitList.add("/retrospective/remove");
+		memberPermitList.add("/retrospective/list");
 		
 		memberPermitList.add("/sprint/list");
 		memberPermitList.add("/sprint/regist");
@@ -137,9 +143,16 @@ public class AuthenticationFilter implements Filter {
 		
 		memberPermitList.add("/history/list");
 		
+		memberPermitList.add("/notice/list");
+		memberPermitList.add("/notice/select");
+		memberPermitList.add("/notice/removeconfirmnotice");
+		
 		memberPermitList.add("/backlog/regist");
 		memberPermitList.add("/backlog/modify");
 		memberPermitList.add("/backlog/remove");
+		memberPermitList.add("/backlog/detail");
+		memberPermitList.add("/backlog/tasklize");
+
 		
 		memberPermitList.add("/issue/list");
 		memberPermitList.add("/issue/modifyissuestatus");
@@ -155,7 +168,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/calendar/modify");
 		
 		memberPermitList.add("/member/logout");
-		memberPermitList.add("/member/moveprofile");
+		memberPermitList.add("/member/profile");
 		memberPermitList.add("/member/emailduplicationcheckforinit");
 		memberPermitList.add("/member/registverification");
 		memberPermitList.add("/member/resubmitverificationnum");

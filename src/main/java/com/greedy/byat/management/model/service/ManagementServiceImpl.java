@@ -65,6 +65,11 @@ public class ManagementServiceImpl implements ManagementService {
 		
 		int result = mapper.insertManagement(map);
 		
+		if(result > 0) {
+			int noticeSettingByOneMember = mapper.insertNoticeSettingByOneMember();
+			
+		}
+		
 		return result;
 	}
 

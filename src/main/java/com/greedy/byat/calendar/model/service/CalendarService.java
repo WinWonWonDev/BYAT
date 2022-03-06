@@ -14,4 +14,6 @@ public interface CalendarService {
 
 	List<ScheduleDTO> selectCalendarList(MemberDTO loginMember);
 
+	int registSchedule(List<Map<String, Object>> calendarList);
+
 }
