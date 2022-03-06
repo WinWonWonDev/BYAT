@@ -123,6 +123,78 @@
  		)
  	</insert>
  	
+ 	<insert id="insertNoticeFisrtProjectRegist" parameterType="NoticeDTO">
+ 		INSERT
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_CODE
+ 		, A.ISSUE_CODE
+ 		, A.SCHEDULE_CODE
+ 		, A.BACKLOG_CODE
+ 		, A.MEETINGLOG_CODE
+ 		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, #{ body }
+ 		, #{ url }
+ 		, #{ status }
+ 		, #{ category }
+ 		, #{ no }
+ 		, SEQ_PROJECT_NO.CURRVAL
+ 		, null
+ 		, null
+ 		, null
+ 		, null
+ 		, null
+ 		, SYSDATE
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertNoticeProjectRegist" parameterType="NoticeDTO">
+	 	INSERT
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_CODE
+ 		, A.ISSUE_CODE
+ 		, A.SCHEDULE_CODE
+ 		, A.BACKLOG_CODE
+ 		, A.MEETINGLOG_CODE
+ 		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, #{ body }
+ 		, #{ url }
+ 		, #{ status }
+ 		, #{ category }
+ 		, #{ no }
+ 		, #{ projectCode }
+ 		, null
+ 		, null
+ 		, null
+ 		, null
+ 		, null
+ 		, SYSDATE
+ 		)
+ 	</insert>
+ 	
  	<insert id="insertProjectWriteMember" parameterType="ProjectMembersDTO">
  		INSERT
  		  INTO TBL_PROJECT_MEMBERS A
@@ -195,6 +267,7 @@
  		  FROM TBL_MEMBER A
  		 WHERE A.MEMBER_NAME LIKE '%' || #{ searchMember } || '%'
  		   AND A.PERMIT_CODE != 1
+ 		   AND A.ABSENCE_YN = 'N'
  	</select>
  	
  	<insert id="insertProjectMembers" parameterType="ProjectMembersDTO">
@@ -422,6 +495,30 @@
  		)
  	</insert>
  	
+ 	<insert id="insertProgressHistory" parameterType="ProjectDTO">
+ 		INSERT
+ 		  INTO TBL_PROJECT_PROGRESS_HISTORY A
+ 		(
+ 		  A.PROJECT_PROGRESS_HISTORY_NO
+ 		, A.PROJECT_CODE
+ 		, A.PROJECT_PROGRESS_HISTORY_STATUS
+ 		, A.PROJECT_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.PROJECT_PROGRESS_HISTORY_START_DATE
+ 		, A.PROJECT_PROGRESS_HISTORY_END_DATE
+ 		, A.PROJECT_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, #{ code }
+ 		, #{ progress }
+ 		, SYSDATE
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, #{ writer }
+ 		)
+ 	</insert>
+ 	
  	<select id="selectProjectMember" resultMap="projectMembersResultMap">
  		SELECT
  		       A.PROJECT_CODE
@@ -463,5 +560,23 @@
  		, #{ code }
  		)
  	</insert>
+ 	
+ 	<select id="selectSprintProceedingCount" parameterType="ProjectMembersDTO" resultType="_int">
+ 		SELECT
+		       COUNT(A.SPRINT_CODE)
+		  FROM TBL_SPRINT A
+		  JOIN TBL_SPRINT_MEMBERS B ON(A.SPRINT_CODE = B.SPRINT_CODE)
+		 WHERE A.PROJECT_CODE = #{ code }
+		   AND B.MEMBER_NO = #{ no }
+		   AND (A.SPRINT_PROGRESS = '진행전'
+		    OR A.SPRINT_PROGRESS = '진행중')
+ 	</select>
+ 	
+ 	<update id="updateProjectProgress" parameterType="ProjectDTO">
+ 		UPDATE
+ 		       TBL_PROJECT A
+ 		   SET A.PROJECT_PROGRESS = #{ progress }
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 	</update>
  	
  </mapper>

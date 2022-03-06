@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.greedy.byat.common.exception.notice.NoticeInsertException;
 import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleException;
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
@@ -41,6 +42,7 @@ import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
 import com.greedy.byat.project.model.service.ProjectService;
+import com.greedy.byat.sprint.model.dto.SprintDTO;
 
 @Controller
 @RequestMapping("/project")
@@ -55,7 +57,7 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/list")
-	public ModelAndView selectProjectList(ModelAndView mv, HttpServletRequest request) {
+	public ModelAndView selectProjectList(ModelAndView mv, HttpServletRequest request) throws ProjectProgressHistoryRegistException {
 		
 		MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		
@@ -84,11 +86,7 @@ public class ProjectController {
 			}
 			
 		}
-		
-		System.out.println("projectList : " + projectList);
-		
-		System.out.println("PMLIST : " + PmMemberNumber);
-		
+
 		mv.addObject("projectList", projectList);
 		mv.addObject("PmMemberNumber", PmMemberNumber);
 		mv.setViewName("/project/list");
@@ -97,7 +95,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/regist")
-	public String registProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException {
+	public String registProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException, NoticeInsertException {
 		
 		String memberName = ((MemberDTO) request.getSession().getAttribute("loginMember")).getName();
 		
@@ -113,7 +111,7 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/remove")
-	public String removeProject(HttpServletRequest request, RedirectAttributes rttr) throws ProjectRemoveException, ProjectVersionHistoryRegistException {
+	public String removeProject(HttpServletRequest request, RedirectAttributes rttr) throws ProjectRemoveException, ProjectVersionHistoryRegistException, NoticeInsertException {
 		
 		int code = Integer.parseInt(request.getParameter("code"));
 		
@@ -135,6 +133,7 @@ public class ProjectController {
 		
 		ProjectDTO projectDetail = projectService.selectProjectDetail(code);
 		
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
 		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
@@ -146,7 +145,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/modify")
-	public String modifyProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectModifyException, ProjectVersionHistoryRegistException {
+	public String modifyProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException {
 
 		int code = Integer.parseInt(request.getParameter("code"));
 		
@@ -278,4 +277,27 @@ public class ProjectController {
 		
 		return "redirect:/project/list";
 	}
+	
+	@PostMapping("/selectsprintmember")
+	public ModelAndView selectSprintMember(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int code = Integer.parseInt(request.getParameter("code"));
+		int no = Integer.parseInt(request.getParameter("no"));
+
+		System.out.println("code : " + code);
+		System.out.println("no : " + no);
+		
+		int count = projectService.selectSprintProceedingCount(code, no);
+		
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		mv.addObject("count", objectMapper.writeValueAsString(count));
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
 }

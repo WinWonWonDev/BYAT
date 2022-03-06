@@ -1079,7 +1079,7 @@
 <script>
 
 	/* 인근이형이 추가하라고 한거 */
-	/* document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + ${ requestScope.code };*/
+	document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + ${ requestScope.code };
 	
 	/* 수빈이형이 추가하라고 한거*/
 	/* document.getElementById("selectMeetingLogList").href = document.getElementById("selectMeetingLogList").href + ${ requestScope.code }; */
