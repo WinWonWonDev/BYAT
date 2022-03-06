@@ -267,7 +267,7 @@ public class MemberController {
 	public String moveProfile() {
 		
 		
-		return "/member/profile";
+		return "redirect:/member/profile";
 	}
 	
 	@GetMapping("/logout")

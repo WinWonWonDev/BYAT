@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.greedy.byat.profile.model.dao.ProfileMapper">
-	<resultMap type="ProfileDTO" id="profileResultMap">
+	<resultMap type="MemberDTO" id="profileResultMap">
 		<id property="no" column="MEMBER_NO"/>
 		<result property="id" column="MEMBER_ID"/>
 		<result property="pwd" column="MEMBER_PWD"/>
@@ -32,6 +32,13 @@
              , A.MEMBER_PHONE = #{ phone }
          WHERE A.MEMBER_ID = #{ id }
 	</update>
+	
+	<select id="selectEncryptedPwd" resultType="java.lang.String">
+        SELECT
+               A.MEMBER_PWD
+          FROM TBL_MEMBER A
+         WHERE A.MEMBER_ID = #{ id }
+	</select>
 	
 	<update id="updatePassword">
         UPDATE

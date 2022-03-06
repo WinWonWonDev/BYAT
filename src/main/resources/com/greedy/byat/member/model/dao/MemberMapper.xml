@@ -199,4 +199,14 @@
 		   AND A.ABSENCE_YN = 'N'
 	</select>
 	
+	<update id="updateMemberProfile">
+        UPDATE /* com.greedy.byat.member.model.dao.MemberMapper#updateMemberProfile() */
+               TBL_MEMBER A
+               A.MEMBER_NAME = #{ name }
+             , A.MEMBER_EMAIL = #{ email }
+             , A.MEMBER_PHONE = #{ phone }
+         WHERE A.ABSENCE_YN = 'N'
+           AND A.MEMBER_ID = #{ id }
+	</update>
+	
  </mapper>
