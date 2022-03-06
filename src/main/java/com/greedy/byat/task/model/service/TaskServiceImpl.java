@@ -264,11 +264,22 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public List<TaskDTO> selectTaskList(int projectCode) {
+	public boolean checkTasksContent(int projectCode) {
+		
+		boolean result = true;
 		
 		List<TaskDTO> taskList = mapper.selectTaskList(projectCode);
 		
-		return taskList;
+		for(int i  = 0; i < taskList.size(); i++) {
+			
+			TaskDTO task = taskList.get(i);
+			
+			if(task.getTitle().isEmpty() || task.getStartDate() == null || task.getEndDate() == null || task.getBody().isEmpty()) {
+				
+				result = false;
+			}
+		}
+		return result;
 	}
 
 

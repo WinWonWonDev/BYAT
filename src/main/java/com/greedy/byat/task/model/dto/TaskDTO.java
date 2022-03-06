@@ -29,7 +29,7 @@ public class TaskDTO {
 	private String body;
 	private int version;
 	private String deleteStatus;
-	private int backLogCode;
+	private int backlogCode;
 	private int sprintCode;
 	private int projectCode;
 	private int memberNo;

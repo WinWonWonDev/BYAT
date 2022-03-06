@@ -52,7 +52,7 @@
  	</resultMap>
  	
  	<resultMap type="BacklogDTO" id="generalBacklogResultMap">
- 		<id property="code" column="BACKLOG_NO"/>
+ 		<id property="code" column="BACKLOG_CODE"/>
  		<result property="title" column="BACKLOG_TITLE"/>
  		<result property="progress" column="BACKLOG_PROGRESS"/>
  		<result property="body" column="BACKLOG_BODY"/>
@@ -286,16 +286,146 @@
  		)
  	</insert>
  	
- 	<!-- 스프린트 상태를 진행중으로 변경 -->
- 	<update id="updateSprintProgress">
- 		UPDATE
- 		       TBL_SPRINT A
- 		   SET A.SPRINT_PROGRESS = '진행중'
+ 	<!-- 스프린트 시작 -->
+ 	<!-- 프로젝트가 진행중인지 확인한다. -->
+ 	<select id="checkProjectProgress" parameterType="hashmap" resultType="_int">
+ 		SELECT
+ 			   COUNT(*)
+ 		  FROM TBL_PROJECT
+ 		 WHERE PROJECT_CODE = #{ projectCode }
+ 		   AND PROJECT_PROGRESS = '진행중'
+ 		   AND PROJECT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<!-- 스프린트가  미진행 상태인지 확인한다. -->
+ 	<select id="checkSprintProgress3" parameterType="hashmap" resultType="_int">
+ 		SELECT
+ 			   COUNT(*)
+ 		  FROM TBL_SPRINT
+ 		 WHERE PROJECT_CODE = #{ projectCode }
+ 		   AND SPRINT_PROGRESS = '진행전'
+ 		   AND SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<!-- 프로젝트의 진행중인 스프린트를 가져온다. -->
+ 	<select id="selectSprint2" parameterType="hashmap" resultMap="sprintResultMap">
+ 		SELECT
+ 		       A.SPRINT_CODE
+ 		     , A.SPRINT_TITLE
+ 		     , A.SPRINT_START_DATE
+ 		     , A.SPRINT_END_DATE
+ 		     , A.SPRINT_BODY
+ 		     , A.PROJECT_CODE
+ 		  FROM TBL_SPRINT A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.SPRINT_PROGRESS = '진행전'
+ 		   AND A.SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<!-- 진행중인 스프린트의 모든 태스크를 가져온다. -->
+ 	<select id="selectTaskList2" parameterType="hashmap" resultMap="taskResultMap">
+ 		SELECT
+ 			   A.TASK_CODE
+ 			 , A.BACKLOG_CODE
+ 			 , A.SPRINT_CODE
+ 			 , A.PROJECT_CODE
+ 			 , A.TASK_TITLE
+ 			 , A.TASK_START_DATE
+ 			 , A.TASK_END_DATE
+ 			 , A.TASK_PROGRESS
+ 			 , A.TASK_BODY
+ 			 , A.TASK_VERSION
+ 			 , A.TASK_DELETE_STATUS
+ 			 , A.MEMBER_NO
+ 		  FROM TBL_TASK A
+ 		 WHERE A.SPRINT_CODE = (SELECT
+ 									   B.SPRINT_CODE
+ 								  FROM TBL_SPRINT B
+ 								 WHERE B.SPRINT_PROGRESS = '진행전'
+ 								   AND B.PROJECT_CODE = #{ projectCode }
+ 								   AND B.SPRINT_DELETE_STATUS = 'N')
+ 		   AND A.TASK_DELETE_STATUS = 'N' 
+ 	</select>
+ 	
+ 	<!-- 태스크를 진행중으로 변경한다. -->
+ 	<update id="updateTaskProgress">
+ 		UPDATE
+ 			   TBL_TASK A
+ 		   SET A.TASK_PROGRESS = '진행중'
+ 		 WHERE A.TASK_CODE = #{ code }
+ 		   AND A.TASK_DELETE_STATUS = 'N'
  	</update>
  	
- 	<!-- 스프린트 상태 변경이력에 추가 -->
- 	<insert id="insertSprintProgressHistory3">
+ 	<!-- 태스크 진행 상태 변경 이력에 추가 -->
+ 	<insert id="insertTaskProgressHistory">
+ 		INSERT
+ 		  INTO TBL_TASK_PROGRESS_HISTORY A
+ 		(
+ 		  A.TASK_PROGRESS_HISTORY_NO
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.TASK_CODE
+ 		, A.TASK_PROGRESS_HISTORY_STATUS
+ 		, A.TASK_PROGRESS_HISTORY_START_DATE
+ 		, A.TASK_PROGRESS_HISTORY_END_DATE
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, #{ code }
+ 		, '진행중'
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<!-- 백로그의 진행 상태도 진행중으로 변경한다. -->
+ 	<update id="updateBacklogProgress">
+ 		UPDATE
+ 		       TBL_BACKLOG A
+ 		   SET A.BACKLOG_PROGRESS = '진행중'
+ 		 WHERE A.BACKLOG_CODE = #{ backlogCode }
+ 		   AND A.BACKLOG_DELETE_STATUS = 'N'
+ 	</update>
+ 	
+ 	<insert id="insertBacklogProgressHistory">
+ 		INSERT
+ 		  INTO TBL_BACKLOG_PROGRESS_HISTORY A
+ 		(
+ 		  A.BACKLOG_PROGRESS_HISTORY_NO
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.BACKLOG_CODE
+ 		, A.BACKLOG_PROGRESS_HISTORY_STATUS
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, #{ backlogCode }
+ 		, '진행중'
+ 		, (SELECT
+ 		          B.MEMBER_NAME
+ 		     FROM TBL_MEMBER B
+ 		    WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updatesprintProgress" parameterType="hashmap">
+ 		UPDATE
+ 			   TBL_SPRINT A
+ 		   SET A.SPRINT_PROGRESS = '진행중'
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.SPRINT_DELETE_STATUS = 'N'
+ 		   AND A.SPRINT_PROGRESS = '진행전'
+ 	</update>
+ 	
+ 	<insert id="insertSprintProgressHistory3" parameterType="hashmap">
  		INSERT
  		  INTO TBL_SPRINT_PROGRESS_HISTORY A
  		(
@@ -311,7 +441,294 @@
  		(
  		  SEQ_SPRINT_PROGRESS_HISTORY_NO.NEXTVAL
  		, '진행중'
- 		, 
+ 		, SYSDATE
+ 		, (SELECT
+ 				  B.SPRINT_START_DATE
+ 			 FROM TBL_SPRINT B
+ 			WHERE B.PROJECT_CODE = #{ projectCode }
+ 			  AND B.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 			  AND B.SPRINT_DELETE_STATUS = 'N')
+ 		, (SELECT
+ 				  C.SPRINT_END_DATE
+ 			 FROM TBL_SPRINT C
+ 			WHERE C.PROJECT_CODE = #{ projectCode }
+ 			  AND C.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 			  AND C.SPRINT_DELETE_STATUS = 'N')
+ 		, (SELECT
+ 				  D.MEMBER_NAME
+ 			 FROM TBL_MEMBER D
+ 			WHERE D.MEMBER_NO = #{ memberNo })
+ 		, (SELECT
+ 				  E.SPRINT_CODE
+ 			 FROM TBL_SPRINT E
+ 			WHERE E.PROJECT_CODE = #{ projectCode }
+ 			  AND E.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 			  AND E.SPRINT_DELETE_STATUS = 'N')	  
  		)
+ 	</insert>
+ 	
+ 	<!-- 스프린트 종료  -->
+ 	<!-- 스프린트가 진행중인지 확인한다. -->
+ 	<select id="checkSprintProgress2" resultType="_int">
+ 		SELECT
+ 			   COUNT(*)
+ 		  FROM TBL_SPRINT
+ 		 WHERE PROJECT_CODE = #{ projectCode }
+ 		   AND SPRINT_PROGRESS = '진행중'
+ 		   AND SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<select id="selectSprintTaskCodeList" parameterType="hashmap" resultMap="taskResultMap">
+ 		SELECT
+ 			   A.TASK_CODE
+ 			 , A.BACKLOG_CODE
+ 			 , A.SPRINT_CODE
+ 			 , A.PROJECT_CODE
+ 			 , A.TASK_TITLE
+ 			 , A.TASK_START_DATE
+ 			 , A.TASK_END_DATE
+ 			 , A.TASK_PROGRESS
+ 			 , A.TASK_BODY
+ 			 , A.TASK_VERSION
+ 			 , A.TASK_DELETE_STATUS
+ 			 , A.MEMBER_NO
+ 		  FROM TBL_TASK A
+ 		 WHERE A.TASK_DELETE_STATUS = 'N'
+ 		   AND A.SPRINT_CODE = (SELECT
+ 		   							   B.SPRINT_CODE
+ 		   						  FROM TBL_SPRINT B
+ 		   						 WHERE B.PROJECT_CODE = #{ projectCode }
+ 		   						   AND B.SPRINT_PROGRESS = '진행중'
+ 		   						   AND B.SPRINT_DELETE_STATUS = 'N')
+ 	</select>
+ 	
+ 	<update id="updateTaskProgress3">
+ 		UPDATE
+ 		       TBL_TASK A
+ 		   SET A.TASK_PROGRESS = '완료'
+ 		 WHERE A.TASK_CODE = #{ code }
+ 	</update>
+ 	
+ 	<insert id="insertTaskProgressHistory2">
+ 		INSERT
+ 		  INTO TBL_TASK_PROGRESS_HISTORY A
+ 		(
+ 		  A.TASK_PROGRESS_HISTORY_NO
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.TASK_CODE
+ 		, A.TASK_PROGRESS_HISTORY_STATUS
+ 		, A.TASK_PROGRESS_HISTORY_START_DATE
+ 		, A.TASK_PROGRESS_HISTORY_END_DATE
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, #{ code }
+ 		, '미완료'
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertBacklog">
+ 		INSERT
+ 		  INTO TBL_BACKLOG A
+ 		(
+ 		  A.BACKLOG_CODE
+ 		, A.BACKLOG_TITLE
+ 		, A.BACKLOG_PROGRESS
+ 		, A.BACKLOG_BODY
+ 		, A.PROJECT_CODE
+ 		, A.BACKLOG_VERSION
+ 		, A.BACKLOG_WRITER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_CODE.NEXTVAL
+ 		, #{ title }
+ 		, '미완료'
+ 		, #{ body }
+ 		, #{ projectCode }
+ 		, 1
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertBacklogProgressHistory2">
+ 		INSERT
+ 		  INTO TBL_BACKLOG_PROGRESS_HISTORY A
+ 		(
+ 		  A.BACKLOG_PROGRESS_HISTORY_NO
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.BACKLOG_CODE
+ 		, A.BACKLOG_PROGRESS_HISTORY_STATUS
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, SEQ_BACKLOG_CODE.CURRVAL
+ 		, '미완료'
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertBacklogVersionHistory">
+ 		<selectKey keyProperty="code" order="BEFORE" resultType="_int">
+ 		SELECT
+ 			   SEQ_BACKLOG_CODE.CURRVAL
+ 		  FROM DUAL
+ 		</selectKey>
+ 		INSERT
+ 		  INTO TBL_BACKLOG_VERSION_HISTORY A
+ 		(
+ 		  A.BACKLOG_VERSION_HISTORY_NO
+ 		, A.BACKLOG_VERSION_HISTORY_BODY
+ 		, A.BACKLOG_VERSION_HISTORY_VERSION
+ 		, A.BACKLOG_CODE
+ 		, A.BACKLOG_VERSION_HISTORY_TITLE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_VERSION_HISTORY_NO.NEXTVAL
+ 		, (SELECT
+ 				  B.BACKLOG_BODY
+ 			 FROM TBL_BACKLOG B
+ 			WHERE B.BACKLOG_CODE = #{ code } )
+ 		, (SELECT
+ 				  C.BACKLOG_VERSION
+ 			 FROM TBL_BACKLOG C
+ 			WHERE C.BACKLOG_CODE = #{ code})
+ 		, #{ code }
+ 		, CHR(39) || (SELECT
+						     D.BACKLOG_TITLE
+				        FROM TBL_BACKLOG D
+				       WHERE D.BACKLOG_CODE = #{ code }
+				 	 ) || CHR(39) || ' 백로그 생성 ' || CHR(40) || (SELECT
+				   								    			  		E.PROJECT_TITLE 
+				   											 	   FROM TBL_PROJECT E
+				   											 	   JOIN TBL_BACKLOG F ON (E.PROJECT_CODE = F.PROJECT_CODE) 
+				   							   					  WHERE F.BACKLOG_CODE = #{ code }
+				   							 					) || CHR(41)
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updateBacklogProgress2">
+ 		UPDATE
+ 			   TBL_BACKLOG A
+ 		   SET A.BACKLOG_PROGRESS = '완료'
+ 		 WHERE A.BACKLOG_CODE = #{ code }
+ 	</update>
+ 	
+ 	<insert id="insertBacklogProgressHistory3">
+ 		INSERT
+ 		  INTO TBL_BACKLOG_PROGRESS_HISTORY A
+ 		(
+ 		  A.BACKLOG_PROGRESS_HISTORY_NO
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.BACKLOG_CODE
+ 		, A.BACKLOG_PROGRESS_HISTORY_STATUS
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, #{ code }
+ 		, '완료'
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updateTaskProgress2">
+ 		UPDATE
+ 			   TBL_TASK A
+ 		   SET A.TASK_PROGRESS = '미완료'
+ 		 WHERE A.TASK_CODE = #{ code }
+ 	</update>
+ 	
+ 	<update id="updateBacklogProgress3">
+ 		UPDATE
+ 			   TBL_BACKLOG A
+ 		   SET A.BACKLOG_PROGRESS = '미완료'
+ 		 WHERE A.BACKLOG_CODE = #{ code }
+ 	</update>
+ 	
+ 	<select id="selectSprintCode" parameterType="hashmap" resultType="_int">
+ 		SELECT
+ 			   A.SPRINT_CODE
+ 		  FROM TBL_SPRINT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.SPRINT_PROGRESS = '진행중'
+ 	</select>
+ 	
+ 	<update id="updateSprintProgress2">
+ 		UPDATE
+ 			   TBL_SPRINT A
+ 		   SET A.SPRINT_PROGRESS = '완료'
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 	</update>
+ 	
+ 	<insert id="insertSprintProgressHistory4" parameterType="hashmap">
+ 		INSERT
+ 		  INTO TBL_SPRINT_PROGRESS_HISTORY A
+ 		(
+ 		  A.SPRINT_PROGRESS_HISTORY_NO
+ 		, A.SPRINT_PROGRESS
+ 		, A.SPRINT_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_START_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_END_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, '완료'
+ 		, SYSDATE
+ 		, (SELECT
+ 				  B.SPRINT_START_DATE
+ 			 FROM TBL_SPRINT B
+ 			WHERE B.SPRINT_CODE = #{ sprintCode })
+ 		, (SELECT
+ 				  C.SPRINT_END_DATE
+ 			 FROM TBL_SPRINT C
+ 			WHERE C.SPRINT_CODE = #{ sprintCode })
+ 		, (SELECT
+ 				  D.MEMBER_NAME
+ 			 FROM TBL_MEMBER D
+ 			WHERE D.MEMBER_NO = #{ memberNo })
+ 		, #{ sprintCode }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertRetrospective">
+ 		INSERT
+ 		  INTO TBL_RETROSPECTIVE A
+ 		(
+ 		  A.RETROSPECT_CODE
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_RETROSPECT_CODE.NEXTVAL
+ 		, #{ sprintCode }
+ 		)  
  	</insert>
  </mapper>
