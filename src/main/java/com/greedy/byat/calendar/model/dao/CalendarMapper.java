@@ -24,5 +24,7 @@ public interface CalendarMapper {
 
 	List<ScheduleDTO> selectCalendarListByMemberOne(int memberNo);
 
+	int insertSchedule(Map<String, Object> map);
+
 
 }

@@ -1,5 +1,6 @@
 package com.greedy.byat.calendar.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,17 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.greedy.byat.calendar.model.dto.ScheduleDTO;
 import com.greedy.byat.calendar.model.service.CalendarService;
-import com.greedy.byat.member.model.dto.MemberDTO;
+
+import net.sf.json.JSONArray;
 
 /* 
 * <pre>
@@ -45,50 +44,119 @@ public class CalendarController {
 		this.calendarService = calendarService;
 	}
 	
-	@GetMapping("list")
-	public String selectCalendarList(Model model, HttpServletRequest request) {
+	
+	@RequestMapping("/list")
+	public String calendar() {
 		
-		
-		MemberDTO loginMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
-		
-		System.out.println("오긴 오냐?");
-		System.out.println("memberNo : " + loginMember);
-		
-		List<ScheduleDTO> calendarList = calendarService.selectCalendarList(loginMember); 
-
-		model.addAttribute("calendarList", calendarList);
-		
-		System.out.println("calendarList : "+ calendarList);
-		
-		return "/calendar/calendar";
+		return "/calendar/testtest";
 	}
 	
-	@PostMapping("regist")
-	public String registSchedule(HttpServletRequest request, RedirectAttributes rttr, @ModelAttribute ScheduleDTO schedule) {
-			
-		int memberNo = Integer.parseInt(request.getParameter("memberNo"));
-		int permitCode = Integer.parseInt(request.getParameter("permitCode"));
-		String memberName = request.getParameter("memberName");
+//	@GetMapping(value="/list", produces="application/json; charset=UTF-8")
+//	@ResponseBody
+//	public String selectCalendarList(Model model, HttpServletRequest request) {
+//		
+//		MemberDTO loginMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+//
+//		Gson gson = new GsonBuilder()
+//				.setDateFormat("yyyy-MM-dd")
+//				.setPrettyPrinting()
+//				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+//				.serializeNulls()
+//				.disableHtmlEscaping()
+//				.create();
+//		
+//		
+//		List<ScheduleDTO> response = calendarService.selectCalendarList(loginMember);
+//		
+//		return  gson.toJson(response);
+//	}
+	
+	
+//	@GetMapping("/list")
+//	@ResponseBody
+//	public Map<String, Object> selectCalendarList(Model model, HttpServletRequest request) {
+//		
+//		MemberDTO loginMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+//		
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		List<ScheduleDTO> plan = calendarService.selectCalendarList(loginMember);
+//		map.put("reponse", plan);
+//		
+//		System.out.println("나오냐 맵: " + map);
+//		System.out.println("나오냐 리스트: " + plan);
+//		
+//		return map;
+//	}
+	
+	
+//	@GetMapping("list")
+//	@ResponseBody
+//	public List<ScheduleDTO> selectCalendarList(Model model, HttpServletRequest request) {
+//		
+//		
+//		MemberDTO loginMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+//		
+//		System.out.println("오긴 오냐?");
+//		System.out.println("memberNo : " + loginMember);
+//		
+//		List<ScheduleDTO> calendarList = calendarService.selectCalendarList(loginMember); 
+//		
+//		System.out.println("calendarList : "+ calendarList);
+//		
+//		return calendarList;
+//	}
+	
+	@PostMapping(value="regist", produces="application/json; charset=UTF-8")
+	public  String registSchedule(HttpServletRequest request, RedirectAttributes rttr, @ModelAttribute ScheduleDTO schedule) {
 		
-		Map<String, Object> map = new HashMap<>();
-		map.put("memberNo", memberNo);
-		map.put("memberName", memberName);
-		map.put("permitCode", permitCode);
-		map.put("title", schedule.getTitle());
-		map.put("startDate", schedule.getStartDate());
-		map.put("endDate", schedule.getEndDate());
-		map.put("body", schedule.getBody());
+		System.out.println("여긴오냐?");
 		
-		int result = calendarService.registSchedule(map, memberNo, memberName, permitCode);
-
+		String allData = request.getParameter("alldata"); //json으로 받았으니까 그거를 
+		
+		List<Map<String, Object>> calendarList = new ArrayList<>();
+		List<ScheduleDTO> calednarListByDTO = null;
+		
+		calendarList = JSONArray.fromObject(allData);
+		
+		System.out.println("캘린더 리스트를  : " + calendarList);
+		
+		int result = calendarService.registSchedule(calendarList);
+		
 		if(result > 0) {
-			rttr.addFlashAttribute("message", "일정 등록 완료!");
+			rttr.addFlashAttribute("message", "일정 등록 성공!");
 		} else {
-			rttr.addFlashAttribute("message", "일정 등록 실패! 다시 시도해 주세요!");
+			rttr.addFlashAttribute("message", "일정 등록 실패! 다시 시도해주세요!");
 		}
 		
 		return "redirect:/calendar/list";
 	}
+
+	//	@PostMapping("regist")
+//	public String registSchedule(HttpServletRequest request, RedirectAttributes rttr, @ModelAttribute ScheduleDTO schedule) {
+//		
+//		int memberNo = Integer.parseInt(request.getParameter("memberNo"));
+//		int permitCode = Integer.parseInt(request.getParameter("permitCode"));
+//		String memberName = request.getParameter("memberName");
+//		
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("memberNo", memberNo);
+//		map.put("memberName", memberName);
+//		map.put("permitCode", permitCode);
+//		map.put("title", schedule.getTitle());
+//		map.put("startDate", schedule.getStartDate());
+//		map.put("endDate", schedule.getEndDate());
+//		map.put("body", schedule.getBody());
+//		
+//		int result = calendarService.registSchedule(map, memberNo, memberName, permitCode);
+//		
+//		if(result > 0) {
+//			rttr.addFlashAttribute("message", "일정 등록 완료!");
+//		} else {
+//			rttr.addFlashAttribute("message", "일정 등록 실패! 다시 시도해 주세요!");
+//		}
+//		
+//		return "redirect:/calendar/list";
+//	}
 	
 	
 }

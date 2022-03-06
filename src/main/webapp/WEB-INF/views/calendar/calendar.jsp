@@ -437,59 +437,6 @@ form {
 		 
 		 
 	       
-         /*달력 출력*/
-      var endDates = [];
-      var startDates = [];
-      var titles = [];
-      var resultList = [];
-
-         
-      var gavedEndDates = document.querySelectorAll("#gavedEndDate"); // 0, 1, 2, 3 드가있을거잖아? 
-      var gavedStartDates = document.querySelectorAll("#gavedStartDate"); // 0, 1, 2, 3 드가있을거잖아? 
-      var gavedTitles = document.querySelectorAll("#gavedTitle"); // 0, 1, 2, 3 드가있을거잖아? 
-      console.log(gavedEndDates);
-      console.log(gavedStartDates);
-      console.log(gavedTitles);
-      
-         for(let i = 0; i < gavedEndDates.length; i++) {
-         //반복해서 enddate 여러개 드가있을 거잖슴? 그걸 각 그기에 춝력
-         var endDates = gavedEndDates[i].value; 
-         var startDates = gavedStartDates[i].value; 
-         var titles = gavedTitles[i].value;
-         dateList(startDates, endDates);
-          
-         console.log("끝나는날 : "  + endDates);
-         console.log(" 시작하는 날 : " + startDates);
-         console.log("타이틀들 : " + titles);
-         console.log("");
-         
-      }   
-
-         // [이벤트 함수 호출]
-
-      /* [이벤트 함수 정의] */       
-      function dateList(startDate, EndDate){
-         // 두 날짜 차이 계산 실시
-         const date1 = new Date(startDate);
-         const date2 = new Date(EndDate);
-         const elapsedMSec = date2.getTime() - date1.getTime();
-         const elapsedDay = elapsedMSec / 1000 / 60 / 60 / 24;
-         var dateTerm = Number(elapsedDay) + 1;
-         var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);   
-         var result = [];   
-         var curDate = new Date(startDate);
-
-         
-         while(curDate <= new Date(EndDate)) {
-            var date = curDate.toISOString().split("T")[0];             
-            result.push(date);
-            curDate.setDate(curDate.getDate() + 1);
-         }   
-
-
-         resultList.push(result);
-         
-      };
      
       
       
@@ -518,29 +465,85 @@ form {
           } 
          
       }
-      } */
+      }      
+         /*달력 출력*/
+      var endDates = [];
+      var startDates = [];
+      var titles = [];
+      var resultList = [];
+      
+
+         
+      var gavedEndDates = document.querySelectorAll("#gavedEndDate"); // 0, 1, 2, 3 드가있을거잖아? 
+      var gavedStartDates = document.querySelectorAll("#gavedStartDate"); // 0, 1, 2, 3 드가있을거잖아? 
+      var gavedTitles = document.querySelectorAll("#gavedTitle"); // 0, 1, 2, 3 드가있을거잖아? 
+      var test = new Array(gavedEndDates.length);
+      
+      console.log(gavedEndDates);
+      console.log(gavedStartDates);
+      console.log(gavedTitles);
+      
+         for(let i = 0; i < gavedEndDates.length; i++) { 
+         //반복해서 enddate 여러개 드가있을 거잖슴? 그걸 각 그기에 춝력
+         var endDates = gavedEndDates[i].value; 
+         var startDates = gavedStartDates[i].value; 
+         titles = gavedTitles[i].value;
+         dateList(startDates, endDates);
+
+         for(let j = 0; j < resultList[i].length; j++) { // 0 , 1, 2, 3 
+         
+		        test[i] = new Array(resultList[i].length); //4개 길이의 arrayList; test가 되겟군
+				
+		        test[i][j] = resultList[i][j];
+
+			    console.log("test[i][j] : " + test[i][j]);
+		        
+			 }   
+         
+      }   
+
+		
+         // [이벤트 함수 호출]
+
+      /* [이벤트 함수 정의] */       
+      function dateList(startDate, EndDate){
+         // 두 날짜 차이 계산 실시
+         const date1 = new Date(startDate);
+         const date2 = new Date(EndDate);
+         const elapsedMSec = date2.getTime() - date1.getTime();
+         const elapsedDay = elapsedMSec / 1000 / 60 / 60 / 24;
+         var dateTerm = Number(elapsedDay) + 1;
+         var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);   
+         var result = [];   
+         var curDate = new Date(startDate);
+
+         
+         while(curDate <= new Date(EndDate)) {
+            var date = curDate.toISOString().split("T")[0];             
+            result.push(date);
+            curDate.setDate(curDate.getDate() + 1);
+         }   
+
+         resultList.push(result); //4개가 들어감 
+         
+      };
+
+      
+   
       
       
-   for (i=1; i<=lastDate.getDate(); i++) { 
-      
-      for(let i = 0; i < resultList.length; i++) {
-          //반복해서 enddate 여러개 드가있을 거잖슴? 그걸 각 그기에 춝력
-           
-        console.log("ㅇㅇ : " + resultList[i]);
-          
-       }   
-      //1일부터 마지막 일까지 돌림
+   for (i = 1; i <= lastDate.getDate(); i++) {  
+	   
       cell = row.insertCell();//열 한칸한칸 계속 만들어주는 역할
-      cell.innerHTML = "<p class='onlyDate'>" + i + "<div>" + titles[i] + "</div>" + "<div>&nbsp;</div>";//셀을 1부터 마지막 day까지 HTML 문법에 넣어줌
+      cell.innerHTML = "<p class='onlyDate'>" + i + "<div>가나다라</div>" + "<div>&nbsp;</div>";//셀을 1부터 마지막 day까지 HTML 문법에 넣어줌
       cnt = cnt + 1;//열의 갯수를 계속 다음으로 위치하게 해주는 역할
-             
-         if (cnt % 7 == 1) {/*일요일 계산*/
+      if (cnt % 7 == 1) {/*일요일 계산*/
              //1주일이 7일 이므로 일요일 구하기
              //월화수목금토일을 7로 나눴을때 나머지가 1이면 cnt가 1번째에 위치함을 의미한다
            cell.innerHTML = "<p style='text-align:right'>" + "<font color=#F79DC2>" + i + "<div>&nbsp;</div>" + "<div>&nbsp;</div>";
            //1번째의 cell에만 색칠
        }    
-         if (cnt%7 == 0){/* 1주일이 7일 이므로 토요일 구하기*/
+       if (cnt%7 == 0){/* 1주일이 7일 이므로 토요일 구하기*/
              //월화수목금토일을 7로 나눴을때 나머지가 0이면 cnt가 7번째에 위치함을 의미한다
              cell.innerHTML = "<p style='text-align:right'>" + "<font color=skyblue>" + i +  "<div>&nbsp;</div>" + "<div>&nbsp;</div>";
              //7번째의 cell에만 색칠
@@ -550,13 +553,73 @@ form {
          
          
          /*오늘의 날짜에 노란색 칠하기*/
-         if (today.getFullYear() == date.getFullYear()
+       if (today.getFullYear() == date.getFullYear()
             && today.getMonth() == date.getMonth()
             && i == date.getDate()) {
              //달력에 있는 년,달과 내 컴퓨터의 로컬 년,달이 같고, 일이 오늘의 일과 같으면
            cell.bgColor = "#FAF58C";//셀의 배경색을 노랑으로 
           }
       }
+   
+   
+/*    
+   for(k = 0; resultList.length; k++) {
+	   
+	   
+	   for(j = 0; resultList[k].length; j++) {
+		   resultList[k][j] = new Date(resultList[k][j]);
+		   
+	   }
+
+   } */
+   
+   
+   for (i = 1; i <= lastDate.getDate(); i++) {  
+	   for(k = 0; resultList.length; k++) {
+		   for(j = 0; resultList[k].length; j++) {
+				if(resultList[k][j].getFullYear() == date.getFullYear()
+					&& resultList[k][j].getMonth() == date.getMonth()
+					&& resultList[k][j].getDate() == date.getDate()) {
+						cell = row.insertCell();
+						cell.innerHTML = "<p class='onlyDate'>" + i + "<div>" + titles[k] + "</div>" + "<div>&nbsp;</div>";
+				
+				}			   
+			   
+		   }
+	   }
+	   
+	   
+      cell = row.insertCell();//열 한칸한칸 계속 만들어주는 역할
+      cell.innerHTML = "<p class='onlyDate'>" + i + "<div>" + titles[i] + "</div>" + "<div>&nbsp;</div>";//셀을 1부터 마지막 day까지 HTML 문법에 넣어줌
+      cnt = cnt + 1;//열의 갯수를 계속 다음으로 위치하게 해주는 역할
+      if (cnt % 7 == 1) {/*일요일 계산*/
+             //1주일이 7일 이므로 일요일 구하기
+             //월화수목금토일을 7로 나눴을때 나머지가 1이면 cnt가 1번째에 위치함을 의미한다
+           cell.innerHTML = "<p style='text-align:right'>" + "<font color=#F79DC2>" + i + "<div>&nbsp;</div>" + "<div>&nbsp;</div>";
+           //1번째의 cell에만 색칠
+       }    
+       if (cnt%7 == 0){/* 1주일이 7일 이므로 토요일 구하기*/
+             //월화수목금토일을 7로 나눴을때 나머지가 0이면 cnt가 7번째에 위치함을 의미한다
+             cell.innerHTML = "<p style='text-align:right'>" + "<font color=skyblue>" + i +  "<div>&nbsp;</div>" + "<div>&nbsp;</div>";
+             //7번째의 cell에만 색칠
+              row = calendar.insertRow();
+              //토요일 다음에 올 셀을 추가
+         }
+         
+         
+         /*오늘의 날짜에 노란색 칠하기*/
+       if (today.getFullYear() == date.getFullYear()
+            && today.getMonth() == date.getMonth()
+            && i == date.getDate()) {
+             //달력에 있는 년,달과 내 컴퓨터의 로컬 년,달이 같고, 일이 오늘의 일과 같으면
+           cell.bgColor = "#FAF58C";//셀의 배경색을 노랑으로 
+          }
+      }
+   
+   
+   
+   
+   
    
   }
    
