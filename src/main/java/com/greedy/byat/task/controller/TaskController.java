@@ -218,7 +218,8 @@ public class TaskController {
 	}
 	
 	@GetMapping("/check")
-	public String selectTaskList(HttpServletRequest request) {
+	@ResponseBody
+	public String checkTasksContent(HttpServletRequest request) {
 		
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		
@@ -230,8 +231,8 @@ public class TaskController {
 				.disableHtmlEscaping()
 				.create();
 		
-		List<TaskDTO> taskList = taskService.selectTaskList(projectCode);
+		boolean result = taskService.checkTasksContent(projectCode);
 		
-		return gson.toJson(taskList);
+		return gson.toJson(result);
 	}
 }

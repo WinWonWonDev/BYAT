@@ -1,10 +1,13 @@
 package com.greedy.byat.sprint.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -159,10 +162,34 @@ public class SprintController {
 	public String startSprint(HttpServletRequest request, RedirectAttributes rttr) {
 		
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
 		
-		sprintService.startSprint(projectCode);
+		Map<String, Integer> map = new HashMap<>();
+		map.put("projectCode", projectCode);
+		map.put("memberNo", memberNo);
 		
-		rttr.addFlashAttribute("message", "스프린트가 시작되었습니다.");
+		String message = sprintService.startSprint(map);
+		
+		rttr.addFlashAttribute("message", message);
+		
+		return "redirect:/sprint/list?code=" + projectCode;
+	}
+	
+	@GetMapping("/end")
+	public String endSprint(HttpServletRequest request, RedirectAttributes rttr) {
+		
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
+		
+		Map<String, Integer> map = new HashMap<>();
+		map.put("projectCode", projectCode);
+		map.put("memberNo", memberNo);
+		
+		String message = sprintService.endSprint(map);
+		
+		System.out.println(message);
+		
+		rttr.addFlashAttribute("message", message);
 		
 		return "redirect:/sprint/list?code=" + projectCode;
 	}

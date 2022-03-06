@@ -430,7 +430,7 @@
 		 WHERE A.TASK_CODE = #{ taskCode }
 	</select>
 	
-	<insert id="insertTaskVersionHistory3" parameterType="hashmap">
+	<insert id="insertTaskVersionHistory3" parameterType="TaskDTO">
 		INSERT
 		  INTO TBL_TASK_VERSION_HISTORY A
 		(

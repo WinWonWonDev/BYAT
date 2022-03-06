@@ -27,6 +27,6 @@ public interface TaskService {
 
 	String removeTaskMembers(Map<String, Integer> map);
 
-	List<TaskDTO> selectTaskList(int projectCode);
+	boolean checkTasksContent(int projectCode);
 
 }
