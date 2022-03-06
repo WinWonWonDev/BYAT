@@ -89,7 +89,7 @@
  		   AND A.SCHEDULE_DELETE_STATUS = 'N'
  	</select>
  
- 	<insert id="insertScheduleByMember">
+<!--  	<insert id="insertScheduleByMember">
  		INSERT
  		  INTO TBL_CALENDAR_SCHEDULE A 
  		(
@@ -143,7 +143,7 @@
  		, 3
  		, 0
  		)
- 	</insert>
+ 	</insert> -->
  	
  	<select id="selectCalendarListByAdmin" resultMap="scheduleResultMap">
  		SELECT
@@ -159,6 +159,103 @@
 	 	WHERE A.MEMBER_NO = #{ memberNo } 
 	 	  AND A.SCHEDULE_DELETE_STATUS = 'N'
  	</select>
+ 	
+ 	<insert id="insertScheduleByMember">
+ 		INSERT
+ 		  INTO TBL_CALENDAR_SCHEDULE A 
+ 		(
+ 		  A.SCHEDULE_CODE 
+ 		, A.SCHEDULE_TITLE
+ 		, A.SCHEDULE_START_DATE
+ 		, A.SCHEDULE_END_DATE
+ 		, A.CALENDAR_SCHEDULE_TYPE_CODE 
+ 		, A.MEMBER_NO 
+ 		, A.SCHEDULE_WRITER 
+ 		)
+ 		VALUES
+ 		(
+ 		 SEQ_SCHEDULE_CODE.NEXTVAL
+ 		, #{ title }
+ 		, (SELECT TO_DATE(#{ startDate } ,'YYYY-MM-DD') FROM DUAL)
+ 		, (SELECT TO_DATE(#{ endDate } ,'YYYY-MM-DD') FROM DUAL)
+ 		, 2
+ 		, #{ memberNo } 
+ 		, #{ memberName }
+ 		)
+<!--  		 		INSERT
+ 		  INTO TBL_CALENDAR_SCHEDULE A 
+ 		(
+ 		  A.SCHEDULE_CODE 
+ 		, A.SCHEDULE_TITLE
+ 		, A.SCHEDULE_START_DATE
+ 		, A.SCHEDULE_END_DATE
+ 		, A.CALENDAR_SCHEDULE_TYPE_CODE 
+ 		, A.MEMBER_NO 
+ 		, A.SCHEDULE_WRITER 
+ 		)
+ 		VALUES
+ 		(
+ 		 SEQ_SCHEDULE_CODE.NEXTVAL
+ 		, '제발좀되라'
+ 		, (SELECT TO_DATE('2022-03-01' ,'YYYY-MM-DD') FROM DUAL)
+ 		, (SELECT TO_DATE( '2022-03-05' ,'YYYY-MM-DD') FROM DUAL)
+ 		, 2
+ 		, 14
+ 		, '이소현'
+ 		); -->
+ 		
+ 		
+ 	</insert>
+
+
+ 	<insert id="insertScheduleByAdmin">
+ 		INSERT
+ 		  INTO TBL_CALENDAR_SCHEDULE A 
+ 		(
+ 		  A.SCHEDULE_CODE 
+ 		, A.SCHEDULE_TITLE
+ 		, A.SCHEDULE_START_DATE
+ 		, A.SCHEDULE_END_DATE
+ 		, A.CALENDAR_SCHEDULE_TYPE_CODE 
+ 		, A.MEMBER_NO 
+ 		, A.SCHEDULE_WRITER 
+ 		)
+ 		VALUES
+ 		(
+ 		 SEQ_SCHEDULE_CODE.NEXTVAL
+ 		, #{ title }
+ 		, (SELECT TO_DATE(#{ startDate } ,'YYYY-MM-DD') FROM DUAL)
+ 		, (SELECT TO_DATE(#{ endDate } ,'YYYY-MM-DD') FROM DUAL)
+ 		, 3
+ 		, #{ memberNo }
+ 		, #{ memberName }
+ 		)
+ 		
+ 		
+<!--  		 		INSERT
+ 		  INTO TBL_CALENDAR_SCHEDULE A 
+ 		(
+ 		  A.SCHEDULE_CODE 
+ 		, A.SCHEDULE_TITLE
+ 		, A.SCHEDULE_START_DATE
+ 		, A.SCHEDULE_END_DATE
+ 		, A.CALENDAR_SCHEDULE_TYPE_CODE 
+ 		, A.MEMBER_NO 
+ 		, A.SCHEDULE_WRITER 
+ 		)
+ 		VALUES
+ 		(
+ 		 SEQ_SCHEDULE_CODE.NEXTVAL
+ 		, '제발좀되라'
+ 		, (SELECT TO_DATE('2022-03-01' ,'YYYY-MM-DD') FROM DUAL)
+ 		, (SELECT TO_DATE( '2022-03-05' ,'YYYY-MM-DD') FROM DUAL)
+ 		, 2
+ 		, 14
+ 		, '이소현'
+ 		); -->
+ 		
+ 		
+ 	</insert>
  	
  	
  	

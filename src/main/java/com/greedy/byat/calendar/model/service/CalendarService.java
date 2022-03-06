@@ -1,6 +1,7 @@
 package com.greedy.byat.calendar.model.service;
 
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,6 @@ public interface CalendarService {
 
 	List<ScheduleDTO> selectCalendarList(MemberDTO loginMember);
 
-	int registSchedule(List<Map<String, Object>> calendarList);
+	int registSchedule(List<Map<String, Object>> calendarList, MemberDTO loginMember) throws ParseException;
 
 }

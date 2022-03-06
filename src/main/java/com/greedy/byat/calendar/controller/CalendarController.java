@@ -1,7 +1,7 @@
 package com.greedy.byat.calendar.controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.greedy.byat.calendar.model.dto.ScheduleDTO;
 import com.greedy.byat.calendar.model.service.CalendarService;
+import com.greedy.byat.member.model.dto.MemberDTO;
 
 import net.sf.json.JSONArray;
 
@@ -107,28 +109,33 @@ public class CalendarController {
 //	}
 	
 	@PostMapping(value="regist", produces="application/json; charset=UTF-8")
-	public  String registSchedule(HttpServletRequest request, RedirectAttributes rttr, @ModelAttribute ScheduleDTO schedule) {
-		
-		System.out.println("여긴오냐?");
+	@ResponseBody
+	public int registSchedule(HttpServletRequest request, RedirectAttributes rttr, @ModelAttribute ScheduleDTO schedule, MemberDTO member) throws ParseException {
 		
 		String allData = request.getParameter("alldata"); //json으로 받았으니까 그거를 
+		
+		MemberDTO loginMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+		System.out.println("ㄴ옴?" + loginMember);
+		
 		
 		List<Map<String, Object>> calendarList = new ArrayList<>();
 		List<ScheduleDTO> calednarListByDTO = null;
 		
 		calendarList = JSONArray.fromObject(allData);
 		
-		System.out.println("캘린더 리스트를  : " + calendarList);
+		int result = calendarService.registSchedule(calendarList, loginMember);
 		
-		int result = calendarService.registSchedule(calendarList);
+		System.out.println("result: " + result); //저장되씅면 result에 1 , 저장안됬으면 result 2
+		
 		
 		if(result > 0) {
 			rttr.addFlashAttribute("message", "일정 등록 성공!");
+			return 1;
 		} else {
 			rttr.addFlashAttribute("message", "일정 등록 실패! 다시 시도해주세요!");
+			return 0;
 		}
 		
-		return "redirect:/calendar/list";
 	}
 
 	//	@PostMapping("regist")

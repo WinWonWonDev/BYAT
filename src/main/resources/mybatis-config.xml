@@ -29,6 +29,8 @@
   		<typeAlias alias="MeetinglogDTO" type="com.greedy.byat.meetinglog.model.dto.MeetinglogDTO"/>
   		<typeAlias alias="AttachmentDTO" type="com.greedy.byat.profile.model.dto.AttachmentDTO"/>
 		<typeAlias alias="NoticeSettingDTO" type="com.greedy.byat.notice.model.dto.NoticeSettingDTO"/>
+		<typeAlias alias="RetrospectDTO" type="com.greedy.byat.retrospect.model.dto.RetrospectDTO"/>
+        <typeAlias alias="RetrospectCommentDTO" type="com.greedy.byat.retrospect.model.dto.RetrospectCommentDTO"/>
   </typeAliases>
   
   </configuration>

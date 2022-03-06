@@ -1,6 +1,8 @@
 package com.greedy.byat.calendar.model.service;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,29 +85,72 @@ public class CalendarServiceImpl implements CalendarService {
 	}
 
 	@Override
-	public int registSchedule(List<Map<String, Object>> calendarList) {
+	public int registSchedule(List<Map<String, Object>> calendarList, MemberDTO loginMember) throws ParseException {
 		
-//		List<ScheduleDTO> scheduleInfo = null;
-
+		System.out.println("서비스 impt 옴?");
+		
 		int result = 0;
 		
-		// string형으로 들어가니까 각자 
-		for(Map<String, Object> calendarListInfo : calendarList) { 
-			// 들어온 일정만큼 돌려서
-			Date calendarStartDate = (Date)calendarListInfo.get("startDate");
-			Date calendarEndDate = (Date)calendarListInfo.get("endDate");
-			System.out.println("start가 date형식으로 됨? : " + calendarStartDate);
-			System.out.println("end가 date형식으로 됨? : " + calendarEndDate);
-			String title = (String)calendarListInfo.get("title");
+		if(loginMember.getPermitCode() == 1) {
 			
-			Map<String, Object> map = new HashMap<>();
-			map.put("title", title);
-			map.put("startDate", calendarStartDate);
-			map.put("endDate", calendarEndDate);
+			// string형으로 들어가니까 각자 
+			for(Map<String, Object> calendarListInfo : calendarList) { 
+				String calendarStartDate = (String) calendarListInfo.get("startDate"); 
+				String calendarEndDate = (String) calendarListInfo.get("endDate");
+				String calendarTitle = (String) calendarListInfo.get("title");
+				
+				
+				Map<String, Object> map = new HashMap<>();
+				map.put("title", calendarTitle);
+				map.put("startDate", calendarStartDate);
+				map.put("endDate", calendarEndDate);
+				map.put("memberNo", loginMember.getNo());
+				map.put("memberName", loginMember.getName());
+				
+				result = mapper.insertScheduleByAdmin(map);
+				
+			}
 			
-			result = mapper.insertSchedule(map);
+		} else if(loginMember.getPermitCode() == 3 || loginMember.getPermitCode() == 2) {
 			
+			System.out.println("금 여기 들어와야되잔항?");
+			// string형으로 들어가니까 각자 
+			for(Map<String, Object> calendarListInfo : calendarList) { 
+				
+				String calendarStartDate = (String) calendarListInfo.get("startDate"); 
+				String calendarEndDate = (String) calendarListInfo.get("endDate");
+				String calendarTitle = (String) calendarListInfo.get("title");
+
+				System.out.println("calendarStartDate : " + calendarStartDate);
+				System.out.println("calendarEndDate : " + calendarEndDate);
+
+//				System.out.println(calendarStartDate.split("T")[calendarListCnt].toString()); //이렇게 하면 나온단 말이지? 
+				
+				String realCalendarStartDate = calendarStartDate.split("T")[0].toString();
+				String realCalendarEndDate = calendarEndDate.split("T")[0].toString();
+				
+				System.out.println("startDate : " + realCalendarStartDate);
+				System.out.println("EndDate : " + realCalendarEndDate);
+				
+				
+				
+				Map<String, Object> map = new HashMap<>();
+				map.put("title", calendarTitle);
+				map.put("startDate", realCalendarStartDate);
+				map.put("endDate", realCalendarEndDate);
+				map.put("memberNo", loginMember.getNo());
+				map.put("memberName", loginMember.getName());
+				
+				System.out.println("map: " + map);
+				
+				result = mapper.insertScheduleByMember(map);
+				
+				System.out.println("됫으면 나와라! : " + result);
+				
+			}
 		}
+		
+		
 			
 		if(result > 0) {
 			return 1;

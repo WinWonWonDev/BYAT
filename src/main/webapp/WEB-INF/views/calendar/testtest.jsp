@@ -13,6 +13,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	
+	console.log("ㅇ? : " + document.getElementById("memberNo"));
 	var calendar = null;
 
 	$(document).ready(function() {
@@ -77,6 +78,8 @@
 			obj.startDate = allEvent[i]._instance.range.start //시작시간
 			obj.endDate = allEvent[i]._instance.range.end //종료시간
 			
+			  //var date = curDate.toISOString().split("T")[0];        
+			
 			events.push(obj);
 		}
 	
@@ -90,13 +93,15 @@
 		$.ajax({
 			url: "regist",
 			type: "post",
-			data: {"alldata": jsondata},
+			data: {"alldata":jsondata},
 			dataType: "text",
-			async: false //동기식으로 넘기기! 
+			async: false, //동기식으로 넘기기! 
 		})
-		.done(function(result) {
-			alert("일정 등록 완료!");
-		})
+		.done(function(data) {
+			alert("일정 등록 성공!");
+			console.log("data:  " + data);
+			console.log("음?done은 옴");
+		}) //인제 저장을 했으니까 그 ...
 		.fail(function(request, status, error) {
 			alert("에러발생! : " + error);
 		});
@@ -116,18 +121,51 @@
 #saveButton {
 	text-align: center;
 	position:absolute;
-	top:27%;
+	top:100%;
 	background-color:rgb(25,25,112);
 	color:white;
 	cursor:pointer;
 }
 
+#external-events {
+	float:right; 
+	width:15%; 
+	padding-right:30px; 
+	padding-left:20px; 
+	margin-top:30px;
+	position:absolute;
+	left:81%;
+	top:10%;
+
+}
+
+#calendarDiv {
+	float:right; 
+	width:80%;  
+	margin-top:30px;
+	position:absolute;
+	left:1%;
+	top:6%;
+	z-index:-1;
+
+}
+
+
 </style>
+<script>
+	const message = '${ requestScope.message }';
+	if (message != null && message != '') {
+		alert(message);
+	}
+</script>
 </head>
 <body>
+	<input type="hidden" name="memberNo" id="memberNo" value="${ sessionScope.loginMember.no }">
+	<input type="hidden" name="memberName" id="memberName" value="${ sessionScope.loginMember.name }">
+	<input type="hidden" name="permitCode" id="permitCode" value="${ sessionScope.loginMember.permitCode }">
 
 
-	<div id='external-events' style="float:right; width:15%; padding-right:30px; padding-left:20px; margin-top:30px;"  >
+	<div id='external-events'>
 		<p>
 			<strong>드래그하여 일정을 추가해주세요</strong>
 		</p>
@@ -142,7 +180,7 @@
 		</p>
 	</div>
 
-	<div style="float:right; width:80%;  margin-top:30px;">
+	<div id="calendarDiv">
 		<div id='calendar'></div>
 	</div>
 
