@@ -1,8 +1,10 @@
 package com.greedy.byat.profile.model.service;
 
-import com.greedy.byat.profile.model.dto.ProfileDTO;
+import com.greedy.byat.member.model.dto.MemberDTO;
 
 public interface ProfileService {
 	
-	void modifyProfile(ProfileDTO profile);
+	String modifyProfile(MemberDTO member);
+
+	void modifyPassword(MemberDTO member);
 }

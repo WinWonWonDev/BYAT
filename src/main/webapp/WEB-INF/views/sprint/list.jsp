@@ -800,7 +800,7 @@
 						<input type="hidden" name="code"  id="backlogCode" value="${ backlog.code }">
 						<div class="backlog-status" id="backlog-status">${ backlog.progress }</div>
 						<input type="button" class="backlog-update-modal-open" id="backlog-update-open-btn" value="조회  / 수정">
-						<input type="button" class="backlog-delete-modal-open" id="backlog-delete-open-btn" value="삭제">
+						<button type="button" class="backlog-delete-modal-open" id="backlog-delete-open-btn" onclick="location.href='${ pageContext.servletContext.contextPath }/backlog/remove?projectCode=${ requestScope.code }&code=${ backlog.code }'">삭제</button>
 					</div>
 				</c:forEach>
 
@@ -870,14 +870,15 @@
 					<h3>백로그 수정</h3>
 		    	</div>
        			<div class="modal_content-box">
-       				<input type="text" class="title" name="backlogTitle" placeholder="BacklogTitle">
+       				<input type="hidden" id="backlogCode2" name="code">
+       				<input type="text" class="title" name="title" id="backlogTitle" placeholder="BacklogTitle">
        				<input type="hidden" id="projectCode" name="projectCode" value="${ requestScope.code }">
 
        				<br clear="both">
-       				<textarea class="description" id="backlogDescription" rows="13" cols="51" placeholder="BackLog Detail Description"></textarea>
+       				<textarea class="description" name="body" id="backlogDescription2" rows="13" cols="51" placeholder="BackLog Detail Description"></textarea>
        			</div>
        			<div class="modal_button">
-	        		<button type="button" id="backlog-update">Ok</button>
+	        		<button type="submit" id="backlog-update">Ok</button>
 	        		<button type="button" id="backlog-close-btn2">Cancel</button>
        			</div>
    			</form>
@@ -1086,59 +1087,19 @@
 	
 	/* 스프린트 시작 */
 	document.getElementById("sprint-start").onclick = function() {
-		
-		if(document.getElementById("projectProgress").value == "완료") {
-			
-			alert("완료된 프로젝트입니다.");
-		} else if (document.getElementById("projectProgress").value == "미진행") {
-			
-			alert("해당 프로젝트가 진행중이 아닙니다.");
-		} else {
-			
-			let result = 0;
-			
-			const $projectCode = document.getElementById("sprint-start");
-			
-			console.log($projectCode.value);
-			/* 태스크들중에  미기입된 항목이 있는지 체크 */
-			$.ajax({
-				url: "/byat/task/check",
-				type: "get",
-				data: { "projectCode": $projectCode.value },
-				async : false,
-				success: function(data, status, xhr){
-					console.table(data);
-					
-					for(let i = 0; i < data.size; i++) {
-					
-						console.log(data[i].title);
-						console.log(data[i].startDate);
-						console.log(data[i].endDate);
-						console.log(data[i].body);
-						
-						if(data[i].title == null || data[i].startDate == null || data[i].endDate == null || data[i].body == null) {
-							
-							result = 1;
-						}
-					}
-				},
-				error: function(xhr, status, error){
-					console.log(xhr);
-				}
-			});
-			
-			if(result > 0) {
 
-				alert("아직 작성완료하지못한 태스크가 있습니다.")
-			} else {
-				
-				location.href = "${ pageContext.servletContext.contextPath }/sprint/start?projectCode=" + $projectCode.value;
-			}
-			
-		}
-		
+		const $projectCode = document.getElementById("sprint-start");
+		location.href = "${ pageContext.servletContext.contextPath }/sprint/start?projectCode=" + $projectCode.value;
 	}
 
+	/* 스프린트 종료 */
+	document.getElementById("sprint-end").onclick = function() {
+
+		const $projectCode = document.getElementById("sprint-end");
+
+		location.href = "${ pageContext.servletContext.contextPath }/sprint/end?projectCode=" + $projectCode.value;
+	}
+	
 	
     document.getElementById("backlog-create-open-btn").onclick = function() {
 		
@@ -1559,6 +1520,71 @@
 		location.href = "${ pageContext.servletContext.contextPath }/task/remove?taskCode=" + $taskDeleteBtn.value + "&projectCode=" + $projectCode;
 	}
 	
+	/* 백로그 관련 JS */
+	if(document.querySelectorAll(".backlog-item")) {
+		
+		const $backlogUpdateBtns = document.querySelectorAll("#backlog-update-open-btn");
+		const $backlogCodes = document.querySelectorAll("#backlogCode");
+
+		console.log($backlogCodes);
+		
+		/* 백로그 수정 & 조회 */
+		for(let i = 0; i < $backlogUpdateBtns.length; i++) {
+			
+			$backlogUpdateBtns[i].onclick = function() {
+				
+				document.getElementById("backlog-update-modal").style.display = "block";
+				
+				$.ajax({
+					url: "/byat/backlog/detail",
+					type: "get",
+					data: { "backlogCode": $backlogCodes[i].value, "projectCode":  ${requestScope.code}  },
+					dataType: "json",
+					success: function(data, status, xhr) {
+						
+						console.table(data);
+						
+						const projectCode = $("#projectCode");
+						const backlogTitle = $("#backlogTitle");
+						const backlogBody = $("#backlogDescription2");
+						const backlogCode = $("#backlogCode2");
+						
+						projectCode.val(data.projectCode);
+						backlogTitle.val(data.title);
+						backlogBody.val(data.body);
+						backlogCode.val(data.code);
+					},
+					error: function(xhr, status, error) {
+						console.log(xhr);
+					}
+				});
+			}
+		}
+		
+		const $backlogDeleteBtns = document.querySelectorAll("#backlog-delete-open-btn");
+		console.log($backlogDeleteBtns);
+		
+		for(let i = 0; i < $backlogDeleteBtns.length; i++) {
+			
+			$backlogDeleteBtns[i].onclick = function() {
+				
+				document.getElementById("backlog-delete-modal").style.display = "block";
+				const deleteBtn = $("#backlog-delete");
+				deleteBtn.val($backlogCodes[i].value);
+			};
+		}
+		
+		const $backlogDeleteBtn = document.getElementById("backlog-delete");
+		const $projectCode = $("#projectCode").val();
+		console.log($backlogDeleteBtn);
+		console.log($projectCode);
+		
+		$backlogDeleteBtn.onclick = function() {
+			location.href = "${ pageContext.servletContext.contextPath }/backlog/remove?backlogCode=" + $backlogDeleteBtn.value + "&projectCode=" + $projectCode;
+		}
+		
+		
+	}
 	
 </script>
 </body>

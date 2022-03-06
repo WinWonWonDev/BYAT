@@ -1,11 +1,9 @@
 package com.greedy.byat.backlog.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.greedy.byat.backlog.model.dto.BacklogDTO;
-import com.greedy.byat.common.exception.backlog.BacklogModifyException;
-import com.greedy.byat.common.exception.backlog.BacklogRegistException;
-import com.greedy.byat.common.exception.backlog.BacklogRemoveException;
 
 public interface BacklogService {
 
@@ -18,4 +16,6 @@ public interface BacklogService {
 	String modifyBacklog(BacklogDTO backlog);
 	
 	String removeBacklog(int code);
+	
+	String registBacklogTasklize(HashMap<String, Object> infoMap);
 }

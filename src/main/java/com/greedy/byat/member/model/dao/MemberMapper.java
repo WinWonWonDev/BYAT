@@ -38,5 +38,7 @@ public interface MemberMapper {
 	int updateVerficiationForInit(String inputVerificationNum);
 
 	int initialInputInfo(HashMap<String, Object> map);
+	
+	int updateMemberProfile(MemberDTO member);
 
 }

@@ -1,5 +1,6 @@
 package com.greedy.byat.backlog.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.greedy.byat.backlog.model.dao.BacklogMapper;
 import com.greedy.byat.backlog.model.dto.BacklogDTO;
-import com.greedy.byat.common.exception.backlog.BacklogModifyException;
-import com.greedy.byat.common.exception.backlog.BacklogRegistException;
-import com.greedy.byat.common.exception.backlog.BacklogRemoveException;
 
 @Service
 public class BacklogServiceImpl implements BacklogService {
@@ -51,9 +49,9 @@ public class BacklogServiceImpl implements BacklogService {
 	@Override
 	public BacklogDTO selectBacklogDetail(int code) {
 		
-		BacklogDTO backlogDetail = mapper.selectBacklogDetail(code);
+		BacklogDTO backlog = mapper.selectBacklogDetail(code);
 		
-		return backlogDetail;
+		return backlog;
 	}
 	
 	/* Backlog 수정용 메서드 */
@@ -83,6 +81,21 @@ public class BacklogServiceImpl implements BacklogService {
 			message = "백로그 삭제 실패 ...";
 		} else {
 			message = "백로그 삭제 성공 !!!";
+		}
+		
+		return message;
+	}
+
+	@Override
+	public String registBacklogTasklize(HashMap<String, Object> infoMap) {
+		
+		int result = mapper.insertBacklogTasklize(infoMap);
+		String message = null;
+		
+		if(!(result > 0)) {
+			message = "백로그 태스크화 실패 ...";
+		} else {
+			message = "백로그 태스크화 성공 !!!";
 		}
 		
 		return message;

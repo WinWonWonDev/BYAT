@@ -256,10 +256,10 @@
                <button type="button" id="updatePic">업로드..</button> 
                </div>
             
-            <div class="memberInfo Info1" id="textIdTitle">Id : <input id="textId" type="text" readonly="readonly"></div>
-            <div class="memberInfo Info2" id="textNameTitle">name : <input id="textName" type="text" readonly="readonly"></div>
-            <div class="memberInfo Info3" id="textEmailTitle">email : <input id="textEmail" type="text" readonly="readonly"></div>
-            <div class="memberInfo Info4" id="textPhoneTitle">phone : <input id="textPhone" type="text" readonly="readonly"> </div>
+            <div class="memberInfo Info1" id="textIdTitle">Id : <input id="textId" type="text" readonly="readonly" value="${ sessionScope.loginMember.id }"></div>
+            <div class="memberInfo Info2" id="textNameTitle">name : <input id="textName" type="text" readonly="readonly" value="${ sessionScope.loginMember.name }"></div>
+            <div class="memberInfo Info3" id="textEmailTitle">email : <input id="textEmail" type="text" readonly="readonly" value="${ sessionScope.loginMember.email }"></div>
+            <div class="memberInfo Info4" id="textPhoneTitle">phone : <input id="textPhone" type="text" readonly="readonly" value="${ sessionScope.loginMember.phone }"> </div>
             
    
             <div class="btns" align="center">
@@ -331,6 +331,11 @@
       document.getElementById("updateModalButtons2").style.display = "block";
       document.getElementById("updateModalButtons1").style.display = "block";
       document.getElementById("grayBoard").style.background = "rgba(0, 0, 0, 0.5)";
+      
+      /* 전화번호 hyphen('-') 자동 삽입 */
+      $(document).on("keyup", "#textPhone", function() {
+    	  $(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+      });
    }
    
    document.getElementById("updateCancelButton").onclick = function() {

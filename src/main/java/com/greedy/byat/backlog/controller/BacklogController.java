@@ -8,8 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.greedy.byat.backlog.model.dto.BacklogDTO;
 import com.greedy.byat.backlog.model.service.BacklogService;
 import com.greedy.byat.member.model.dto.MemberDTO;
@@ -63,6 +67,8 @@ public class BacklogController {
 	@PostMapping("/modify")
 	public String modifyBacklog(@ModelAttribute BacklogDTO backlog, HttpServletRequest request, RedirectAttributes rttr) {
 		
+		System.out.println("수정하려는 backlog : " + backlog);
+		
 		String message = backlogService.modifyBacklog(backlog);
 		
 		rttr.addFlashAttribute("message", message);
@@ -73,13 +79,49 @@ public class BacklogController {
 	@GetMapping("/remove")
 	public String removeBacklog(HttpServletRequest request, RedirectAttributes rttr) {
 		
-		int code = Integer.parseInt(request.getParameter("code"));
+		int backlogCode = Integer.parseInt(request.getParameter("backlogCode"));
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		
-		String message = backlogService.removeBacklog(code);
+		System.out.println("backlogCode : " + backlogCode + ", projectCode : " + projectCode);
+		
+		String message = backlogService.removeBacklog(backlogCode);
 		
 		rttr.addFlashAttribute("message", message);
 		
 		return "redirect:/sprint/list?code=" + projectCode;
+	}
+	
+	@GetMapping(value="/detail", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String showBacklogDetail(HttpServletRequest request) {
+		
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		int backlogCode = Integer.parseInt(request.getParameter("backlogCode"));
+		
+		System.out.println("projectCode : " + projectCode);
+		System.out.println("backlogCode : " + backlogCode);
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		BacklogDTO backlog = backlogService.selectBacklogDetail(backlogCode);
+		System.out.println("backlog : " + backlog);
+		
+		return gson.toJson(backlog);
+	}
+	
+	@GetMapping("/tasklize")
+	public String registBacklogTasklize(HttpServletRequest request, RedirectAttributes rttr) {
+		
+		
+		
+		MemberDTO writer = (MemberDTO) request.getSession().getAttribute("loginMember");
+		
+		return "";
 	}
 }

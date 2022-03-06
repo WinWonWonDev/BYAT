@@ -1,10 +1,10 @@
 package com.greedy.byat.profile.model.dao;
 
-import com.greedy.byat.profile.model.dto.ProfileDTO;
+import com.greedy.byat.member.model.dto.MemberDTO;
 
 public interface ProfileMapper {
 	
-	int updateProfile(ProfileDTO profile);
+	int updateMemberProfile(MemberDTO member);
 	
-	int updatePassword(ProfileDTO profile);
+	int updatePassword(MemberDTO member);
 }

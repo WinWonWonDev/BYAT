@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.backlog.model.dao.BacklogMapper">
  	<resultMap type="BacklogDTO" id="generalBacklogResultMap">
- 		<id property="code" column="BACKLOG_NO"/>
+ 		<id property="code" column="BACKLOG_CODE"/>
  		<result property="title" column="BACKLOG_TITLE"/>
  		<result property="progress" column="BACKLOG_PROGRESS"/>
  		<result property="body" column="BACKLOG_BODY"/>
@@ -26,10 +26,9 @@
              , A.PROJECT_CODE
              , A.BACKLOG_VERSION
              , A.BACKLOG_DELETE_STATUS
-             , A.BACKLOG_DELETE_STATUS
              , A.BACKLOG_WRITER
           FROM TBL_BACKLOG A
-         WHERE A.BACKLOG_DELETE_STAUTS = 'N'
+         WHERE A.BACKLOG_DELETE_STATUS = 'N'
            AND A.BACKLOG_CODE = #{ code }
  	</select>
  	
@@ -65,12 +64,37 @@
  	<delete id="deleteBacklog" parameterType="_int">
         UPDATE /* com.greedy.byat.backlog.model.dao.BacklogMapper#deleteBacklog() */
                TBL_BACKLOG A
-           SET A.BACKLOG_DELETE_STATUS = 'N'
+           SET A.BACKLOG_DELETE_STATUS = 'Y'
          WHERE A.BACKLOG_CODE = #{ code }
  	</delete>
  	
- 	<update id="updateBacklogTasklize" parameterType="BacklogDTO">
-        
- 	</update>
+ 	<insert id="insertBacklogTasklize" parameterType="hashmap">
+        INSERT
+          INTO TBL_TASK A
+        (
+          A.TASK_CODE
+        , A.BACKLOG_CODE
+        , A.TASK_TITLE
+        , A.TASK_BODY
+        , A.SPRINT_CODE
+        , A.PROJECT_CODE
+        , A.MEMBER_NO
+        )
+        SELECT 
+               SEQ_TASK_CODE.NEXTVAL
+             , B.BACKLOG_CODE
+             , B.BACKLOG_TITLE
+             , B.BACKLOG_BODY
+             , C.SPRINT_CODE
+             , #{ projectCode }
+             , (SELECT
+                       D.MEMBER_NO
+                  FROM TBL_MEMBER D
+                 WHERE D.MEMBER_NAME = #{ name }
+               )
+          FROM TBL_BACKLOG B, TBL_SPRINT C
+         WHERE B.BACKLOG_CODE = #{ code }
+           AND C.SPRINT_CODE = #{ sprintCode }
+ 	</insert>
  	
  </mapper>
