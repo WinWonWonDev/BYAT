@@ -255,6 +255,8 @@ public class IssueServiceImpl implements IssueService {
 			issue.setWriter(changeMemberNo);
 			issue.setVersion(issue.getVersion() + 1);
 			
+			System.out.println("removeissue : " + issue);
+			
 			int versionHistoryInsertResult = mapper.insertIssueVersionHistory(issue);
 			
 			if(!(versionHistoryInsertResult > 0)) {

@@ -194,7 +194,7 @@ public class IssueController {
 		return mv;
 	}
 	
-	@GetMapping
+	@GetMapping("remove")
 	public String removeIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueRemoveException, IssueInsertVersionHistoryException {
 		
 		MemberDTO changeMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
