@@ -42,7 +42,7 @@
 	      right: 'dayGridMonth,timeGridWeek,timeGridDay',
 	      },
   	      editable: true,
-  	      eventLimit: true,
+  	      eventLimit: false,
   	      selectable: true,
   	      selectHelper: true,
   	      /* 여기부터 추가했고 */
@@ -77,12 +77,12 @@
         	title : '<%=dto.getTitle()%>',
             start : '<%=dto.getStartDate()%>',
             end : '<%=dto.getEndDate()%>',
-            color : '#' + Math.round(Math.random() * 0xffffff).toString(3)
+            color : '#483D8B'
          },
 <%}
 }%>
 			],
-      drop: function(info) {
+     	 drop: function(info) {
 	      // is the "remove after drop" checkbox checked?
 	      if (checkbox.checked) {
 	        // if so, remove the element from the "Draggable Events" list
@@ -107,7 +107,7 @@
 			var obj = new Object();
 			
 			obj.title = allEvent[i]._def.title; //이벤트 명칭
-			/* obj.allDay = allEvent[i]._def.adllDay //하루종일 이벤트인지 아닌지 */
+			obj.allDay = allEvent[i]._def.adllDay //하루종일 이벤트인지 아닌지 */
 			obj.startDate = allEvent[i]._instance.range.start //시작시간
 			obj.endDate = allEvent[i]._instance.range.end //종료시간
 			
@@ -144,7 +144,7 @@
 .fc-event {
 	margin-top:5px;
 	cursor:move;
-	background-color:rgb(25,25,112);
+	background-color:#483D8B;
 }
 
 #saveButton {
@@ -158,25 +158,34 @@
 
 #external-events {
 	float:right; 
-	width:15%; 
-	padding-right:30px; 
-	padding-left:20px; 
-	margin-top:30px;
 	position:absolute;
-	left:86%;
-	top:15%;
+	left:93%;
+	top:19%;
 
 }
 
 #calendarDiv {
 	float:right; 
-	width:80%;  
+	width:90%;  
 	margin-top:30px;
 	position:absolute;
 	left:1%;
 	top:6%;
 	z-index:-1;
 
+}
+
+#searchMembers {
+	position:absolute;
+	top:11%;
+	left:92.5%;
+	width:100px;
+	height:30px;
+	font-size:5px;
+	text-align:center;
+	background: white;
+	border-radius: 3px;
+	z-index:-1;
 }
 
 
@@ -197,5 +206,21 @@
 		<div id='calendar'></div>
 	</div>
 
+	<c:if test="${ sessionScope.loginMember.name eq '관리자' }">
+	<!-- 본인 뱨고 인원만큼 셀렉트 박스 생겨야함! (이름 + 사번 ) -->
+	<select name="selectBox" id="selectBox" class="selectBox">
+		<option id="nonSelectedStatus">선택해주세요</option>
+		<c:forEach var="mlist" items="${memberList}"></c:forEach>
+		<option id="OneMember"></option>
+	</select>
+	
+		<input type="text" id="searchMembers" maxlength="20" style="background-color:rgb(242,242,242);" placeholder="검색할 이름 입력">
+	</c:if>
+
+
+<script>
+	/* 셀렉트 박스용 script */
+	/* 누르면 그 페이지로 이동하는 건가? calendar로 가지만 */
+</script>
 </body>
 </html>

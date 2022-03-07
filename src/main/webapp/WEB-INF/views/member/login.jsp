@@ -312,6 +312,14 @@ html, body {
 	
 }
 
+#adminNumber {
+	position:absolute;
+	top:86%;
+	left:46%;
+	color:gray;
+	
+}
+
 </style>
 </head>
 <body>
@@ -458,6 +466,7 @@ html, body {
 			</div>
 		</div>
 	</div>
+	<div id="adminNumber">tel: 010-6222-0160</div>
 	
 	<input type="hidden" id="forSubmitTing" name="forSubmitTing">
 	<input type="hidden" id="forSubmitTing2" name="forSubmitTing2">

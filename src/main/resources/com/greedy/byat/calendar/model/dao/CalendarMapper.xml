@@ -51,7 +51,7 @@
  	</select> 
  
  	<select id="selectProjectListByMemberOne" resultMap="scheduleResultMap">
- 		 SELECT
+ 	    SELECT
  		       A.SCHEDULE_CODE
  		     , A.SCHEDULE_TITLE
  		     , A.SCHEDULE_START_DATE
@@ -62,6 +62,7 @@
  		     , A.CALENDAR_SCHEDULE_TYPE_CODE
  		     , A.PROJECT_CODE
  		     , A.SCHEDULE_DELETE_STATUS
+ 		     , B.PROJECT_DELETE_STATUS 
  		  	 , B.PROJECT_TITLE 
  		  FROM TBL_CALENDAR_SCHEDULE A 
  		  JOIN TBL_PROJECT B ON (A.PROJECT_CODE = B.PROJECT_CODE)
@@ -69,6 +70,8 @@
  		 WHERE A.MEMBER_NO = #{ memberNo }
  		   AND A.CALENDAR_SCHEDULE_TYPE_CODE = 1
  		   AND A.SCHEDULE_DELETE_STATUS = 'N'
+ 		   AND B.PROJECT_DELETE_STATUS = 'N'
+ 		   AND C.PROJECT_PARTICIPATION_YN = 'Y'		   
  	</select>
  	
  	<select id="selectCalendarListByMemberOne" resultMap="scheduleResultMap">

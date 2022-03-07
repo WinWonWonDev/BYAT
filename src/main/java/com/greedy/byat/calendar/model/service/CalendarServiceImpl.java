@@ -48,12 +48,17 @@ public class CalendarServiceImpl implements CalendarService {
 		if(permitCode == 1) { //관리자의 경우
 			totalCalendarList = mapper.selectCalendarListByAdmin(memberNo);
 			
-		} else { //일반멤버,PM의 경우(나머지 2,3인 경우)
+		} else { //일반멤버,PM의 경우(나머지 2,3인 경우) -> 관리자일정, 프로젝트일정, 개인일정 다 보여야 되잖아? 
 			totalCalendarList = mapper.selectProjectListByMemberOne(memberNo);
 			calendarList = mapper.selectCalendarListByMemberOne(memberNo);
+			System.out.println("맴버쪽만? 프로젝트 말ㄱ : " + calendarList);
+			System.out.println("프로젝트만 : " + totalCalendarList);
+			
+			
 			totalCalendarList.addAll(calendarList);
 		}
 		
+		System.out.println("음 많이 잘나오냐? : " + totalCalendarList);
 		return totalCalendarList;
 	}
 
@@ -67,30 +72,37 @@ public class CalendarServiceImpl implements CalendarService {
 		int deleteAllCalendar = 0;
 		int result = 0;
 			
+		// 만약에 수정하고 regist 할 때 select에 wrtier가 본인꺼가 아니거나  수정하고 하면 걔한테는 바뀌고(일단 ㄱㄷ)
+		
+		List<Integer> memberNumbers = mapper.selectAllMemberNo();
+		
 		
 		if(loginMember.getPermitCode() == 1) {
 			
 			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
 			// string형으로 들어가니까 각자 
-			for(Map<String, Object> calendarListInfo : calendarList) { 
-				String calendarStartDate = (String) calendarListInfo.get("startDate"); 
-				String calendarEndDate = (String) calendarListInfo.get("endDate");
-				String calendarTitle = (String) calendarListInfo.get("title");
-				
-				String realCalendarStartDate = calendarStartDate.split("T")[0].toString();
-				String realCalendarEndDate = calendarEndDate.split("T")[0].toString();
-				
-				
-				Map<String, Object> map = new HashMap<>();
-				map.put("title", calendarTitle);
-				map.put("startDate", realCalendarStartDate);
-				map.put("endDate", realCalendarEndDate);
-				map.put("memberNo", memberNo);
-				map.put("memberName", memberName);
-				
-				result = mapper.insertScheduleByAdmin(map);
-				
-			}
+				for(Map<String, Object> calendarListInfo : calendarList) { 
+					String calendarStartDate = (String) calendarListInfo.get("startDate"); 
+					String calendarEndDate = (String) calendarListInfo.get("endDate");
+					String calendarTitle = (String) calendarListInfo.get("title");
+					
+					String realCalendarStartDate = calendarStartDate.split("T")[0].toString();
+					String realCalendarEndDate = calendarEndDate.split("T")[0].toString();
+					
+					
+					Map<String, Object> map = new HashMap<>();
+					map.put("title", calendarTitle);
+					map.put("startDate", realCalendarStartDate);
+					map.put("endDate", realCalendarEndDate);
+					map.put("memberName", memberName);
+					
+					for(int i = 0; i < memberNumbers.size(); i++) {
+						//ㄱㄷㄱㄷ
+						map.put("memberNo", memberNumbers.get(i));
+						result = mapper.insertScheduleByAdmin(map);
+					}
+					
+				}
 			
 		} else if(loginMember.getPermitCode() == 3 || loginMember.getPermitCode() == 2) {
 
