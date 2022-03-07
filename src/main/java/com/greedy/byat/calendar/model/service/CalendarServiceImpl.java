@@ -37,35 +37,8 @@ public class CalendarServiceImpl implements CalendarService {
 	}
 
 	@Override
-	public int registSchedule(Map<String, Object> map, int memberNo, String memberName, int permitCode) {
-		
-		List<Integer> memberNumbers = mapper.selectAllMemberNo();
-		int result = 0;
-
-		map.put("memberNo", memberNo);
-		map.put("memberName", memberName);
-		
-		if(permitCode == 1) {
-			for(int i = 0; i < memberNumbers.size(); i++) {
-				map.put("memberNo", memberNumbers.get(i));
-				result = mapper.insertScheduleByAdmin(map);
-			}
-			
-		} else if(permitCode == 3 || permitCode == 2) {
-			result = mapper.insertScheduleByMember(map);
-		}
-
-		return result;
-	}
-
-	@Override
 	public List<ScheduleDTO> selectCalendarList(MemberDTO loginMember) {
 		
-		//캘린더 조회할때 -> 나와야하는 게 
-		//1) 관리자의 경우 -> 프로젝트는 x, 회사일정, 대신 관리자만 다른 애들 검색 가능 !
-		//2) 일반 멤버의 경우 -> 관련된 프로젝트 , 본인 개인 일정
-		//3) PM의 경우 -> 관련된 프로젝트, 본인 개인 일정
-		// -> 2,3 의 경우 : 프로젝트에 참여했어도 현재 참여여부따져서 나오게 안나오게 해야함
 		List<ScheduleDTO> totalCalendarList = null;
 		List<ScheduleDTO> calendarList = null;
 		
@@ -89,29 +62,39 @@ public class CalendarServiceImpl implements CalendarService {
 		
 		System.out.println("서비스 impt 옴?");
 		
+		int memberNo = loginMember.getNo();
+		String memberName = loginMember.getName();
+		int deleteAllCalendar = 0;
 		int result = 0;
+			
 		
 		if(loginMember.getPermitCode() == 1) {
 			
+			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
 			// string형으로 들어가니까 각자 
 			for(Map<String, Object> calendarListInfo : calendarList) { 
 				String calendarStartDate = (String) calendarListInfo.get("startDate"); 
 				String calendarEndDate = (String) calendarListInfo.get("endDate");
 				String calendarTitle = (String) calendarListInfo.get("title");
 				
+				String realCalendarStartDate = calendarStartDate.split("T")[0].toString();
+				String realCalendarEndDate = calendarEndDate.split("T")[0].toString();
+				
 				
 				Map<String, Object> map = new HashMap<>();
 				map.put("title", calendarTitle);
-				map.put("startDate", calendarStartDate);
-				map.put("endDate", calendarEndDate);
-				map.put("memberNo", loginMember.getNo());
-				map.put("memberName", loginMember.getName());
+				map.put("startDate", realCalendarStartDate);
+				map.put("endDate", realCalendarEndDate);
+				map.put("memberNo", memberNo);
+				map.put("memberName", memberName);
 				
 				result = mapper.insertScheduleByAdmin(map);
 				
 			}
 			
 		} else if(loginMember.getPermitCode() == 3 || loginMember.getPermitCode() == 2) {
+
+			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
 			
 			System.out.println("금 여기 들어와야되잔항?");
 			// string형으로 들어가니까 각자 
@@ -124,33 +107,23 @@ public class CalendarServiceImpl implements CalendarService {
 				System.out.println("calendarStartDate : " + calendarStartDate);
 				System.out.println("calendarEndDate : " + calendarEndDate);
 
-//				System.out.println(calendarStartDate.split("T")[calendarListCnt].toString()); //이렇게 하면 나온단 말이지? 
-				
 				String realCalendarStartDate = calendarStartDate.split("T")[0].toString();
 				String realCalendarEndDate = calendarEndDate.split("T")[0].toString();
 				
 				System.out.println("startDate : " + realCalendarStartDate);
 				System.out.println("EndDate : " + realCalendarEndDate);
 				
-				
-				
 				Map<String, Object> map = new HashMap<>();
 				map.put("title", calendarTitle);
 				map.put("startDate", realCalendarStartDate);
 				map.put("endDate", realCalendarEndDate);
-				map.put("memberNo", loginMember.getNo());
-				map.put("memberName", loginMember.getName());
-				
-				System.out.println("map: " + map);
+				map.put("memberNo", memberNo);
+				map.put("memberName", memberName);
 				
 				result = mapper.insertScheduleByMember(map);
 				
-				System.out.println("됫으면 나와라! : " + result);
-				
 			}
 		}
-		
-		
 			
 		if(result > 0) {
 			return 1;

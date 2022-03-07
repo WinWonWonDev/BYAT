@@ -16,7 +16,6 @@
 		<typeAlias alias="MeetinglogDTO" type="com.greedy.byat.meetinglog.model.dto.MeetinglogDTO"/>
 		<typeAlias alias="MyTaskDTO" type="com.greedy.byat.mytask.model.dto.MyTaskDTO"/>
 		<typeAlias alias="NoticeDTO" type="com.greedy.byat.notice.model.dto.NoticeDTO"/>
-		<typeAlias alias="ProfileDTO" type="com.greedy.byat.profile.model.dto.ProfileDTO"/>
 		<typeAlias alias="RetrospectDTO" type="com.greedy.byat.retrospect.model.dto.RetrospectDTO"/>
 		<typeAlias alias="SprintDTO" type="com.greedy.byat.sprint.model.dto.SprintDTO"/>
 		<typeAlias alias="TaskDTO" type="com.greedy.byat.task.model.dto.TaskDTO"/>

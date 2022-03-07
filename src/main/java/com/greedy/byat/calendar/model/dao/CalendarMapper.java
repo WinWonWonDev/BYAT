@@ -12,9 +12,9 @@ public interface CalendarMapper {
 
 	int insertScheduleByAdmin(Map<String, Object> map);
 
-	List<Integer> selectAllMemberNo();
+//	List<Integer> selectAllMemberNo();
 
-	List<ScheduleDTO> selectCalendarList(int memberNo);
+//	List<ScheduleDTO> selectCalendarList(int memberNo);
 
 	List<ScheduleDTO> selectCalendarListByAdmin(int memberNo);
 
@@ -25,6 +25,8 @@ public interface CalendarMapper {
 	List<ScheduleDTO> selectCalendarListByMemberOne(int memberNo);
 
 	int insertSchedule(Map<String, Object> map);
+
+	int deleteAllCalendar(int memberNo);
 
 
 }

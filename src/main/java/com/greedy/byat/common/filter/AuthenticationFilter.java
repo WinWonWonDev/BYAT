@@ -146,6 +146,7 @@ public class AuthenticationFilter implements Filter {
 		memberPermitList.add("/profile/mypage");
         memberPermitList.add("/profile/modify");
         memberPermitList.add("/profile/modify/pwd");
+        memberPermitList.add("/profile/registpic");
 		
 		memberPermitList.add("/notice/list");
 		memberPermitList.add("/notice/select");
