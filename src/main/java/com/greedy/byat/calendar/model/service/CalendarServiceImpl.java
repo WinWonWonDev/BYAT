@@ -1,6 +1,8 @@
 package com.greedy.byat.calendar.model.service;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,35 +37,8 @@ public class CalendarServiceImpl implements CalendarService {
 	}
 
 	@Override
-	public int registSchedule(Map<String, Object> map, int memberNo, String memberName, int permitCode) {
-		
-		List<Integer> memberNumbers = mapper.selectAllMemberNo();
-		int result = 0;
-
-		map.put("memberNo", memberNo);
-		map.put("memberName", memberName);
-		
-		if(permitCode == 1) {
-			for(int i = 0; i < memberNumbers.size(); i++) {
-				map.put("memberNo", memberNumbers.get(i));
-				result = mapper.insertScheduleByAdmin(map);
-			}
-			
-		} else if(permitCode == 3 || permitCode == 2) {
-			result = mapper.insertScheduleByMember(map);
-		}
-
-		return result;
-	}
-
-	@Override
 	public List<ScheduleDTO> selectCalendarList(MemberDTO loginMember) {
 		
-		//캘린더 조회할때 -> 나와야하는 게 
-		//1) 관리자의 경우 -> 프로젝트는 x, 회사일정, 대신 관리자만 다른 애들 검색 가능 !
-		//2) 일반 멤버의 경우 -> 관련된 프로젝트 , 본인 개인 일정
-		//3) PM의 경우 -> 관련된 프로젝트, 본인 개인 일정
-		// -> 2,3 의 경우 : 프로젝트에 참여했어도 현재 참여여부따져서 나오게 안나오게 해야함
 		List<ScheduleDTO> totalCalendarList = null;
 		List<ScheduleDTO> calendarList = null;
 		
@@ -73,38 +48,93 @@ public class CalendarServiceImpl implements CalendarService {
 		if(permitCode == 1) { //관리자의 경우
 			totalCalendarList = mapper.selectCalendarListByAdmin(memberNo);
 			
-		} else { //일반멤버,PM의 경우(나머지 2,3인 경우)
+		} else { //일반멤버,PM의 경우(나머지 2,3인 경우) -> 관리자일정, 프로젝트일정, 개인일정 다 보여야 되잖아? 
 			totalCalendarList = mapper.selectProjectListByMemberOne(memberNo);
 			calendarList = mapper.selectCalendarListByMemberOne(memberNo);
+			System.out.println("맴버쪽만? 프로젝트 말ㄱ : " + calendarList);
+			System.out.println("프로젝트만 : " + totalCalendarList);
+			
+			
 			totalCalendarList.addAll(calendarList);
 		}
 		
+		System.out.println("음 많이 잘나오냐? : " + totalCalendarList);
 		return totalCalendarList;
 	}
 
 	@Override
-	public int registSchedule(List<Map<String, Object>> calendarList) {
+	public int registSchedule(List<Map<String, Object>> calendarList, MemberDTO loginMember) throws ParseException {
 		
-//		List<ScheduleDTO> scheduleInfo = null;
-
+		System.out.println("서비스 impt 옴?");
+		
+		int memberNo = loginMember.getNo();
+		String memberName = loginMember.getName();
+		int deleteAllCalendar = 0;
 		int result = 0;
+			
+		// 만약에 수정하고 regist 할 때 select에 wrtier가 본인꺼가 아니거나  수정하고 하면 걔한테는 바뀌고(일단 ㄱㄷ)
 		
-		// string형으로 들어가니까 각자 
-		for(Map<String, Object> calendarListInfo : calendarList) { 
-			// 들어온 일정만큼 돌려서
-			Date calendarStartDate = (Date)calendarListInfo.get("startDate");
-			Date calendarEndDate = (Date)calendarListInfo.get("endDate");
-			System.out.println("start가 date형식으로 됨? : " + calendarStartDate);
-			System.out.println("end가 date형식으로 됨? : " + calendarEndDate);
-			String title = (String)calendarListInfo.get("title");
+		List<Integer> memberNumbers = mapper.selectAllMemberNo();
+		
+		
+		if(loginMember.getPermitCode() == 1) {
 			
-			Map<String, Object> map = new HashMap<>();
-			map.put("title", title);
-			map.put("startDate", calendarStartDate);
-			map.put("endDate", calendarEndDate);
+			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
+			// string형으로 들어가니까 각자 
+				for(Map<String, Object> calendarListInfo : calendarList) { 
+					String calendarStartDate = (String) calendarListInfo.get("startDate"); 
+					String calendarEndDate = (String) calendarListInfo.get("endDate");
+					String calendarTitle = (String) calendarListInfo.get("title");
+					
+					String realCalendarStartDate = calendarStartDate.split("T")[0].toString();
+					String realCalendarEndDate = calendarEndDate.split("T")[0].toString();
+					
+					
+					Map<String, Object> map = new HashMap<>();
+					map.put("title", calendarTitle);
+					map.put("startDate", realCalendarStartDate);
+					map.put("endDate", realCalendarEndDate);
+					map.put("memberName", memberName);
+					
+					for(int i = 0; i < memberNumbers.size(); i++) {
+						//ㄱㄷㄱㄷ
+						map.put("memberNo", memberNumbers.get(i));
+						result = mapper.insertScheduleByAdmin(map);
+					}
+					
+				}
 			
-			result = mapper.insertSchedule(map);
+		} else if(loginMember.getPermitCode() == 3 || loginMember.getPermitCode() == 2) {
+
+			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
 			
+			System.out.println("금 여기 들어와야되잔항?");
+			// string형으로 들어가니까 각자 
+			for(Map<String, Object> calendarListInfo : calendarList) { 
+				
+				String calendarStartDate = (String) calendarListInfo.get("startDate"); 
+				String calendarEndDate = (String) calendarListInfo.get("endDate");
+				String calendarTitle = (String) calendarListInfo.get("title");
+
+				System.out.println("calendarStartDate : " + calendarStartDate);
+				System.out.println("calendarEndDate : " + calendarEndDate);
+
+				String realCalendarStartDate = calendarStartDate.split("T")[0].toString();
+				String realCalendarEndDate = calendarEndDate.split("T")[0].toString();
+				
+				System.out.println("startDate : " + realCalendarStartDate);
+				System.out.println("EndDate : " + realCalendarEndDate);
+				
+				Map<String, Object> map = new HashMap<>();
+				map.put("title", calendarTitle);
+				map.put("startDate", realCalendarStartDate);
+				map.put("endDate", realCalendarEndDate);
+				map.put("memberNo", memberNo);
+				map.put("memberName", memberName);
+				
+				result = mapper.insertScheduleByMember(map);
+				
+			}
 		}
 			
 		if(result > 0) {

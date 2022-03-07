@@ -70,7 +70,15 @@
 		color:white;
 		font-size:60px;
 		font-weight:100;
- 
+ 		
+	}
+	
+	#adminNumber {
+		position:absolute;
+		top:94%;
+		left:89%;
+		color:gray;
+		
 	}
    
 </style>
@@ -90,6 +98,8 @@
 	<div id="loginButton" align="center">
 		<input type="button" class="img-button" onclick="location.href='${ pageContext.servletContext.contextPath }/member/login'">
 	</div>
+	
+	<div id="adminNumber">tel: 010-6222-0160</div>
 
 </body>
 </html>
