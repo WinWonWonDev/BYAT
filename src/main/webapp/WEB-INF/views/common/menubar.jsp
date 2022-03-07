@@ -493,7 +493,7 @@
     <!-- 프로필관리/로그아웃 모달창 -->
     <div id="profileAndLogoutModal" style="display:none;">
     	<div id="profileAndLogoutWhiteBoard">
-    		<div id="ProfileArea" onclick="location.href='${ pageContext.servletContext.contextPath }/member/moveprofile'">프로필 관리</div>
+    		<div id="ProfileArea" onclick="location.href='${ pageContext.servletContext.contextPath }/profile/mypage'">프로필 관리</div>
     		<div id="logoutArea">로그아웃</div>
     	</div>
     </div>
@@ -531,6 +531,17 @@
 	
 
     <script>
+    
+    	document.getElementById("notificationSettingBtn").onclick = function() {
+    		
+    		location.href = '${ pageContext.servletContext.contextPath }/notice/noticesetting?no=' + '${ sessionScope.loginMember.no }';
+    		
+    	}
+    	
+    	document.getElementById("moreNoticeBtn").onclick = function() {
+    		
+    		location.href = '${ pageContext.servletContext.contextPath }/notice/listall?no=' + '${ sessionScope.loginMember.no }';
+    	}
     
 		const $notificationText = document.querySelectorAll("#notificationText");
 		const noteNum = document.getElementById("note-num");
@@ -736,6 +747,7 @@
 	    	if(document.getElementById("profileAndLogoutModal").style.display == 'none'){
 	    		
 	    		document.getElementById("profileAndLogoutModal").style.display = 'block';
+	    		document.getElementById("notificationBox").style.display = 'none';
 	    	}else{
 	    		document.getElementById("profileAndLogoutModal").style.display = 'none';
 	    	}

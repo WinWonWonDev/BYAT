@@ -8,6 +8,7 @@ import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleExc
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
+import com.greedy.byat.common.exception.project.ProjectModifyCalendarException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectProgressHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
@@ -30,7 +31,7 @@ public interface ProjectService {
 
 	ProjectDTO selectProjectDetail(int code);
 
-	void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException;
+	void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException, ProjectModifyCalendarException;
 
 	List<MemberDTO> searchAddMemberList(String searchMember, String[] projectMembersList, String[] selectMembers);
 
