@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.greedy.byat.issue.model.dto.IssueDTO;
 import com.greedy.byat.issue.model.dto.IssueMembersDTO;
+import com.greedy.byat.notice.model.dto.NoticeDTO;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.sprint.model.dto.SprintMembersDTO;
 
@@ -40,5 +41,7 @@ public interface IssueMapper {
 	int deleteIssue(int code);
 
 	String selectProjectTitle(int projectCode);
+
+	int insertNoticeIssue(NoticeDTO notice);
 
 }

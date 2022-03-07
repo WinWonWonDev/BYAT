@@ -1148,8 +1148,18 @@
 			const createEndDate = document.getElementById("createEndDate");
 			const projectModalTitle = document.getElementById("projectModalTitle");
 			
+			let today = new Date();
+			
+			let year = today.getFullYear();
+			let month = ('0' + (today.getMonth() + 1)).slice(-2);
+			let day = ('0' + today.getDate()).slice(-2);
+			
+			let dateString = year + '-' + month + '-' + day;
+			
 			if(createStartDate.value >= createEndDate.value) {
 				alert("종료일자가 시작일자 전일 수 없습니다.");
+			} else if(createEndDate.value <= dateString) {
+				alert("종료일자는 금일 이후여야 합니다.");
 			} else {
 				sock.send("${sessionScope.loginMember.no}");
 				document.getElementById("projectCreateForm").submit();
@@ -1162,12 +1172,22 @@
 			const updateStartDate = document.getElementById("updateStartDate");
 			const updateEndDate = document.getElementById("updateEndDate");
 			
+			let today = new Date();
+			
+			let year = today.getFullYear();
+			let month = ('0' + (today.getMonth() + 1)).slice(-2);
+			let day = ('0' + today.getDate()).slice(-2);
+			
+			let dateString = year + '-' + month + '-' + day;
+			
 			if(updateStartDate.value > updateEndDate.value) {
 				alert("종료일자가 시작일자 전일 수 없습니다.");
 			} else if(writerCheck) {
 				alert("권한이 없습니다!");
 			} else if(document.getElementById("updateModalProjectProgress").value == "완료"){
 				alert("완료된 프로젝트는 수정하실 수 없습니다.");
+			} else if(updateEndDate.value <= dateString) {
+				alert("종료일자는 금일 이후여야 합니다.");
 			} else {
 				
 				let projectUpdateIndex = document.getElementById("updateModalProjectIndex");

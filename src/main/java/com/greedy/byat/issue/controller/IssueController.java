@@ -17,13 +17,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greedy.byat.common.exception.issue.IssueDeleteNoticeException;
 import com.greedy.byat.common.exception.issue.IssueInsertMemberHistoryException;
 import com.greedy.byat.common.exception.issue.IssueInsertVersionHistoryException;
 import com.greedy.byat.common.exception.issue.IssueModifyMemberException;
+import com.greedy.byat.common.exception.issue.IssueModifyNoticeException;
 import com.greedy.byat.common.exception.issue.IssueModifyStatusException;
 import com.greedy.byat.common.exception.issue.IssueRegistStatusHistoryException;
 import com.greedy.byat.common.exception.issue.IssueRemoveException;
 import com.greedy.byat.common.exception.issue.IssueRemoveMemberException;
+import com.greedy.byat.common.exception.issue.IssueRemoveMemberNoticeException;
+import com.greedy.byat.common.exception.issue.IssueStatusModifyNoticeException;
 import com.greedy.byat.common.exception.issue.IssueUpdateContentException;
 import com.greedy.byat.issue.model.dto.IssueDTO;
 import com.greedy.byat.issue.model.dto.IssueMembersDTO;
@@ -61,7 +65,7 @@ public class IssueController {
 	}
 	
 	@GetMapping("modifyissuestatus")
-	public ModelAndView modifyIssueStatus(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws IssueModifyStatusException, JsonProcessingException, IssueRegistStatusHistoryException {
+	public ModelAndView modifyIssueStatus(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws IssueModifyStatusException, JsonProcessingException, IssueRegistStatusHistoryException, IssueStatusModifyNoticeException {
 		
 		response.setContentType("application/json; charset=UTF-8");
 		
@@ -124,7 +128,7 @@ public class IssueController {
 	}
 	
 	@PostMapping("modify")
-	public String modifyIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueModifyMemberException, IssueUpdateContentException, IssueInsertVersionHistoryException, IssueInsertMemberHistoryException {
+	public String modifyIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueModifyMemberException, IssueUpdateContentException, IssueInsertVersionHistoryException, IssueInsertMemberHistoryException, IssueModifyNoticeException {
 		
 		MemberDTO changeMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		
@@ -170,7 +174,7 @@ public class IssueController {
 	}
 	
 	@PostMapping("removeissuemember")
-	public ModelAndView removeIssueMember(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws IssueRemoveMemberException, IssueInsertMemberHistoryException {
+	public ModelAndView removeIssueMember(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws IssueRemoveMemberException, IssueInsertMemberHistoryException, IssueRemoveMemberNoticeException {
 		
 		response.setContentType("application/json; charset=UTF-8");
 		
@@ -195,7 +199,7 @@ public class IssueController {
 	}
 	
 	@GetMapping("remove")
-	public String removeIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueRemoveException, IssueInsertVersionHistoryException {
+	public String removeIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueRemoveException, IssueInsertVersionHistoryException, IssueDeleteNoticeException {
 		
 		MemberDTO changeMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		

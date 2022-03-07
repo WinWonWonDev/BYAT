@@ -291,4 +291,40 @@
  		 WHERE A.PROJECT_CODE = #{ projectCode }
  	</select>
  	
+ 	<insert id="insertNoticeIssue" parameterType="NoticeDTO">
+ 		INSERT
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_CODE
+ 		, A.ISSUE_CODE
+ 		, A.SCHEDULE_CODE
+ 		, A.BACKLOG_CODE
+ 		, A.MEETINGLOG_CODE
+ 		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, #{ body }
+ 		, #{ url }
+ 		, #{ status }
+ 		, #{ category }
+ 		, #{ no }
+ 		, null
+ 		, #{ issueCode }
+ 		, null
+ 		, null
+ 		, null
+ 		, null
+ 		, SYSDATE
+ 		)
+ 	</insert>
+ 	
  </mapper>
