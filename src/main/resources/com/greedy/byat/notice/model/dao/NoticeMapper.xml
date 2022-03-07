@@ -78,5 +78,50 @@
 		 WHERE A.MEMBER_NO = #{ no }
 		   AND A.NOTICE_STATUS = 'Y'
 	</update>
+	
+	<update id="updateNoticeSetting" parameterType="NoticeSettingDTO">
+		UPDATE
+		       TBL_NOTIFICATION_BY_MEMBER A
+		   <if test="projectSetting != null">
+		   SET A.PROJECT_NOTIFICATION_SETTING = #{ projectSetting }
+		   </if>
+		   <if test="sprintSetting != null">
+		   SET A.SPRINT_NOTIFICATION_SETTING = #{ sprintSetting }
+		   </if>
+		   <if test="backlogSetting != null">
+		   SET A.BACKLOG_NOTIFICATION_SETTING = #{ backlogSetting }
+		   </if>
+		   <if test="issueSetting != null">
+		   SET A.ISSUE_NOTIFICATION_SETTING = #{ issueSetting }
+		   </if>
+		   <if test="meetinglogSetting != null">
+		   SET A.MEETINGLOG_NOTIFICATION_SETTING = #{ meetinglogSetting }
+		   </if>
+		   <if test="calendarSetting != null">
+		   SET A.CALENDAR_NOTIFICATION_SETTING = #{ calendarSetting }
+		   </if>
+		 WHERE A.MEMBER_NO = #{ no }
+	</update>
+ 	
+ 	<update id="updateNoticeStatusChange" parameterType="NoticeDTO">
+ 		UPDATE
+ 		       TBL_NOTICE A
+ 		   <if test='"Y".equals(status)'>
+ 		   SET A.NOTICE_STATUS = 'N'
+ 		   </if>
+ 		   <if test='"N".equals(status)'>
+ 		   SET A.NOTICE_STATUS = 'Y'
+ 		   </if>
+ 		 WHERE A.NOTICE_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }
+ 	</update>
+ 	
+ 	<update id="deleteNotice" parameterType="NoticeDTO">
+ 		UPDATE
+ 		       TBL_NOTICE A
+ 		   SET A.NOTICE_STATUS = 'REMOVE'
+ 		 WHERE A.NOTICE_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }
+ 	</update>
  	
  </mapper>

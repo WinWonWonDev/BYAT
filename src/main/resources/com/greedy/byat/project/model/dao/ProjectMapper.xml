@@ -557,7 +557,7 @@
  		, #{ writerMember.no }
  		, #{ writer }
  		, 1
- 		, #{ code }
+ 		, SEQ_PROJECT_NO.CURRVAL
  		)
  	</insert>
  	
@@ -577,6 +577,17 @@
  		       TBL_PROJECT A
  		   SET A.PROJECT_PROGRESS = #{ progress }
  		 WHERE A.PROJECT_CODE = #{ code }
+ 	</update>
+ 	
+ 	<update id="updateCalendarProject" parameterType="ProjectDTO">
+ 		UPDATE
+ 		       TBL_CALENDAR_SCHEDULE A
+ 		   SET A.SCHEDULE_TITLE = #{ title }
+ 		     , A.SCHEDULE_START_DATE = #{ startDate }
+ 		     , A.SCHEDULE_END_DATE = #{ endDate }
+ 		     , A.SCHEDULE_BODY = #{ body }
+ 		 WHERE A.MEMBER_NO = #{ writerMember.no }
+ 		   AND A.PROJECT_CODE = #{ code }
  	</update>
  	
  </mapper>

@@ -15,4 +15,10 @@ public interface NoticeMapper {
 
 	int deleteConfirmNotice(int no);
 
+	int updateNoticeSetting(NoticeSettingDTO noticeSetting);
+
+	int updateNoticeStatusChange(NoticeDTO notice);
+
+	int deleteNotice(NoticeDTO notice);
+
 }

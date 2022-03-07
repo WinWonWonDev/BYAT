@@ -75,5 +75,7 @@ public interface ProjectMapper {
 
 	int insertNoticeProjectRegist(NoticeDTO notice);
 
+	int updateCalendarProject(ProjectDTO calendarProject);
+
 
 }

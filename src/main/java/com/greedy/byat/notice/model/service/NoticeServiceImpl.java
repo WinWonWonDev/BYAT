@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.greedy.byat.common.exception.notice.NoticeConfirmRemoveException;
-import com.greedy.byat.common.exception.notice.NoticeUpdateStatus;
+import com.greedy.byat.common.exception.notice.NoticeModifySettingException;
+import com.greedy.byat.common.exception.notice.NoticeRemoveException;
+import com.greedy.byat.common.exception.notice.NoticeUpdateStatusExcepction;
 import com.greedy.byat.notice.model.dao.NoticeMapper;
 import com.greedy.byat.notice.model.dto.NoticeDTO;
 import com.greedy.byat.notice.model.dto.NoticeSettingDTO;
@@ -76,11 +78,19 @@ public class NoticeServiceImpl implements NoticeService {
 			
 		}
 		
+		for(int i = 0; i < noticeFinalList.size(); i++) {
+			
+			if(noticeFinalList.get(i).getBody().length() >= 50) {
+				noticeFinalList.get(i).setBody(noticeFinalList.get(i).getBody().substring(0, 50) + "...");
+			}
+			
+		}
+		
 		return noticeFinalList;
 	}
 
 	@Override
-	public void updateNoticeStatus(int no, int code) throws NoticeUpdateStatus {
+	public void updateNoticeStatus(int no, int code) throws NoticeUpdateStatusExcepction {
 		
 		NoticeDTO notice = new NoticeDTO();
 		notice.setCode(code);
@@ -89,7 +99,7 @@ public class NoticeServiceImpl implements NoticeService {
 		int result = mapper.updateNoticeStatus(notice);
 		
 		if(!(result > 0)) {
-			throw new NoticeUpdateStatus("알림 읽음 상태 변경!");
+			throw new NoticeUpdateStatusExcepction("알림 읽음 상태 변경!");
 		}
 		
 	}
@@ -101,6 +111,50 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		if(!(result > 0)) {
 			throw new NoticeConfirmRemoveException("조회한 알림 삭제 실패!");
+		}
+		
+	}
+
+	@Override
+	public NoticeSettingDTO selectNoticeSetting(int no) {
+
+		NoticeSettingDTO noticeSetting = mapper.selectNoticeSetting(no);
+		
+		return noticeSetting;
+	}
+
+	@Override
+	public void updateNoticeSetting(NoticeSettingDTO noticeSetting) throws NoticeModifySettingException {
+		
+		int noticeSettingResult = mapper.updateNoticeSetting(noticeSetting);
+		
+		if(!(noticeSettingResult > 0)) {
+			
+			throw new NoticeModifySettingException("멤버 알림 설정 변경 실패!");
+		}
+		
+	}
+
+	@Override
+	public void chagenNoticeStatus(NoticeDTO notice) throws NoticeUpdateStatusExcepction {
+
+		int noticeStatusUpdateResult = mapper.updateNoticeStatusChange(notice);
+		
+		if(!(noticeStatusUpdateResult > 0)) {
+			
+			throw new NoticeUpdateStatusExcepction("알림 상태 변경 실패!");
+		}
+		
+	}
+
+	@Override
+	public void deleteNotice(NoticeDTO notice) throws NoticeRemoveException {
+		
+		int noticeDeleteResult = mapper.deleteNotice(notice);
+		
+		if(!(noticeDeleteResult > 0)) {
+			
+			throw new NoticeRemoveException("알림 삭제 실패!");
 		}
 		
 	}

@@ -31,6 +31,7 @@ import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleExc
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
+import com.greedy.byat.common.exception.project.ProjectModifyCalendarException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectProgressHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
@@ -145,7 +146,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/modify")
-	public String modifyProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException {
+	public String modifyProject(@ModelAttribute ProjectDTO project, HttpServletRequest request, RedirectAttributes rttr) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException, ProjectModifyCalendarException {
 
 		int code = Integer.parseInt(request.getParameter("code"));
 		

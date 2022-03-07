@@ -15,6 +15,7 @@ import com.greedy.byat.common.exception.project.CalendatRegistProjectScheduleExc
 import com.greedy.byat.common.exception.project.ProjectMemberHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectMemberModifyRoleException;
 import com.greedy.byat.common.exception.project.ProjectMemberRemoveException;
+import com.greedy.byat.common.exception.project.ProjectModifyCalendarException;
 import com.greedy.byat.common.exception.project.ProjectModifyException;
 import com.greedy.byat.common.exception.project.ProjectProgressHistoryRegistException;
 import com.greedy.byat.common.exception.project.ProjectRegistException;
@@ -166,12 +167,13 @@ public class ProjectServiceImpl implements ProjectService {
 		if (!(result > 0 && projectMembersRegistResult > 0 && projectRoleRegistResult > 0)) {
 			throw new ProjectRegistException("프로젝트 생성 실패!");
 		} else {
+			String projectTitle = project.getTitle();
 			project.setTitle("\'" + project.getTitle() + "\' 프로젝트 생성 (" + project.getTitle() + ")");
 			int historyResult = mapper.insertFirstVersionHistory(project);
 			int statusResult = mapper.insertFirstProgressHistory(project);
 			int memberHistoryResult = mapper.insertFirstMemberHistory(projectMembers);
+			project.setTitle(projectTitle);
 			int calendarInsertResult = mapper.insertCalendarProjectSchedule(project);
-			
 			
 			if(!(historyResult > 0)) {
 				
@@ -269,7 +271,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException {
+	public void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException, ProjectModifyCalendarException {
 
 		int result = mapper.updateProject(project);
 		
@@ -285,10 +287,23 @@ public class ProjectServiceImpl implements ProjectService {
 		notice.setStatus("N");
 		
 		int insertNoticeProjectRegistResult = 0;
+		int updateCalendarProjectResult = 0;
+		
+		MemberDTO calendarMember = new MemberDTO();
+		ProjectDTO calendarProject = project;
 		
 		for(int i = 0; i < projectMembers.size(); i++) {
 			notice.setNo(projectMembers.get(i).getNo());
 			insertNoticeProjectRegistResult = mapper.insertNoticeProjectRegist(notice);
+			calendarMember.setNo(projectMembers.get(i).getNo());
+			calendarProject.setWriterMember(calendarMember);
+			
+			updateCalendarProjectResult = mapper.updateCalendarProject(calendarProject);
+			
+			if(!(updateCalendarProjectResult > 0)) {
+				
+				throw new ProjectModifyCalendarException("프로젝트 수정시 일정 수정 실패!");
+			}
 		}
 		
 		
