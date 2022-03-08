@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -95,6 +96,32 @@ public class CalendarController {
 		
 	}
 
+	@GetMapping("/selectallmember")
+	@ResponseBody
+	public List<MemberDTO> selectAllMemberForSelectBox() {
+		
+		List<MemberDTO> selectAllMemberList = calendarService.selectAllMemberList();
+		
+		System.out.println(selectAllMemberList);
+		
+		return selectAllMemberList;
+	}
 	
+	@GetMapping(value="/movecalendarbymember", produces="application/json; charset=UTF-8")
+	public String moveCalendarByMember(Model model, HttpServletRequest request, int memberNoForMove) {
+
+		System.out.println("오냐 ? : " + memberNoForMove);
+		List<ScheduleDTO> calendarList = calendarService.selectCalendarListForSelectBox(memberNoForMove);
+
+		System.out.println("컨트롤러 그거 가따온거 되냐?");
+		
+		model.addAttribute("calendarList", calendarList);
+		
+		System.out.println("calendarList : " + calendarList);
+		
+		return "/calendar/calendar";
+		
+		
+	}
 	
 }
