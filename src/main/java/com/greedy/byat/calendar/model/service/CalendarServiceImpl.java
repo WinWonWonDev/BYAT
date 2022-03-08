@@ -64,16 +64,14 @@ public class CalendarServiceImpl implements CalendarService {
 		int deleteAllCalendar = 0;
 		int result = 0;
 			
-		// 만약에 수정하고 regist 할 때 select에 wrtier가 본인꺼가 아니거나  수정하고 하면 걔한테는 바뀌고(일단 ㄱㄷ)
-		
 		List<Integer> memberNumbers = mapper.selectAllMemberNo();
 		
 		
 		if(loginMember.getPermitCode() == 1) {
 			
-			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
-			// string형으로 들어가니까 각자 
-				for(Map<String, Object> calendarListInfo : calendarList) { 
+			deleteAllCalendar = mapper.deleteAllCalendarByAdmin();
+
+			for(Map<String, Object> calendarListInfo : calendarList) { 
 					String calendarStartDate = (String) calendarListInfo.get("startDate"); 
 					String calendarEndDate = (String) calendarListInfo.get("endDate");
 					String calendarTitle = (String) calendarListInfo.get("title");
@@ -89,19 +87,17 @@ public class CalendarServiceImpl implements CalendarService {
 					map.put("memberName", memberName);
 					
 					for(int i = 0; i < memberNumbers.size(); i++) {
-						//ㄱㄷㄱㄷ
+
 						map.put("memberNo", memberNumbers.get(i));
 						result = mapper.insertScheduleByAdmin(map);
 					}
 					
 				}
 			
-		} else if(loginMember.getPermitCode() == 3 || loginMember.getPermitCode() == 2) {
+		} else if (loginMember.getPermitCode() == 3 || loginMember.getPermitCode() == 2) {
 
 			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
 			
-			System.out.println("금 여기 들어와야되잔항?");
-			// string형으로 들어가니까 각자 
 			for(Map<String, Object> calendarListInfo : calendarList) { 
 				
 				String calendarStartDate = (String) calendarListInfo.get("startDate"); 

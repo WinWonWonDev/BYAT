@@ -30,5 +30,7 @@ public interface CalendarMapper {
 
 	List<MemberDTO> selectAllMemberList();
 
+	int deleteAllCalendarByAdmin();
+
 
 }

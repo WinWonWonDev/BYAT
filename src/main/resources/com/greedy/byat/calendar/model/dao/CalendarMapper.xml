@@ -213,4 +213,9 @@
  		 WHERE A.MEMBER_NO = #{ memberNo }
  	</delete>
  	
+ 	<delete id="deleteAllCalendarByAdmin">
+ 		DELETE TBL_CALENDAR_SCHEDULE A 
+ 		 WHERE A.CALENDAR_SCHEDULE_TYPE_CODE = 3
+ 	</delete>
+ 	
  </mapper>
