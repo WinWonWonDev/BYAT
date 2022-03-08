@@ -166,19 +166,84 @@
 			</div>
 		</div>
 		<div class="retrospectListBox">
-			<details class="toggleDetails">
-				<summary id="toggle">000의 회고록</summary>
-				<div id="comments">
-					댓글 <span><input type="text" class="CommentsBox"></span>
-					<!-- if) 이 댓글을 삭제하거나 수정하고 싶을 떄 -> 수정/삭제버튼 만들어주기  -->
-					<button type="button" id="updateButton"></button>
-					<button type="button" id="deleteButton"></button>
-
-				</div>
-			</details>
+			<c:forEach items="${ requestScope.retrospectList }" var="retrospect">
+				<details class="toggleDetails">
+					<summary id="toggle">${ retrospect.title }의 회고록</summary>
+					<div id="comments">
+						<input type="hidden" id="sprintCode" value="${ retrospect.sprintCode }">
+						<input type="hidden" id="retrospectCode" value="${ retrospect.code }">
+					  댓글 <span>
+							<input type="text" class="CommentsBox" id="comment-body" name="body">
+							<button type="submit" id="regist-comment">등록</button>
+						</span>
+						<div id="comment-box">
+							<c:forEach items="${ retrospect.commentList }" var="comment">
+								<h6>${ comment.memberName } : </h6>
+								<h6>${ comment.body }</h6>
+								<!-- if) 이 댓글을 삭제하거나 수정하고 싶을 떄 -> 수정/삭제버튼 만들어주기  -->
+								<br clear="both">							
+							</c:forEach>
+						</div>
+						<button type="button" id="updateButton"></button>
+						<button type="button" id="deleteButton"></button>
+	
+					</div>
+				</details>
+			</c:forEach>
 
 		</div>
 	</div>
+	<script>
+	
+	const $registBtn = document.querySelectorAll("#regist-comment");
+	const $retrospectCode = document.querySelectorAll("#retrospectCode");
+	const $comment = document.querySelectorAll("#comment-body");
+	
+	console.log($registBtn);
+	console.log($retrospectCode);
+	console.log($comment);
+	
+	for(let i = 0; i < $registBtn.length; i++) {
+		
+		$registBtn[i].onclick = function() {
+			
+			$.ajax({
+				url: "/byat/retrospect/regist",
+				type: "post",
+				async: false,
+				data: { "body": $comment[i].value,
+						"retrospectCode": $retrospectCode[i].value },
+				success: function(data, status, xhr){
+					console.table(data);
+					
+					const $commentBox = $("#comment-box");
+					$commentBox.html("");
+					
+					for(let j = 0; j < data.size(); j++){
+						
+						const $nameH6 = $("<h6>").text(data[i].memberName);
+						const $commentH6 = $("<h6>").text(data[i].body);
+						const $br = $("<br clear='both'>");
+						
+						
+						$commentBox.append($nameH6);
+						$commentBox.append($commentH6);
+						$commentBox.append($br);
+						
+					}
+					
+				},
+				error: function(xhr, status, error){
+					console.log(xhr);
+				}
+			});
+			
+		}
+		
+	}
+
+	
+	</script>
 </body>
 </html>
 

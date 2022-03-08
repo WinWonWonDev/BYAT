@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.greedy.byat.backlog.model.dto.BacklogDTO;
 import com.greedy.byat.common.exception.sprint.RegistSprintException;
+import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.sprint.model.dao.SprintMapper;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
@@ -44,7 +45,7 @@ public class SprintServiceImpl implements SprintService {
 		
 		int projectCode = sprint.getProjectCode();
 		
-		/*진행중인 스프린트가 있으면 스프린트를 생성할 수 없다.*/
+		/*진행중이거나 진행전인 스프린트가 있으면 스프린트를 생성할 수 없다.*/
 		int checkResult = mapper.checkSprintProgress(projectCode);
 		
 		String result = null;
@@ -57,12 +58,36 @@ public class SprintServiceImpl implements SprintService {
 		
 			int result3 = mapper.insertSprintProgressHistory(sprint);
 		
+			/* 이슈 상태 변경 이력에 추가해야 하기 때문에 보류중인 이슈 코드들을 가져온다. */
+			List<Integer> issueList = mapper.selectIssueList2(sprint);
+			
+			/* 보류중인 이슈가 있으면 해당 스프린트에 추가한다.*/
+			int result4 = mapper.updateIssueSprintCode(projectCode);
+			
+			int result5 = 0;
+			int result6 = 0;
+			
+			Map<String, Integer> map = new HashMap<>();
+			map.put("projectCode", projectCode);
+			map.put("memberNo", sprint.getMemberNo());
+			
+			for(int i = 0; i < issueList.size(); i++) {
+				
+				map.put("issueCode", issueList.get(i));
+				
+				/* 이슈 상태 변경 이력 추가*/
+				result5 += mapper.insertIssueProgressHistory2(map);
+			}
+			
 			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0)) {
+				
 				result = "스프린트 생성 실패";
 			} else {
+				
 				result = "스프린트를 생성하였습니다.";
 			}
 		} else {
+			
 			result = "완료되지 않은 스프린트가 존재합니다.";
 		}
 		
@@ -76,7 +101,20 @@ public class SprintServiceImpl implements SprintService {
 		
 		int result2 = mapper.insertSprintVersionHistory2(sprint);
 		
-		if(!(result1 > 0) && !(result2 > 0)) {
+		List<Integer> sprintMemberList = mapper.selectSprintMemberList3(sprint);
+		
+		int result3 = 0;
+		
+		Map<String, Integer> map = new HashMap<>();
+		map.put("sprintCode", sprint.getCode());
+		
+		for(int i = 0; i < sprintMemberList.size(); i++) {
+			
+			map.put("memberNo", sprintMemberList.get(i));
+			result3 += mapper.insertUpdateSprintNotice(map);
+		}
+		
+		if(!(result1 > 0) && !(result2 > 0) && !(result3 != sprintMemberList.size())) {
 			System.out.println("스프린트 수정 실패");
 		}
 	}
@@ -92,9 +130,24 @@ public class SprintServiceImpl implements SprintService {
 	@Override
 	public void removeSprint(int sprintCode) {
 		
-		int result = mapper.deleteSprint(sprintCode);
+		int result1 = mapper.deleteSprint(sprintCode);
 		
-		if(!(result > 0)) {
+		int result2 = mapper.insertSprintVersionHistory3(sprintCode);//
+		
+		int result3 = mapper.updateIssueProgress2(sprintCode);
+		
+		List<Integer> issueList = mapper.selectIssueList3(sprintCode);
+		
+		int result4 = 0;
+		
+		for(int i = 0; i < issueList.size(); i++) {
+			
+			int issueCode = issueList.get(i);
+			
+			result4 += mapper.insertIssueProgressHistory3(issueCode);//
+		}
+		
+		if(!(result1 > 0) && !(result2 > 0)) {
 			System.out.println("스프린트 삭제 실패");
 		}
 	}
@@ -138,66 +191,84 @@ public class SprintServiceImpl implements SprintService {
 					/* 진행전인 스프린트의 태스크리스트*/
 					List<TaskDTO> taskList = mapper.selectTaskList2(map);
 					int cnt = 0;
-					System.out.println("taskList@@@@@@@@@@@" + taskList);
 					
-					for(int i = 0; i < taskList.size(); i++) {
-						
-						TaskDTO task = taskList.get(i);
-						task.setMemberNo(map.get("memberNo"));
-						
-						/* 태스크들이  미기입된 항목이 있는지 체크한다.*/
-						if(task.getTitle() != null && task.getStartDate() != null && task.getEndDate() != null && task.getBody() != null) {
+					/* 태스크가 존재하는지 확인하는 if */
+					if(taskList.size() != 0) {
+					
+						for(int i = 0; i < taskList.size(); i++) {
 							
-							/* 백로그코드가 있는 태스크면 태스크의 진행 상태를 진행중으로 바꾸고 백로그의 진행상태도 진행중으로 바꾼다.*/
-							if(task.getBacklogCode() > 0) {
+							TaskDTO task = taskList.get(i);
+							task.setMemberNo(map.get("memberNo"));
+							
+							/* 태스크들이  미기입된 항목이 있는지 체크한다.*/
+							if(task.getTitle() != null && task.getStartDate() != null && task.getEndDate() != null && task.getBody() != null) {
 								
-								/* 태스크의 진행상태를 진행중으로 바꾼다. */
-								int result1 = mapper.updateTaskProgress(task);
-								
-								/* 태스크의 진행상태 변경 이력 추가 */
-								int result2 = mapper.insertTaskProgressHistory(task);
-								
-								/* 백로그의 진행상태도 진행중으로 바꿔준다. */
-								int result3 = mapper.updateBacklogProgress(task);
-								
-								/* 백로그의 진행상태 변경 이력 추가 */
-								int result4 = mapper.insertBacklogProgressHistory(task);
-								
-								if(result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0) {
+								/* 백로그코드가 있는 태스크면 태스크의 진행 상태를 진행중으로 바꾸고 백로그의 진행상태도 진행중으로 바꾼다.*/
+								if(task.getBacklogCode() > 0) {
 									
-									cnt++;
+									/* 태스크의 진행상태를 진행중으로 바꾼다. */
+									int result1 = mapper.updateTaskProgress(task);
+									
+									/* 태스크의 진행상태 변경 이력 추가 */
+									int result2 = mapper.insertTaskProgressHistory(task);
+									
+									/* 백로그의 진행상태도 진행중으로 바꿔준다. */
+									int result3 = mapper.updateBacklogProgress(task);
+									
+									/* 백로그의 진행상태 변경 이력 추가 */
+									int result4 = mapper.insertBacklogProgressHistory(task);
+									
+									if(result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0) {
+										
+										cnt++;
+									}
+									
+									/* 백로그코드가 없는 태스크면 태스크의 진행 상태를 진행중으로 바꾼다.*/
+								} else {
+									
+									int result1 = mapper.updateTaskProgress(task);
+									
+									int result2 = mapper.insertTaskProgressHistory(task);
+									
+									if(result1 > 0 && result2 > 0) {
+										
+										cnt++;
+									}
 								}
-							
-							/* 백로그코드가 없는 태스크면 태스크의 진행 상태를 진행중으로 바꾼다.*/
 							} else {
 								
-								int result1 = mapper.updateTaskProgress(task);
-								
-								int result2 = mapper.insertTaskProgressHistory(task);
-								
-								if(result1 > 0 && result2 > 0) {
-									
-									cnt++;
-								}
+								message = "필수항목이 미기입된 태스크가 존재합니다.";
+								break;
 							}
-						} else {
-							
-							message = "필수항목이 미기입된 태스크가 존재합니다.";
-							break;
 						}
+						
+						if(taskList.size() == cnt) {
+							
+							int result1 = mapper.updatesprintProgress(map);
+							
+							int result2 = mapper.insertSprintProgressHistory3(map);
+							
+							List<Integer> sprintMemberList = mapper.selectSprintMemberList(map);
+							
+							int result3 = 0;
+							
+							for(int j = 0; j < sprintMemberList.size(); j++) {
+								
+								map.put("memberNo", sprintMemberList.get(j));
+								result3 += mapper.insertStartSprintNotice(map);
+							}
+							
+							if(result1 > 0 && result2 > 0 && result3 == sprintMemberList.size()) {
+								
+								message = "스프린트를 시작합니다.";
+							}
+						}
+						
+					} else {
+						
+						message = "태스크가 없습니다. 태스크를 생성해주세요.";
 					}
 					
-					if(taskList.size() == cnt) {
-						
-						int result1 = mapper.updatesprintProgress(map);
-						
-						int result2 = mapper.insertSprintProgressHistory3(map);
-						
-						if(result1 > 0 && result2 > 0) {
-							
-							message = "스프린트를 시작합니다.";
-						}
-					}
 					
 				} else {
 					
@@ -212,8 +283,6 @@ public class SprintServiceImpl implements SprintService {
 			message = "프로젝트가 진행중이 아닙니다.";
 		}
 		
-		
-		
 		return message; 		
 	}
 
@@ -221,6 +290,8 @@ public class SprintServiceImpl implements SprintService {
 	public String endSprint(Map<String, Integer> map) {
 		
 		String message = null;
+		
+		int loginMemberNo = map.get("memberNo");
 		
 		int sprintProgressResult = mapper.checkSprintProgress2(map);
 		
@@ -275,7 +346,7 @@ public class SprintServiceImpl implements SprintService {
 					
 					int result5 = mapper.insertBacklogVersionHistory(task);
 					
-					if(result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0) {
+					if(result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0 && result5 > 0) {
 						
 						cnt++;
 					}
@@ -287,32 +358,67 @@ public class SprintServiceImpl implements SprintService {
 				}
 			}
 			
-			System.out.println("taskCodeList : " + taskCodeList.size());
-			System.out.println("cnt : "+cnt);
-			
 			if(cnt == taskCodeList.size()) {
 				
 				/* 스프린트 코드를 가져온다.*/
 				int sprintCode = mapper.selectSprintCode(map);
 				
-				int result1 = mapper.updateSprintProgress2(sprintCode);
-				
 				map.put("sprintCode", sprintCode);
 				
-				int result2 = mapper.insertSprintProgressHistory4(map);
+				/* 회고록을 생성한다. */
+				int result1 = mapper.insertRetrospective(sprintCode);
 				
-				System.out.println(result1 + "aaaaa" + result2);
+				/* 스프린트 알림을 생성해야 하기때문에 스프린트 구성원리스트를 가져온다. */
+				List<Integer> sprintMemberList = mapper.selectSprintMemberList2(map);
 				
-				if(result1 > 0 && result2 > 0) {
+				int result2 = 0;
+				
+				for(int j = 0; j < sprintMemberList.size(); j++ ) {
 					
-					int result = mapper.insertRetrospective(sprintCode);
+					map.put("memberNo", sprintMemberList.get(j));
 					
-					if(result > 0) {
+					/* 스프린트 구성원별로 알림을 생성한다. */
+					result2 += mapper.insertEndSprintNotice(map);
+				}
+				
+				/* 아직 미완료인 모든 이슈리스트를 가져온다. */
+				List<Integer> issueList = mapper.selectIssueList(map);
+				
+				Map<String, Integer> issueMap = new HashMap<>();
+				issueMap.put("memberNo", loginMemberNo);
+				
+				int result3 = 0;
+				int result4 = 0;
+				int result5 = 0;
+				
+				for(int j = 0; j < issueList.size(); j++) {
+					
+					int issueCode = issueList.get(j);
+					
+					issueMap.put("issueCode", issueCode);
+					
+					result3 += mapper.updateIssueProgress(issueCode);
+					
+					result4 += mapper.insertIssueProgressHistory(issueMap);
+					
+					/* 이슈 구성원들의 참여 상태를 N으로 바꾼다. */
+					result5 += mapper.updateIssueMembersParticipation(issueCode);
+				}
+				
+				if(result1 > 0 && result2 == sprintMemberList.size() && result3 == issueList.size() && result4 == issueList.size() && result5 == issueList.size()) {
+					
+					int result6 = mapper.updateSprintProgress2(sprintCode);
+					
+					map.put("memberNo", loginMemberNo);
+					
+					int result7 = mapper.insertSprintProgressHistory4(map);
+					
+					if(result6 > 0 && result7 > 0) {
 						
 						message = "스프린트를 종료합니다.";
 					} else {
 						
-						message = "스프린트 좆ㅇ료 실패3";
+						message = "스프린트 종료 실패3";
 					}
 				} else {
 					
