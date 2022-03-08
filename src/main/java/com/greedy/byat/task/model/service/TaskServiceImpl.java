@@ -1,5 +1,6 @@
 package com.greedy.byat.task.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -166,7 +167,7 @@ public class TaskServiceImpl implements TaskService {
 		int result2 = mapper.insertTaskVersionHistory2(task);
 		
 		if(result1 > 0 && result2 > 0) {
-			message =  "태스크를 수정하셨습니다.";
+			message = "태스크를 수정하셨습니다.";
 		} else {
 			message = "태스크 수정 실패";
 		}
