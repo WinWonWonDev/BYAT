@@ -82,6 +82,7 @@ public class SprintController {
 		
 		sprint.setProjectCode(projectCode);
 		sprint.setWriter(writer.getName());
+		sprint.setMemberNo(writer.getNo());
 		
 		String message = sprintService.registSprint(sprint);
 		

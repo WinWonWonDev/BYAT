@@ -731,4 +731,221 @@
  		, #{ sprintCode }
  		)  
  	</insert>
+ 	
+ 	<insert id="insertStartSprintNotice" parameterType="hashmap">
+ 		INSERT
+ 		  INTO TBL_TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, CHR(39) || (SELECT
+ 							 B.SPRINT_TITLE
+ 						FROM TBL_SPRINT B
+ 					   WHERE B.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 					     AND B.PROJECT_CODE = #{ projectCode }) || CHR(39) || '스프린트가 시작되었습니다.'
+ 		, '/sprint/list
+ 		, 'Y'
+ 		, 2
+ 		, #{ memberNO }
+ 		, (SELECT
+ 				  C.SPRINT_CODE
+ 			 FROM TBL_SPRINT C
+ 			WHERE C.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 			  AKD C.PROJECT_CODE = #{ projectCode })
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectSprintMemberList" resultType="_int">
+ 		SELECT
+ 			   A.MEMBER_NO
+ 		  FROM TBL_SPRINT_MEMBERS A
+ 		 WHERE A.SPRINT_CODE = (SELECT
+ 		 							   B.SPRINT_CODE
+ 		 						  FROM TBL_SPRINT B
+ 		 						 WHERE B.PROJECT_CODE = #{ projectCode }
+ 		 						   AND B.SPRINT_PROGRESS IN ('진행전', '진행중'))
+ 		   AND A.SPRINT_PARTICIPATION_YN = 'Y'
+ 	</select>
+ 	
+ 	<select id="selectSprintMemberList2" resultType="_int">
+ 		SELECT
+ 			   A.MEMBER_NO
+ 		  FROM TBL_SPRINT_MEMBERS A
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		   AND A.SPRINT_PARTICIPATION_YN = 'Y'
+ 	</select>
+ 	
+ 	<insert id="insertEndSprintNotice">
+ 		INSERT
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, CHR(39) || (SELECT
+ 							 B.SPRINT_TITLE
+ 					    FROM TBL_SPRINT B
+ 					   WHERE B.SPRINT_CODE = #{ sprintCode }) || CHR(39) || '스프린트가 종료 되었습니다.'
+ 		, '/sprint/list'
+ 		, 'Y'
+ 		, 2
+ 		, #{ sprintCode }
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectSprintMemberList3" resultType="_int">
+ 		SELECT
+ 			   A.MEMBER_NO
+ 		  FROM TBL_SPRINT_MEMBERS A
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		   AND A.SPRINT_PARTICIPATION_YN = 'Y'
+ 	</select>
+ 	
+ 	<insert id="insertUpdateSprintNotice" parameterType="hashmap">
+ 		INSERT
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, CHR(39) || (SELECT
+ 							 B.SPRINT_TITLE
+ 					    FROM TBL_SPRINT B
+ 					   WHERE B.SPRINT_CODE = #{ sprintCode }) || CHR(39) || '스프린트가 수정 되었습니다.'
+ 		, '/sprint/list'
+ 		, 'Y'
+ 		, 2
+ 		, #{ memberNo }
+ 		, #{ sprintCode }
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectIssueList" parameterType="hashmap">
+ 		SELECT
+ 			   A.ISSUE_CODE
+ 		  FROM TBL_ISSUE A
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		   AND A.ISSUE_PROGRESS IN ('해결전', '해결중')
+ 	</select>
+ 	
+ 	<update id="updateIssueProgress" >
+ 		UPDATE
+ 		       TBL_ISSUE A
+ 		   SET A.ISSUE_PROGRESS = '보류'
+ 		 WHERE A.ISSUE_CODE = #{ issueCode }
+ 	</update>
+ 	
+ 	<insert id="insertIssueProgressHistory" parameterType="hashmap">
+ 		INSERT
+ 		  INTO TBL_ISSUE_PROGRESS_HISTORY A
+ 		(
+ 		  A.ISSUE_PROGRESS_HISTORY_NO
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.ISSUE_PROGRESS_HISTORY_STATUS
+ 		, A.ISSUE_CODE
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, '보류'
+ 		, #{ issueCode }
+ 		, #{ memberNo }
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectIssueList2" resultType="_int">
+ 		SELECT
+ 			   A.ISSUE_CODE
+ 		  FROM TBL_ISSU A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.ISSU_PROGRESS = '보류'
+ 		   AND A.ISSU_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<update id="updateIssueSprintCode">
+ 		UPDATE
+ 		       TBL_ISSUE A
+ 		   SET A.SPRINT_CODE = (SELECT
+ 		   							   B.SPRINT_CODE
+ 		   						  FROM TBL_SPRINT B
+ 		   						 WHERE B.PROJECT_CODE = #{ projectCode }
+ 		   						   AND B.SPRINT_PROGRESS IN ('진행중', '진행전'))
+ 		   	 , A.ISSU_PROGRESS = '해결전'
+ 	</update>
+ 	
+ 	<insert id="insertIssueProgressHistory2" parameterType="hashmap">
+ 		INSERT
+ 		  INTO TBL_ISSUE_PROGRESS_HISTORY A
+ 		(
+ 		  A.ISSUE_PROGRESS_HISTORY_NO
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.ISSUE_PROGRESS_HISTORY_STATUS
+ 		, A.ISSUE_CODE
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, '해결전'
+ 		, #{ issueCode }
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updateIssueMembersParticipation">
+ 		UPDATE
+ 		       TBL_ISSUE_MEMBERS A
+ 		   SET A.ISSUE_PARTICIPATION_YN = 'N'
+ 		 WHERE A.ISSUE_CODE = #{ issueCode }
+ 	</update>
+ 	
+ 	<update id="updateIssueProgress2">
+ 		UPDATE
+ 		       TBL_ISSUE A
+ 		   SET A.ISSUE_PROGRESS = '보류'
+ 		 WHERE A.SPRINT_CODE = (SELECT
+ 		 							   B.SPRINT_CODE
+ 		 						  FROM TBL_SPRINT B
+ 		 						 WHERE B.PROJECT_CODE = #{ projectCode }
+ 		 						   AND B.SPRINT_PROGRESS IN ('진행중', '진행전'))
+ 	</update>
+ 	
+ 	<select id="selectIssueList3">
+ 		SELECT
+ 			   A.ISSUE_CODE
+ 		  FROM TBL_ISSUE A
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		   AND A.ISSUE_DELETE_STATUS = 'N'
+ 	</select>
  </mapper>

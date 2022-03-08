@@ -29,13 +29,13 @@ public class TaskServiceImpl implements TaskService {
 		String message = null;
 		
 		/* 진행중이거나 진행전인 스프린트가 있는지 확인 결과 */
-		int progressTaskResult = mapper.checkSprintProgress(projectCode);
+		int progressSprintResult = mapper.checkSprintProgress(projectCode);
 		
 		/* 태스크에 스프린트 코드를 넣어줌 */
 		task.setSprintCode(mapper.selectSprintCode(projectCode));
 		
 		/* 진행중인 태크스가 있다면 */
-		if(progressTaskResult > 0) {
+		if(progressSprintResult > 0) {
 			
 			/* 태스크 생성 결과 */
 			int result1 = mapper.insertTask(task);

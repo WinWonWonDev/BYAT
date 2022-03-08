@@ -85,5 +85,42 @@ public interface SprintMapper {
 
 	int updateTaskProgress3(TaskDTO task);
 
+	int insertSprintNotice(Map<String, Integer> map);
+
+	int insertStartSprintNotice(Map<String, Integer> map);
+
+	List<Integer> selectSprintMemberList(Map<String, Integer> map);
+
+	List<Integer> selectSprintMemberList2(Map<String, Integer> map);
+
+	int insertEndSprintNotice(Map<String, Integer> map);
+
+	int insertUpdateSprintNotice(Map<String, Integer> map);
+
+	List<Integer> selectSprintMemberList3(SprintDTO sprint);
+
+	List<Integer> selectIssueList(Map<String, Integer> map);
+
+	int updateIssueProgress(int issueCode);
+
+	int insertIssueProgressHistory(Map<String, Integer> issueMap);
+
+	List<Integer> selectIssueList2(SprintDTO sprint);
+
+	int updateIssueSprintCode(int projectCode);
+
+	int insertIssueProgressHistory2(Map<String, Integer> map);
+
+	int updateIssueMembersParticipation(int issueCode);
+
+	int updateIssueProgress2(int sprintCode);
+
+	List<Integer> selectIssueList3(int sprintCode);
+
+	int insertSprintVersionHistory3(int sprintCode);
+
+	int insertIssueProgressHistory3(int issueCode);
+
+
 
 }
