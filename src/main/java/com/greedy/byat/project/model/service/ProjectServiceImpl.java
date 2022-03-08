@@ -173,7 +173,7 @@ public class ProjectServiceImpl implements ProjectService {
 			int statusResult = mapper.insertFirstProgressHistory(project);
 			int memberHistoryResult = mapper.insertFirstMemberHistory(projectMembers);
 			project.setTitle(projectTitle);
-			int calendarInsertResult = mapper.insertCalendarProjectSchedule(project);
+			int calendarInsertResult = mapper.insertCalendarFirstProjectSchedule(project);
 			
 			if(!(historyResult > 0)) {
 				
@@ -297,6 +297,8 @@ public class ProjectServiceImpl implements ProjectService {
 			insertNoticeProjectRegistResult = mapper.insertNoticeProjectRegist(notice);
 			calendarMember.setNo(projectMembers.get(i).getNo());
 			calendarProject.setWriterMember(calendarMember);
+			
+			System.out.println("!: " + calendarProject);
 			
 			updateCalendarProjectResult = mapper.updateCalendarProject(calendarProject);
 			
@@ -455,8 +457,6 @@ public class ProjectServiceImpl implements ProjectService {
 			} else {
 				
 				int memberHistoryResult = mapper.insertMemberHistory(registMember);
-				
-				System.out.println("문제있니 ? : " + project);
 				
 				int calendarInsertResult = mapper.insertCalendarProjectSchedule(project);
 				

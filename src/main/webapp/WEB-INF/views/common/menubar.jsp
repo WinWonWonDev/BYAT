@@ -249,7 +249,7 @@
 		display: none;
 		position:relative;
 		width:100%;
-		z-index:1;
+		z-index:1500;
 	}
 	
 	#logoutModal h2 {
@@ -484,8 +484,8 @@
 				${ sessionScope.loginMember.name }
 			</div>
 			<div class="user-image">
-		   		<img src=""><!-- 로그인한 유저 사진 -->
-			</div>
+               <img src="${ pageContext.servletContext.contextPath }${ requestScope.attachment.thumbnailPath }">
+         	</div>
 			</div>
         </div>
     </nav>

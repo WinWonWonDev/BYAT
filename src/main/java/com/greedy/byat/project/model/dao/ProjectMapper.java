@@ -77,5 +77,7 @@ public interface ProjectMapper {
 
 	int updateCalendarProject(ProjectDTO calendarProject);
 
+	int insertCalendarFirstProjectSchedule(ProjectDTO project);
+
 
 }

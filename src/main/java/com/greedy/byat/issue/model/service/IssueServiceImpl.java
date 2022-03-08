@@ -8,18 +8,24 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greedy.byat.common.exception.issue.IssueDeleteNoticeException;
 import com.greedy.byat.common.exception.issue.IssueInsertMemberHistoryException;
 import com.greedy.byat.common.exception.issue.IssueInsertVersionHistoryException;
 import com.greedy.byat.common.exception.issue.IssueModifyMemberException;
+import com.greedy.byat.common.exception.issue.IssueModifyNoticeException;
 import com.greedy.byat.common.exception.issue.IssueModifyStatusException;
 import com.greedy.byat.common.exception.issue.IssueRegistStatusHistoryException;
 import com.greedy.byat.common.exception.issue.IssueRemoveException;
 import com.greedy.byat.common.exception.issue.IssueRemoveMemberException;
+import com.greedy.byat.common.exception.issue.IssueRemoveMemberNoticeException;
+import com.greedy.byat.common.exception.issue.IssueStatusModifyNoticeException;
 import com.greedy.byat.common.exception.issue.IssueUpdateContentException;
+import com.greedy.byat.issue.controller.IssueController;
 import com.greedy.byat.issue.model.dao.IssueMapper;
 import com.greedy.byat.issue.model.dto.IssueDTO;
 import com.greedy.byat.issue.model.dto.IssueMembersDTO;
 import com.greedy.byat.member.model.dto.MemberDTO;
+import com.greedy.byat.notice.model.dto.NoticeDTO;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.sprint.model.dto.SprintMembersDTO;
 
@@ -61,17 +67,35 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	@Override
-	public int updateIssueStatus(IssueDTO issue) throws IssueModifyStatusException, IssueRegistStatusHistoryException {
+	public int updateIssueStatus(IssueDTO issue) throws IssueModifyStatusException, IssueRegistStatusHistoryException, IssueStatusModifyNoticeException {
 		
-		System.out.println("!! : " + issue);
-
 		int result = mapper.updateIssueStatus(issue);
-		
-		System.out.println("?? : " + issue);
 		
 		int historyResult = mapper.insertIssueProgressHistory(issue);
 		
-		System.out.println(historyResult);
+		List<IssueMembersDTO> issueMemberList = mapper.selectIssueMemberList(issue.getCode());
+		
+		IssueDTO noticeIssue = mapper.selectIssue(issue.getCode());
+		
+		NoticeDTO notice = new NoticeDTO();
+		notice.setIssueCode(noticeIssue.getCode());
+		notice.setBody("\'" + noticeIssue.getTitle() + "\' 이슈의 상태가 " + noticeIssue.getProgress() + "(으)로 변경되었습니다.");
+		notice.setCategory(4);
+		notice.setUrl("/issue/list?code=" + noticeIssue.getProjectCode());
+		notice.setStatus("N");
+		
+		int noticeInsertIssueStatusChangeResult = 0;
+		
+		for(int i = 0; i < issueMemberList.size();i ++) {
+			
+			notice.setNo(issueMemberList.get(i).getNo());
+			noticeInsertIssueStatusChangeResult = mapper.insertNoticeIssue(notice);
+			
+			if(!(noticeInsertIssueStatusChangeResult > 0)) {
+				
+				throw new IssueStatusModifyNoticeException("이슈 상태 변경 알림 생성 실패!");
+			}
+		}
 		
 		if(!(result > 0)) {
 			
@@ -115,7 +139,7 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	@Override
-	public void updateIssue(IssueDTO modifyIssue) throws IssueModifyMemberException, IssueUpdateContentException, IssueInsertVersionHistoryException, IssueInsertMemberHistoryException {
+	public void updateIssue(IssueDTO modifyIssue) throws IssueModifyMemberException, IssueUpdateContentException, IssueInsertVersionHistoryException, IssueInsertMemberHistoryException, IssueModifyNoticeException {
 
 		IssueDTO boforeIssue = mapper.selectIssue(modifyIssue.getCode());
 		
@@ -129,9 +153,27 @@ public class IssueServiceImpl implements IssueService {
 		
 		List<IssueMembersDTO> newIssueMemberList = new ArrayList<>();
 		
+		NoticeDTO notice = new NoticeDTO();
+		notice.setIssueCode(modifyIssue.getCode());
+		notice.setBody("\'" + boforeIssue.getTitle() + "\' 이슈가 수정되었습니다.");
+		notice.setCategory(4);
+		notice.setUrl("/issue/list?code=" + boforeIssue.getProjectCode());
+		notice.setStatus("N");
+		
+		int noticeInsertIssueUpdateResult = 0;
+		
 		for(int i = 0; i < modifyIssue.getIssueMemberList().size(); i++) {
 			
 			for(int j = 0; j < beforeIssueMemberList.size(); j++) {
+				
+				notice.setNo(beforeIssueMemberList.get(j).getNo());
+				
+				noticeInsertIssueUpdateResult = mapper.insertNoticeIssue(notice);
+				
+				if(!(noticeInsertIssueUpdateResult > 0)) {
+					
+					throw new IssueModifyNoticeException("이슈 수정 알림 생성 실패!");
+				}
 				
 				if(modifyIssue.getIssueMemberList().get(i).getNo() == beforeIssueMemberList.get(j).getNo()) {
 					break;
@@ -139,14 +181,13 @@ public class IssueServiceImpl implements IssueService {
 				
 				if(j == beforeIssueMemberList.size() - 1) {
 					modifyIssue.getIssueMemberList().get(i).setParticipationYn("Y");
+					modifyIssue.getIssueMemberList().get(i).setSprintCode(modifyIssue.getSprintCode());
 					newIssueMemberList.add(modifyIssue.getIssueMemberList().get(i));
 				}
 				
 			}
 			
 		}
-		
-		System.out.println("newMember : " + newIssueMemberList);
 		
 		if(!(updateIssueContentResult > 0)) {
 			
@@ -165,11 +206,14 @@ public class IssueServiceImpl implements IssueService {
 			
 			if(newIssueMemberList != null) {
 				
+				notice.setBody("\'" + boforeIssue.getTitle() + "\' 의 담당자로 지정되었습니다.");
 					
 				for(int i = 0; i < newIssueMemberList.size(); i++) {
-
+					
 					int checkBeforeMember = mapper.checkBeforeIssueMember(newIssueMemberList.get(i));
 					
+					notice.setNo(newIssueMemberList.get(i).getNo());
+
 					if(checkBeforeMember > 0) {
 						
 						updateIssueMemberResult = mapper.updateIssueMember(newIssueMemberList.get(i));
@@ -181,9 +225,16 @@ public class IssueServiceImpl implements IssueService {
 							
 							int issueMembersHistoryResult = mapper.insertIssueMembersHistory(newIssueMemberList.get(i));
 							
+							int issueMembersNoticeResult = mapper.insertNoticeIssue(notice);
+							
 							if(!(issueMembersHistoryResult > 0)) {
 								
 								throw new IssueInsertMemberHistoryException("이슈 담당자 변경 히스토리 생성 실패!");
+							}
+							
+							if(!(issueMembersNoticeResult > 0)) {
+								
+								throw new IssueModifyNoticeException("이슈 담당자 지정 알림 생성 실패!");
 							}
 							
 						}
@@ -199,9 +250,16 @@ public class IssueServiceImpl implements IssueService {
 							
 							int issueMembersHistoryResult = mapper.insertIssueMembersHistory(newIssueMemberList.get(i));
 							
+							int issueMembersNoticeResult = mapper.insertNoticeIssue(notice);
+							
 							if(!(issueMembersHistoryResult > 0)) {
 								
 								throw new IssueInsertMemberHistoryException("이슈 담당자 변경 히스토리 생성 실패!");
+							}
+							
+							if(!(issueMembersNoticeResult > 0)) {
+								
+								throw new IssueModifyNoticeException("이슈 담당자 지정 알림 생성 실패!");
 							}
 							
 						}
@@ -214,14 +272,24 @@ public class IssueServiceImpl implements IssueService {
 			
 		}
 		
-		
-		
 	}
 
 	@Override
-	public int deleteIssueMember(IssueMembersDTO removeMember) throws IssueRemoveMemberException, IssueInsertMemberHistoryException {
+	public int deleteIssueMember(IssueMembersDTO removeMember) throws IssueRemoveMemberException, IssueInsertMemberHistoryException, IssueRemoveMemberNoticeException {
 
 		int result = mapper.deleteIssueMember(removeMember);
+		
+		int issueRemoveMemberNoticeResult = 0;
+		
+		IssueDTO issue = mapper.selectIssue(removeMember.getCode());
+		
+		NoticeDTO notice = new NoticeDTO();
+		notice.setIssueCode(issue.getCode());
+		notice.setBody("\'" + issue.getTitle() + "\' 이슈의 담당자에서 제외되었습니다.");
+		notice.setCategory(4);
+		notice.setUrl("/issue/list?code=" + issue.getProjectCode());
+		notice.setStatus("N");
+		notice.setNo(removeMember.getNo());
 		
 		if(!(result > 0)) {
 			
@@ -230,9 +298,16 @@ public class IssueServiceImpl implements IssueService {
 			
 			int insertMemberHistoryResult = mapper.insertIssueMembersHistory(removeMember);
 			
+			issueRemoveMemberNoticeResult = mapper.insertNoticeIssue(notice);
+			
 			if(!(insertMemberHistoryResult > 0)) {
 				
 				throw new IssueInsertMemberHistoryException("이슈 담당자 변경 히스토리 생성 실패!");
+			}
+			
+			if(!(issueRemoveMemberNoticeResult > 0)) {
+				
+				throw new IssueRemoveMemberNoticeException("이슈 멤버 제외 알림 생성 실패!");
 			}
 		}
 		
@@ -240,11 +315,17 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	@Override
-	public int deleteIssue(int code, int changeMemberNo) throws IssueRemoveException, IssueInsertVersionHistoryException {
+	public int deleteIssue(int code, int changeMemberNo) throws IssueRemoveException, IssueInsertVersionHistoryException, IssueDeleteNoticeException {
 		
 		int result = mapper.deleteIssue(code);
 		
+		int issueDeleteNoticeResult = 0;
+		
 		IssueDTO issue = new IssueDTO();
+		
+		List<IssueMembersDTO> issueMemberList = mapper.selectIssueMemberList(code);
+		
+		NoticeDTO notice = new NoticeDTO();
 		
 		if(!(result > 0)) {
 			
@@ -255,7 +336,23 @@ public class IssueServiceImpl implements IssueService {
 			issue.setWriter(changeMemberNo);
 			issue.setVersion(issue.getVersion() + 1);
 			
-			System.out.println("removeissue : " + issue);
+			notice.setIssueCode(issue.getCode());
+			notice.setBody("\'" + issue.getTitle() + "\' 이슈가 삭제되었습니다.");
+			notice.setCategory(4);
+			notice.setUrl("/issue/list?code=" + issue.getProjectCode());
+			notice.setStatus("N");
+
+			for(int i = 0; i < issueMemberList.size(); i++) {
+				
+				notice.setNo(issueMemberList.get(i).getNo());
+				issueDeleteNoticeResult = mapper.insertNoticeIssue(notice);
+				
+				if(!(issueDeleteNoticeResult > 0)) {
+					
+					throw new IssueDeleteNoticeException("이슈 삭제 알림 생성 실패!");
+				}
+			}
+			
 			
 			int versionHistoryInsertResult = mapper.insertIssueVersionHistory(issue);
 			
