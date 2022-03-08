@@ -16,7 +16,7 @@ public interface SprintService {
 
 	SprintDTO selectSprint(int sprintCode);
 
-	void removeSprint(int sprintCode);
+	void removeSprint(Map<String, Integer> map);
 
 	String selectProjectProgress(int projectCode);
 

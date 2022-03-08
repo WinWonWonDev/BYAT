@@ -607,16 +607,4 @@
 		 						   AND B.SPRINT_PROGRESS IN ('진행전','진행중'))
 	</select>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
  </mapper>

@@ -129,11 +129,13 @@ public class SprintController {
 		
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
 		
-		System.out.println("프로젝토 꼬드 : " + projectCode);
-		System.out.println("스뿌린뜨 꼬드 : " + sprintCode);
+		Map<String, Integer> map = new HashMap<>();
+		map.put("memberNo", memberNo);
+		map.put("sprintCode", sprintCode);
 		
-		sprintService.removeSprint(sprintCode);
+		sprintService.removeSprint(map);
 		
 		rttr.addFlashAttribute("message", "스프린트 삭제 완료");
 		

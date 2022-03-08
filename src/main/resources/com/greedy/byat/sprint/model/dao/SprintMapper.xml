@@ -948,4 +948,72 @@
  		 WHERE A.SPRINT_CODE = #{ sprintCode }
  		   AND A.ISSUE_DELETE_STATUS = 'N'
  	</select>
+ 	
+ 	<insert id="insertSprintVersionHistory3">
+ 		INSERT
+ 		  INTO TBL_SPRINT_VERSION_HISTORY A
+ 		(
+ 		  A.SPRINT_VERSION_HISTORY_NO
+ 		, A.SPRINT_VERSION_HISTORY_TITLE
+ 		, A.SPRINT_VERSION_HISTORY_BODY
+ 		, A.SPRINT_HISTORY_VERSION
+ 		, A.SPRINT_HISTORY_UPDATE_DATE
+ 		, A.SPRINT_HISTORY_UPDATE_MEMBER
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_VERSION_HISTORY_NO.NEXTVAL
+ 		, #{ title }
+ 		, #{ body }
+ 		, #{ version }
+ 		, SYSDATE
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		, #{ code }
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updateIssueMembersParticipation2">
+ 		UPDATE
+ 		       TBL_ISSUE_MEMBERS A
+ 		   SET A.ISSUE_PARTICIPATION_YN = 'N'
+ 		 WHERE A.ISSUE_CODE = #{ issueCode }
+ 	</update>
+ 	
+ 	<select id="selectSprintMemberList4" resultType="_int">
+ 		SELECT
+ 			   A.MEMBER_NO
+ 		  FROM TBL_SPRINT_MEMBERS A
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 	</select>
+ 	
+ 	<insert id="insertRemoveSprintNotice" parameterType="hashmap">
+ 		INSERT
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, CHR(39) || (SELECT
+ 							 B.SPRINT_TITLE
+ 					    FROM TBL_SPRINT B
+ 					   WHERE B.SPRINT_CODE = #{ sprintCode }) || CHR(39) || '스프린트가 삭제 되었습니다.'
+ 		, '/sprint/list'
+ 		, 'Y'
+ 		, 2
+ 		, #{ memberNo }
+ 		, #{ sprintCode }
+ 		)
+ 	</insert>
  </mapper>
