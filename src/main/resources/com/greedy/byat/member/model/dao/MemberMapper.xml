@@ -16,6 +16,15 @@
  		<result property="initPwdYN" column="INIT_PWD_YN"/>
  	</resultMap>
  	
+ 	<resultMap id="attachmentResultMap" type="AttachmentDTO">
+ 		<id property="code" column="ATTACHMENT_CODE"/>
+ 		<result property="orgName" column="ATTACHMENT_ORG_NAME"/>
+ 		<result property="savedName" column="ATTACHMENT_SAVED_NAME"/>
+ 		<result property="path" column="ATTACHMENT_PATH"/>
+ 		<result property="thumbnailPath" column="ATTACHMENT_THUMBNAIL_PATH"/>
+ 		<result property="status" column="ATTACHMENT_STATUS"/>
+ 		<result property="memberNo" column="MEMBER_NO"/>
+ 	</resultMap>
  	
  	<select id="selectEncryptedPwd" resultType="java.lang.String">
  		SELECT
@@ -202,11 +211,53 @@
 	<update id="updateMemberProfile">
         UPDATE /* com.greedy.byat.member.model.dao.MemberMapper#updateMemberProfile() */
                TBL_MEMBER A
-               A.MEMBER_NAME = #{ name }
+           SET A.MEMBER_NAME = #{ name }
              , A.MEMBER_EMAIL = #{ email }
              , A.MEMBER_PHONE = #{ phone }
          WHERE A.ABSENCE_YN = 'N'
            AND A.MEMBER_ID = #{ id }
 	</update>
 	
+	<select id="selectAttachment" resultMap="attachmentResultMap">
+        SELECT /* com.greedy.byat.member.model.dao.MemberMapper#selectAttachment() */
+               A.ATTACHMENT_CODE
+             , A.ATTACHMENT_ORG_NAME
+             , A.ATTACHMENT_SAVED_NAME
+             , A.ATTACHMENT_PATH
+             , A.ATTACHMENT_THUMBNAIL_PATH
+             , A.ATTACHMENT_STATUS
+             , A.MEMBER_NO
+          FROM TBL_ATTACHMENT A
+         WHERE A.MEMBER_NO = #{ no }
+           AND A.ATTACHMENT_STATUS = 'Y'
+	</select>
+	
+	<update id="updateAttachmentStatus">
+        UPDATE
+               TBL_ATTACHMENT A
+           SET A.ATTACHMENT_STATUS = 'N'
+         WHERE A.MEMBER_NO = #{ no }
+	</update>
+	
+	<insert id="insertAttachment">
+        INSERT /* com.greedy.byat.member.model.dao.MemberMapper#updateAttachment() */
+          INTO TBL_ATTACHMENT A
+          (
+            A.ATTACHMENT_CODE
+          , A.ATTACHMENT_ORG_NAME
+          , A.ATTACHMENT_SAVED_NAME
+          , A.ATTACHMENT_PATH
+          , A.ATTACHMENT_THUMBNAIL_PATH
+          , A.MEMBER_NO
+          )
+          VALUES
+          (
+            SEQ_ATTACHMENT_CODE.NEXTVAL
+          , #{ orgName }
+          , #{ savedName }
+          , #{ path }
+          , #{ thumbnailPath }
+          , #{ memberNo }
+          )
+	</insert>
  </mapper>

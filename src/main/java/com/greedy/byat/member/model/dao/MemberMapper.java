@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.greedy.byat.member.model.dto.MemberDTO;
+import com.greedy.byat.profile.model.dto.AttachmentDTO;
 
 public interface MemberMapper {
 
@@ -40,5 +41,11 @@ public interface MemberMapper {
 	int initialInputInfo(HashMap<String, Object> map);
 	
 	int updateMemberProfile(MemberDTO member);
+
+	AttachmentDTO selectAttachment(int memberNo);
+	
+	int updateAttachmentStatus(int memberNo);
+
+	int insertAttachment(AttachmentDTO attachment);
 
 }

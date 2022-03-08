@@ -52,7 +52,8 @@ public class MemberServiceImpl implements MemberService {
 				if(mapper.initLogin(member) != null) {
 					
 					if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
-						return null;
+						rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+						return "redirect:/member/login";
 					
 					} else {
 						model.addAttribute("loginMember", mapper.initLogin(member));
@@ -72,7 +73,8 @@ public class MemberServiceImpl implements MemberService {
 			if(mapper.login(member) != null) {
 				
 					if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
-						return null;
+						rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
+						return "redirect:/member/login";
 						
 					} else {
 						model.addAttribute("loginMember", mapper.login(member));
