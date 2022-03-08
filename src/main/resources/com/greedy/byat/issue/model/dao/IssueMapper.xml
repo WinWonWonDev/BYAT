@@ -327,4 +327,144 @@
  		)
  	</insert>
  	
+ 	<select id="selectSprintCode" resultType="_int">
+ 		SELECT
+ 		       A.SPRINT_CODE
+ 		  FROM TBL_SPRINT A
+ 		 WHERE A.PROJECT_CODE = #{ code }
+ 		   AND (A.SPRINT_PROGRESS = '진행전'
+ 		    OR A.SPRINT_PROGRESS= '진행중')
+ 	</select>
+ 	
+ 	<insert id="registIssue" parameterType="IssueDTO">
+ 		INSERT
+ 		  INTO TBL_ISSUE A
+ 		(
+ 		  A.ISSUE_CODE
+ 		, A.ISSUE_TITLE
+ 		, A.ISSUE_BODY
+ 		, A.ISSUE_WRITING_TIME
+ 		, A.ISSUE_PROGRESS
+ 		, A.ISSUE_VERSION
+ 		, A.ISSUE_DELETE_STATUS
+ 		, A.ISSUE_WRITER
+ 		, A.SPRINT_CODE
+ 		, A.PROJECT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_CODE.NEXTVAL
+ 		, #{ title }
+ 		, #{ body }
+ 		, SYSDATE
+ 		, '진행전'
+ 		, 1
+ 		, 'N'
+ 		, #{ writer }
+ 		, #{ sprintCode }
+ 		, #{ projectCode }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertFirstIssueMember" parameterType="IssueMembersDTO">
+ 		INSERT
+ 		  INTO TBL_ISSUE_MEMBERS A
+ 		(
+ 		  A.ISSUE_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		, A.ISSUE_PARTICIPATION_YN
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_CODE.CURRVAL
+ 		, #{ no }
+ 		, #{ sprintCode }
+ 		, 'Y'
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertIssueFirstVersionHistory" parameterType="IssueDTO">
+ 		INSERT
+ 		  INTO TBL_ISSUE_VERSION_HISTORY A
+ 		(
+ 		  A.ISSUE_VERSION_HISTORY_NO
+ 		, A.ISSUE_VERSION_HISTORY_TITLE
+ 		, A.ISSUE_VERSION_HISTORY_BODY
+ 		, A.ISSUE_VERSION_HISTORY_VERSION
+ 		, A.ISSUE_CODE
+ 		, A.ISSUE_VERSION_HISTORY_UPDATE_MEMBER
+ 		, A.ISSUE_VERSION_HISTORY_UPDATE_DATE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_VERSION_HISTORY_NO.NEXTVAL
+ 		, #{ title }
+ 		, #{ body }
+ 		, #{ version }
+ 		, SEQ_ISSUE_CODE.CURRVAL
+ 		, (SELECT
+ 			      B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ writer })
+ 		, SYSDATE
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertIssueFirstProgressHistory" parameterType="IssueDTO">
+ 		INSERT
+ 		  INTO TBL_ISSUE_PROGRESS_HISTORY A
+ 		(
+ 		  A.ISSUE_PROGRESS_HISTORY_NO
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.ISSUE_PROGRESS_HISTORY_STATUS
+ 		, A.ISSUE_CODE
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, '진행전'
+ 		, SEQ_ISSUE_CODE.CURRVAL
+ 		, #{ name }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertNoticeIssueFirst" parameterType="NoticeDTO">
+ 		INSERT
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.PROJECT_CODE
+ 		, A.ISSUE_CODE
+ 		, A.SCHEDULE_CODE
+ 		, A.BACKLOG_CODE
+ 		, A.MEETINGLOG_CODE
+ 		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, #{ body }
+ 		, #{ url }
+ 		, #{ status }
+ 		, #{ category }
+ 		, #{ no }
+ 		, null
+ 		, SEQ_ISSUE_CODE.CURRVAL
+ 		, null
+ 		, null
+ 		, null
+ 		, null
+ 		, SYSDATE
+ 		)
+ 	</insert>
+ 	
  </mapper>
