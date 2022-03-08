@@ -44,4 +44,16 @@ public interface IssueMapper {
 
 	int insertNoticeIssue(NoticeDTO notice);
 
+	int selectSprintCode(int projectCode);
+
+	int registIssue(IssueDTO registIssue);
+
+	int insertFirstIssueMember(IssueMembersDTO issueMembersDTO);
+
+	int insertIssueFirstVersionHistory(IssueDTO registIssue);
+
+	int insertIssueFirstProgressHistory(IssueDTO registIssue);
+
+	int insertNoticeIssueFirst(NoticeDTO notice);
+
 }
