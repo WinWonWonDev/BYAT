@@ -8,4 +8,12 @@ public interface MeetinglogService {
 
 	List<MeetinglogDTO> selectMeetinglogList(int projectCode);
 
+	int registMeetinglog(MeetinglogDTO meetinglog);
+
+	MeetinglogDTO selectMeetinglogDetail(int meetinglogCode);
+
+	int modifyMeetinglog(MeetinglogDTO meetinglog);
+
+	
+
 }

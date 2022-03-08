@@ -19,6 +19,7 @@ public class MeetinglogDTO {
 	private java.sql.Date writingDate;
 	private int version;
 	private String deleteStatus;
-	private String writer;
 	private int projectCode;
+	private int memberNo; 
+	private String memberName;
 }

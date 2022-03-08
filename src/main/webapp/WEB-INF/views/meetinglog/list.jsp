@@ -31,15 +31,17 @@
       	left:3%;
       	width:95%;
       	height:78%;
-	}
+      	z-index:1;
+      	
+      	}
 	
 	.meetinglogListHead {
-		height:15%;
+		height:20%;
 	}
 
 	.meetinglogListName {
 		margin-left:3%;
-		margin-top:1%;
+		margin-top:3%;
 		font-size:35px;
 		float:left;
 		display:inline;
@@ -56,11 +58,55 @@
 		margin-right:auto;
 	}
 	
-	.meetinglogBox {
-		border:2px solid black;
-		width:250px;
-		height:100px;
+	.meetinglogListBody{
+		width:100%;
+		height: 80%;
+		border:1px solid black;
+	
+	}
+	
+	.meetinglogBox , .meetinglogPlusBox {
+		float: left;
+		width: 250px;
+		height: 120px;
 		margin-left:3%;
+		margin-top:3%;
+		cursor:pointer;
+		border:2px solid black;
+	}
+	
+	.titleBox{
+		width:228px;
+		height: 30px;
+		font-size: 120%;
+		text-align: center;
+		border:1px solid black;
+		text-shadow: 2px 2px 2px gray;
+		overflow: hidden;
+  		text-overflow: ellipsis;
+  		white-space: nowrap;
+		margin-top:5%;
+		padding-left:10px;
+		padding-right:10px;
+	}
+	
+	.dateBox{
+	 	float:right;
+	 	text-align: right;
+	 	margin-top:15%;
+	 	margin-left:15%;
+	 	padding-right:10px;
+	 	font-size: 10px;
+	 	width:100px;
+	}
+	
+	.writerBox{
+		position: relative;
+		text-align: left;
+	 	font-size: 10%;
+	 	margin-top:15%;
+	 	margin-left:3%;
+	 	width:100px;
 	}
 	
 	.plusBox {
@@ -69,6 +115,7 @@
 		height:20px;
 		margin-left:2%;
 		margin-top:3%;
+		cursor:pointer;
 	}
 	
 	.plusBlackImage {
@@ -77,24 +124,23 @@
 		background:url("/byat/resources/images/plusBlackButton.png") no-repeat;
 		background-size:cover;
 		border:0px;
-		cursor:pointer;
 		margin-left:45%;
 	}
 	
+	//모달창 생성
 	#meetinglogCreateModal {
-		display: none;
-		position:relative;
+		display:none;
+		position:absolute;
 		width:100%;
 		height:100%;
+		bottom:1%;
 		z-index:1;
 	}
-	
 	#meetinglogCreateModal button {
 		display:inline-block;
 		width:100px;
 		margin-left:calc(100% - 100px - 10px);
 	}
-	
 	#meetinglogCreateModal .modal_content {
 		width:500px;
 		height:600px;
@@ -103,8 +149,50 @@
 		border:1px solid black;
 		border-radius:25px;
 	}
-	
 	#meetinglogCreateModal .modal_layer {
+		position:fixed;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+		background:rgba(0, 0, 0, 0.5);
+		bottom:1%;
+		z-index:1;
+	}
+	
+	.modal_head {
+		height:35px;
+		color:white;
+		text-align:left;
+		font-size:20px;
+		margin-top:20px;
+	}
+	
+	#meetinglogDetailModal button {
+		display:inline-block;
+		width:100px;
+		margin-left:calc(100% - 100px - 10px);
+	}
+	
+	
+	#meetinglogDetailModal{
+		display: none;
+		position: absolute;
+		width:100%;
+		height:100%;
+		z-index:1;
+	}
+	
+	#meetinglogDetailModal .modal_content {
+		width:500px;
+		height:600px;
+		margin:20px auto;
+		background:#29428C;
+		border:1px solid black;
+		border-radius:25px;
+	}
+	
+	#meetinglogDetailModal .modal_layer {
 		position:fixed;
 		top:0;
 		left:0;
@@ -113,8 +201,8 @@
 		background:rgba(0, 0, 0, 0.5);
 		z-index:-1;
 	}
-	.modal_head {
 	
+	.modal_head {
 		height:35px;
 		color:white;
 		text-align:left;
@@ -122,7 +210,7 @@
 		margin-top:20px;
 	}
 	
-	#meetingLogCloseBtn {
+	#meetingLogCloseBtn, #meetingLogDetailCloseBtn {
 		background-color:rgb(25,25,112);
 		color:white;
 		text-align:center;
@@ -130,11 +218,11 @@
 		width:80px;
 		height:30px;
 		position:absolute;
-		right:30%;
+		right:15%;
 		top:5%;
 	}
 	
-	#meetingLogCreateBtn {
+	#meetingLogCreateBtn, #meetingLogDetailCreateBtn {
 		background-color:rgb(25,25,112);
 		color:white;
 		text-align:center;
@@ -142,7 +230,19 @@
 		width:80px;
 		height:30px;
 		position:absolute;
-		right:55%;
+		right:60%;
+		top:5%;
+	}
+	#meetingLogDetailDeleteBtn {
+		display:none;
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:80px;
+		height:30px;
+		position:absolute;
+		right:38%;
 		top:5%;
 	}
 	
@@ -169,29 +269,111 @@
 		margin-left: 20px;
 	}
 	
-	h5 {
-		font-size: 20px;
-		float: left;
-		margin-left: 30px;
-		margin-right: 105px;
-		margin-bottom: 0px;
-		height: 20px;
-	}
-	
 	form {
 		width:100%;
 		height:100%;
 	}
 	
-	.meetingLogTitle {
+	.meetingLogTitle, .meetingLogDetailTitle {
 		font-size:30px;	
+		
 	}
 	
-	.meetingLogDescription {
+	.meetingLogDescription , .meetingLogDetailDescription {
 		margin-top: 10%;
 	}
 	
+	.titleError {
+		display: none;
+		color:red;
+		font-size:15px;
+		float:left;
+		margin-left:40px;
+	}
 	
+	#delete_modal {
+		display: none;
+		position:relative;
+		width:100%;
+		height:100%;
+		z-index:1;
+	}
+		
+	#delete_modal h2 {
+		margin:0;
+	}
+	#delete_modal button {
+		display:inline-block;
+		width:100px;
+		margin-left:calc(100% - 100px - 10px);
+	}
+	
+	#delete_modal .delete_modal_content {
+		width:700px;
+		height:300px;
+		margin:100px auto;
+		/* padding:20px 10px; */
+		background:#fff;
+		border:2px solid #666;
+	}
+	
+	.delete_modal_head {
+		width:100.1%;
+		height:35px;
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		font-size:20px;
+		float:right;
+	}
+
+	#delete_modal_close_btn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:80px;
+		height:50px;
+		position:absolute;
+		right:30%;
+		top:20%;
+	}
+	#delete_modal_ok_btn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:80px;
+		height:50px;
+		position:absolute;
+		right:55%;
+		top:20%;
+	}
+	
+	.delete_modal_content_message {
+		width:100%;
+		height:50%;
+		float:right;
+		font-size:30px;
+		text-align:center;
+	}
+	
+	.delete_modal_button {
+		width:100%;
+		height:30%;
+		float:right;
+		position:relative;
+	}
+	.delete_modal_head {
+		width:100.1%;
+		height:35px;
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		font-size:20px;
+		float:right;
+	}
+
 </style>
 <title>Insert title here</title>
 </head>
@@ -211,34 +393,111 @@
 					</div>
 				</div>
 	      </div>
-	      <div class="meetinglogBox">
-	      		<div class="plusBox">
-	      			<button type="button" class="plusBlackImage" id="plusBlackImage"></button>
-	      		</div>
-	      </div>
-	</div>
-	<div id="meetinglogCreateModal">
-  
-  		<div class="modal_content">
-  		<form action="" method="post">
-			<div class="modal_head">
-			<h3>회의록 생성</h3>
-	    	</div>
-      		<div class="modal_content-box">
-      			<input type="text" class="meetingLogTitle" name="meetingLogTitle" placeholder="MeetingLog-001">
-      			<textarea class="meetingLogDescription" id="meetingLogDescription" rows="20" cols="49" placeholder="상세내용을 입력해주세요"></textarea>
-      		</div>
-      		<div class="modal_button">
-	        	<button type="button" id="meetingLogCreateBtn">Ok</button>
-	        	<button type="button" id="meetingLogCloseBtn">Cancel</button>
-      		</div>
-		</form>
-   		</div>
-  		<div class="modal_layer"></div>
+	      <div class="meetinglogListBody">
+		      <c:forEach items="${meetinglogList}" var="meetinglogList">
+			      <div class="meetinglogBox" id="meetinglogBox">
+			      	  <input type="hidden" id="meetinglogCode" value="${meetinglogList.code}"/>
+			      	  <input type="hidden" id="projectCode" value="${meetinglogList.projectCode}"/>
+				      <div id="titleBox" class="titleBox"><c:out value="${meetinglogList.title}"/></div>
+				      <div id"class="dateBox"><c:out value="작성날짜  : ${meetinglogList.writingDate}"/></div>
+				      <div class="writerBox"><c:out value=" ${meetinglogList.memberName}"/></div>
+			      </div>
+		      </c:forEach>
+		      
+		      <div class="meetinglogPlusBox" id="meetinglogPlusBox">
+		      		<div class="plusBox" id="plusBox">
+		      			<button type="button" class="plusBlackImage" id="plusBlackImage"></button>
+		      		</div>
+		      </div>
+		</div>
 	</div>
 	
+	<!-- 모달창 생성 -->
+	<div id="meetinglogCreateModal" style="display:none">
+  		<div class="modal_content">
+	  		<form id="createProjectForm" action="${ pageContext.servletContext.contextPath }/meetinglog/regist"  method="post">
+				<div class="modal_head">
+					<h3>회의록 생성</h3>
+		    	</div>
+	      		<div class="modal_content-box">
+	      			<input type="hidden" id="projectCode" name="code" value="${code}"/>
+	      			<input type="text"  id ="meetingLogTitle" class="meetingLogTitle" name="meetingLogTitle" placeholder="제목  (필수항목)">
+	      			<div id ="titleError" class="titleError"><c:out value="제목(필수항목)을 입력해주세요.."/></div>
+	      			<textarea  id ="meetingLogBody"class="meetingLogDescription" name="meetingLogDescription" rows="20" cols="49" placeholder="상세내용을 입력해주세요"></textarea>
+	      		</div>
+	      		<div class="modal_button">
+		        	<button type="button" id="meetingLogCreateBtn">Ok</button>
+		        	<button type="button" id="meetingLogCloseBtn">Cancel</button>
+	      		</div>
+			</form>
+   		</div>
+   		<div class="modal_layer"></div>
+	</div>
+	
+	<!-- 모달창 상세 수정 -->
+	<div id="meetinglogDetailModal">
+  		<div class="modal_content">
+  			<form id="updateProjectForm" action="${ pageContext.servletContext.contextPath }/meetinglog/modify"  method="post">
+				<div class="modal_head">
+				<h3>회의록 상세/수정</h3>
+		    	</div>
+	      		<div class="modal_content-box">
+	      			<input type="hidden" name="code" value="${code}">
+	      			<input type="hidden" name="memberName" value="${sessionScope.loginMember.name}">
+	      			<input type="hidden" id="meetingLogDetailCode" name="meetingLogDetailCode" value="">
+	      			<input type="text" id ="meetingLogDetailTitle" class="meetingLogDetailTitle" name="meetingLogDetailTitle" value="">
+	      			<div id ="DetailTitleError" class="titleError"><c:out value="제목(필수항목)을 입력해주세요.."/></div>
+	      			<textarea id="meetingLogDetailBody" class="meetingLogDescription"  name="meetingLogDetailBody"  rows="20" cols="49" value=""></textarea>
+	      		</div>
+	      		<div class="modal_button" id ="modal_button">
+		        	<button type="button" id="meetingLogDetailCreateBtn">Ok</button>
+	        		<button type="button" id="meetingLogDetailDeleteBtn" >Delete</button>
+		        	<button type="button" id="meetingLogDetailCloseBtn">Cancel</button>
+	      		</div>
+      		</form>
+   		</div>
+   		<div class="modal_layer"></div>
+	</div>
+	
+	<div id="delete_modal">
+   
+	    <div class="delete_modal_content">
+		  	<form id="removeMeetingForm" action="${ pageContext.servletContext.contextPath }/meetinglog/remove"  method="get">
+			    <input type="hidden" name="meetingCode" value="${meetingCode}">
+			    <div class="delete_modal_head">
+			    	Alert Message
+			    </div>
+		       	<div class="delete_modal_content_message">
+		  	   		<br>삭제한 회의록는 <font style="color:red;">복구</font>하실 수 없습니다. <br>정말 삭제하시겠습니까?
+		       	</div>
+		       	<div class="delete_modal_button">
+			        <button type="button" id="delete_modal_ok_btn">Ok</button>
+			        <button type="button" id="delete_modal_close_btn">Cancel</button>
+		       	</div>
+		    </form>
+    	</div>
+    	<div class="modal_layer"></div>
+	</div>
+	
+	
+	
+	
 	<script>
-		document.getElementById("plusBlackImage").onclick = function() {
+	
+		const $meetinglogbody = document.getElementById("meetinglogbody");
+		const $meetingLogDetailTitle = document.getElementById("meetingLogDetailTitle");
+		const $meetingLogDetailBody = document.getElementById("meetingLogDetailBody");
+		const $meetinglogDetailModal = document.getElementById("meetinglogDetailModal");
+		const $meetinglogCreateModal = document.getElementById("meetinglogCreateModal");
+		const $modal_button = document.getElementById("modal_button");
+		const $meetingLogDetailDeleteBtn = document.getElementById("meetingLogDetailDeleteBtn");
+		const $meetingLogDetailCode = document.getElementById("meetingLogDetailCode");
+		
+		
+		const $meetinglogBox = document.querySelectorAll("#meetinglogBox")
+		const $meetinglogCode = document.querySelectorAll("#meetinglogCode");
+		
+		document.getElementById("meetinglogPlusBox").onclick = function() {
 	        document.getElementById("meetinglogCreateModal").style.display="block";
 	    }
 
@@ -246,6 +505,140 @@
 	        document.getElementById("meetinglogCreateModal").style.display="none";
 	    }
 		
+		document.getElementById("meetingLogDetailCloseBtn").onclick = function() {
+			document.getElementById("meetinglogDetailModal").style.display="none";
+	    }
+		
+		document.getElementById("meetingLogCreateBtn").onclick = function(){
+
+			if(document.getElementById("meetingLogTitle").value.trim() ==""){
+				document.getElementById("titleError").style.display="block";
+
+			}else{
+				document.getElementById("createProjectForm").submit();
+				document.getElementById("titleError").style.display="none";
+
+			}
+		}
+		
+		document.getElementById("meetingLogDetailDeleteBtn").onclick=function(){
+			document.getElementById("delete_modal").style.display="block";
+		}
+		
+		document.getElementById("delete_modal_ok_btn").onclick=function(){
+			document.getElementById("removeMeetingForm").submit();
+		}
+		
+		document.getElementById("delete_modal_close_btn").onclick=function(){
+			document.getElementById("delete_modal").style.display="block";
+		}
+	
+		  
+		let changeTitle="";
+		let changeBody="";
+		let titleText="";
+		let bodyText="";
+		
+	 	/* $(meetingLogDetailTitle).on("propertychange change keyup paste input", function() {
+			changeTitle=$(this).val();
+			console.log("changeTitle : " + changeTitle);
+
+	   }); */
+		 
+	
+	  /*  $(document).ready(function(){
+			$("#meetingLogDatailBody").focus(function(){
+				changeBody=$(this).val();
+				console.log("{focus}changeBody : " + changeBody);
+	
+			});
+			$("#meetingLogDatailTitle").focus(function(){
+				changeTitle=$(this).val();
+				console.log("{focus}changeTitle : " + changeTitle);
+	
+			});
+		}); */
+		
+		document.getElementById("meetingLogDetailCreateBtn").onclick = function(){
+			console.log("changeTitle : " + changeTitle);
+			console.log("changeBody : " + changeBody);
+			console.log("titleText : " + titleText);
+			console.log("bodyText : " + bodyText);
+			console.log("title value : " + $meetingLogDetailTitle.value);
+			console.log("body value : " + $meetingLogDetailBody.value);
+			console.log("code value : " + $meetingLogDetailCode.value);
+
+			document.getElementById("updateProjectForm").submit();
+
+			
+			/* if(document.getElementById("meetingLogTitle").value.trim() !=""){
+				document.getElementById("DetailTitleError").style.display="none";
+				document.getElementById("updateProjectForm").submit();
+			}else{
+				document.getElementById("DetailTitleError").style.display="block";
+			} */
+		}
+		
+		/* // 상세 수정
+		   $(document).ready(function(){
+				$meetingLogDetailDeleteBtn.onclick = function() {
+					if(changeTitle != $meetingLogDetailTitle.value || changeBody != $meetingLogDetailBody.value ){
+			     		 $.ajax({
+			   	  			url: "/byat/meetinglog/detail",
+			   	  			type: "post",
+			   	  			data: { "meetingLogDetailTitle" : $meetingLogDetailTitle.value
+			   	  					,"meetingLogDetailBody" : $meetingLogDetailBody.value  
+			   	  					,"meetingLogDetailCode" : $$meetingLogDetailCode.value },
+			   	  			success:function(data, status, xhr){
+			   	  				document.getElementById("meetinglogDetailModal").style.display="none";
+			   	  				
+			   	  			},
+							error: function(xhr, status, error) {
+								
+							}
+			   	  		}); 
+					}else{
+						document.getElementById("meetinglogDetailModal").style.display="none";
+						document.getElementById("titleError").style.display="none";
+					}
+		        }
+		});  */
+		
+		
+		
+		  // 상세 조회
+		   $(document).ready(function(){
+			for(let i = 0; i < $meetinglogBox.length; i++){
+				$meetinglogBox[i].onclick = function() {
+		     		$.ajax({
+		   	  			url: "/byat/meetinglog/detail",
+		   	  			type: "post",
+		   	  			data: { "meetinglogCode" : $meetinglogCode[i].value},
+		   	  			success:function(data, status, xhr){
+		   	  				console.log(data);
+		   	  				if(data.memberNo == "${ sessionScope.loginMember.no }"){
+		   	  					$meetingLogDetailDeleteBtn.style.display="block";
+		   	  				}else{
+		   	  					$meetingLogDetailDeleteBtn.style.display="none";
+		   	  				}
+		   	  				$meetingLogDetailCode.value= data.code;
+		   	  				$meetingLogDetailTitle.value=data.title;
+		   	  				$meetingLogDetailBody.value=data.body;
+		   	  				$meetinglogDetailModal.style.display="block";
+			   	  			
+		   	  				titleText =data.title;
+		   	  				bodyText = data.body;
+		   	  			
+		   	  			},
+						error: function(xhr, status, error) {
+							alert("상세 조회 실패");
+						}
+		   	  		});
+		        }
+			}
+		});   
+		  
+		  
 		
 	</script>
 

@@ -26,14 +26,49 @@ public class MeetinglogServiceImpl implements MeetinglogService {
 		return meetinglog;
 	}
 
+	@Override
+	public int registMeetinglog(MeetinglogDTO meetinglog) {
 
-	
+		System.out.println("registMeetinglog 히스토리 값 넣기전 : "+meetinglog);
+		
+		int result = mapper.registMeetinglog(meetinglog);
+		
+		//MeetinglogDTO meetinglogCode = mapper.selectMeetinglogCode(meetinglog);
+		
+		//meetinglog.setCode(meetinglogCode.getCode());
+		
+		
+		//mapper.registMeetinglogHistory(meetinglog);
+		 
+		return result;
+	}
 
 
 
+	@Override
+	public MeetinglogDTO selectMeetinglogDetail(int meetinglogCode) {
+		
+		MeetinglogDTO meetinglog = mapper.selectMeetinglogDetail(meetinglogCode);
+		
+		return meetinglog;
+	}
 
-
-
+	@Override
+	public int modifyMeetinglog(MeetinglogDTO meetinglog) {
+		
+		java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+		
+		meetinglog.setWritingDate(sqlDate);
+		meetinglog.setDeleteStatus("N");
+		int result = mapper.modifyMeetinglog(meetinglog);
+		
+		System.out.println(result + ": modify ");
+		if(result==1) {
+			mapper.insertVersion(meetinglog);
+			//mapper.registMeetinglogHistory(meetinglog);
+		}
+		return result ;
+	}
 
 }
 

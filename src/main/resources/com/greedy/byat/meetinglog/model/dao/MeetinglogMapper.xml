@@ -4,18 +4,19 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.meetinglog.model.dao.MeetinglogMapper">
  	
- <!-- 	<resultMap id ="meetinglogResultMap" type="MeetinglogDTO">
+ 	<resultMap id ="meetinglogResultMap" type="MeetinglogDTO">
  		<id property="code" column="MEETINGLOG_CODE"/>
  		<result property="title" column="MEETINGLOG_TITLE"/>
  		<result property="body" column="MEETINGLOG_BODY"/>
- 		<reuslt property="writingDate" column="MEETINGLOG_WRITING_DATE"/>
+ 		<result property="writingDate" column="MEETINGLOG_WRITING_DATE"/>
  		<result property="version" column="MEETINGLOG_VERSION"/>
- 		<result property="deleteSatus" column="MEETINGLOG_DELETE_STATUS"/>
- 		<result property="writer" column="MEETINGLOG_WRITER"/>
+ 		<result property="deleteStatus" column="MEETINGLOG_DELETE_STATUS"/>
  		<result property="projectCode" column="PROJECT_CODE"/>
- 	</resultMap> -->
+ 		<result property="memberNo" column="MEMBER_NO"/>
+ 		<result property="memberName" column="MEMBER_NAME"/>
+ 	</resultMap>
  	
- 	<!-- <select id="selectMeetingLogList" resultMap = meetinglogResultMap>
+ 	<select id="selectMeetinglogList" resultMap="meetinglogResultMap">
  		SELECT
 			   A.MEETINGLOG_CODE
 			 , A.MEETINGLOG_TITLE
@@ -23,26 +24,39 @@
 			 , A.MEETINGLOG_WRITING_DATE
 			 , A.MEETINGLOG_VERSION
 			 , A.MEETINGLOG_DELETE_STATUS
-			 , A.MEETINGLOG_WRITER
 			 , A.PROJECT_CODE
+			 , A.MEMBER_NO
+			 , A.MEMBER_NAME 
 		  FROM TBL_MEETINGLOG A
+		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
 		 WHERE A.PROJECT_CODE = #{ projectCode }
-		   AND A.MEETRINGLOG_DELETE_STATUS = 'N'
-		 ORDER BY MEETINGLOG_CODE DESC
- 	</select> -->
+		   AND A.MEETINGLOG_DELETE_STATUS = 'N'
+		 ORDER BY MEETINGLOG_CODE DESC 
+ 	</select>
  	
- 	<!-- <select id="selectMeetinglogDetail" resultMap = meetinglogResultMap>
+ 	<select id="selectMeetinglogDetail" resultMap = "meetinglogResultMap">
  		SELECT
 			   A.MEETINGLOG_CODE
 			 , A.MEETINGLOG_TITLE
 			 , A.MEETINGLOG_BODY
 			 , A.MEETINGLOG_WRITING_DATE
+			 , A.MEETINGLOG_DELETE_STATUS
 			 , A.MEETINGLOG_VERSION
-			 , A.MEETINGLOG_WRITER
-		  FROM TBL_MEETINGLOG A
+			 , A.MEMBER_NO
+			 , A.MEMBER_NAME 
+		  FROM TBL_MEETINGLOG A 
+		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
 		 WHERE A.MEETINGLOG_CODE = #{ code }
-		   AND A.MEETRINGLOG_DELETE_STATUS = 'N'
 		 ORDER BY MEETINGLOG_CODE DESC
+ 	</select>
+ 	<select id="selectMeetinglogCode" >
+        SELECT 
+               A.MEETINGLOG_CODE
+		  FROM TBL_MEETINGLOG A 
+         WHERE A.MEMBER_NO = #{ memberNo };
+           AND A.PROJECT_CODE = #{projectCode};
+           AND A.MEETINGLOG_TITLE = #{title};
+           AND A.MEETINGLOG_BODY = #{body};
  	</select>
  	
  	<insert id="registMeetinglog" parameterType="MeetinglogDTO">
@@ -55,29 +69,74 @@
 		, A.MEETINGLOG_WRITING_DATE
 		, A.MEETINGLOG_VERSION
 		, A.MEETINGLOG_DELETE_STATUS
-		, A.MEETINGLOG_WRITER
+		, A.MEMBER_NO
 		, A.PROJECT_CODE
+		, A.MEMBER_NAME
  		)
  		VALUES
  		(
  		  SEQ_PROJECT_NO.NEXTVAL
  		, #{ title } 
  		, #{ body }
- 		, #{ writingDate }
+ 		, TO_DATE(SYSDATE)
  		, 1
  		, 'N'
- 		, #{ writer }
+ 		, #{ memberNo }
  		, #{ projectCode }
+ 		, #{ memberName }
  		)
  	</insert>
 
  	<update id="modifyMeetinglog" parameterType="MeetinglogDTO">
  		UPDATE
  		       TBL_MEETINGLOG A
- 		   SET A.PROJECT_TITLE = #{ title }
-			 , A.MEETINGLOG_WRITING_DATE = TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
+ 		   SET A.MEETINGLOG_TITLE = #{ title }
+			 , A.MEETINGLOG_WRITING_DATE = TO_DATE(SYSDATE)
  		     , A.MEETINGLOG_BODY = #{ body }
  		 WHERE A.MEETINGLOG_CODE = #{ code }
- 	</update> -->
+ 	</update>
  	
+ 	<update id="insertVersion">
+        UPDATE
+               TBL_MEETINGLOG A
+           SET A.MEETINGLOG_VERSION = (SELECT B.MEETINGLOG_VERSION
+                                  FROM TBL_MEETINGLOG B
+                                 WHERE B.MEETINGLOG_CODE = #{ code }
+                               ) + 1
+         WHERE A.MEETINGLOG_CODE = #{ code }
+	</update>
+	
+	<update id="removeMeetinglog">
+		UPDATE
+ 		       TBL_MEETINGLOG A
+ 		   SET A.MEETINGLOG_DELETE_STATUS = 'Y'
+ 		 WHERE A.MEETINGLOG_CODE = #{ code }
+	
+	</update>
+ 	
+ 	<insert id="registMeetinglogHistory" parameterType="MeetingLogDTO">
+ 	INSERT
+ 		  INTO TBL_MEETINGLOG_HISTORY A
+ 		(
+ 		  A.MEETINGLOG_HISTORY_NO				
+		, A.MEETINGLOG_HISTORY_TITLE
+		, A.MEETINGLOG_HISTORY_BODY
+		, A.MEETINGLOG_HISTORY_VERSION
+		, A.MEETINGLOG_HISTORY_UPDATE_MEMBER
+		, A.MEETINGLOG_CODE
+		, A.MEETINGLOG_HISTORY_UPDATE_DATE
+		, A.MEETINGLOG_HISTORY_DELETE_STATUS
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_NO.NEXTVAL
+ 		, #{ title } 
+ 		, #{ body }
+ 		, #{ version }
+ 		, #{ memberName }
+ 		, #{ code }
+ 		, #{ writingDate }
+ 		, #{ deleteStatus }
+ 		)
+ 	</insert>
  </mapper>
