@@ -69,7 +69,7 @@
 		float: left;
 		width: 250px;
 		height: 120px;
-		margin-left:3%;
+		margin-left:5%;
 		margin-top:3%;
 		cursor:pointer;
 		border:2px solid black;
@@ -90,14 +90,21 @@
 		padding-right:10px;
 	}
 	
+	.meetinglogCode{
+		position: relative;
+		text-align: left;
+	 	margin-left:3%;
+	 	width:10px;
+	 	font-size:10px;
+	 	margin-top:4px;
+	}
+	
 	.dateBox{
-	 	float:right;
-	 	text-align: right;
-	 	margin-top:15%;
-	 	margin-left:15%;
-	 	padding-right:10px;
-	 	font-size: 10px;
-	 	width:100px;
+		position: relative;
+		float:right;
+		margin-left:30px;
+		margin-top:13%;
+		margin-right:3%;
 	}
 	
 	.writerBox{
@@ -127,7 +134,6 @@
 		margin-left:45%;
 	}
 	
-	//모달창 생성
 	#meetinglogCreateModal {
 		display:none;
 		position:absolute;
@@ -157,7 +163,7 @@
 		height:100%;
 		background:rgba(0, 0, 0, 0.5);
 		bottom:1%;
-		z-index:1;
+		z-index:-1;
 	}
 	
 	.modal_head {
@@ -276,7 +282,7 @@
 	
 	.meetingLogTitle, .meetingLogDetailTitle {
 		font-size:30px;	
-		
+		margin-top:20px;
 	}
 	
 	.meetingLogDescription , .meetingLogDetailDescription {
@@ -380,7 +386,7 @@
 <body>
 	<div id="whiteBoard">
 	      <div class="meetinglogListHead">
-				<div class="meetinglogListName">회의록</div>
+				<div class="meetinglogListName">회의록 :  <c:out value="${projectName}" /></div>
 				<div class="searchMeetinglog">
 					<div class="search-area">
 						<select id="searchCondition" name="searchCondition">
@@ -396,10 +402,9 @@
 	      <div class="meetinglogListBody">
 		      <c:forEach items="${meetinglogList}" var="meetinglogList">
 			      <div class="meetinglogBox" id="meetinglogBox">
-			      	  <input type="hidden" id="meetinglogCode" value="${meetinglogList.code}"/>
-			      	  <input type="hidden" id="projectCode" value="${meetinglogList.projectCode}"/>
+			      	  <div id="meetinglogCode" class="meetinglogCode"><c:out value="NO.${meetinglogList.code}"/></div>
 				      <div id="titleBox" class="titleBox"><c:out value="${meetinglogList.title}"/></div>
-				      <div id"class="dateBox"><c:out value="작성날짜  : ${meetinglogList.writingDate}"/></div>
+				      <div id="dateBox" class="dateBox"><c:out value="작성날짜  : ${meetinglogList.writingDate}"/></div>
 				      <div class="writerBox"><c:out value=" ${meetinglogList.memberName}"/></div>
 			      </div>
 		      </c:forEach>
@@ -412,8 +417,8 @@
 		</div>
 	</div>
 	
-	<!-- 모달창 생성 -->
-	<div id="meetinglogCreateModal" style="display:none">
+	<%-- 모달창  생성. --%>
+	<div id="meetinglogCreateModal">
   		<div class="modal_content">
 	  		<form id="createProjectForm" action="${ pageContext.servletContext.contextPath }/meetinglog/regist"  method="post">
 				<div class="modal_head">
@@ -434,12 +439,12 @@
    		<div class="modal_layer"></div>
 	</div>
 	
-	<!-- 모달창 상세 수정 -->
+	<%-- 모달창 상세 수정. --%>
 	<div id="meetinglogDetailModal">
   		<div class="modal_content">
   			<form id="updateProjectForm" action="${ pageContext.servletContext.contextPath }/meetinglog/modify"  method="post">
 				<div class="modal_head">
-				<h3>회의록 상세/수정</h3>
+					<h3>회의록 상세/수정</h3>
 		    	</div>
 	      		<div class="modal_content-box">
 	      			<input type="hidden" name="code" value="${code}">

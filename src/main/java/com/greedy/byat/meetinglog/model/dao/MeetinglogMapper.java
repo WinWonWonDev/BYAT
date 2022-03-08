@@ -3,7 +3,6 @@ package com.greedy.byat.meetinglog.model.dao;
 import java.util.List;
 
 import com.greedy.byat.meetinglog.model.dto.MeetinglogDTO;
-import com.greedy.byat.member.model.dto.MemberDTO;
 
 public interface MeetinglogMapper {
 
@@ -20,5 +19,7 @@ public interface MeetinglogMapper {
 	void registMeetinglogHistory(MeetinglogDTO meetinglog);
 
 	MeetinglogDTO selectMeetinglogCode(MeetinglogDTO meetinglog);
+
+	String selectProjectName(int projectCode);
 
 }
