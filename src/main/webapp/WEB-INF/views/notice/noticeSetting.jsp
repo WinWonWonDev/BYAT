@@ -31,7 +31,7 @@
       	height:78%;
 	}
 	
-		.switch {
+	.switch {
 		position: relative;
 		display: inline-block;
 		width: 60px;
