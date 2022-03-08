@@ -14,6 +14,7 @@ import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 
+
 @Service
 public class MyTaskServiceImpl implements MyTaskService {
  
@@ -30,13 +31,12 @@ public class MyTaskServiceImpl implements MyTaskService {
 		
 		MyTaskDTO myTask= new MyTaskDTO();
 		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
-		//List<ProjectMembersDTO> orderProjectMembers = new ArrayList<>();
 		
 		List<ProjectDTO> projectList = mapper.selectMyTaskProjectList(member.getNo());
 		List<ToDoListDTO> toDoList = mapper.selectMyTaskToDoList(member.getNo());
 		List<TaskDTO>taskList= mapper.selectTaskList(member.getNo());
 
-        System.out.println(toDoList);
+        System.out.println("서비스자식클래스"+toDoList);
 
 	    for(int i=0; i < projectList .size(); i++) {
 			projectList.get(i).setWriter(projectList.get(i).getWriter().substring(1, 3));
@@ -109,6 +109,11 @@ public class MyTaskServiceImpl implements MyTaskService {
 	@Override 
 	public int modifyToDoList(ToDoListDTO todoList) {
 
+		
+		java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+		
+		todoList.setWritingTime(sqlDate);
+		
 		int result =mapper.modifyToDoList(todoList);
 		
 		System.out.println("modifyToDoList : " + result);

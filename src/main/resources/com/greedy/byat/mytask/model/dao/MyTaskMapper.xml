@@ -42,7 +42,7 @@
        <result property ="writingTime" column="TODOlIST_WRITING_TIME"/>
        <result property="title" column="TODOLIST_TITLE"/>
        <result property="checkStatus" column="TODOLIST_CHECK_STATUS"/>
-       <result property="deleteStatus" column="TODOLIST_DELETESTATUS"/>
+       <result property="deleteStatus" column="TODOLIST_DELETE_STATUS"/>
        <result property="memberNo" column="MEMBER_NO"/>
     </resultMap>
     
@@ -110,6 +110,7 @@
           FROM TBL_TASK A
          WHERE A.MEMBER_NO = #{memberNo}
            AND A.TASK_DELETE_STATUS = 'N'
+           AND A.TASK_PROGRESS NOT IN ('완료')
      </select>
      
      <select id="selectTaskListForProject" resultMap="taskResultMap">
@@ -136,11 +137,11 @@
              , A.TODOLIST_DELETE_STATUS
              , A.MEMBER_NO
           FROM TBL_TODOLIST A
-         WHERE A.MEMBER_NO = #{memberNumber}
+         WHERE A.MEMBER_NO = #{ memberNumber}
            AND A.TODOLIST_DELETE_STATUS = 'N'
     </select>
 
- 	<insert id = "registToDoList" parameterType="int" >
+ 	<insert id ="registToDoList" parameterType="int" >
         INSERT
           INTO TBL_TODOLIST A
         (
@@ -174,7 +175,7 @@
  		       TBL_TODOLIST A
  		   SET A.TODOLIST_CHECK_STATUS = #{checkStatus}
  		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
- 		 WHERE A.TODOLIST_NO = #{toDoListNo}
+ 		 WHERE A.TODOLIST_NO = #{no}
  	</update>
  	
  	<select id="selectMemberModal" resultMap="projectMembersResultMap">
@@ -192,12 +193,12 @@
 		   AND B.MEMBER_NO = C.MEMBER_NO
  	</select>
  	
- 	<update id ="modifyToDoList"  parameterType="ToDoListDTO">
+ 	<update id ="modifyToDoList" parameterType="ToDoListDTO">
        UPDATE 
  		       TBL_TODOLIST A
  		   SET A.TODOLIST_TITLE = #{title}
- 		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
- 		 WHERE A.TODOLIST_NO = #{toDoListNo}
+ 		     , A.TODOLIST_WRITING_TIME = #{ writingTime }
+ 		 WHERE A.TODOLIST_NO = #{no}
  	</update>
  	
  </mapper>
