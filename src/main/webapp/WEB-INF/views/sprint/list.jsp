@@ -1083,7 +1083,7 @@
 	document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + ${ requestScope.code };
 	
 	/* 수빈이형이 추가하라고 한거*/
-	/* document.getElementById("selectMeetingLogList").href = document.getElementById("selectMeetingLogList").href + ${ requestScope.code }; */
+	document.getElementById("selectMeetingLogList").href = document.getElementById("selectMeetingLogList").href + ${ requestScope.code };
 	
 	/* 스프린트 시작 */
 	document.getElementById("sprint-start").onclick = function() {
@@ -1141,16 +1141,20 @@
     	document.getElementById("task-give-up-modal").style.display = "none";
     }
     
-    document.getElementById("backlog-update-open-btn").onclick = function() {
-        document.getElementById("backlog-update-modal").style.display = "block";
+    if(document.getElementById("backlog-update-open-btn")) {    	
+		document.getElementById("backlog-update-open-btn").onclick = function() {
+			document.getElementById("backlog-update-modal").style.display = "block";
+		}
     }
     
     document.getElementById("backlog-close-btn2").onclick = function() {
         document.getElementById("backlog-update-modal").style.display = "none";
     }
     
-    document.getElementById("backlog-delete-open-btn").onclick = function() {
-        document.getElementById("backlog-delete-modal").style.display = "block";
+    if(document.getElementById("backlog-delete-open-btn")) {
+		document.getElementById("backlog-delete-open-btn").onclick = function() {
+			document.getElementById("backlog-delete-modal").style.display = "block";
+    	}    	
     }
     
     document.getElementById("backlog-cloes-btn3").onclick = function() {

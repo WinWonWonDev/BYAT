@@ -262,14 +262,6 @@ public class MemberController {
 		return result;
 	}
 	
-	
-	@GetMapping("/moveprofile")
-	public String moveProfile() {
-		
-		
-		return "redirect:/member/profile";
-	}
-	
 	@GetMapping("/logout")
 	public String logout(SessionStatus status, RedirectAttributes rttr) {
 		status.setComplete();
