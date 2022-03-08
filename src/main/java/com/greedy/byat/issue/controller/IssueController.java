@@ -23,6 +23,9 @@ import com.greedy.byat.common.exception.issue.IssueInsertVersionHistoryException
 import com.greedy.byat.common.exception.issue.IssueModifyMemberException;
 import com.greedy.byat.common.exception.issue.IssueModifyNoticeException;
 import com.greedy.byat.common.exception.issue.IssueModifyStatusException;
+import com.greedy.byat.common.exception.issue.IssueRegistException;
+import com.greedy.byat.common.exception.issue.IssueRegistMemberException;
+import com.greedy.byat.common.exception.issue.IssueRegistNoticeException;
 import com.greedy.byat.common.exception.issue.IssueRegistStatusHistoryException;
 import com.greedy.byat.common.exception.issue.IssueRemoveException;
 import com.greedy.byat.common.exception.issue.IssueRemoveMemberException;
@@ -211,4 +214,70 @@ public class IssueController {
 		
 		return "redirect:/issue/list?code=" + projectCode;
 	}
+	
+	@PostMapping("selectsprintmemberlist")
+	public ModelAndView selectSprintMemberList(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+		
+		response.setContentType("application/json; charset=UTF-8");
+		
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		
+		List<SprintMembersDTO> selectsprintMemberList = issueService.selectSprintMembersList(projectCode);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		mv.addObject("selectsprintMemberList", objectMapper.writeValueAsString(selectsprintMemberList));
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	@PostMapping("regist")
+	public String registIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueRegistMemberException, IssueRegistException, IssueInsertVersionHistoryException, IssueRegistStatusHistoryException, IssueRegistNoticeException {
+		
+		MemberDTO writer = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+		
+		String title = request.getParameter("issueCreateTitle");
+		String body = request.getParameter("issueCreateBody");
+		String[] memberInfo = request.getParameterValues("issueMemberBody");
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
+		
+		List<IssueMembersDTO> issueMemberList = new ArrayList<>();
+		
+		for(int i = 0; i < memberInfo.length; i++) {
+			
+			IssueMembersDTO member = new IssueMembersDTO();
+			
+			String[] memberInfoSplit = memberInfo[i].split(" ");
+			
+			member.setId(memberInfoSplit[0]);
+			member.setName(memberInfoSplit[1]);
+			member.setNo(Integer.parseInt(memberInfoSplit[2]));
+			member.setChangeMemberNo(writer.getNo());
+			member.setSprintCode(sprintCode);
+			
+			issueMemberList.add(i, member);
+			
+		}
+		
+		IssueDTO registIssue = new IssueDTO();
+		registIssue.setTitle(title);
+		registIssue.setBody(body);
+		registIssue.setIssueMemberList(issueMemberList);
+		registIssue.setProjectCode(projectCode);
+		registIssue.setSprintCode(sprintCode);
+		registIssue.setWriter(writer.getNo());
+		registIssue.setName(writer.getName());
+		
+		System.out.println(registIssue);
+		
+		issueService.insertIssue(registIssue);
+		
+		rttr.addFlashAttribute("message", "이슈 생성 성공!");
+		
+		return "redirect:/issue/sprint?code=" + projectCode;
+	}
+
+	
 }

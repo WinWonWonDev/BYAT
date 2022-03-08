@@ -76,4 +76,8 @@ public interface TaskMapper {
 	int insertSprintMembersHistory2(Map<String, Integer> map);
 
 	List<TaskDTO> selectTaskList(int projectCode);
+
+	List<Integer> selectTaskMembersList2(TaskDTO task);
+
+	int insertUpdateTaskNotice(Map<String, Integer> map);
 }

@@ -492,22 +492,16 @@
 		<div class="issueListHead">
 			<div class="issueListName" id="issueListName">
 				<c:forEach items="${ sprintList }" var="sprintList" varStatus="firstStatus">
-					<c:if test="${ sprintList.progress eq '진행전'}">
-						<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font>의 Issue <font id="titleProgress">(진행전)</font>
-					</c:if>
-					<c:if test="${ sprintList.progress eq '진행중'}">
-						<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font>의 Issue <font id="titleProgress">(진행중)</font>
-					</c:if>
 					<c:if test="${ firstStatus.index eq 0 }">
 						<c:choose>
 							<c:when test="${ sprintList.progress eq '진행전'}">
-								<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font><font id="titleProgressArea">의 Issue</font>
+								<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font><font id="titleProgress">의 Issue (${ sprintList.progress })</font>
 							</c:when>
 							<c:when test="${ sprintList.progress eq '진행중'}">
-								<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font><font id="titleProgressArea">의 Issue</font>
+								<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font><font id="titleProgress">의 Issue (${ sprintList.progress })</font>
 							</c:when>
 							<c:when test="${ sprintList.progress eq '완료'}">
-								<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font><font id="titleProgressArea">의 Issue</font>
+								<font style="color: rgba(48, 58, 154, 100)" id="titleFont">${ sprintList.title }</font><font id="titleProgress">의 Issue (${ sprintList.progress })</font>
 							</c:when>
 						</c:choose>
 						<input type="hidden" id="projectCode" value="${ sprintList.projectCode }">					
@@ -610,17 +604,18 @@
 		}
 
 		<c:forEach items="${sprintList}" var="sprintList" varStatus="status">
+			
+			console.log("${sprintList.title}");
+		
 			if("${sprintList.title}" == selectedOption) {
 				
 				document.getElementById("headSprintProgress").value = "${sprintList.progress}";
-				
-				document.getElementById("titleProgressArea").innerText = "의 Issue (${sprintList.progress})"
 				
 				$.ajax({
 					url : "/byat/issue/issuelist",
 					type : "get",
 					data : {
-						sprintCode : "${sprintList.code}",
+						sprintCode : "${sprintList.code}"
 					},
 					success : function(data, status, xhr) {
 						
@@ -1078,6 +1073,8 @@
 			issueAjaxCode = 0;
 			checkFirst = 1;
 			
+			console.log(checkFirst);
+			
 			for(let i = 0; i < kanbanArea.length; i++) {
 				
 				while(kanbanArea[i].hasChildNodes()) {
@@ -1113,7 +1110,7 @@
 					
 					titleFont.innerText = selectedOption;
 					
-					document.getElementById("titleProgressArea").innerText = "의 Issue (${sprintList.progress})"
+					document.getElementById("titleProgress").innerText = "의 Issue (${sprintList.progress})"
 					
 					$.ajax({
 						url : "/byat/issue/issuelist",

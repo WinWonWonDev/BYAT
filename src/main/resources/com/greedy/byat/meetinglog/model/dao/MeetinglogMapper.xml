@@ -6,7 +6,7 @@
  	
  	<resultMap id ="meetinglogResultMap" type="MeetinglogDTO">
  		<id property="code" column="MEETINGLOG_CODE"/>
- 		<result property="title" column="MEETINGLOG_TITLE"/>
+ 		<result property="title" column="MEETINGLㄴOG_TITLE"/>
  		<result property="body" column="MEETINGLOG_BODY"/>
  		<result property="writingDate" column="MEETINGLOG_WRITING_DATE"/>
  		<result property="version" column="MEETINGLOG_VERSION"/>
@@ -15,6 +15,23 @@
  		<result property="memberNo" column="MEMBER_NO"/>
  		<result property="memberName" column="MEMBER_NAME"/>
  	</resultMap>
+
+	<resultMap id="noticeResultMap" type="NoticeDTO" >
+		<id property="code" column="NOTICE_CODE"/>
+		<result property="body" column="NOTICE_BODY"/>
+		<result property="url" column="NOTICE_URL"/>
+		<result property="status" column="NOTICE_STATUS"/>
+		<result property="category" column="NOTICE_CATEGORY_CODE"/>
+		<result property="meetinglogCode" column="MEETINGLOG_CODE"/>
+		<result property="createdTime" column="NOTICE_TIME"/>
+	</resultMap>
+ 	
+ 	 	<select id="selectProjectName" resultType="string">
+ 		SELECT
+ 		       A.PROJECT_TITLE
+ 		  FROM TBL_PROJECT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 	</select>
  	
  	<select id="selectMeetinglogList" resultMap="meetinglogResultMap">
  		SELECT
@@ -49,15 +66,7 @@
 		 WHERE A.MEETINGLOG_CODE = #{ code }
 		 ORDER BY MEETINGLOG_CODE DESC
  	</select>
- 	<select id="selectMeetinglogCode" >
-        SELECT 
-               A.MEETINGLOG_CODE
-		  FROM TBL_MEETINGLOG A 
-         WHERE A.MEMBER_NO = #{ memberNo };
-           AND A.PROJECT_CODE = #{projectCode};
-           AND A.MEETINGLOG_TITLE = #{title};
-           AND A.MEETINGLOG_BODY = #{body};
- 	</select>
+
  	
  	<insert id="registMeetinglog" parameterType="MeetinglogDTO">
  		INSERT
@@ -137,6 +146,30 @@
  		, #{ code }
  		, #{ writingDate }
  		, #{ deleteStatus }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="registNoticeCode" parameterType="NoticeDTO">
+ 	INSERT
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE				
+		, A.NOTICE_BODY
+		, A.NOTICE_URL
+		, A.NOTICE_STATUS
+		, A.NOTICE_CATEGORY_CODE
+		, A.MEETINGLOG_CODE
+		, A.NOTICE_TIME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_PROJECT_NO.NEXTVAL
+ 		, #{ body } 
+ 		, #{ url }
+ 		, 'N'
+ 		, '5'
+ 		, #{ meetinglogCode }
+ 		, TO_DATE(SYSDATE)
  		)
  	</insert>
  </mapper>

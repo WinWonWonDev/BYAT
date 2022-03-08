@@ -784,6 +784,212 @@
 		position: relative; 
 		left: 0px;
 	}
+	
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 60px;
+		height: 34px;
+		vertical-align:middle;
+	}
+	
+	.switch input {
+		display:none;
+	}
+	
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+	
+	.slider:before {
+		position: absolute;
+		content: "";
+		height: 26px;
+		width: 26px;
+		left: 4px;
+		bottom: 4px;
+		background-color: white;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+	
+	.taskAndIssueSlidebar:checked + .slider {
+		background-color: #2196F3;
+	}
+
+	.taskAndIssueSlidebar:focus + .slider {
+		box-shadow: 0 0 1px #2196F3;
+	}
+
+	.taskAndIssueSlidebar:checked + .slider:before {
+		-webkit-transform: translateX(26px);
+		-ms-transform: translateX(26px);
+		transform: translateX(26px);
+	}
+
+	.slider.round {
+	  	border-radius: 34px;
+	}
+
+	.slider.round:before {
+	  	border-radius: 50%;
+	}
+
+	.sliderType {
+		margin:0px;
+		display:inline-block;
+		font-size:20px;
+		font-weight:bold;
+		color:white;
+	}
+	
+	.switchArea {
+		position: absolute;
+		margin-left:820px;
+		top:8px;
+	}
+	
+	#issue-modal-content {
+		display: none;
+	}
+	
+	.issueCreateModalTitle {
+		width:82%;
+		font-size:20px;
+		padding-top:7px;
+		padding-bottom:7px;
+		margin-top:30px;
+		border:1px solid black;
+	}
+	
+	.issueMemberCreateArea {
+		width:100%;
+		height:32%;
+		margin-top:15px;
+	}
+	
+	.issueMemberCreateSelectArea {
+		width:100%;
+		height:18%;
+	}
+	
+	.createMemberSelectBox {
+		position:relative;
+		width:185px;
+		border:1px solid black;
+		margin-left:183px;
+		bottom:25px;
+	}
+	
+	.issueCreateMemberList {
+		background-color:white;
+		position:relative;
+		width:82%;
+		height:140px;
+		border:1px solid black;
+		margin-left:37px;
+		overflow-y:scroll;
+	}
+	
+	.issueCreateMemberList::-webkit-scrollbar {
+	
+		border-radius:15px;
+	}
+	
+	.issueCreateMemberList::-webkit-scrollbar-thumb {
+		background-color: skyblue;
+		border-radius:15px;
+	}
+	
+	.issueCreateDescription {
+		position:relative;
+		border:1px solid black;
+		resize: none;
+		margin-top:10px;
+		margin-right:3px;
+	}
+	
+	.issueMember {
+		position:relative;
+		width:90%;
+		height:30px;
+		border:none;
+		border-radius:15px;
+		background-color:rgb(242,242,242);
+		margin-top:15px;
+		margin-left:25px;
+	}
+	
+	.issueMemberInfo {
+		font-size:13px;
+		width:150px;
+		position:relative;
+		top:5px;
+		left:15px;
+	}
+	
+	.removeIssueMember {
+		position:absolute;
+		background-color:orangered;
+		font-size:13px;
+		color:white;
+		border-radius:15px;
+		width:70px;
+		bottom:5px;
+		margin-left:30px;
+		cursor:pointer;
+	}
+	
+	.selectBoxMessage {
+		position:absolute;
+		border:none;
+		font-size:12px;
+		color:yellowgreen;
+		margin-left:35px;
+	}
+	
+	.issueCreateBtn {
+		margin-right:50px;
+	}
+	
+	.modal_issue_create_button {
+		width:100%;
+		height:50px;
+		float:right;
+		position:relative;
+		margin-top:5%;
+	}
+	
+	.issueCreateBtn {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:100px;
+		height:30px;
+		position:absolute;
+		right:45%;
+	}
+	
+	.issueCreateClose {
+		background-color:rgb(25,25,112);
+		color:white;
+		text-align:center;
+		cursor:pointer;
+		width:100px;
+		height:30px;
+		position:absolute;
+		right:30%;
+	}
+	
 </style>
 </head>
 <body>
@@ -888,46 +1094,63 @@
 	
 	<!-- 긴급 태스크 생성 모달창 -->
 	<div id="task-create-modal">
- 		
- 		
-   		<div id="task-modal-content" class="modal_content">
-   			<form action="${ pageContext.servletContext.contextPath }/task/regist" method="post">
-   				<input type="hidden" id="projectCode" name="projectCode" value="${ requestScope.code }">
-   				<input type="hidden" id="writer" name="memberNo" value="${ sessionScope.loginMember.no }">
-				<div class="modal_head">
-					<h3>태스크 생성</h3>
-	   	 		</div>
-       			<div class="modal_content-box">
-       				<input type="text" class="title" name="title"  placeholder="Task Title">
-       				
+       
+		<div class="switchArea">
+			<p class="sliderType">Task</p>
+			<label class="switch">
+				<input type="checkbox" id="taskAndIssueSlidebar" class="taskAndIssueSlidebar">
+				<span class="slider round"></span>
+			</label>
+			<p class="sliderType">Issue</p>
+		</div>
+       
+        <div id="task-modal-content" class="modal_content">
+            <form action="${ pageContext.servletContext.contextPath }/task/regist" method="post">
+				<input type="hidden" id="projectCode" name="projectCode" value="${ requestScope.code }">
+               	<input type="hidden" id="writer" name="memberNo" value="${ sessionScope.loginMember.no }">
+           		<div class="modal_head">
+               		<h3>태스크 생성</h3>
+	            </div>
+	            <div class="modal_content-box">
+	              	<input type="text" class="title" name="title"  placeholder="Task Title">
+	               
 					<h5>시작일</h5>
 					<h5>종료일</h5>
-       				<br clear="both">
-       				<input type='date' class="start-day" name='startDate'/>
-       				<input type='date' class="end-day" name='endDate'/>
-       				<textarea class="description" id="taskDescription" name="body" rows="13" cols="51" placeholder="Task Detail Description"></textarea>
-       			</div>
-       			<div class="modal_button">
-	        		<button type="submit" id="task-create">Ok</button>
-	        		<button type="button" id="task-close-btn1">Cancel</button>
-       			</div>
-   			</form>
-    	</div>
-    	<div id="issue-modal-content" class="modal_content" style="display: none;">
-    		<form action="${ pageContext.servletContext.contextPath }/issue/regist" method="post">
-    			<input type="hidden" id="projectCode" name="projectCode" value="${ requestScope.code }">
-    			<div class="modal-head">
-    				<h3>이슈 생성</h3>
-    			</div>
-    			<div class="modal_content_box">
-    				<input type="text" class="title" name="title" placeholder="Issue Title">
-    				
-    				<!-- 담당자 지정 넣어주는곳  -->
-    				
-    				<textarea class="description" id="issueDescription" name="body" rows="13" cols="51" placeholder="Issue Detail Description"></textarea>
-    			</div>
-    		</form>
-    	</div>
+					<br clear="both">
+					<input type='date' class="start-day" name='startDate'/>
+					<input type='date' class="end-day" name='endDate'/>
+					<textarea class="description" id="taskDescription" name="body" rows="13" cols="51" placeholder="Task Detail Description"></textarea>
+	            </div>
+	            <div class="modal_button">
+					<button type="submit" id="task-create">Ok</button>
+	             	<button type="button" id="task-close-btn1">Cancel</button>
+	            </div>
+			</form>
+       	</div>
+       	<div class="modal_content" id="issue-modal-content">
+			<div class="modal_head">
+				<h3>이슈 생성</h3>
+			</div>
+			<div class="modal_content-box">
+				<form action="${ pageContext.servletContext.contextPath }/issue/regist" id="issueCreateForm" method="post">
+					<input type="text" class="issueCreateModalTitle" id="issueCreateModalTitle" name="issueCreateTitle" placeholder="IssueTitle" required>
+					<div class="issueMemberCreateArea">
+						<div class="issueMemberCreateSelectArea">
+							<div id="selectBoxMessage" class="selectBoxMessage">* [사번 이름 고유번호]</div>
+							<select class="createMemberSelectBox" id="createMemberSelectBox">
+								<option style="text-align:center">----------</option>
+							</select>
+						</div>
+						<div class="issueCreateMemberList" id="issueCreateMemberList"></div>
+						<textarea class="issueCreateDescription" id="issueCreateDescription" name="issueCreateBody" rows="13" cols="49" placeholder="상세내용을 입력해주세요" required></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal_issue_create_button"> 
+	        	<button type="button" id="issueCreateBtn" class="issueCreateBtn">Ok</button>
+	        	<button type="button" id="issueCreateClose" class="issueCreateClose">Cancel</button>
+			</div>
+		</div>
     	<div class="modal_layer"></div>
 	</div>
 	
@@ -1085,6 +1308,216 @@
 	/* 수빈이형이 추가하라고 한거*/
 	document.getElementById("selectMeetingLogList").href = document.getElementById("selectMeetingLogList").href + ${ requestScope.code };
 	
+	/* 이슈 부분 */
+	let taskAndIssueSlidebar = $("#taskAndIssueSlidebar");
+	
+	taskAndIssueSlidebar.click(function(){
+		//false면 task, true면 issue
+		
+		let taskModalContent = document.getElementById("task-modal-content");
+		let issueModalContent = document.getElementById("issue-modal-content");
+		
+		if(taskAndIssueSlidebar[0].checked == true) {
+			
+			$.ajax({
+				url : "/byat/issue/selectsprintmemberlist",
+				type : "post",
+				data : {
+					projectCode : ${ requestScope.code }
+				},
+				success : function(data, status, xhr) {
+					
+					const selectBoxSprintMemberList = JSON.parse(data.selectsprintMemberList);
+					
+					issueModalSprintCode = document.createElement("input");
+					issueModalSprintCode.setAttribute('type', 'hidden');
+					issueModalSprintCode.setAttribute('id', 'issueModalSprintCode');
+					issueModalSprintCode.setAttribute('value', selectBoxSprintMemberList[0].sprintCode);
+					
+					issueModalContent.appendChild(issueModalSprintCode);
+					
+					createMemberSelectBox = document.getElementById("createMemberSelectBox");
+					
+					for(let i in selectBoxSprintMemberList) {
+						
+						selectBoxSprintMember = document.createElement('option');
+						selectBoxSprintMember.setAttribute('style', 'text-align:center');
+						selectBoxSprintMember.innerText = selectBoxSprintMemberList[i].id + " " + selectBoxSprintMemberList[i].name + " " + selectBoxSprintMemberList[i].no;
+						
+						sprintMemberHiddenNo = document.createElement('input');
+						sprintMemberHiddenNo.setAttribute('type', 'hidden');
+						sprintMemberHiddenNo.setAttribute('id', 'sprintMemberHiddenNo');
+						sprintMemberHiddenNo.setAttribute('value', selectBoxSprintMemberList[i].no);
+						
+						issueModalContent.appendChild(sprintMemberHiddenNo);
+						createMemberSelectBox.appendChild(selectBoxSprintMember);
+						
+					}
+					
+				},
+				error : function(xhr, status, error) {
+					console.log(xhr);
+				}
+			});
+			
+			
+			taskModalContent.style.display = 'none';
+			issueModalContent.style.display = 'block';
+		} else {
+			taskModalContent.style.display = 'block';
+			issueModalContent.style.display = 'none';
+		}
+	});
+	
+	document.getElementById("issueCreateClose").onclick = function() {
+
+		taskAndIssueSlidebar[0].checked = false;
+		document.getElementById("task-modal-content").style.display = 'block';
+		document.getElementById("issue-modal-content").style.display = 'none';
+		
+		document.getElementById("task-create-modal").style.display = 'none';
+		document.getElementById("issueCreateModalTitle").value = "";
+		document.getElementById("issueCreateDescription").value = "";
+		createMemberSelectBoxChildNodes = document.getElementById("createMemberSelectBox");
+		
+		issueCreateMemberListChildNodes = document.getElementById("issueCreateMemberList");
+		
+		while(issueCreateMemberListChildNodes.hasChildNodes()) {
+            
+			issueCreateMemberListChildNodes.removeChild(issueCreateMemberListChildNodes.firstChild);
+            
+         }
+		
+		while(createMemberSelectBoxChildNodes.hasChildNodes()) {
+			
+			createMemberSelectBoxChildNodes.removeChild(createMemberSelectBoxChildNodes.firstChild);
+		}
+		
+		createMemberSelectBox = document.getElementById("createMemberSelectBox");
+		
+		boxFirstElement = document.createElement('option');
+		boxFirstElement.setAttribute('style', 'text-align:center');
+		boxFirstElement.innerText = "----------";
+		
+		createMemberSelectBox.appendChild(boxFirstElement);
+	}
+	
+	$(document).ready(function() {
+		
+		$("#createMemberSelectBox").on('change', function() {
+
+    		let issueModal = document.getElementById("issue-modal-content");
+    		
+			const $alreadyissueMember = document.querySelectorAll("#issueMemberInfo");
+			
+			let checkAlreadyIssueMember = false;
+			
+			if(this.value != "----------") {
+				
+				for(let a = 0; a < $alreadyissueMember.length; a++) {
+					
+					if($alreadyissueMember[a].innerText == this.value) {
+						
+						checkAlreadyIssueMember = true;
+					}
+				}
+				
+				if(checkAlreadyIssueMember) {
+					
+					alert("이미 선택된 멤버입니다.");
+					
+				} else {
+					
+					issueCreateMemberList = document.getElementById("issueCreateMemberList");
+				
+					issueMemberDiv = document.createElement('div');
+    				issueMemberDiv.setAttribute('id', 'issueMember');
+    				issueMemberDiv.setAttribute('class', 'issueMember');
+    				
+    				issueMemberInfoDiv = document.createElement('div');
+    				issueMemberInfoDiv.setAttribute('id', 'issueMemberInfo');
+    				issueMemberInfoDiv.setAttribute('class', 'issueMemberInfo');
+    				issueMemberInfoDiv.setAttribute('name', 'issueMemberInfo');
+    				issueMemberInfoDiv.innerText = this.value;
+    				
+    				issueMemberBody = document.createElement('input');
+    				issueMemberBody.setAttribute('type', 'hidden');
+    				issueMemberBody.setAttribute('id', 'issueMemberBody');
+    				issueMemberBody.setAttribute('class', 'issueMemberBody');
+    				issueMemberBody.setAttribute('name', 'issueMemberBody');
+    				issueMemberBody.setAttribute('value', this.value);
+    				
+    				thisSprintProjectCode = document.createElement('input');
+    				thisSprintProjectCode.setAttribute('type', 'hidden');
+    				thisSprintProjectCode.setAttribute('name', 'projectCode');
+    				thisSprintProjectCode.setAttribute('value', ${ requestScope.code });
+    				
+    				thisSprintCode = document.createElement('input');
+    				thisSprintCode.setAttribute('type', 'hidden');
+    				thisSprintCode.setAttribute('name', 'sprintCode');
+    				thisSprintCode.setAttribute('value', issueModal.children[3].value);
+    				
+    				removeIssueMemberBtn = document.createElement('input');
+    				removeIssueMemberBtn.setAttribute('type', 'button');
+    				removeIssueMemberBtn.setAttribute('id', 'removeIssueMember');
+    				removeIssueMemberBtn.setAttribute('class', 'removeIssueMember');
+    				removeIssueMemberBtn.setAttribute('value', '제외하기');
+    				
+    				issueMemberDiv.appendChild(issueMemberInfoDiv);
+    				issueMemberDiv.appendChild(issueMemberBody);
+    				issueMemberDiv.appendChild(thisSprintProjectCode);
+    				issueMemberDiv.appendChild(thisSprintCode);
+    				issueMemberDiv.appendChild(removeIssueMemberBtn);
+    				
+    				issueCreateMemberList.appendChild(issueMemberDiv);
+					
+				}
+			}
+			
+		});
+    	
+    	$(document).on("click", "#issueCreateBtn", function(event) { 
+    		
+    		createMemberSelectBox = document.getElementById("issueCreateMemberList");
+			
+    		const $sprintMemberHiddenNoList = document.querySelectorAll("#sprintMemberHiddenNo");
+    		
+    		let checkSprintMember = false;
+    		
+    		for(let i = 0; i < $sprintMemberHiddenNoList.length; i++) {
+    			
+    			if($sprintMemberHiddenNoList[i].value == "${ sessionScope.loginMember.no }") {
+    				checkSprintMember = true;
+    				break;
+    			}
+    			
+    		}
+    		
+			if(createMemberSelectBox.children.length == 0) {
+				
+				alert("이슈 담당자를 지정해야합니다.");
+				
+			} else {
+				
+				if(checkSprintMember) {
+					document.getElementById("issueCreateForm").submit();
+				} else {
+					alert("참여한 스프린트에서만 이슈를 생성하실 수 있습니다.");
+				}
+				
+			}
+    		
+    	});
+    	
+    	$(document).on("click", "#removeIssueMember", function(event) { 
+    		
+    		alert("담당자 제외에 성공하셨습니다!");
+			$(this).parent('div').remove();
+    		
+    	});
+    	
+    });
+		
 	/* 스프린트 시작 */
 	document.getElementById("sprint-start").onclick = function() {
 

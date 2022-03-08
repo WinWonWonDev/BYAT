@@ -65,7 +65,6 @@ public class SprintServiceImpl implements SprintService {
 			int result4 = mapper.updateIssueSprintCode(projectCode);
 			
 			int result5 = 0;
-			int result6 = 0;
 			
 			Map<String, Integer> map = new HashMap<>();
 			map.put("projectCode", projectCode);
@@ -79,7 +78,7 @@ public class SprintServiceImpl implements SprintService {
 				result5 += mapper.insertIssueProgressHistory2(map);
 			}
 			
-			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0)) {
+			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0) && !(result4 > 0) && !(result5 == issueList.size())) {
 				
 				result = "스프린트 생성 실패";
 			} else {
@@ -128,26 +127,47 @@ public class SprintServiceImpl implements SprintService {
 	}
 	
 	@Override
-	public void removeSprint(int sprintCode) {
+	public void removeSprint(Map<String, Integer> map) {
+		
+		int sprintCode = map.get("sprintCode");
+		
+		SprintDTO sprint = mapper.selectSprint(sprintCode);
+		sprint.setMemberNo(map.get("memberNo"));
 		
 		int result1 = mapper.deleteSprint(sprintCode);
 		
-		int result2 = mapper.insertSprintVersionHistory3(sprintCode);//
+		int result2 = mapper.insertSprintVersionHistory3(sprint);//
 		
+		/* 스프린트의 이슈들의 상태를 보류로 바꿔준다. */
 		int result3 = mapper.updateIssueProgress2(sprintCode);
 		
+		/* 스프린트의 이슈코드 들을 가져온다. */
 		List<Integer> issueList = mapper.selectIssueList3(sprintCode);
 		
 		int result4 = 0;
-		
+
 		for(int i = 0; i < issueList.size(); i++) {
 			
 			int issueCode = issueList.get(i);
 			
-			result4 += mapper.insertIssueProgressHistory3(issueCode);//
+			/* 이슈 구성원도 참가 여부를 N으로 바꿔준다.*/
+			result4 += mapper.updateIssueMembersParticipation2(issueCode);
 		}
 		
-		if(!(result1 > 0) && !(result2 > 0)) {
+		/* 스프린트의 구성원들을 가져온다. */
+		List<Integer> sprintMembers = mapper.selectSprintMemberList4(sprintCode);
+		
+		int result5 = 0;
+		
+		for(int i = 0; i < sprintMembers.size(); i++) {
+			
+			map.put("memberNo", sprintMembers.get(i));
+			
+			/* 멤버 구성원 별로 스프린트가 삭제되었다는 알림이 생성된다. */
+			result5 += mapper.insertRemoveSprintNotice(map);
+		}
+		
+		if(!(result1 > 0) && !(result2 > 0) && !(result3 > 0) && !(result4 == issueList.size()) && !(result5 == sprintMembers.size())) {
 			System.out.println("스프린트 삭제 실패");
 		}
 	}

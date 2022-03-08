@@ -34,16 +34,20 @@ public class MeetinglogController {
 	
 	  @GetMapping("/list") 
 	  public String selectMytask(HttpServletRequest request, Model model) {
-		 
+		  System.out.println("list 확인");
+		  
 		  int projectCode = Integer.parseInt(request.getParameter("code"));
 
+		  String projectName = meetinglogService.selectProjectName(projectCode);
+		  
 		  List<MeetinglogDTO> meetinglogList = meetinglogService.selectMeetinglogList(projectCode);
-		  
-		  
-		  model.addAttribute("meetinglogList", meetinglogList);
+				  
 		  model.addAttribute("code", projectCode);
+		  model.addAttribute("projectName", projectName);
+		  model.addAttribute("meetinglogList", meetinglogList);
 		  
 		  System.out.println(meetinglogList+" : meetinglogList selectMytask");
+		  
 		  return "/meetinglog/list";
 	  }
 
@@ -56,6 +60,7 @@ public class MeetinglogController {
 
 		int meetinglogCode = Integer.parseInt(request.getParameter("meetinglogCode"));
 		System.out.println("[selectMeetinglogDetail] meetinglogCode : " + meetinglogCode);
+		
 		MeetinglogDTO meetinglog = meetinglogService.selectMeetinglogDetail(meetinglogCode);
 		  
 		System.out.println(meetinglog);
@@ -77,8 +82,6 @@ public class MeetinglogController {
 	  public String registMeetinglog(HttpServletRequest request, Model model) {
 		
 		  java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
-			
-			
 		  
 		  MeetinglogDTO meetinglog = new MeetinglogDTO();
 		  MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
@@ -137,6 +140,7 @@ public class MeetinglogController {
 		 
 		  int projectCode = Integer.parseInt(request.getParameter("code"));
 		  
+		  int code = Integer.parseInt(request.getParameter("meetingLogDetailCode"));
 
 		  
 		 // int result  = meetinglogService.removeMeetinglog(meetingLogDetailCode);

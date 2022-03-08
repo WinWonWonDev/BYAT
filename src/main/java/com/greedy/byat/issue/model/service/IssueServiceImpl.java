@@ -14,6 +14,9 @@ import com.greedy.byat.common.exception.issue.IssueInsertVersionHistoryException
 import com.greedy.byat.common.exception.issue.IssueModifyMemberException;
 import com.greedy.byat.common.exception.issue.IssueModifyNoticeException;
 import com.greedy.byat.common.exception.issue.IssueModifyStatusException;
+import com.greedy.byat.common.exception.issue.IssueRegistException;
+import com.greedy.byat.common.exception.issue.IssueRegistMemberException;
+import com.greedy.byat.common.exception.issue.IssueRegistNoticeException;
 import com.greedy.byat.common.exception.issue.IssueRegistStatusHistoryException;
 import com.greedy.byat.common.exception.issue.IssueRemoveException;
 import com.greedy.byat.common.exception.issue.IssueRemoveMemberException;
@@ -363,6 +366,73 @@ public class IssueServiceImpl implements IssueService {
 		}
 		
 		return issue.getProjectCode();
+	}
+
+	@Override
+	public List<SprintMembersDTO> selectSprintMembersList(int projectCode) {
+	
+		int sprintCode = mapper.selectSprintCode(projectCode);
+		
+		List<SprintMembersDTO> selectSprintMemberList = mapper.selectSprintMembers(sprintCode);
+		
+		return selectSprintMemberList;
+	}
+
+	@Override
+	public void insertIssue(IssueDTO registIssue) throws IssueRegistMemberException, IssueRegistException, IssueInsertVersionHistoryException, IssueRegistStatusHistoryException, IssueRegistNoticeException {
+		
+		int result = mapper.registIssue(registIssue);
+		
+		int insertIssueMemberResult = 0;
+		int insertIssuenoticeResult = 0;
+		
+		NoticeDTO notice = new NoticeDTO();
+		notice.setBody("\'" + registIssue.getTitle() + "\'이슈가 생성되었습니다.");
+		notice.setCategory(4);
+		notice.setUrl("/issue/list?code=" + registIssue.getProjectCode());
+		notice.setStatus("N");
+		
+		if(!(result > 0)) {
+			
+			throw new IssueRegistException("이슈 생성 실패!");
+			
+		} else {
+			
+			registIssue.setVersion(1);
+			
+			int issueRegistHistoryResult = mapper.insertIssueFirstVersionHistory(registIssue);
+			int issueRegistRrogressHistoryResult = mapper.insertIssueFirstProgressHistory(registIssue);
+			
+			for(int i = 0; i < registIssue.getIssueMemberList().size(); i++) {
+
+				notice.setNo(registIssue.getIssueMemberList().get(i).getNo());
+				
+				insertIssueMemberResult = mapper.insertFirstIssueMember(registIssue.getIssueMemberList().get(i));
+				insertIssuenoticeResult = mapper.insertNoticeIssueFirst(notice);
+				
+				if(!(insertIssueMemberResult > 0)) {
+					
+					throw new IssueRegistMemberException("이슈 담당자 지정 실패!");
+				} 
+				
+				if(!(issueRegistHistoryResult > 0)) {
+					
+					throw new IssueInsertVersionHistoryException("이슈 생성 버전 히스토리 생성 실패!");
+				}
+				
+				if(!(issueRegistRrogressHistoryResult > 0)) {
+					
+					throw new IssueRegistStatusHistoryException("이슈 생성 상태 변경 이력 생성 실패!");
+				}
+
+				if(!(insertIssuenoticeResult > 0)) {
+					
+					throw new IssueRegistNoticeException("이슈 생성 알림 생성 실패!");
+				}
+				
+			}
+		}
+		
 	}
 
 }

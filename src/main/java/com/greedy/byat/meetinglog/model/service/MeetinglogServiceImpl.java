@@ -23,6 +23,7 @@ public class MeetinglogServiceImpl implements MeetinglogService {
 
 		List<MeetinglogDTO> meetinglog = mapper.selectMeetinglogList(projectCode);
 		
+		
 		return meetinglog;
 	}
 
@@ -68,6 +69,14 @@ public class MeetinglogServiceImpl implements MeetinglogService {
 			//mapper.registMeetinglogHistory(meetinglog);
 		}
 		return result ;
+	}
+
+	@Override
+	public String selectProjectName(int projectCode) {
+		
+		String project = mapper.selectProjectName(projectCode);
+		
+		return project;
 	}
 
 }

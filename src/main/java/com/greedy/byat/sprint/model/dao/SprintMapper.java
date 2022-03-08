@@ -117,9 +117,15 @@ public interface SprintMapper {
 
 	List<Integer> selectIssueList3(int sprintCode);
 
-	int insertSprintVersionHistory3(int sprintCode);
+	int insertSprintVersionHistory3(SprintDTO sprint);
 
 	int insertIssueProgressHistory3(int issueCode);
+
+	int updateIssueMembersParticipation2(int issueCode);
+
+	List<Integer> selectSprintMemberList4(int sprintCode);
+
+	int insertRemoveSprintNotice(Map<String, Integer> map);
 
 
 

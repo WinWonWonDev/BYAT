@@ -14,6 +14,8 @@ public interface MeetinglogService {
 
 	int modifyMeetinglog(MeetinglogDTO meetinglog);
 
+	String selectProjectName(int projectCode);
+
 	
 
 }
