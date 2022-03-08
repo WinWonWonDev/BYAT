@@ -17,6 +17,4 @@ public interface CalendarService {
 
 	List<MemberDTO> selectAllMemberList();
 
-	List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove);
-
 }

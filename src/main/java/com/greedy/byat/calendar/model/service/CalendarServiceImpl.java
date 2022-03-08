@@ -53,7 +53,6 @@ public class CalendarServiceImpl implements CalendarService {
 			totalCalendarList.addAll(calendarList);
 		}
 		
-		System.out.println("음 많이 잘나오냐? : " + totalCalendarList);
 		return totalCalendarList;
 	}
 
@@ -146,24 +145,25 @@ public class CalendarServiceImpl implements CalendarService {
 		return selectAllMemberList;
 	}
 
-	@Override
-	public List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove) {
-
-		System.out.println("서비스는 올는데");
-		List<ScheduleDTO> totalCalendarList = null;
-		List<ScheduleDTO> calendarList = null;
-		
-		totalCalendarList = mapper.selectProjectCalendarListForSelectBox(memberNoForMove);
-		calendarList = mapper.selectCalendarListForSelectBox(memberNoForMove);
-		System.out.println("여기가 안나온느건가?");
-		totalCalendarList.addAll(calendarList);
-		
-		System.out.println("여기 잘 이거 나와야함!!! 나옴? : " + totalCalendarList);
-		
-		return totalCalendarList;
-		
-		
-	}
+//	@Override
+//	public List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove) {
+//		
+//		List<ScheduleDTO> totalCalendarList = null;
+//		List<ScheduleDTO> calendarList = null;
+//		
+//		System.out.println("서비스는 올는데");
+//		totalCalendarList = mapper.selectProjectCalendarListForSelectBox(memberNoForMove);
+//		System.out.println("토탈조차 안되는건가");
+//		calendarList = mapper.selectCalendarListForSelectBox(memberNoForMove);
+//		System.out.println("여기가 안나온느건가?");
+//		totalCalendarList.addAll(calendarList);
+//		
+//		System.out.println("여기 잘 이거 나와야함!!! 나옴? : " + totalCalendarList);
+//		
+//		return totalCalendarList;
+//		
+//		
+//	}
 
 
 

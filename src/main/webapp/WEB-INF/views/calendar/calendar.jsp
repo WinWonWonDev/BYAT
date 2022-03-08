@@ -195,9 +195,12 @@
 </script>
 </head>
 <body>
-	<div id='external-events'>
-		<button id="saveButton" style="cursor:pointer;" onclick="allSave();" >일정 저장</button>	
-	</div>
+	
+	<c:if test="${ sessionScope.loginMember.no == requestScope.memberNos }">
+		<div id='external-events'>
+			<button id="saveButton" style="cursor:pointer;" onclick="allSave();" >일정 저장</button>	
+		</div>
+	</c:if>
 
 	<div id="calendarDiv">
 		<div id='calendar'></div>
@@ -211,37 +214,15 @@
 	
 <script>
 
-console.log("여기 클릭용");
 		const selectBoxDiv = document.getElementById("selectBoxDiv");
 		const select = document.getElementById("selectBox");
 		const option = document.createElement("option");
 
 		function moveCalendarByMember(value) {
+			location.href = "${ pageContext.servletContext.contextPath }/calendar/list?no=" + value;
+			/* $('#selectBox').val(value).prop("selected", true); */
 			
-			console.log("되긴되냐?" + value);
-			console.log("되긴되냐?");
-			$.ajax({
-				url : "/byat/calendar/movecalendarbymember",
-				method : "get",
-				data : {"memberNoForMove":value},
-				successs : function(data, status, xhr) {
-					alert("성공");
-				},
-				error : function(error) {
-					alert("에러 발생... " + error)
-				}
-				
-			});
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		function createSelectBox() {
 			option.value = "ALL";
@@ -249,18 +230,19 @@ console.log("여기 클릭용");
 			select.appendChild(option);
 			
 			return select;
-		}
+		} 
 		
 		$.ajax({
 			url : "/byat/calendar/selectallmember",
 			method : "get",
 			data: {},
 			success: function(data, status, xhr) {
-				createSelectBox();
+				createSelectBox(); 
 
 				for(i = 0; i < data.length; i++) { //여러개가 담겻을 테니 
 					let option = document.createElement("option");
 					option.value = data[i].no;
+					
 					option.text = data[i].name + " " + data[i].id;
 					select.appendChild(option);
 				}

@@ -30,10 +30,5 @@ public interface CalendarMapper {
 
 	List<MemberDTO> selectAllMemberList();
 
-	List<ScheduleDTO> selectProjectCalendarListForSelectBox(int memberNoForMove);
-
-	List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove);
-
-
 
 }
