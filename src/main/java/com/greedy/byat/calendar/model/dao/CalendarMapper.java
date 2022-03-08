@@ -28,6 +28,12 @@ public interface CalendarMapper {
 
 	int deleteAllCalendar(int memberNo);
 
+	List<MemberDTO> selectAllMemberList();
+
+	List<ScheduleDTO> selectProjectCalendarListForSelectBox(int memberNoForMove);
+
+	List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove);
+
 
 
 }

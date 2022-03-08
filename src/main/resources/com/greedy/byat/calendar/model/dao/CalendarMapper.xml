@@ -43,6 +43,15 @@
  		<result property="initPwdYN" column="INIT_PWD_YN"/>
  	</resultMap>
  
+ 	<select id="selectAllMemberList" resultMap="memberResultMap">
+ 		SELECT 
+ 			   A.MEMBER_ID
+ 			 , A.MEMBER_NO
+ 			 , A.MEMBER_NAME
+ 		  FROM TBL_MEMBER A 
+ 		 WHERE A.MEMBER_NO != 13
+ 	</select>
+ 
     <select id="selectAllMemberNo" resultType="_int">
  		SELECT 
  		       MEMBER_NO
@@ -74,7 +83,7 @@
  		   AND C.PROJECT_PARTICIPATION_YN = 'Y'		   
  	</select>
  	
- 	<select id="selectCalendarListByMemberOne" resultMap="scheduleResultMap">
+ 	<select id="selectCalendarListForSelectBox">
  		 SELECT
  		       A.SCHEDULE_CODE
  		     , A.SCHEDULE_TITLE

@@ -1,8 +1,6 @@
 package com.greedy.byat.calendar.model.service;
 
-import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,10 +49,7 @@ public class CalendarServiceImpl implements CalendarService {
 		} else { //일반멤버,PM의 경우(나머지 2,3인 경우) -> 관리자일정, 프로젝트일정, 개인일정 다 보여야 되잖아? 
 			totalCalendarList = mapper.selectProjectListByMemberOne(memberNo);
 			calendarList = mapper.selectCalendarListByMemberOne(memberNo);
-			System.out.println("맴버쪽만? 프로젝트 말ㄱ : " + calendarList);
-			System.out.println("프로젝트만 : " + totalCalendarList);
-			
-			
+
 			totalCalendarList.addAll(calendarList);
 		}
 		
@@ -64,8 +59,6 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	public int registSchedule(List<Map<String, Object>> calendarList, MemberDTO loginMember) throws ParseException {
-		
-		System.out.println("서비스 impt 옴?");
 		
 		int memberNo = loginMember.getNo();
 		String memberName = loginMember.getName();
@@ -142,6 +135,33 @@ public class CalendarServiceImpl implements CalendarService {
 		} else {
 			return 0;
 		}
+		
+	}
+
+	@Override
+	public List<MemberDTO> selectAllMemberList() {
+
+		List<MemberDTO> selectAllMemberList = mapper.selectAllMemberList();
+		
+		return selectAllMemberList;
+	}
+
+	@Override
+	public List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove) {
+
+		System.out.println("서비스는 올는데");
+		List<ScheduleDTO> totalCalendarList = null;
+		List<ScheduleDTO> calendarList = null;
+		
+		totalCalendarList = mapper.selectProjectCalendarListForSelectBox(memberNoForMove);
+		calendarList = mapper.selectCalendarListForSelectBox(memberNoForMove);
+		System.out.println("여기가 안나온느건가?");
+		totalCalendarList.addAll(calendarList);
+		
+		System.out.println("여기 잘 이거 나와야함!!! 나옴? : " + totalCalendarList);
+		
+		return totalCalendarList;
+		
 		
 	}
 

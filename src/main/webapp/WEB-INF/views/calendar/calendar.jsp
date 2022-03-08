@@ -42,10 +42,7 @@
 	      right: 'dayGridMonth,timeGridWeek,timeGridDay',
 	      },
   	      editable: true,
-  	      eventLimit: false,
   	      selectable: true,
-  	      selectHelper: true,
-  	      /* 여기부터 추가했고 */
           selectMirror: true,
           navLinks: true,
           select: function(arg) {
@@ -77,7 +74,8 @@
         	title : '<%=dto.getTitle()%>',
             start : '<%=dto.getStartDate()%>',
             end : '<%=dto.getEndDate()%>',
-            color : '#483D8B'
+            color : 'gray',
+            backgroundColor: "#483D8B"
          },
 <%}
 }%>
@@ -136,8 +134,6 @@
 		});
 	}
 	
-	
-
 </script>
 <style>
 
@@ -159,14 +155,14 @@
 #external-events {
 	float:right; 
 	position:absolute;
-	left:93%;
+	left:90%;
 	top:19%;
 
 }
 
 #calendarDiv {
 	float:right; 
-	width:90%;  
+	width:85%;  
 	margin-top:30px;
 	position:absolute;
 	left:1%;
@@ -175,17 +171,18 @@
 
 }
 
-#searchMembers {
+#selectBox {
 	position:absolute;
 	top:11%;
-	left:92.5%;
-	width:100px;
+	left:88%;
+	width:150px;
 	height:30px;
 	font-size:5px;
 	text-align:center;
 	background: white;
 	border-radius: 3px;
-	z-index:-1;
+	z-index:-1;	
+
 }
 
 
@@ -207,20 +204,73 @@
 	</div>
 
 	<c:if test="${ sessionScope.loginMember.name eq '관리자' }">
-	<!-- 본인 뱨고 인원만큼 셀렉트 박스 생겨야함! (이름 + 사번 ) -->
-	<select name="selectBox" id="selectBox" class="selectBox">
-		<option id="nonSelectedStatus">선택해주세요</option>
-		<c:forEach var="mlist" items="${memberList}"></c:forEach>
-		<option id="OneMember"></option>
-	</select>
-	
-		<input type="text" id="searchMembers" maxlength="20" style="background-color:rgb(242,242,242);" placeholder="검색할 이름 입력">
+		<select id="selectBox" name="selectBox" onchange="moveCalendarByMember(this.value);">
+			<!-- 옵션이 생기는 곳 -->
+		</select>
 	</c:if>
-
-
+	
 <script>
-	/* 셀렉트 박스용 script */
-	/* 누르면 그 페이지로 이동하는 건가? calendar로 가지만 */
+
+console.log("여기 클릭용");
+		const selectBoxDiv = document.getElementById("selectBoxDiv");
+		const select = document.getElementById("selectBox");
+		const option = document.createElement("option");
+
+		function moveCalendarByMember(value) {
+			
+			console.log("되긴되냐?" + value);
+			console.log("되긴되냐?");
+			$.ajax({
+				url : "/byat/calendar/movecalendarbymember",
+				method : "get",
+				data : {"memberNoForMove":value},
+				successs : function(data, status, xhr) {
+					alert("성공");
+				},
+				error : function(error) {
+					alert("에러 발생... " + error)
+				}
+				
+			});
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		function createSelectBox() {
+			option.value = "ALL";
+			option.text = "선택해주세요";
+			select.appendChild(option);
+			
+			return select;
+		}
+		
+		$.ajax({
+			url : "/byat/calendar/selectallmember",
+			method : "get",
+			data: {},
+			success: function(data, status, xhr) {
+				createSelectBox();
+
+				for(i = 0; i < data.length; i++) { //여러개가 담겻을 테니 
+					let option = document.createElement("option");
+					option.value = data[i].no;
+					option.text = data[i].name + " " + data[i].id;
+					select.appendChild(option);
+				}
+			},
+			error: function(error) {
+				alert("에러 발생 다시 시도해주세요!");
+			}
+		});
+ 
+
 </script>
 </body>
 </html>

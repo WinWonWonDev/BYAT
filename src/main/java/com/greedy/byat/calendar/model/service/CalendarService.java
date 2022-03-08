@@ -15,4 +15,8 @@ public interface CalendarService {
 
 	int registSchedule(List<Map<String, Object>> calendarList, MemberDTO loginMember) throws ParseException;
 
+	List<MemberDTO> selectAllMemberList();
+
+	List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove);
+
 }
