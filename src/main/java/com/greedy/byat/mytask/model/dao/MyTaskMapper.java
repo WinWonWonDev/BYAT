@@ -29,6 +29,5 @@ public interface MyTaskMapper {
 
 	int modifyToDoList(ToDoListDTO todoList);
 
-
 	List<TaskDTO> selectTaskListForProject(TaskDTO task);
 }

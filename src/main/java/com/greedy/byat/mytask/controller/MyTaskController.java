@@ -21,6 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.mytask.model.dto.MyTaskDTO;
 import com.greedy.byat.mytask.model.dto.ToDoListDTO;
@@ -61,13 +64,14 @@ public class MyTaskController {
 				progressIng++;
 			} else if (mytask.getProjectDTO().get(i).getProgress().equals("완료")) {
 	            progressDone++;
-	         } else {
+	        } else {
 	            progressNotDone++;
-	         }
+	        }
 		}
 		
 		int[] projectProgressArr = { progressIng, progressDone, progressNotDone };
 		
+		System.out.println(mytask.getTodolistDTO());
 		
 		model.addAttribute("projectProgress", projectProgressArr);
 		model.addAttribute("projectList", mytask.getProjectDTO());
@@ -77,20 +81,7 @@ public class MyTaskController {
 		return "/mytask/mytask";
 	}
 	
-	/*
-	 * @PostMapping("/selecttasklist")
-	 * 
-	 * @ResponseBody public List<TaskDTO> selectTaskList(int loginMember ,
-	 * HttpServletResponse response) {
-	 * 
-	 * System.out.println(loginMember + "@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-	 * response.setContentType("application/json; charset=UTF-8");
-	 * 
-	 * List<TaskDTO> taskList = mytaskService.selectTaskList(loginMember);
-	 * System.out.println(taskList + "@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-	 * 
-	 * return taskList; }
-	 */
+
 	
 	@GetMapping("/selecttasklistforproject")
 	@ResponseBody 
@@ -102,18 +93,15 @@ public class MyTaskController {
 		
 		List<TaskDTO> taskList = mytaskService.selectTaskListForProject(member.getNo(), projectCode);
 
-		
-
 		return taskList;
 	}
 	
 	@GetMapping("/regist")
 	public String registToDoList(HttpServletRequest request) {
-
 		int memberNumber = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
 
 		mytaskService.registToDoList(memberNumber);
-
+		
 		return "redirect:/mytask/list";
 	}
 
@@ -127,13 +115,13 @@ public class MyTaskController {
 		return result;
 	}
 	
-	@PostMapping("/modify")
-	public int modifyToDoList(@ModelAttribute ToDoListDTO todoList, HttpServletResponse response) {
+	@PostMapping(value = "/modify", produces="application/json; charset=UTF-8")
+	public int modifyToDoList(@ModelAttribute ToDoListDTO todoList) {
 
-		response.setContentType("application/json; charset=UTF-8");
-
+		
 		int result= mytaskService.modifyToDoList(todoList);
-
+		
+		System.out.println(result + "modify");
 		return result;
 	}
 	

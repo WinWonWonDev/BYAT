@@ -101,21 +101,23 @@
 		padding-top: 10px;
 	}
 	/*스크롤 스타일*/
-	  .modalTbodyDiv {
+	.modalTbodyDiv {
     
-  }
-  .modalTbodyDiv::-webkit-scrollbar {
-    width: 10px;
-  }
-  .modalTbodyDiv::-webkit-scrollbar-thumb {
-    background-color: #2f3542;
-    border-radius: 10px;
-  }
-  .modalTbodyDiv::-webkit-scrollbar-track {
-    background-color: grey;
-    border-radius: 10px;
-    box-shadow: inset 0px 0px 5px white;
-  }
+  	}
+	 
+	 .modalTbodyDiv::-webkit-scrollbar {
+	    width: 10px;
+	}
+	  
+	  .modalTbodyDiv::-webkit-scrollbar-thumb {
+	    background-color: #2f3542;
+	    border-radius: 10px;
+	  }
+	  .modalTbodyDiv::-webkit-scrollbar-track {
+	    background-color: grey;
+	    border-radius: 10px;
+	    box-shadow: inset 0px 0px 5px white;
+	  }
 	
 	#myTaskWhiteBoard {
 		background: white;
@@ -199,14 +201,16 @@
 		width: 98%;
 		height: auto;
 		text-align: center;
-		border-radius: 20px;
-		padding: 5px;
+		
+		padding: 10px;
 		margin-top:10px;
+		display: block;
 	}
 	
-	.mytaskTbody{
-		background-color: silver;
-		border: 1px solid black;
+	.myTaskTbody {
+		margin-top: 200px;
+		padding-top :100px;
+		height:80px;
 	}
 	
 	#member1-circle {
@@ -382,6 +386,28 @@
 
 	#projectList:hover {
 		background-color: skyblue;
+		cursor:pointer;
+		
+	}
+	
+	.projectBackbtn{
+		background:url("/byat/resources/images/back-button-arrow-sign.png") no-repeat;
+        
+        width:40px;
+        height:36px;
+        cursor:pointer;
+        float:center;
+	}
+	
+	.membersModalButton{
+		border: 1px solid black;
+	 	width:32px;
+        height:32px;
+		cursor:pointer;
+	}
+	
+	.titleText{
+	 float:left;
 	}
 /* 스클롤*/
 
@@ -392,7 +418,8 @@
 <body>
 	<div id="myTaskWhiteBoard">
 		<div id="myTaskProjectListBox">
-			<p>프로젝트 목록</p>
+			<input type="button" class="projectBackbtn" id="projectBackbtn"/>
+			<p class="titleText">프로젝트 목록</p>
 			<div id="myTaskProjectListInnerBox">
 				<table class="myTaskProjectTable" >
 					<c:forEach items="${ projectList }" var="project" >
@@ -428,7 +455,7 @@
                        			</td>
                         		<td>
                         			<input type="hidden" id=projectCode value="${project.code}"/>
-                        			<input id="membersModalButton" type="button" value="..."/>
+                        			<input id="membersModalButton" class="membersModalButton"type="button" value="..."/>
                        			 </td>
                       			 <td id="myTaskPrjectDeadline">
                           			 <c:out value="${ project.startDate }"/> <br> ~ <c:out value="${ project.endDate }"/>
@@ -467,11 +494,12 @@
 		<div id="myTaskListBox">
 			<p>나의 테스크</p>
 				<div id="myTaskListInnerBox">
-					
+					<table></table>
 						<table class="myTaskList" id="myTaskList">
 							<c:forEach items="${ taskList }" var="taskList" varStatus="status">
-								<tbody id= myTaskTbody>
-									<tr>
+								<tbody id= "myTaskTbody" class="myTaskTbody">
+									
+									<tr >
 										<td><c:out value="${ taskList.title }"/> </td>
 										<td><c:out value="${ taskList.startDate }"/><br>~ <c:out value="${ taskList.endDate }"/></td>
 										<td>
@@ -485,25 +513,17 @@
 			                   			  		<c:when test="${ taskList.progress eq '진행완료' }">
 			                   			  			<div class="projectstate3"><c:out value="${ taskList.progress }"/></div>
 			                   			  		</c:when>
-			                   			  		<c:when test="${ taskList.progress eq '완료' }">
-			                   			  			<div class="projectstate3"><c:out value="${ taskList.progress }"/></div>
-			                   			  		</c:when>
 			                       			 </c:choose>
 										</td>
 									</tr>
 							</tbody>
 						</c:forEach>
 					</table>
-				
-				<%-- <c:if test="${empty taskList }">
-							<c:out value="태스크가 없습니다."/>
-				</c:if> --%>
 			</div>
 		</div>
 
 		<div id="myTaskDoToListBox">
 			<input type="hidden" id="loginMemberNo" value="${sessionScope.loginMember}"/>
-			<input type="hidden" id="loginMemberNumber" value="${sessionScope.loginMember.no}"/>
 			<p>
 				ToDoList 
 				<input type="button" class="img-button-plus" value="+" onclick="location.href ='${pageContext.servletContext.contextPath}/mytask/regist'">
@@ -511,27 +531,27 @@
 			</p>
 			<div class="myTaskDoToListInnerBox">
 				 <table class="myTaskDoToList-left">
-						<c:forEach items="${ todolist }" var="todolist" varStatus="status">
+						<c:forEach items="${ todoList }" var="todolist" varStatus="status">
 				 			<c:choose>	
-				 				<c:when test="${status.index%2==1}">	
+				 				<c:when test="${status.index % 2 == 1}">	
 									<tr id="todolist" class="todolist">
 										<td>
 											<input type ="hidden" id="toDoListNo" value="${todolist.no}"/>
 											<input type="checkbox" id="ToDoListCheckBox" name ="ToDoListCheckBox" ${todolist.checkStatus  eq "Y" ? "checked" : ""}/>
 											<input type="text" id="ToDoListText" name="ToDoListText" value="${todolist.title}" ${todolist.checkStatus  eq "Y" ? "style=text-decoration:line-through;" : ""} />
-											</td>
-										</tr>
+										</td>
+									</tr>
 								</c:when>
 							</c:choose>
 						</c:forEach>
 					</table>
 				<table class="myTaskDoToList-right">
-					<c:forEach items="${ todolist }" var="todolist" varStatus="status">
+					<c:forEach items="${ todoList }" var="todolist" varStatus="status">
 						<c:choose>	
-							<c:when test="${status.index%2==0}">		
+							<c:when test="${status.index % 2 == 0}">		
 								<tr id="todolist" class="todolist">
 									<td>
-										<input type ="hidden" id="toDoListNo" value="${todolist.no}"/>
+										<input type ="hidden" id="toDoListNo" value="${ todolist.no }"/>
 										<input type="checkbox" id="ToDoListCheckBox" name ="ToDoListCheckBox" ${todolist.checkStatus  eq "Y" ? "checked" : ""}/>
 										<input type="text" id="ToDoListText" name="ToDoListText" value="${todolist.title}" ${todolist.checkStatus  eq "Y" ? "style=text-decoration:line-through;" : ""} />	
 									</td>
@@ -597,21 +617,20 @@
       
     </script>
     
-   
-      
-      
 	<script>
 		let count = 0;
 		const $ToDoListCheckBox = document.querySelectorAll("#ToDoListCheckBox");
-		const ToDoListText = document.querySelectorAll("#ToDoListText");
+		const $ToDoListText = document.querySelectorAll("#ToDoListText");
 		const $todolist = document.querySelectorAll("#todolist");
 		const $toDoListNo = document.querySelectorAll("#toDoListNo");
     	const $modalTable = document.querySelectorAll("#modalTable");
 		const $membersModalButton = document.querySelectorAll("#membersModalButton");
 		const $projectCode = document.querySelectorAll("#projectCode");
-		const loginMember =$('#loginMemberNumber').val();
 		const $projectList = document.querySelectorAll("#projectList");
 		
+		document.getElementById("projectBackbtn").onclick = function(e) {
+			window.location.href="${ pageContext.servletContext.contextPath }/mytask/list";
+	    }
 		google.charts.load('current', {'packages':['corechart']});
     	google.charts.setOnLoadCallback(drawChart);
     	
@@ -624,11 +643,11 @@
                 ['완료', ${projectProgress[1]} ] ,
                 ['미진행', ${projectProgress[2]}]
              ]);
-            
+        
             var options = {   title:'나의 프로젝트 상태'
             				, alignment:'center'
-            				, width:'390px'
-            				, height:'328px' 
+            				, width:'80%'
+            				, height:'80%' 
             				, legend: {'position':'right','alignment':'center'}
             	  			, slices: [{color: 'rgb(78,115,223)'}, {color :'rgb(41, 60, 117)'}, {color: 'rgb(196, 196, 196)'}]};
             var chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -655,13 +674,14 @@
 			  					if(data!=0){
 				  					for(let index in data) {
 				  						console.log(data);
-				  						const $tbody =$("<tbody id= myTaskTbody>");
+				  						const $tbody =$("<tbody id='myTaskTbody' class='myTaskTbody'>");
 										const $tr = $("<tr>");
 										const $titleTd = $("<td>").text(data[index].title);
 										const $dateTd = $("<td>").text(data[index].startDate);
+										
 										const $br = $("<br>").text("~" + data[index].endDate);
 										const $progressTd = $("<td>");
-										let $div=$("<div>");
+										let $div = $("<div>");
 										
 										 if('진행전' == data[index].progress){
 											$div = $("<div class='projectstate1'>").text(data[index].progress);
@@ -721,10 +741,11 @@
       	  		}
         	}
         });
-    	//모달 버튼
-         for(let i = 0; i < $membersModalButton.length; i++){
+    	//
+       /*   for(let i = 0; i < $membersModalButton.length; i++){
         	
-        	 $membersModalButton[i].onclick = function() {
+        	 $membersModalButton[i].onclick = function(e) {
+        		 
         		 $.ajax({
   	  				url: "/byat/mytask/selectmembermodal",
   	  				type: "post",
@@ -752,7 +773,7 @@
 					}
   	  			}); 
          	}
-        } 
+        }  */
         
         let style ="";
         let checked="";
@@ -782,29 +803,34 @@
       		 }
         }
      
+        
         //ToDoList 내용 수정 
-    	//check 상태도 여기에 포함시기자
+      $(document).ready(function(){
+    	  let focusindex ="";
         	for(let i = 0; i < ToDoListText.length; i++){
+        		
         		$(ToDoListText[i]).on("propertychange change keyup paste input", function() {
+        			console.log("gg");
         		 	$.ajax({
                      	url : "/byat/mytask/modify",      
                      	type : "post",            
-                    	 data : {"title"  : ToDoListText[i].value
+                    	 data : {"title"  : $ToDoListText[i].value
                     	 		, "no" : $toDoListNo[i].value },           
                      	success: function(data, status, xhr) {
+                     		console.log("수정 성공");
                      	},
                      	error: function(xhr, status, error) {
 						   	console.log(xhr);
 						 }
                   	});
         		});
-        	}
-    	
+      		}
+       	});
         //구성원 모달창 Ajax
         for(let i = 0; i < $membersModalButton.length; i++){
        	
-       	  $membersModalButton[i].onclick = function() {
-       			
+       	  $membersModalButton[i].onclick = function(e) {
+       		 e.stopPropagation();
        		  console.log($projectCode[i].value);
        		  
        		 $.ajax({
@@ -840,46 +866,7 @@
         	}
        }  
         
-          //project 클릭
-       /*  for(let i = 0; i < $membersModalButton.length; i++){
-       	
-       	  $membersModalButton[i].onclick = function() {
-       			
-       		 console.log($projectCode[i].value);
-       		  
-       		 $.ajax({
- 	  				url: "/byat/mytask/list",
- 	  				type: "post",
- 	  				data: { "projectCode" : $projectCode[i].value},
- 	  				success:function(data, status, xhr){
- 	  					console.table(data);
-					
-						const $table = $("#myTaskTbody");
-						$table.html("");
-					
-						for(let index in data) {
-							const $tr = $("<tr>");
-							const $noTd = $("<td id=myTaskListProjectNmae>").text(data[index].id);
-							const $nameTd = $("<td id=myTaskListProjectDeadLine>").text(data[index].name);
-							const $roleNameTd = $("<td>").text(data[index].roleName);
-							
-						
-							$tr.append($noTd);
-							$tr.append($nameTd);
-							$tr.append($roleNameTd);
-						
-							$table.append($tr);
- 	  					}
- 	  					
- 	  					
- 	  					$('#myModal').show(); 
- 	  				},
-					error: function(xhr, status, error) {
-					   console.log(xhr);
-					}
- 	  			}); 
-        	}
-       }    */
+     
           
 	</script>
 </body>
