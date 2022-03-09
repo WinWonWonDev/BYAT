@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 
-<title>Insert title here</title>
+<title>Better-than-Your-Agile-Tool</title>
 <script>
 	const message = '${ requestScope.message }';
 	if (message != null && message != '') {

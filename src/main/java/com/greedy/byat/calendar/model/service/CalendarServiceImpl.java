@@ -65,7 +65,7 @@ public class CalendarServiceImpl implements CalendarService {
 		int result = 0;
 			
 		List<Integer> memberNumbers = mapper.selectAllMemberNo();
-		
+		  
 		
 		if(loginMember.getPermitCode() == 1) {
 			

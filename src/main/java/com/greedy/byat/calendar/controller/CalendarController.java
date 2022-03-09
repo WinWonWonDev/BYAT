@@ -69,10 +69,13 @@ public class CalendarController {
 		} else {
 			calendarList = calendarService.selectCalendarList(loginMember);
 			request.setAttribute("memberNos", loginMember.getNo());
+			
 		}
 		
 		request.setAttribute("calendarList", calendarList);
-		
+		request.setAttribute("loginMemberForDelete", loginMember); //
+		System.out.println("이거 나오냐 ? : " + loginMember);
+		System.out.println("calendarList : " + calendarList);
 		
 		return "/calendar/calendar";
 		
