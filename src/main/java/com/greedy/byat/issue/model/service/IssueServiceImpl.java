@@ -169,15 +169,6 @@ public class IssueServiceImpl implements IssueService {
 			
 			for(int j = 0; j < beforeIssueMemberList.size(); j++) {
 				
-				notice.setNo(beforeIssueMemberList.get(j).getNo());
-				
-				noticeInsertIssueUpdateResult = mapper.insertNoticeIssue(notice);
-				
-				if(!(noticeInsertIssueUpdateResult > 0)) {
-					
-					throw new IssueModifyNoticeException("이슈 수정 알림 생성 실패!");
-				}
-				
 				if(modifyIssue.getIssueMemberList().get(i).getNo() == beforeIssueMemberList.get(j).getNo()) {
 					break;
 				}
@@ -188,6 +179,19 @@ public class IssueServiceImpl implements IssueService {
 					newIssueMemberList.add(modifyIssue.getIssueMemberList().get(i));
 				}
 				
+			}
+			
+		}
+		
+		for(int i = 0; i < beforeIssueMemberList.size(); i++) {
+			
+			notice.setNo(beforeIssueMemberList.get(i).getNo());
+			
+			noticeInsertIssueUpdateResult = mapper.insertNoticeIssue(notice);
+			
+			if(!(noticeInsertIssueUpdateResult > 0)) {
+				
+				throw new IssueModifyNoticeException("이슈 수정 알림 생성 실패!");
 			}
 			
 		}
@@ -356,7 +360,9 @@ public class IssueServiceImpl implements IssueService {
 				}
 			}
 			
+			String projectTitle = mapper.selectProjectTitle(issue.getProjectCode());
 			
+			issue.setTitle("\'" + issue.getTitle() + "\' 이슈 삭제 (" + projectTitle + ")");
 			int versionHistoryInsertResult = mapper.insertIssueVersionHistory(issue);
 			
 			if(!(versionHistoryInsertResult > 0)) {
@@ -379,12 +385,14 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	@Override
-	public void insertIssue(IssueDTO registIssue) throws IssueRegistMemberException, IssueRegistException, IssueInsertVersionHistoryException, IssueRegistStatusHistoryException, IssueRegistNoticeException {
+	public void insertIssue(IssueDTO registIssue) throws IssueRegistMemberException, IssueRegistException, IssueInsertVersionHistoryException, IssueRegistStatusHistoryException, IssueRegistNoticeException, IssueInsertMemberHistoryException {
 		
 		int result = mapper.registIssue(registIssue);
 		
 		int insertIssueMemberResult = 0;
 		int insertIssuenoticeResult = 0;
+		
+		String projectTitle = mapper.selectProjectTitle(registIssue.getProjectCode());
 		
 		NoticeDTO notice = new NoticeDTO();
 		notice.setBody("\'" + registIssue.getTitle() + "\'이슈가 생성되었습니다.");
@@ -400,6 +408,8 @@ public class IssueServiceImpl implements IssueService {
 			
 			registIssue.setVersion(1);
 			
+			registIssue.setTitle("\'" + registIssue.getTitle() + "\' 이슈 생성 (" + projectTitle + ")");
+			
 			int issueRegistHistoryResult = mapper.insertIssueFirstVersionHistory(registIssue);
 			int issueRegistRrogressHistoryResult = mapper.insertIssueFirstProgressHistory(registIssue);
 			
@@ -409,6 +419,7 @@ public class IssueServiceImpl implements IssueService {
 				
 				insertIssueMemberResult = mapper.insertFirstIssueMember(registIssue.getIssueMemberList().get(i));
 				insertIssuenoticeResult = mapper.insertNoticeIssueFirst(notice);
+				int insertIssueMemberHistoryResult = mapper.insertIssueFirstMembersHistory(registIssue.getIssueMemberList().get(i));
 				
 				if(!(insertIssueMemberResult > 0)) {
 					
@@ -428,6 +439,11 @@ public class IssueServiceImpl implements IssueService {
 				if(!(insertIssuenoticeResult > 0)) {
 					
 					throw new IssueRegistNoticeException("이슈 생성 알림 생성 실패!");
+				}
+				
+				if(!(insertIssueMemberHistoryResult > 0)) {
+					
+					throw new IssueInsertMemberHistoryException("이슈 생성 담당자 지정 이력 생성 실패!");
 				}
 				
 			}

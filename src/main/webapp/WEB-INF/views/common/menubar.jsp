@@ -5,14 +5,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Song+Myung&display=swap" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
-<title>Insert title here</title>
+<title>Better-than-Your-Agile-Tool</title>
 <style>
-	@import url('https://fonts.googleapis.com/css?family=Roboto');
 
-	body{
-		font-family: 'Roboto', sans-serif;
+	html{
+		font-family: 'Gowun Batang', serif;
+		font-family: 'Song Myung', serif;
 	}
 	* {
 		margin: 0;
@@ -47,8 +50,6 @@
 	    font-size: 15px;
 	    display: block;
 	    padding: 20px 35px;
-	    transition-duration:0.6s;
-		transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 	    position: relative;
 	}
 	#navbarSupportedContent>ul>li.active>a{
@@ -78,7 +79,7 @@
 		position:absolute;
 		height: 83%;
 		top: 0px;
-		left: 0px;
+		left: 100px;
 		transition-duration:0.6s;
 		transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 		background-color: #fff;
@@ -417,6 +418,11 @@
 	}
 	
 </style>
+
+<script type="text/javascript">-
+	/* $(".horiselector")[0].style.left = 210.35 + "px"; */
+	console.log(window.location.pathname);
+</script>
 </head>
 <body scroll="no">
 	<nav class="navbar navbar-expand-custom navbar-mainbg">
@@ -425,10 +431,10 @@
 		</div>
        
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto" style="margin-left:100px">
                  
              	<div class="hori-selector"><div class="left"></div><div class="right"></div></div>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="${ pageContext.servletContext.contextPath }/home">Home</a>
                 </li>
                 <li class="nav-item">
@@ -439,9 +445,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="${ pageContext.servletContext.contextPath }/calendar/list">Calendar</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="${ pageContext.servletContext.contextPath }/history/list">History</a>
                 </li>
                 <c:if test="${ sessionScope.loginMember.permitCode == 1 }"> 
 	                <li class="nav-item">
@@ -606,6 +609,13 @@
 						noteNum.innerText = noticeCount;
 					}
 					
+					for(let i = 0; i < $notification.length; i++) {
+						
+						$notificationText[i].innerText = "";
+						$notification[i].style.background = 'white';
+						$notification[i].onclick = null;
+					}
+					
 					for(let i in notice) {
 						
 						if(notice[i].status != "Y") {
@@ -653,6 +663,10 @@
 		
 		function noticeDisplay() {
     		
+			if(document.getElementById("profileAndLogoutModal").style.display == "block") {
+				document.getElementById("profileAndLogoutModal").style.display = "none";
+			}
+			
     		sock.send("${sessionScope.loginMember.no}");
     		
     		const notificationBox = document.getElementById("notificationBox");
@@ -672,10 +686,11 @@
 	    	var activeWidthNewAnimWidth = activeItemNewAnim.innerWidth();
 	    	var itemPosNewAnimTop = activeItemNewAnim.position();
 	    	var itemPosNewAnimLeft = activeItemNewAnim.position();
+	    	
 	    	$(".hori-selector").css({
 	    		"top":itemPosNewAnimTop.top + "px", 
 	    		"left":itemPosNewAnimLeft.left + "px",
-	    		"height": activeWidthNewAnimHeight - 10.0 + "px",
+	    		"height": activeWidthNewAnimHeight - 11.0 + "px",
 	    		"width": activeWidthNewAnimWidth + "px"
 	    	});
 	    	$("#navbarSupportedContent").on("click","li",function(e){
@@ -688,7 +703,7 @@
 	    		$(".hori-selector").css({
 	    			"top":itemPosNewAnimTop.top + "px", 
 	    			"left":itemPosNewAnimLeft.left + "px",
-	    			"height": activeWidthNewAnimHeight - 10.0 + "px",
+	    			"height": activeWidthNewAnimHeight - 11.0 + "px",
 	    			"width": activeWidthNewAnimWidth + "px"
 	    		});
 	    	});
@@ -729,14 +744,41 @@
 	    jQuery(document).ready(function($){
 	    	// Get current path and find target link
 	    	var path = window.location.pathname.split("/").pop();
+	    	
+	    	console.log(window.location.pathname.split("/")[2]);
+	    	
 	    	// Account for home page with empty path
-	    	if ( path == '' ) {
+	    	if( path == '' ) {
 	    		path = 'index.html';
+	    	} else if( path == 'home' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/home';
+	    	} else if( window.location.pathname.split("/")[2] == 'project' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/project/list';
+	    	} else if( window.location.pathname.split("/")[2] == 'mytask' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/mytask/list';
+	    	} else if( window.location.pathname.split("/")[2] == 'calendar'){
+	    		path = '${ pageContext.servletContext.contextPath }/calendar/list';
+	    	} else if( window.location.pathname.split("/")[2] == 'notice' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/home';
+	    	} else if( window.location.pathname.split("/")[2] == 'sprint' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/project/list';
+	    	} else if( window.location.pathname.split("/")[2] == 'issue' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/project/list';
+	    	} else if( window.location.pathname.split("/")[2] == 'retrospect' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/project/list';
+	    	} else if( window.location.pathname.split("/")[2] == 'meetinglog' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/project/list';
+	    	} else if( window.location.pathname.split("/")[2] == 'management' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/management/list'
+	    	} else if( window.location.pathname.split("/")[2] == 'profile' ) {
+	    		path = '${ pageContext.servletContext.contextPath }/home';
 	    	}
-
+	    	
 	    	var target = $('#navbarSupportedContent ul li a[href="'+path+'"]');
 	    	// Add active class to target link
+	    	
 	    	target.parent().addClass('active');
+	    	
 	    }); 
 	    
 	    const $profileName = document.getElementById("profileName");
@@ -756,6 +798,7 @@
 	    
 	    $logoutArea.onclick = function() {
 	    	document.getElementById("logoutModal").style.display="block";
+	    	document.getElementById("profileAndLogoutModal").style.display="none";
 	    }
 	    
 	    const $logoutModalCloseButton = document.getElementById("logoutModalCloseButton");
