@@ -6,7 +6,7 @@
  	
  	<resultMap id ="meetinglogResultMap" type="MeetinglogDTO">
  		<id property="code" column="MEETINGLOG_CODE"/>
- 		<result property="title" column="MEETINGLㄴOG_TITLE"/>
+ 		<result property="title" column="MEETINGLOG_TITLE"/>
  		<result property="body" column="MEETINGLOG_BODY"/>
  		<result property="writingDate" column="MEETINGLOG_WRITING_DATE"/>
  		<result property="version" column="MEETINGLOG_VERSION"/>
@@ -18,6 +18,7 @@
 
 	<resultMap id="noticeResultMap" type="NoticeDTO" >
 		<id property="code" column="NOTICE_CODE"/>
+		<id property="no" column="MEMBER_NO"/>
 		<result property="body" column="NOTICE_BODY"/>
 		<result property="url" column="NOTICE_URL"/>
 		<result property="status" column="NOTICE_STATUS"/>
@@ -25,7 +26,21 @@
 		<result property="meetinglogCode" column="MEETINGLOG_CODE"/>
 		<result property="createdTime" column="NOTICE_TIME"/>
 	</resultMap>
- 	
+
+	<resultMap id="proejectMemberMap" type="ProjectMembersDTO">
+		<id property="projectCode" column="PROJECT_CODE"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="projectParticipationYN" column="PROJECT_PARTICIPATION_YN"/>
+	</resultMap>
+	
+	<select id ="selectProjectMembers" resultType="_int">
+        SELECT
+               A.MEMBER_NO
+          FROM TBL_PROJECT_MEMBERS A
+         WHERE A.PROJECT_CODE = #{projectCode}
+           AND A.PROJECT_PARTICIPATION_YN = 'Y'
+	</select>
+
  	 	<select id="selectProjectName" resultType="string">
  		SELECT
  		       A.PROJECT_TITLE
@@ -57,8 +72,9 @@
 			 , A.MEETINGLOG_TITLE
 			 , A.MEETINGLOG_BODY
 			 , A.MEETINGLOG_WRITING_DATE
-			 , A.MEETINGLOG_DELETE_STATUS
 			 , A.MEETINGLOG_VERSION
+			 , A.MEETINGLOG_DELETE_STATUS
+			 , A.PROJECT_CODE
 			 , A.MEMBER_NO
 			 , A.MEMBER_NAME 
 		  FROM TBL_MEETINGLOG A 
@@ -72,7 +88,7 @@
  		INSERT
  		  INTO TBL_MEETINGLOG A
  		(
- 		 	A.MEETINGLOG_CODE
+ 		  A.MEETINGLOG_CODE
 		, A.MEETINGLOG_TITLE
 		, A.MEETINGLOG_BODY
 		, A.MEETINGLOG_WRITING_DATE
@@ -84,12 +100,12 @@
  		)
  		VALUES
  		(
- 		  SEQ_PROJECT_NO.NEXTVAL
+ 		  SEQ_MEETINGLOG_CODE.NEXTVAL
  		, #{ title } 
  		, #{ body }
- 		, TO_DATE(SYSDATE)
- 		, 1
- 		, 'N'
+ 		, #{ writingDate }
+ 		, #{ version }
+ 		, #{ deleteStatus }
  		, #{ memberNo }
  		, #{ projectCode }
  		, #{ memberName }
@@ -119,37 +135,11 @@
 		UPDATE
  		       TBL_MEETINGLOG A
  		   SET A.MEETINGLOG_DELETE_STATUS = 'Y'
- 		 WHERE A.MEETINGLOG_CODE = #{ code }
+ 		 WHERE A.MEETINGLOG_CODE = #{ meetingCode }
 	
 	</update>
- 	
- 	<insert id="registMeetinglogHistory" parameterType="MeetingLogDTO">
- 	INSERT
- 		  INTO TBL_MEETINGLOG_HISTORY A
- 		(
- 		  A.MEETINGLOG_HISTORY_NO				
-		, A.MEETINGLOG_HISTORY_TITLE
-		, A.MEETINGLOG_HISTORY_BODY
-		, A.MEETINGLOG_HISTORY_VERSION
-		, A.MEETINGLOG_HISTORY_UPDATE_MEMBER
-		, A.MEETINGLOG_CODE
-		, A.MEETINGLOG_HISTORY_UPDATE_DATE
-		, A.MEETINGLOG_HISTORY_DELETE_STATUS
- 		)
- 		VALUES
- 		(
- 		  SEQ_PROJECT_NO.NEXTVAL
- 		, #{ title } 
- 		, #{ body }
- 		, #{ version }
- 		, #{ memberName }
- 		, #{ code }
- 		, #{ writingDate }
- 		, #{ deleteStatus }
- 		)
- 	</insert>
- 	
- 	<insert id="registNoticeCode" parameterType="NoticeDTO">
+ 
+ 	<insert id="registMeetinglogNotice">
  	INSERT
  		  INTO TBL_NOTICE A
  		(
@@ -158,18 +148,22 @@
 		, A.NOTICE_URL
 		, A.NOTICE_STATUS
 		, A.NOTICE_CATEGORY_CODE
+		, A.MEMBER_NO
 		, A.MEETINGLOG_CODE
 		, A.NOTICE_TIME
  		)
  		VALUES
  		(
- 		  SEQ_PROJECT_NO.NEXTVAL
+ 		  SEQ_NOTICE_CODE.NEXTVAL
  		, #{ body } 
  		, #{ url }
- 		, 'N'
- 		, '5'
- 		, #{ meetinglogCode }
+ 		, #{ status }
+ 		, #{ category }
+ 		, #{ no }
+ 		, SEQ_MEETINGLOG_CODE.CURRVAL
  		, TO_DATE(SYSDATE)
  		)
  	</insert>
+ 
+ 	
  </mapper>
