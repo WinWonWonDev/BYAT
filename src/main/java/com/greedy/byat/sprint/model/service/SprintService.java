@@ -30,4 +30,6 @@ public interface SprintService {
 
 	String endSprint(Map<String, Integer> map);
 
+	String selectMemberRoleName(Map<String, Integer> map);
+
 }

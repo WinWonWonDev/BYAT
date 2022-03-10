@@ -297,14 +297,14 @@
  		   AND PROJECT_DELETE_STATUS = 'N'
  	</select>
  	
- 	<!-- 스프린트가  미진행 상태인지 확인한다. -->
- 	<select id="checkSprintProgress3" parameterType="hashmap" resultType="_int">
+ 	<!-- 스프린트의 진행 상태를 확인한다. -->
+ 	<select id="checkSprintProgress3" parameterType="hashmap" resultType="java.lang.String">
  		SELECT
- 			   COUNT(*)
- 		  FROM TBL_SPRINT
- 		 WHERE PROJECT_CODE = #{ projectCode }
- 		   AND SPRINT_PROGRESS = '진행전'
- 		   AND SPRINT_DELETE_STATUS = 'N'
+ 			   A.SPRINT_PROGRESS
+ 		  FROM TBL_SPRINT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.SPRINT_PROGRESS IN ('진행전', '진행전')
+ 		   AND A.SPRINT_DELETE_STATUS = 'N'
  	</select>
  	
  	<!-- 프로젝트의 진행중인 스프린트를 가져온다. -->
@@ -505,7 +505,7 @@
  	<update id="updateTaskProgress3">
  		UPDATE
  		       TBL_TASK A
- 		   SET A.TASK_PROGRESS = '완료'
+ 		   SET A.TASK_PROGRESS = '미완료'
  		 WHERE A.TASK_CODE = #{ code }
  	</update>
  	
@@ -734,7 +734,7 @@
  	
  	<insert id="insertStartSprintNotice" parameterType="hashmap">
  		INSERT
- 		  INTO TBL_TBL_NOTICE A
+ 		  INTO TBL_NOTICE A
  		(
  		  A.NOTICE_CODE
  		, A.NOTICE_BODY
@@ -743,6 +743,7 @@
  		, A.NOTICE_CATEGORY_CODE
  		, A.MEMBER_NO
  		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
  		)
  		VALUES
  		(
@@ -752,15 +753,16 @@
  						FROM TBL_SPRINT B
  					   WHERE B.SPRINT_PROGRESS IN ('진행전', '진행중')
  					     AND B.PROJECT_CODE = #{ projectCode }) || CHR(39) || '스프린트가 시작되었습니다.'
- 		, '/sprint/list
+ 		, '/sprint/list?code=' || #{ projectCode }
  		, 'Y'
  		, 2
- 		, #{ memberNO }
+ 		, #{ memberNo }
  		, (SELECT
  				  C.SPRINT_CODE
  			 FROM TBL_SPRINT C
  			WHERE C.SPRINT_PROGRESS IN ('진행전', '진행중')
- 			  AKD C.PROJECT_CODE = #{ projectCode })
+ 			  AND C.PROJECT_CODE = #{ projectCode })
+ 		, SYSDATE
  		)
  	</insert>
  	
@@ -784,7 +786,7 @@
  		   AND A.SPRINT_PARTICIPATION_YN = 'Y'
  	</select>
  	
- 	<insert id="insertEndSprintNotice">
+ 	<insert id="insertEndSprintNotice" parameterType="hashmap">
  		INSERT
  		  INTO TBL_NOTICE A
  		(
@@ -795,6 +797,7 @@
  		, A.NOTICE_CATEGORY_CODE
  		, A.MEMBER_NO
  		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
  		)
  		VALUES
  		(
@@ -803,10 +806,15 @@
  							 B.SPRINT_TITLE
  					    FROM TBL_SPRINT B
  					   WHERE B.SPRINT_CODE = #{ sprintCode }) || CHR(39) || '스프린트가 종료 되었습니다.'
- 		, '/sprint/list'
+ 		, '/sprint/list?code=' || (SELECT
+ 										  C.PROJECT_CODE
+ 									 FROM TBL_SPRINT C
+ 									WHERE C.SPRINT_CODE = #{ sprintCode })
  		, 'Y'
  		, 2
+ 		, #{ memberNo }
  		, #{ sprintCode }
+ 		, SYSDATE
  		)
  	</insert>
  	
@@ -814,7 +822,7 @@
  		SELECT
  			   A.MEMBER_NO
  		  FROM TBL_SPRINT_MEMBERS A
- 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		 WHERE A.SPRINT_CODE = #{ code }
  		   AND A.SPRINT_PARTICIPATION_YN = 'Y'
  	</select>
  	
@@ -829,6 +837,7 @@
  		, A.NOTICE_CATEGORY_CODE
  		, A.MEMBER_NO
  		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
  		)
  		VALUES
  		(
@@ -837,15 +846,19 @@
  							 B.SPRINT_TITLE
  					    FROM TBL_SPRINT B
  					   WHERE B.SPRINT_CODE = #{ sprintCode }) || CHR(39) || '스프린트가 수정 되었습니다.'
- 		, '/sprint/list'
+ 		, '/sprint/list?code=' || (SELECT
+ 										  C.PROJECT_CODE
+ 									 FROM TBL_SPRINT C
+ 									WHERE C.SPRINT_CODE = #{ sprintCode }) 
  		, 'Y'
  		, 2
  		, #{ memberNo }
  		, #{ sprintCode }
+ 		, SYSDATE
  		)
  	</insert>
  	
- 	<select id="selectIssueList" parameterType="hashmap">
+ 	<select id="selectIssueList" parameterType="hashmap" resultType="_int">
  		SELECT
  			   A.ISSUE_CODE
  		  FROM TBL_ISSUE A
@@ -883,21 +896,18 @@
  	<select id="selectIssueList2" resultType="_int">
  		SELECT
  			   A.ISSUE_CODE
- 		  FROM TBL_ISSU A
+ 		  FROM TBL_ISSUE A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
- 		   AND A.ISSU_PROGRESS = '보류'
- 		   AND A.ISSU_DELETE_STATUS = 'N'
+ 		   AND A.ISSUE_PROGRESS = '보류'
+ 		   AND A.ISSUE_DELETE_STATUS = 'N'
  	</select>
  	
  	<update id="updateIssueSprintCode">
  		UPDATE
  		       TBL_ISSUE A
- 		   SET A.SPRINT_CODE = (SELECT
- 		   							   B.SPRINT_CODE
- 		   						  FROM TBL_SPRINT B
- 		   						 WHERE B.PROJECT_CODE = #{ projectCode }
- 		   						   AND B.SPRINT_PROGRESS IN ('진행중', '진행전'))
- 		   	 , A.ISSU_PROGRESS = '해결전'
+ 		   SET A.SPRINT_CODE = SEQ_SPRINT_CODE.CURRVAL
+ 		   	 , A.ISSUE_PROGRESS = '해결전'
+ 		 WHERE A.ISSUE_PROGRESS = '보류'
  	</update>
  	
  	<insert id="insertIssueProgressHistory2" parameterType="hashmap">
@@ -941,7 +951,7 @@
  		 						   AND B.SPRINT_PROGRESS IN ('진행중', '진행전'))
  	</update>
  	
- 	<select id="selectIssueList3">
+ 	<select id="selectIssueList3" resultType="_int">
  		SELECT
  			   A.ISSUE_CODE
  		  FROM TBL_ISSUE A
@@ -1016,4 +1026,12 @@
  		, #{ sprintCode }
  		)
  	</insert>
+ 	
+ 	<select id="selectProjectMembersRoleNamee" parameterType="hashmap" resultType="java.lang.String">
+ 		SELECT
+ 			   A.ROLE_NAME
+ 		  FROM TBL_ROLE A
+ 		 WHERE A.MEMBER_NO = #{ memberNo }
+ 		   AND A.PROJECT_CODE = #{ projectCode }
+ 	</select>
  </mapper>

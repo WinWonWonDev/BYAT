@@ -217,11 +217,26 @@ public class TaskController {
 		return "redirect:/sprint/list?code=" + projectCode; 
 	}
 	
-	@GetMapping("/check")
+	@GetMapping("/progress")
 	@ResponseBody
-	public String checkTasksContent(HttpServletRequest request) {
+	public String updateTaskProgress(HttpServletRequest request) {
 		
-		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
+		int taskCode = Integer.parseInt(request.getParameter("taskCode"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
+		int taskProgressCode = 0;
+		
+		if("진행중".equals(request.getParameter("taskProgress"))) {
+			
+			taskProgressCode = 1;
+		} else if("완료".equals(request.getParameter("taskProgress"))) {
+			
+			taskProgressCode = 2;
+		}
+		
+		Map<String, Integer> map = new HashMap<>();
+		map.put("taskCode", taskCode);
+		map.put("taskProgressCode", taskProgressCode);
+		map.put("memberNo", memberNo);
 		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd")
@@ -231,7 +246,7 @@ public class TaskController {
 				.disableHtmlEscaping()
 				.create();
 		
-		boolean result = taskService.checkTasksContent(projectCode);
+		boolean result = taskService.updateTaskProgress(map);
 		
 		return gson.toJson(result);
 	}

@@ -61,7 +61,7 @@ public interface SprintMapper {
 
 	int checkProjectProgress(Map<String, Integer> map);
 
-	int checkSprintProgress3(Map<String, Integer> map);
+	String checkSprintProgress3(Map<String, Integer> map);
 
 	SprintDTO selectSprint2(Map<String, Integer> map);
 
@@ -127,6 +127,6 @@ public interface SprintMapper {
 
 	int insertRemoveSprintNotice(Map<String, Integer> map);
 
-
+	String selectProjectMembersRoleNamee(Map<String, Integer> map);
 
 }

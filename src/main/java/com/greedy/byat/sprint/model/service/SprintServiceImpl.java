@@ -41,11 +41,19 @@ public class SprintServiceImpl implements SprintService {
 	}
 
 	@Override
+	public String selectMemberRoleName(Map<String, Integer> map) {
+		
+		String roleName = mapper.selectProjectMembersRoleNamee(map);
+		
+		return roleName;
+	}
+	
+	@Override
 	public String registSprint(SprintDTO sprint) {
 		
 		int projectCode = sprint.getProjectCode();
 		
-		/*진행중이거나 진행전인 스프린트가 있으면 스프린트를 생성할 수 없다.*/
+		/* 진행중이거나 진행전인 스프린트가 있으면 스프린트를 생성할 수 없다. */
 		int checkResult = mapper.checkSprintProgress(projectCode);
 		
 		String result = null;
@@ -78,7 +86,7 @@ public class SprintServiceImpl implements SprintService {
 				result5 += mapper.insertIssueProgressHistory2(map);
 			}
 			
-			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0) && !(result4 > 0) && !(result5 == issueList.size())) {
+			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0) && !(result5 == issueList.size())) {
 				
 				result = "스프린트 생성 실패";
 			} else {
@@ -110,6 +118,7 @@ public class SprintServiceImpl implements SprintService {
 		for(int i = 0; i < sprintMemberList.size(); i++) {
 			
 			map.put("memberNo", sprintMemberList.get(i));
+			
 			result3 += mapper.insertUpdateSprintNotice(map);
 		}
 		
@@ -198,10 +207,10 @@ public class SprintServiceImpl implements SprintService {
 		/* 프로젝트가 진행중인지 확인하는 if */
 		if(projectProgressResult > 0) {
 			
-			int sprintProgressResult = mapper.checkSprintProgress3(map);
+			String sprintProgressResult = mapper.checkSprintProgress3(map);
 			
 			/* 스프린트가 진행전인 상태인지 확인하는 if*/
-			if(sprintProgressResult > 0) {
+			if("진행전".equals(sprintProgressResult)) {
 				
 				SprintDTO sprint = mapper.selectSprint2(map);
 				
@@ -288,15 +297,16 @@ public class SprintServiceImpl implements SprintService {
 						
 						message = "태스크가 없습니다. 태스크를 생성해주세요.";
 					}
-					
-					
 				} else {
 					
 					message = "스프린트에 미기입된 항목이 있습니다.";
 				}
+			} else if("진행중".equals(sprintProgressResult)) {
+				
+				message = "진행중인 스프린트가 존재합니다.";
 			} else {
 				
-				message = "진행전인 스프린트가 아닙니다.";
+				message = "시작할 스프린트가 존재하지 않습니다.";
 			}
 		} else {
 			
@@ -449,21 +459,13 @@ public class SprintServiceImpl implements SprintService {
 			}
 		} else {
 			
-			message = "스프린트가 진행중이 아닙니다.";
+			message = "스프린트가 진행중이지 않습니다.";
 		}
 		
 		return message;
 	}
 
 	
-
-
-	
-
-
-
-
-
 
 
 }

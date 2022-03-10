@@ -12,4 +12,6 @@ public interface RetrospectService {
 
 	List<RetrospectCommentDTO> registRetrospectComment(RetrospectCommentDTO retrospectComment);
 
+	List<RetrospectCommentDTO> removeRetrospectComment(int retrospectiveCommentNo);
+
 }
