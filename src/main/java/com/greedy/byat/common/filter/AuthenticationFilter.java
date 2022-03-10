@@ -20,9 +20,9 @@ import javax.servlet.http.HttpSession;
 import com.greedy.byat.member.model.dto.MemberDTO;
 
 
-@WebFilter(urlPatterns = {"/backlog/*", "/member/*", "/history/*", "/issue/*"
-		, "/management/*", "/meetinglog/*", "/member/*", "/mytask/*", "/notice/*", "/profile/*"
-		, "/project/*", "/retrospect/*", "/sprint/*", "/task/*"})
+//@WebFilter(urlPatterns = {"/backlog/*", "/member/*", "/history/*", "/issue/*"
+//		, "/management/*", "/meetinglog/*", "/member/*", "/mytask/*", "/notice/*", "/profile/*"
+//		, "/project/*", "/retrospect/*", "/sprint/*", "/task/*"})
 public class AuthenticationFilter implements Filter {
 	
 	Map<String, List<String>> permitURIList;

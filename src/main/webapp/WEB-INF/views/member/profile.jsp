@@ -275,7 +275,7 @@
             </div>
             <form action="${ pageContext.servletContext.contextPath }/profile/uploadimage" method="post" enctype="multipart/form-data">
 				<div>
-					<input type="file" id="imageFile" name="uploadedImg" onchange="loadImg(this)" style="display:none"/>
+					<input type="file" id="imageFile" name="uploadedImg" style="display:none"/>
 					<button type="button" id="updateImg" disabled>선택..</button>
 					<button type="submit" id="updateImgBtn" style="display: none;">업로드</button>
 				</div>
@@ -343,19 +343,16 @@
 	
 	
 	/* Image 미리보기 함수 (File API 활용) */
-	function loadImg(val) {
+	document.getElementById("imageFile").onchange = function() {
 		
-		if(value.files && value.files[0]) {
-			const reader = new FileReader();
-			
-			reader.readAsDataURL(value.files[0]);
-			
-			reader.onload = function(e) {
-				console.log(e.targer.result);
-				document.getElementById("profileImg").src = e.targer.result;
-			}
-		}
-	}
+		const reader = new FileReader();
+		
+		reader.onload = function(e) {
+			document.getElementById("profileImg").src = e.target.result;
+		};
+		
+		reader.readAsDataURL(this.files[0]);
+	};
 
    document.getElementById("regist").onclick = function() {
        document.getElementById("profile-create-modal").style.display="block";

@@ -107,7 +107,8 @@ public class ProfileController {
 				if(!requestNewPwd.equals(requestNewAgain)) {
 					message = "변경할 비밀번호가 일치하지 않습니다.";					
 				} else {
-					message = profileService.modifyPassword(requestNewPwd, member.getId());
+					String encodedPwd = passwordEncoder.encode(requestNewPwd);
+					message = profileService.modifyPassword(encodedPwd, member.getId());
 					request.getSession().setAttribute("loginMember", member);
 				}
 			} else {
