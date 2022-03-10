@@ -71,7 +71,7 @@
 	      	<% System.out.println(" 되냐 : "  + loginMemberForDelete.getName()); %>
 	      	<% System.out.println(" 되냐2 : "  +  dto.getWriter()); %>
           <%if (loginMemberForDelete.getName().equals(dto.getWriter())) {%>
-          eventClick: 
+          eventClick:                                    
 	    	  function(arg) {
     	      if (confirm('정말 삭제하시겠습니까?')) {
         	    arg.event.remove()
