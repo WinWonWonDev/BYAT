@@ -1,15 +1,19 @@
 package com.greedy.byat.member.model.service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.greedy.byat.common.exception.member.LoginFailedException;
 import com.greedy.byat.common.exception.member.NotexistEmailException;
 import com.greedy.byat.member.model.dto.MemberDTO;
+import com.greedy.byat.profile.model.dto.AttachmentDTO;
 
 public interface MemberService {
 
-	String selectMember(MemberDTO member, RedirectAttributes rttr, Model model);
+	String selectMember(MemberDTO member, RedirectAttributes rttr, Model model, HttpServletRequest request);
 
 	int selectEmailById(String id) throws NotexistEmailException;
 
