@@ -52,6 +52,8 @@ public class ProfileController {
 		
 		model.addAttribute("attachment", attachment);
 		
+		System.out.println(model.getAttribute("attachment"));
+		
 		return "/member/profile";
 	}
 
@@ -149,8 +151,8 @@ public class ProfileController {
 					attachment.setPath(fileUploadPath);
 
 					/* thumbnail로 변환할 사이즈 지정 */
-					int width = 120;
-					int height = 100;
+					int width = 50;
+					int height = 55;
 
 					/* thumbnail로 변환 */
 					Thumbnails.of(uploadDirectory + "/" + savedName).forceSize(width, height)
