@@ -320,19 +320,13 @@ public class MemberServiceImpl implements MemberService {
 
 		String encodedFirstPwd = passwordEncoder.encode(newPassword);
 		
-		System.out.println("암호화된 비밀번호 ㅇㅇ : " + encodedFirstPwd);
-		
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("email", emailAddress);
 		map.put("phone", phoneNumber);
 		map.put("password", encodedFirstPwd);
 		map.put("no", inputNo);
 		
-		System.out.println("map : " + map);
-		
 		int result = mapper.initialInputInfo(map);
-		
-		System.out.println("서비스에서 sesult : " + result);
 		
 		return result;
 	}
