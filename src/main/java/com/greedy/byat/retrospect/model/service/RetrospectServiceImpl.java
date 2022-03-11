@@ -43,6 +43,21 @@ public class RetrospectServiceImpl implements RetrospectService {
 		return commentList;
 	}
 
+	@Override
+	public List<RetrospectCommentDTO> removeRetrospectComment(int retrospectiveCommentNo) {
+
+		int result = mapper.deleteRetrospectComment(retrospectiveCommentNo);
+		
+		List<RetrospectCommentDTO> commentList = null;
+		
+		if(result > 0) {
+			
+			commentList = mapper.selectRetrospectCommentList3(retrospectiveCommentNo);
+		}
+		
+		return commentList;
+	}
+
 	
 
 

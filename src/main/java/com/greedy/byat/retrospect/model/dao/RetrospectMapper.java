@@ -14,4 +14,8 @@ public interface RetrospectMapper {
 
 	List<RetrospectCommentDTO> selectRetrospectCommentList2(RetrospectCommentDTO retrosepctComment);
 
+	int deleteRetrospectComment(int retrospectiveCommentNo);
+
+	List<RetrospectCommentDTO> selectRetrospectCommentList3(int retrospectiveCommentNo);
+
 }

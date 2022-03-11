@@ -5,15 +5,16 @@
  <mapper namespace="com.greedy.byat.retrospect.model.dao.RetrospectMapper">
  
  	<resultMap type="RetrospectDTO" id="retrospectResultMap">
- 		<id property="code" column="RETROSPECT_CODE"/>
+ 		<id property="code" column="RETROSPECTIVE_CODE"/>
  		<result property="sprintCode" column="SPRINT_CODE"/>
  		<result property="title" column="SPRINT_TITLE"/>
  		
- 		<collection property="commentList" column="code" select="selectRetrospectCommentList"/>
+ 		<collection property="commentList" column="RETROSPECTIVE_CODE" select="selectRetrospectCommentList"/>
  	</resultMap>
  	
  	<resultMap type="RetrospectCommentDTO" id="retrospectCommentResultMap">
-		<id property="code" column="RETROSPECT_CODE"/>
+ 		<id property="no" column="RETROSPECTIVE_COMMENT_NO"/>
+		<id property="code" column="RETROSPECTIVE_CODE"/>
 		<id property="memberNo" column="MEMBER_NO"/>
 		<result property="body" column="RETROSPECTIVE_BODY"/>
 		<result property="writingTime" column="RETROSPECTIVE_WRITING_TIME"/>
@@ -24,7 +25,7 @@
  	
  	<select id="selectRetrospectList" resultMap="retrospectResultMap">
  		SELECT
- 			   A.RETROSPECT_CODE
+ 			   A.RETROSPECTIVE_CODE
  			 , A.SPRINT_CODE
  			 , B.SPRINT_TITLE
  		  FROM TBL_RETROSPECTIVE A
@@ -36,17 +37,18 @@
  	
  	<select id="selectRetrospectCommentList" resultMap="retrospectCommentResultMap">
  		SELECT
- 			   A.MEMBER_NO
+ 		       A.RETROSPECTIVE_COMMENT_NO
+ 			 , A.MEMBER_NO
  			 , B.MEMBER_NAME
- 			 , A.RETROSPECT_CODE
+ 			 , A.RETROSPECTIVE_CODE
  			 , A.SPRINT_CODE
  			 , A.RETROSPECTIVE_BODY
  			 , A.RETROSPECTIVE_WRITING_TIME
  			 , A.RETROSPECTIVE_DELETE_STATUS
  	      FROM TBL_RETROSPECTIVE_COMMENT A
  	      JOIN TBL_MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
- 	     WHERE A.SPRINT_CODE = #{ code }
- 	       AND A.SPRINT_DELETE_STATUS = 'N'
+ 	     WHERE A.RETROSPECTIVE_CODE = #{ code }
+ 	       AND A.RETROSPECTIVE_DELETE_STATUS = 'N'
  	     ORDER BY 5
  	</select>
  	
@@ -54,30 +56,33 @@
  		INSERT
  		  INTO TBL_RETROSPECTIVE_COMMENT A
  		(
- 		  A.MEMBER_NO
+ 		  A.RETROSPECTIVE_COMMENT_NO
+ 		, A.MEMBER_NO
  		, A.RETROSPECTIVE_BODY
  		, A.RETROSPECTIVE_WRITING_TIME
  		, A.RETROSPECTIVE_DELETE_STATUS
  		, A.SPRINT_CODE
- 		, A.RETROSPECT_CODE
+ 		, A.RETROSPECTIVE_CODE
  		)
  		VALUES
  		(
- 		  #{ memberNo }
+ 		  SEQ_RETROSPECTIVE_COMMENT_NO.NEXTVAL
+ 		, #{ memberNo }
  		, #{ body }
  		, SYSDATE
  		, 'N'
  		, (SELECT
  				  B.SPRINT_CODE
  			 FROM TBL_RETROSPECTIVE B
- 			WHERE B.RETROSPECT_CODE = #{ code })
+ 			WHERE B.RETROSPECTIVE_CODE = #{ code })
  		, #{ code }
  		)
  	</insert>
  	
- 	<select id="selectRetrospectCommentList2" resultType="list">
+ 	<select id="selectRetrospectCommentList2" resultMap="retrospectCommentResultMap">
  		SELECT
- 			   A.RETROSPECT_CODE
+ 			   A.RETROSPECTIVE_COMMENT_NO
+ 			 , A.RETROSPECTIVE_CODE
  			 , A.MEMBER_NO
  			 , B.MEMBER_NAME
  			 , A.RETROSPECTIVE_BODY
@@ -86,7 +91,33 @@
  			 , A.SPRINT_CODE
  		 FROM TBL_RETROSPECTIVE_COMMENT A
  		 JOIN TBL_MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
- 		WHERE A.RETROSPECT_CODE = #{ code }
+ 		WHERE A.RETROSPECTIVE_CODE = #{ code }
  		  AND A.RETROSPECTIVE_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<update id="deleteRetrospectComment">
+ 		UPDATE
+ 		       TBL_RETROSPECTIVE_COMMENT A
+ 		   SET A.RETROSPECTIVE_DELETE_STATUS = 'Y'
+ 		 WHERE A.RETROSPECTIVE_COMMENT_NO = #{ retrospectiveCommentNo }
+ 	</update>
+ 	
+ 	<select id="selectRetrospectCommentList3" resultMap="retrospectCommentResultMap">
+ 		SELECT
+ 			   A.RETROSPECTIVE_COMMENT_NO
+ 			 , A.RETROSPECTIVE_CODE
+ 			 , A.MEMBER_NO
+ 			 , B.MEMBER_NAME
+ 			 , A.RETROSPECTIVE_BODY
+ 			 , A.RETROSPECTIVE_WRITING_TIME
+ 			 , A.RETROSPECTIVE_DELETE_STATUS
+ 			 , A.SPRINT_CODE
+ 		 FROM TBL_RETROSPECTIVE_COMMENT A
+ 		 JOIN TBL_MEMBER B ON (A.MEMBER_NO = B.MEMBER_NO)
+ 	    WHERE A.RETROSPECTIVE_CODE = (SELECT
+ 	    									 C.RETROSPECTIVE_CODE
+ 	    								FROM TBL_RETROSPECTIVE_COMMENT C
+ 	    							   WHERE C.RETROSPECTIVE_COMMENT_NO = #{ retrospectiveCommentNo })
+ 	      AND A.RETROSPECTIVE_DELETE_STATUS = 'N'
  	</select>
  </mapper>
