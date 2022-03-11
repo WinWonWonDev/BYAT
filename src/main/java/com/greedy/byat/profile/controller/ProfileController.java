@@ -2,13 +2,10 @@ package com.greedy.byat.profile.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -44,13 +41,16 @@ public class ProfileController {
 	}
 	
 	@RequestMapping("/mypage")
-	public String goProfile(Model model) {
+	public String goProfile(Model model, HttpSession session) {
 		
 		int memberNo = ((MemberDTO) model.getAttribute("loginMember")).getNo();
 		
 		AttachmentDTO attachment = profileService.selectAttachment(memberNo);
 		
+		session.setAttribute("attachment", attachment);
 		model.addAttribute("attachment", attachment);
+		
+		System.out.println(session.getAttribute("attachment"));
 		
 		return "/member/profile";
 	}
@@ -149,8 +149,8 @@ public class ProfileController {
 					attachment.setPath(fileUploadPath);
 
 					/* thumbnail로 변환할 사이즈 지정 */
-					int width = 120;
-					int height = 100;
+					int width = 50;
+					int height = 55;
 
 					/* thumbnail로 변환 */
 					Thumbnails.of(uploadDirectory + "/" + savedName).forceSize(width, height)
