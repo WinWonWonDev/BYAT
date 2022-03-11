@@ -421,7 +421,7 @@
       position: absolute;
       width: 50px;
       height: 55px;
-      right:0.5%;
+      right:-10%;
    }
 	
 </style>
