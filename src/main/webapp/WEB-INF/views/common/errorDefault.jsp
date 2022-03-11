@@ -51,7 +51,7 @@
 </style>
 <title>Insert title here</title>
 </head>
-<body>
+<body style="overflow-y:hidden; overflow-x:hidden;">
 	<div class="errorMessage">
 		<p class="errorDefault"><strong>Default<br>ooops, sorry<br>tel : 010-6222-0160</strong></p>
 	</div>

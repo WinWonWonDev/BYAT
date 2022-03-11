@@ -51,7 +51,7 @@
 </style>
 <title>Insert title here</title>
 </head>
-<body>
+<body style="overflow-y:hidden; overflow-x:hidden;">
 	<div class="errorMessage">
 		<p class="error404page"><strong>404<br>ooops, nothing to see here!<br>BYAT can’t find the page<br>please check url !</strong></p>
 	</div>
