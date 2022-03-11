@@ -206,6 +206,11 @@
 	</div>
 	<script>
 	
+	document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + ${ requestScope.code };
+	document.getElementById("selectMeetingLogList").href = document.getElementById("selectMeetingLogList").href + ${ requestScope.code };
+	document.getElementById("selectSprintList").href = document.getElementById("selectSprintList").href + ${ requestScope.code };
+	document.getElementById("selectRetrospectList").href = document.getElementById("selectRetrospectList").href + ${ requestScope.code };
+	
 	const $registBtn = document.querySelectorAll("#regist-comment");
 	const $retrospectCode = document.querySelectorAll("#retrospectCode");
 	const $comment = document.querySelectorAll("#comment-body");
