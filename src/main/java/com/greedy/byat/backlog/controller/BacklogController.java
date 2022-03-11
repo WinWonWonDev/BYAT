@@ -1,5 +1,7 @@
 package com.greedy.byat.backlog.controller;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,29 +32,11 @@ public class BacklogController {
 		this.backlogService = backlogService;
 	}
 	
-//	@RequestMapping("/")
-//	public String selectAllBacklogList(HttpServletRequest request, Model model) {
-//		
-//		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
-//		
-//		List<BacklogDTO> backlogList = backlogService.selectBacklogList(projectCode);
-//		
-//		System.out.println("backlogList : " + backlogList);
-//		
-//		model.addAttribute("backlogList", backlogList);
-//		
-//		return "/sprint/list";
-//	}
-	
 	@RequestMapping("/regist")
 	public String registBacklog(@ModelAttribute BacklogDTO backlog, HttpServletRequest request, RedirectAttributes rttr) {
 		
 		MemberDTO writer = (MemberDTO) request.getSession().getAttribute("loginMember");
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
-		
-		System.out.println("writer : " + writer);
-		System.out.println("projectCode : " + projectCode);
-		System.out.println("backlog : " + backlog);
 		
 		backlog.setWriter(writer.getName());
 		backlog.setProjectCode(projectCode);
@@ -66,9 +50,7 @@ public class BacklogController {
 	
 	@PostMapping("/modify")
 	public String modifyBacklog(@ModelAttribute BacklogDTO backlog, HttpServletRequest request, RedirectAttributes rttr) {
-		
-		System.out.println("수정하려는 backlog : " + backlog);
-		
+
 		String message = backlogService.modifyBacklog(backlog);
 		
 		rttr.addFlashAttribute("message", message);
@@ -98,9 +80,6 @@ public class BacklogController {
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		int backlogCode = Integer.parseInt(request.getParameter("backlogCode"));
 		
-		System.out.println("projectCode : " + projectCode);
-		System.out.println("backlogCode : " + backlogCode);
-		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd")
 				.setPrettyPrinting()
@@ -110,7 +89,6 @@ public class BacklogController {
 				.create();
 		
 		BacklogDTO backlog = backlogService.selectBacklogDetail(backlogCode);
-		System.out.println("backlog : " + backlog);
 		
 		return gson.toJson(backlog);
 	}
@@ -118,10 +96,23 @@ public class BacklogController {
 	@GetMapping("/tasklize")
 	public String registBacklogTasklize(HttpServletRequest request, RedirectAttributes rttr) {
 		
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
 		
+		int backlogCode = Integer.parseInt(request.getParameter("backlogCode"));
+		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
+		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		
-		MemberDTO writer = (MemberDTO) request.getSession().getAttribute("loginMember");
+
+		HashMap<String, Integer> infoMap = new HashMap<>();
+		infoMap.put("backlogCode", backlogCode);
+		infoMap.put("sprintCode", sprintCode);
+		infoMap.put("projectCode", projectCode);
+		infoMap.put("memberNo", memberNo);
 		
-		return "";
+		String message = backlogService.registBacklogTasklize(infoMap);
+		
+		rttr.addFlashAttribute("message", message);
+		
+		return "redirect:/sprint/list?code=" + projectCode;
 	}
 }

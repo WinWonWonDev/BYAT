@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.greedy.byat.backlog.model.dao.BacklogMapper;
 import com.greedy.byat.backlog.model.dto.BacklogDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;
 
 @Service
 public class BacklogServiceImpl implements BacklogService {
@@ -87,16 +88,22 @@ public class BacklogServiceImpl implements BacklogService {
 	}
 
 	@Override
-	public String registBacklogTasklize(HashMap<String, Object> infoMap) {
+	public String registBacklogTasklize(HashMap<String, Integer> infoMap) {
 		
-		int result = mapper.insertBacklogTasklize(infoMap);
 		String message = null;
+		int checkSprintProgressResult = mapper.checkSprintProgress(infoMap);
+		int result = mapper.insertBacklogTasklize(infoMap);
 		
-		if(!(result > 0)) {
-			message = "백로그 태스크화 실패 ...";
+		if(checkSprintProgressResult > 0) {
+			if(result > 0) {
+				message = "백로그가 스프린트에 담겼습니다 !!!";
+			} else {
+				message = "백로그를 담는 데에 실패했습니다 ...";
+			}	
 		} else {
-			message = "백로그 태스크화 성공 !!!";
+			message = "진행중인 스프린트가 없습니다.";
 		}
+		
 		
 		return message;
 	}

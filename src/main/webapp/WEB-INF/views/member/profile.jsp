@@ -365,8 +365,6 @@
    document.getElementById("update").onclick = function() {
 	  document.getElementById("updateImg").disabled = false;
 	  document.getElementById("updateImgBtn").style.display = "block";
-      document.getElementById("textId").readOnly = false;
-      document.getElementById("textName").readOnly = false;
       document.getElementById("textEmail").readOnly = false;
       document.getElementById("textPhone").readOnly = false;  
       document.getElementById("textIdTitle").style.color = "#29428C";
@@ -388,8 +386,6 @@
 	document.getElementById("updateCancelButton").onclick = function() {
 		document.getElementById("updateImg").disabled = true;
 		document.getElementById("updateImgBtn").style.display = "none";
-		document.getElementById("textId").readOnly = true;
-		document.getElementById("textName").readOnly = true;
 		document.getElementById("textEmail").readOnly = true;
 		document.getElementById("textPhone").readOnly = true;
 		document.getElementById("textIdTitle").style.color = "#7F7FAE";

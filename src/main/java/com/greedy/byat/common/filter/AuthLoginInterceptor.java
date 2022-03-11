@@ -27,16 +27,11 @@ public class AuthLoginInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object Handler) throws IOException {
 		
-		System.out.println("================ preHandle 호출 ================");
-		System.out.println("요청한 URI : " + request.getRequestURI());
-		
 		MemberDTO loginMember = (MemberDTO) request.getSession().getAttribute("loginMember");
 		
 		if(loginMember != null) {
 			return true;
 		} else {
-			
-			System.out.println("로그인 화면으로 이동");
 			
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("text/html; charset=UTF-8");
@@ -53,23 +48,16 @@ public class AuthLoginInterceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView mv) throws Exception {
 
-		System.out.println("================ postHandle 호출 ================");
 		String requestURI = request.getRequestURI();
 		String url = requestURI.substring(5);
 		
-		System.out.println("requestURI : " + requestURI);
-		System.out.println("url : " + url);
-		
 		try {
 			if(!"/byat".equals(requestURI)) {
-				
-				System.out.println("권한 인터셉터 실행");
+
 				MemberDTO member = (MemberDTO) request.getSession().getAttribute("loginMember");
-				System.out.println("memberId : " + member.getId());
 
 				if(member != null && member.getId() != null) {		// 세션이 존재할 경우
 					ArrayList<Integer> menuPermitList = menuService.selectPermitByURL(url);
-					System.out.println("menuPermitList : " + menuPermitList);
 					
 					int memberPermitCode = member.getPermitCode();
 					boolean isPermitCheck = false;
@@ -92,8 +80,6 @@ public class AuthLoginInterceptor implements HandlerInterceptor {
 				}
 			}
 		} catch(Exception e) {
-			System.out.println("catch문 동작");
-//			mv = new ModelAndView("redirect:/member/login");
 			throw new ModelAndViewDefiningException(mv);
 		}
 	}
