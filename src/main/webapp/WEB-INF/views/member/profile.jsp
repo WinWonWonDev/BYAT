@@ -271,7 +271,7 @@
       <div id="myProfileTitle"><br><h1>My Profile</h1></div>
          <div id="grayBoard">
             <div id="PicBoard">
-	            <img id="profileImg" width="100%" height="100%" src="${ pageContext.servletContext.contextPath }/resources/upload/original/${ requestScope.attachment.savedName }"/><br>
+	            <img id="profileImg" width="100%" height="100%" src="${ pageContext.servletContext.contextPath }/resources/upload/original/${ requestScope.attachment.savedName }" onerror="this.src='${ pageContext.servletContext.contextPath }/resources/images/defaultProfileBig.png'"/><br>
             </div>
             <form action="${ pageContext.servletContext.contextPath }/profile/uploadimage" method="post" enctype="multipart/form-data">
 				<div>
