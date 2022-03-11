@@ -502,6 +502,20 @@
 	
 	<script>
 	
+		/* 이슈 서브메뉴 */
+		document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + ${ requestScope.code };
+		
+		/*회의록 서브메뉴 */
+		document.getElementById("selectMeetingLogList").href = document.getElementById("selectMeetingLogList").href + ${ requestScope.code };
+	
+		//스프린트 서브메뉴
+		document.getElementById("selectSprintList").href = document.getElementById("selectSprintList").href + ${ requestScope.code };
+
+		//회고록 서브메뉴
+		//document.getElementById("selectRetrospectList").href = document.getElementById("selectRetrospectList").href + ${ requestScope.code };
+
+	
+	
 		const $meetinglogbody = document.getElementById("meetinglogbody");
 		const $meetingLogDetailTitle = document.getElementById("meetingLogDetailTitle");
 		const $meetingLogDetailBody = document.getElementById("meetingLogDetailBody");
