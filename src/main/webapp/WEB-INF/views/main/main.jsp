@@ -34,7 +34,7 @@
 </style>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Better-than-Your-Agile-Tool</title>
 <script>
 	const message = '${ requestScope.message }';
 	if(message != null && message != '') {

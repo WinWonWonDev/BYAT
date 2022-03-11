@@ -53,7 +53,6 @@ public class CalendarServiceImpl implements CalendarService {
 			totalCalendarList.addAll(calendarList);
 		}
 		
-		System.out.println("음 많이 잘나오냐? : " + totalCalendarList);
 		return totalCalendarList;
 	}
 
@@ -65,16 +64,14 @@ public class CalendarServiceImpl implements CalendarService {
 		int deleteAllCalendar = 0;
 		int result = 0;
 			
-		// 만약에 수정하고 regist 할 때 select에 wrtier가 본인꺼가 아니거나  수정하고 하면 걔한테는 바뀌고(일단 ㄱㄷ)
-		
 		List<Integer> memberNumbers = mapper.selectAllMemberNo();
-		
+		  
 		
 		if(loginMember.getPermitCode() == 1) {
 			
-			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
-			// string형으로 들어가니까 각자 
-				for(Map<String, Object> calendarListInfo : calendarList) { 
+			deleteAllCalendar = mapper.deleteAllCalendarByAdmin();
+
+			for(Map<String, Object> calendarListInfo : calendarList) { 
 					String calendarStartDate = (String) calendarListInfo.get("startDate"); 
 					String calendarEndDate = (String) calendarListInfo.get("endDate");
 					String calendarTitle = (String) calendarListInfo.get("title");
@@ -90,19 +87,17 @@ public class CalendarServiceImpl implements CalendarService {
 					map.put("memberName", memberName);
 					
 					for(int i = 0; i < memberNumbers.size(); i++) {
-						//ㄱㄷㄱㄷ
+
 						map.put("memberNo", memberNumbers.get(i));
 						result = mapper.insertScheduleByAdmin(map);
 					}
 					
 				}
 			
-		} else if(loginMember.getPermitCode() == 3 || loginMember.getPermitCode() == 2) {
+		} else if (loginMember.getPermitCode() == 3 || loginMember.getPermitCode() == 2) {
 
 			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
 			
-			System.out.println("금 여기 들어와야되잔항?");
-			// string형으로 들어가니까 각자 
 			for(Map<String, Object> calendarListInfo : calendarList) { 
 				
 				String calendarStartDate = (String) calendarListInfo.get("startDate"); 
@@ -146,24 +141,25 @@ public class CalendarServiceImpl implements CalendarService {
 		return selectAllMemberList;
 	}
 
-	@Override
-	public List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove) {
-
-		System.out.println("서비스는 올는데");
-		List<ScheduleDTO> totalCalendarList = null;
-		List<ScheduleDTO> calendarList = null;
-		
-		totalCalendarList = mapper.selectProjectCalendarListForSelectBox(memberNoForMove);
-		calendarList = mapper.selectCalendarListForSelectBox(memberNoForMove);
-		System.out.println("여기가 안나온느건가?");
-		totalCalendarList.addAll(calendarList);
-		
-		System.out.println("여기 잘 이거 나와야함!!! 나옴? : " + totalCalendarList);
-		
-		return totalCalendarList;
-		
-		
-	}
+//	@Override
+//	public List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove) {
+//		
+//		List<ScheduleDTO> totalCalendarList = null;
+//		List<ScheduleDTO> calendarList = null;
+//		
+//		System.out.println("서비스는 올는데");
+//		totalCalendarList = mapper.selectProjectCalendarListForSelectBox(memberNoForMove);
+//		System.out.println("토탈조차 안되는건가");
+//		calendarList = mapper.selectCalendarListForSelectBox(memberNoForMove);
+//		System.out.println("여기가 안나온느건가?");
+//		totalCalendarList.addAll(calendarList);
+//		
+//		System.out.println("여기 잘 이거 나와야함!!! 나옴? : " + totalCalendarList);
+//		
+//		return totalCalendarList;
+//		
+//		
+//	}
 
 
 
