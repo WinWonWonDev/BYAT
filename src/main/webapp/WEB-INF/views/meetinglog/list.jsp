@@ -7,7 +7,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
+<title>BYAT 회의록 jsp</title>
+<script>
+   const message = '${ requestScope.message }';
+   if(message != null && message != '') {
+      alert(message);
+   }   
+</script>
 <style>
 	html {
 		width: 100%;
@@ -50,7 +56,7 @@
 	.searchMeetinglog {
 		float:right;
 		margin-right:3%;
-		margin-top:2%;
+		margin-top:5%;
 	}
 	
 	.search-area {
@@ -62,17 +68,17 @@
 		width:100%;
 		height: 80%;
 		border:1px solid black;
-	
+		overflow-y:scroll;
 	}
 	
 	.meetinglogBox , .meetinglogPlusBox {
 		float: left;
 		width: 250px;
 		height: 120px;
-		margin-left:5%;
-		margin-top:3%;
-		cursor:pointer;
+		margin-left:7%;
+		margin-top:5%;
 		border:2px solid black;
+		cursor:pointer;
 	}
 	
 	.titleBox{
@@ -105,6 +111,7 @@
 		margin-left:30px;
 		margin-top:13%;
 		margin-right:3%;
+		cursor:pointer
 	}
 	
 	.writerBox{
@@ -119,9 +126,9 @@
 	.plusBox {
 		border:1px solid black;
 		width:240px;
-		height:20px;
+		height:30px;
 		margin-left:2%;
-		margin-top:3%;
+		margin-top:10%;
 		cursor:pointer;
 	}
 	
@@ -132,6 +139,8 @@
 		background-size:cover;
 		border:0px;
 		margin-left:45%;
+		margin-top:10px;
+		cursor:pointer;
 	}
 	
 	#meetinglogCreateModal {
@@ -179,7 +188,6 @@
 		width:100px;
 		margin-left:calc(100% - 100px - 10px);
 	}
-	
 	
 	#meetinglogDetailModal{
 		display: none;
@@ -385,35 +393,40 @@
 </head>
 <body>
 	<div id="whiteBoard">
-	      <div class="meetinglogListHead">
-				<div class="meetinglogListName">회의록 :  <c:out value="${projectName}" /></div>
-				<div class="searchMeetinglog">
-					<div class="search-area">
+		<div class="meetinglogListHead">
+			<div class="meetinglogListName">회의록 :  <c:out value="${projectName}" /></div>
+			<div class="searchMeetinglog">
+				<div class="search-area">
+					<form id="loginForm" action="${ pageContext.servletContext.contextPath}/meetinglog/list" method="Post">
 						<select id="searchCondition" name="searchCondition">
-							<option value="title">제목</option>
+							<option value="title" ${requestScope.select} }>제목</option>
 							<option value="content">내용</option>
 							<option value="writer">작성자</option>
 						</select>
 						<input type="search">
-						<button type="submit">검색</button>
-					</div>
+						<button type="submit" id="searchValue" name="searchValue" value="<c:out value="${ requestScope.selectCriteria.searchValue }"/>">검색</button>
+					</form>
 				</div>
-	      </div>
-	      <div class="meetinglogListBody">
-		      <c:forEach items="${meetinglogList}" var="meetinglogList">
-			      <div class="meetinglogBox" id="meetinglogBox">
-			      	  <div id="meetinglogCode" class="meetinglogCode"><c:out value="NO.${meetinglogList.code}"/></div>
-				      <div id="titleBox" class="titleBox"><c:out value="${meetinglogList.title}"/></div>
-				      <div id="dateBox" class="dateBox"><c:out value="작성날짜  : ${meetinglogList.writingDate}"/></div>
-				      <div class="writerBox"><c:out value=" ${meetinglogList.memberName}"/></div>
-			      </div>
-		      </c:forEach>
-		      
-		      <div class="meetinglogPlusBox" id="meetinglogPlusBox">
-		      		<div class="plusBox" id="plusBox">
-		      			<button type="button" class="plusBlackImage" id="plusBlackImage"></button>
-		      		</div>
-		      </div>
+			</div>
+		</div>
+		<div class="meetinglogListBody">
+			<div class="meetinglogPlusBox" id="meetinglogPlusBox">
+				<div class="plusBox" id="plusBox">
+			      	<button type="button" class="plusBlackImage" id="plusBlackImage"></button>
+				</div>
+			</div>
+				<c:forEach items="${meetinglogList}" var="meetinglogList">
+					<div class="meetinglogBox" id="meetinglogBox">
+						<input type="hidden" id="meetinglogCode" value="${meetinglogList.code}"/>
+						<input type="hidden" id="projectCode" value="${meetinglogList.projectCode}"/>
+						<input type="hidden" id="meetinglogListBodys" value="${meetinglogList.body}"/>
+						<input type="hidden" id="meetinglogListTitle" value="${meetinglogList.title}"/>
+						<div id="meetinglogCodeView" class="meetinglogCode"><c:out value="NO.${meetinglogList.code}"/></div>
+						<div id="titleBox" class="titleBox"><c:out value="${meetinglogList.title}"/></div>
+						<div id="dateBox" class="dateBox"><c:out value="작성날짜  : ${meetinglogList.writingDate}"/></div>
+						<div class="writerBox"><c:out value=" ${meetinglogList.memberName}"/></div>
+					</div>
+				</c:forEach>
 		</div>
 	</div>
 	
@@ -448,11 +461,10 @@
 		    	</div>
 	      		<div class="modal_content-box">
 	      			<input type="hidden" name="code" value="${code}">
-	      			<input type="hidden" name="memberName" value="${sessionScope.loginMember.name}">
 	      			<input type="hidden" id="meetingLogDetailCode" name="meetingLogDetailCode" value="">
 	      			<input type="text" id ="meetingLogDetailTitle" class="meetingLogDetailTitle" name="meetingLogDetailTitle" value="">
 	      			<div id ="DetailTitleError" class="titleError"><c:out value="제목(필수항목)을 입력해주세요.."/></div>
-	      			<textarea id="meetingLogDetailBody" class="meetingLogDescription"  name="meetingLogDetailBody"  rows="20" cols="49" value=""></textarea>
+	      			<textarea id="meetingLogDetailBody" class="meetingLogDescription"  name="meetingLogDetailBody"  rows="20" cols="49" ></textarea>
 	      		</div>
 	      		<div class="modal_button" id ="modal_button">
 		        	<button type="button" id="meetingLogDetailCreateBtn">Ok</button>
@@ -467,8 +479,9 @@
 	<div id="delete_modal">
    
 	    <div class="delete_modal_content">
-		  	<form id="removeMeetingForm" action="${ pageContext.servletContext.contextPath }/meetinglog/remove"  method="get">
-			    <input type="hidden" name="meetingCode" value="${meetingCode}">
+		  	<form id="removeMeetingForm" action="${ pageContext.servletContext.contextPath }/meetinglog/remove"  method="post">
+			    <input type="hidden" id ="meetingCode" name="meetingCode" value="">
+			    <input type="hidden" name="code" value="${code}">
 			    <div class="delete_modal_head">
 			    	Alert Message
 			    </div>
@@ -497,7 +510,7 @@
 		const $modal_button = document.getElementById("modal_button");
 		const $meetingLogDetailDeleteBtn = document.getElementById("meetingLogDetailDeleteBtn");
 		const $meetingLogDetailCode = document.getElementById("meetingLogDetailCode");
-		
+		const $meetingCode= document.getElementById("meetingCode");
 		
 		const $meetinglogBox = document.querySelectorAll("#meetinglogBox")
 		const $meetinglogCode = document.querySelectorAll("#meetinglogCode");
@@ -535,92 +548,25 @@
 		}
 		
 		document.getElementById("delete_modal_close_btn").onclick=function(){
-			document.getElementById("delete_modal").style.display="block";
+			document.getElementById("delete_modal").style.display="none";
 		}
 	
-		  
-		let changeTitle="";
-		let changeBody="";
-		let titleText="";
-		let bodyText="";
-		
-	 	/* $(meetingLogDetailTitle).on("propertychange change keyup paste input", function() {
-			changeTitle=$(this).val();
-			console.log("changeTitle : " + changeTitle);
-
-	   }); */
-		 
-	
-	  /*  $(document).ready(function(){
-			$("#meetingLogDatailBody").focus(function(){
-				changeBody=$(this).val();
-				console.log("{focus}changeBody : " + changeBody);
-	
-			});
-			$("#meetingLogDatailTitle").focus(function(){
-				changeTitle=$(this).val();
-				console.log("{focus}changeTitle : " + changeTitle);
-	
-			});
-		}); */
 		
 		document.getElementById("meetingLogDetailCreateBtn").onclick = function(){
-			console.log("changeTitle : " + changeTitle);
-			console.log("changeBody : " + changeBody);
-			console.log("titleText : " + titleText);
-			console.log("bodyText : " + bodyText);
-			console.log("title value : " + $meetingLogDetailTitle.value);
-			console.log("body value : " + $meetingLogDetailBody.value);
-			console.log("code value : " + $meetingLogDetailCode.value);
 
 			document.getElementById("updateProjectForm").submit();
 
-			
-			/* if(document.getElementById("meetingLogTitle").value.trim() !=""){
-				document.getElementById("DetailTitleError").style.display="none";
-				document.getElementById("updateProjectForm").submit();
-			}else{
-				document.getElementById("DetailTitleError").style.display="block";
-			} */
 		}
-		
-		/* // 상세 수정
-		   $(document).ready(function(){
-				$meetingLogDetailDeleteBtn.onclick = function() {
-					if(changeTitle != $meetingLogDetailTitle.value || changeBody != $meetingLogDetailBody.value ){
-			     		 $.ajax({
-			   	  			url: "/byat/meetinglog/detail",
-			   	  			type: "post",
-			   	  			data: { "meetingLogDetailTitle" : $meetingLogDetailTitle.value
-			   	  					,"meetingLogDetailBody" : $meetingLogDetailBody.value  
-			   	  					,"meetingLogDetailCode" : $$meetingLogDetailCode.value },
-			   	  			success:function(data, status, xhr){
-			   	  				document.getElementById("meetinglogDetailModal").style.display="none";
-			   	  				
-			   	  			},
-							error: function(xhr, status, error) {
-								
-							}
-			   	  		}); 
-					}else{
-						document.getElementById("meetinglogDetailModal").style.display="none";
-						document.getElementById("titleError").style.display="none";
-					}
-		        }
-		});  */
-		
-		
-		
 		  // 상세 조회
 		   $(document).ready(function(){
 			for(let i = 0; i < $meetinglogBox.length; i++){
 				$meetinglogBox[i].onclick = function() {
+					console.log($meetinglogCode[i].value);
 		     		$.ajax({
 		   	  			url: "/byat/meetinglog/detail",
 		   	  			type: "post",
 		   	  			data: { "meetinglogCode" : $meetinglogCode[i].value},
 		   	  			success:function(data, status, xhr){
-		   	  				console.log(data);
 		   	  				if(data.memberNo == "${ sessionScope.loginMember.no }"){
 		   	  					$meetingLogDetailDeleteBtn.style.display="block";
 		   	  				}else{
@@ -628,12 +574,11 @@
 		   	  				}
 		   	  				$meetingLogDetailCode.value= data.code;
 		   	  				$meetingLogDetailTitle.value=data.title;
+		   	  				
 		   	  				$meetingLogDetailBody.value=data.body;
 		   	  				$meetinglogDetailModal.style.display="block";
-			   	  			
-		   	  				titleText =data.title;
-		   	  				bodyText = data.body;
-		   	  			
+		   	  				
+		   	  			    $meetingCode.value= data.code;
 		   	  			},
 						error: function(xhr, status, error) {
 							alert("상세 조회 실패");
@@ -643,8 +588,6 @@
 			}
 		});   
 		  
-		  
-		
 	</script>
 
 </body>

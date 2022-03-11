@@ -3,6 +3,7 @@ package com.greedy.byat.meetinglog.model.dao;
 import java.util.List;
 
 import com.greedy.byat.meetinglog.model.dto.MeetinglogDTO;
+import com.greedy.byat.notice.model.dto.NoticeDTO;
 
 public interface MeetinglogMapper {
 
@@ -16,10 +17,16 @@ public interface MeetinglogMapper {
 
 	void insertVersion(MeetinglogDTO meetinglog);
 
-	void registMeetinglogHistory(MeetinglogDTO meetinglog);
-
-	MeetinglogDTO selectMeetinglogCode(MeetinglogDTO meetinglog);
+	int registMeetinglogHistory(MeetinglogDTO meetinglog);
 
 	String selectProjectName(int projectCode);
+
+	int removeMeetinglog(int meetingCode);
+
+	int registMeetinglogNotice(NoticeDTO notice);
+
+	List<Integer> selectProjectMembers(int projectCode);
+
+	
 
 }

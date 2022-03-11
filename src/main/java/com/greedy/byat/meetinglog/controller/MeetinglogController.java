@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -55,7 +56,7 @@ public class MeetinglogController {
 		
 	  @PostMapping(value="/detail", produces="application/json; charset=UTF-8" )
 	  @ResponseBody
-	  public String selectMeetinglogDetail(HttpServletRequest request, Model model ) {
+	  public String selectMeetinglogDetail(HttpServletRequest request) {
 		System.out.println("selectMeetinglogDetail : 디데일 조회");
 
 		int meetinglogCode = Integer.parseInt(request.getParameter("meetinglogCode"));
@@ -63,10 +64,8 @@ public class MeetinglogController {
 		
 		MeetinglogDTO meetinglog = meetinglogService.selectMeetinglogDetail(meetinglogCode);
 		  
-		System.out.println(meetinglog);
+		System.out.println(meetinglog+ "dgdgdg");
 	  
-		model.addAttribute("meetinglog", meetinglog);
-		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
 				.setPrettyPrinting()
@@ -79,72 +78,87 @@ public class MeetinglogController {
 	  }
 	  
 	  @PostMapping("/regist") 
-	  public String registMeetinglog(HttpServletRequest request, Model model) {
+	  public String registMeetinglog(HttpServletRequest request, Model model, RedirectAttributes rttr) {
 		
-		  java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+		  System.out.println("regist");
 		  
+		  java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+ 
 		  MeetinglogDTO meetinglog = new MeetinglogDTO();
 		  MemberDTO member = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+		  
 		  int projectCode = Integer.parseInt(request.getParameter("code"));
-
 		  String title = request.getParameter("meetingLogTitle");
 		  String body = request.getParameter("meetingLogDescription");
 		  
+		  meetinglog.setWritingDate(sqlDate);
+		  meetinglog.setDeleteStatus("N");
+		  meetinglog.setVersion('1');
 		  meetinglog.setTitle(title);
 		  meetinglog.setBody(body);
-		  meetinglog.setWritingDate(sqlDate);
 		  meetinglog.setProjectCode(projectCode);
 		  meetinglog.setMemberNo(member.getNo());
 		  meetinglog.setMemberName(member.getName());
-		  meetinglog.setDeleteStatus("N");
 		  
-		  int result = meetinglogService.registMeetinglog(meetinglog);
+		  System.out.println("regist:meetinglog"  +meetinglog);
+		  String message = meetinglogService.registMeetinglog(meetinglog);
 
-		  System.out.println("gg : " + projectCode );
 		  
 		  model.addAttribute("code", projectCode);
+		  
+		  rttr.addFlashAttribute("message",message);
 		  
 		  return "redirect:/meetinglog/list?code="+projectCode; 
 		  
 	  }
 	  
 	  @PostMapping("/modify")
-	  public String modifyMeetinglog(HttpServletRequest request, Model model) {
+	  public String modifyMeetinglog(HttpServletRequest request, Model model, RedirectAttributes rttr) {
 		
 		  MeetinglogDTO meetinglog = new MeetinglogDTO();
+		  MemberDTO member =  ((MemberDTO) request.getSession().getAttribute("loginMember"));
+
 		  
 		  int projectCode = Integer.parseInt(request.getParameter("code"));
 		  
 		  String title = request.getParameter("meetingLogDetailTitle");
 		  String body = request.getParameter("meetingLogDetailBody");
 		  int code = Integer.parseInt(request.getParameter("meetingLogDetailCode"));
-		  String memberName = request.getParameter("memberName");
 		  
 		  meetinglog.setBody(body);
 		  meetinglog.setCode(code);
 		  meetinglog.setTitle(title);
-		  meetinglog.setMemberName(memberName);
+		  meetinglog.setProjectCode(projectCode);
+		  meetinglog.setMemberNo(member.getNo());
+		  meetinglog.setMemberName(member.getName());
 		  System.out.println("modify meetinglog : " + meetinglog);
 		  
-		  int result = meetinglogService.modifyMeetinglog(meetinglog);
+		  String message= meetinglogService.modifyMeetinglog(meetinglog);
+		  
+		  System.out.println("modify meetinglog :" + meetinglog);
 		  
 		  model.addAttribute("code", projectCode);
-		  model.addAttribute("meetinglog", meetinglog);
+		  
+		  rttr.addFlashAttribute("message",message);
 		  
 		  return "redirect:/meetinglog/list?code=" + projectCode; 
 		  
 	  }
 	  
-	  @GetMapping("/remove")
-	  public String removeMeetinglog(HttpServletRequest request, Model model) {
+	  @PostMapping("/remove")
+	  public String removeMeetinglog(HttpServletRequest request, Model model, RedirectAttributes rttr) {
 		 
 		  int projectCode = Integer.parseInt(request.getParameter("code"));
 		  
-		  int code = Integer.parseInt(request.getParameter("meetingLogDetailCode"));
+		  int meetingCode = Integer.parseInt(request.getParameter("meetingCode"));
 
+		  String message  = meetinglogService.removeMeetinglog(meetingCode);
+		 
 		  
-		 // int result  = meetinglogService.removeMeetinglog(meetingLogDetailCode);
+		  
 		  model.addAttribute("code", projectCode);
+		  
+		  rttr.addFlashAttribute("message",message);
 		  
 		  return "redirect:/meetinglog/list?code=" + projectCode; 
 		  
