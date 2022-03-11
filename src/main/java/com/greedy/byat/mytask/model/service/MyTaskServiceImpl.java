@@ -25,9 +25,10 @@ public class MyTaskServiceImpl implements MyTaskService {
 		this.mapper = mapper;
 	}
 
-	
 	@Override
 	public MyTaskDTO selectmyTaskList(MemberDTO member) {
+		
+		System.out.println("selectmyTaskList MemberDTO: " + member);
 		
 		MyTaskDTO myTask= new MyTaskDTO();
 		List<ProjectMembersDTO> projectMembers = new ArrayList<>();
@@ -41,7 +42,6 @@ public class MyTaskServiceImpl implements MyTaskService {
 	    for(int i=0; i < projectList .size(); i++) {
 			projectList.get(i).setWriter(projectList.get(i).getWriter().substring(1, 3));
 			
-	       
 			projectMembers = mapper.selectMyTaskProjectMembers(projectList.get(i).getCode());
 			
 			for(int j = 0; j < projectMembers.size(); j++) {
@@ -78,6 +78,8 @@ public class MyTaskServiceImpl implements MyTaskService {
 
 	@Override
 	public int removeToDoList(int todoListNumber) {
+		System.out.println( todoListNumber + " : removeToDoList");
+		
 		int result = mapper.removeToDoList(todoListNumber);
 		
 		System.out.println( result + " : removeToDoList");

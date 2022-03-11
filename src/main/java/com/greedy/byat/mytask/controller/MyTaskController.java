@@ -71,7 +71,7 @@ public class MyTaskController {
 		
 		int[] projectProgressArr = { progressIng, progressDone, progressNotDone };
 		
-		System.out.println(mytask.getTodolistDTO());
+		System.out.println(mytask.getProjectDTO());
 		
 		model.addAttribute("projectProgress", projectProgressArr);
 		model.addAttribute("projectList", mytask.getProjectDTO());
@@ -82,10 +82,9 @@ public class MyTaskController {
 	}
 	
 
-	
-	@GetMapping("/selecttasklistforproject")
+	@GetMapping(value="/selecttasklistforproject", produces="application/json; charset=UTF-8")
 	@ResponseBody 
-	public List<TaskDTO> selectTaskListForProject(int projectCode, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+	public String selectTaskListForProject(int projectCode, HttpServletRequest request, HttpServletResponse response, Model model) throws JsonProcessingException {
 
 		response.setContentType("application/json; charset=UTF-8");
 		
@@ -93,11 +92,22 @@ public class MyTaskController {
 		
 		List<TaskDTO> taskList = mytaskService.selectTaskListForProject(member.getNo(), projectCode);
 
-		return taskList;
+		model.addAttribute("code", projectCode);
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+
+		return gson.toJson(taskList); 
 	}
 	
 	@GetMapping("/regist")
 	public String registToDoList(HttpServletRequest request) {
+		
 		int memberNumber = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
 
 		mytaskService.registToDoList(memberNumber);
@@ -105,30 +115,31 @@ public class MyTaskController {
 		return "redirect:/mytask/list";
 	}
 
-	@GetMapping("/remove")
-	public int removeToDoList(int toDoListNumber, HttpServletResponse response) {
+	@GetMapping(value = "/remove", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public int removeToDoList(int toDoListNo, HttpServletResponse response) {
 
-		response.setContentType("application/json; charset=UTF-8");
+		System.out.println("gg");
 
-		int result = mytaskService.removeToDoList(toDoListNumber);
+		int result = mytaskService.removeToDoList(toDoListNo);
 
 		return result;
 	}
 	
 	@PostMapping(value = "/modify", produces="application/json; charset=UTF-8")
+	@ResponseBody
 	public int modifyToDoList(@ModelAttribute ToDoListDTO todoList) {
 
-		
 		int result= mytaskService.modifyToDoList(todoList);
 		
 		System.out.println(result + "modify");
 		return result;
 	}
 	
-	@GetMapping("/modifytodoliststatus")
-	public int modifyToDoListStatus(@ModelAttribute ToDoListDTO todoList, HttpServletResponse response) {
-		
-		response.setContentType("application/json; charset=UTF-8");
+	@GetMapping(value="/modifytodoliststatus", produces="application/json; charset=UTF-8")
+	@ResponseBody 
+	public int modifyToDoListStatus(@ModelAttribute ToDoListDTO todoList) {
+		System.out.println("modifyTODoListStatus : " + todoList);
 
 		int result = mytaskService.modifyToDoListStatus(todoList);
 		
@@ -137,9 +148,8 @@ public class MyTaskController {
 
 	@PostMapping("/selectmembermodal")
 	@ResponseBody
-	public List<ProjectMembersDTO> selectMembersModal(int projectCode, HttpServletResponse response) {
-		
-		response.setContentType("application/json; charset=UTF-8");
+	public List<ProjectMembersDTO> selectMembersModal(int projectCode){
+	
 
 		List<ProjectMembersDTO> projectMembers = mytaskService.selectMemberModal(projectCode);
 		
