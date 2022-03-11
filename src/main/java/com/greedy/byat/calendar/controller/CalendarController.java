@@ -56,11 +56,26 @@ public class CalendarController {
 	@RequestMapping(value="/list", produces="application/json; charset=UTF-8", method=RequestMethod.GET)
 	public String selectCalendarList(Model model, HttpServletRequest request) {
 		
+		List<ScheduleDTO> calendarList = null;
 		MemberDTO loginMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
+		String memberNoForSelectorBox = request.getParameter("no");
 		
-		List<ScheduleDTO> calendarList = calendarService.selectCalendarList(loginMember);
+		if(memberNoForSelectorBox != null) { 
+			MemberDTO selectedMember = new MemberDTO();
+			selectedMember.setNo(Integer.parseInt(memberNoForSelectorBox));
+			calendarList = calendarService.selectCalendarList(selectedMember);
+			request.setAttribute("memberNos", selectedMember.getNo());
+			
+		} else {
+			calendarList = calendarService.selectCalendarList(loginMember);
+			request.setAttribute("memberNos", loginMember.getNo());
+			
+		}
 		
 		request.setAttribute("calendarList", calendarList);
+		request.setAttribute("loginMemberForDelete", loginMember); //
+		System.out.println("이거 나오냐 ? : " + loginMember);
+		System.out.println("calendarList : " + calendarList);
 		
 		return "/calendar/calendar";
 		
@@ -70,11 +85,9 @@ public class CalendarController {
 	@ResponseBody
 	public int registSchedule(HttpServletRequest request, RedirectAttributes rttr, @ModelAttribute ScheduleDTO schedule, MemberDTO member) throws ParseException {
 		
-		String allData = request.getParameter("alldata"); //json으로 받았으니까 그거를 
+		String allData = request.getParameter("alldata"); 
 		
 		MemberDTO loginMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
-		System.out.println("ㄴ옴?" + loginMember);
-		
 		
 		List<Map<String, Object>> calendarList = new ArrayList<>();
 		List<ScheduleDTO> calednarListByDTO = null;
@@ -82,9 +95,6 @@ public class CalendarController {
 		calendarList = JSONArray.fromObject(allData);
 		
 		int result = calendarService.registSchedule(calendarList, loginMember);
-		
-		System.out.println("result: " + result); //저장되씅면 result에 1 , 저장안됬으면 result 2
-		
 		
 		if(result > 0) {
 			rttr.addFlashAttribute("message", "일정 등록 성공!");
@@ -105,23 +115,6 @@ public class CalendarController {
 		System.out.println(selectAllMemberList);
 		
 		return selectAllMemberList;
-	}
-	
-	@GetMapping(value="/movecalendarbymember", produces="application/json; charset=UTF-8")
-	public String moveCalendarByMember(Model model, HttpServletRequest request, int memberNoForMove) {
-
-		System.out.println("오냐 ? : " + memberNoForMove);
-		List<ScheduleDTO> calendarList = calendarService.selectCalendarListForSelectBox(memberNoForMove);
-
-		System.out.println("컨트롤러 그거 가따온거 되냐?");
-		
-		model.addAttribute("calendarList", calendarList);
-		
-		System.out.println("calendarList : " + calendarList);
-		
-		return "/calendar/calendar";
-		
-		
 	}
 	
 }

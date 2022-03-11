@@ -8,6 +8,9 @@ import com.greedy.byat.common.exception.issue.IssueInsertVersionHistoryException
 import com.greedy.byat.common.exception.issue.IssueModifyMemberException;
 import com.greedy.byat.common.exception.issue.IssueModifyNoticeException;
 import com.greedy.byat.common.exception.issue.IssueModifyStatusException;
+import com.greedy.byat.common.exception.issue.IssueRegistException;
+import com.greedy.byat.common.exception.issue.IssueRegistMemberException;
+import com.greedy.byat.common.exception.issue.IssueRegistNoticeException;
 import com.greedy.byat.common.exception.issue.IssueRegistStatusHistoryException;
 import com.greedy.byat.common.exception.issue.IssueRemoveException;
 import com.greedy.byat.common.exception.issue.IssueRemoveMemberException;
@@ -34,5 +37,9 @@ public interface IssueService {
 	int deleteIssueMember(IssueMembersDTO removeMember) throws IssueRemoveMemberException, IssueInsertMemberHistoryException, IssueRemoveMemberNoticeException;
 
 	int deleteIssue(int code, int changeMemberNo) throws IssueRemoveException, IssueInsertVersionHistoryException, IssueDeleteNoticeException;
+
+	List<SprintMembersDTO> selectSprintMembersList(int projectCode);
+
+	void insertIssue(IssueDTO registIssue) throws IssueRegistMemberException, IssueRegistException, IssueInsertVersionHistoryException, IssueRegistStatusHistoryException, IssueRegistNoticeException, IssueInsertMemberHistoryException;
 
 }

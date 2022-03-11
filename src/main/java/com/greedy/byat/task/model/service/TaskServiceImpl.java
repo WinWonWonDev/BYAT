@@ -1,5 +1,6 @@
 package com.greedy.byat.task.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,11 +32,11 @@ public class TaskServiceImpl implements TaskService {
 		/* 진행중이거나 진행전인 스프린트가 있는지 확인 결과 */
 		int progressSprintResult = mapper.checkSprintProgress(projectCode);
 		
-		/* 태스크에 스프린트 코드를 넣어줌 */
-		task.setSprintCode(mapper.selectSprintCode(projectCode));
-		
-		/* 진행중인 태크스가 있다면 */
+		/* 진행중인 스프린트가 있다면 */
 		if(progressSprintResult > 0) {
+			
+			/* 태스크에 스프린트 코드를 넣어줌 */
+			task.setSprintCode(mapper.selectSprintCode(projectCode));
 			
 			/* 태스크 생성 결과 */
 			int result1 = mapper.insertTask(task);
@@ -166,7 +167,7 @@ public class TaskServiceImpl implements TaskService {
 		int result2 = mapper.insertTaskVersionHistory2(task);
 		
 		if(result1 > 0 && result2 > 0) {
-			message =  "태스크를 수정하셨습니다.";
+			message = "태스크를 수정하셨습니다.";
 		} else {
 			message = "태스크 수정 실패";
 		}
@@ -249,7 +250,6 @@ public class TaskServiceImpl implements TaskService {
 				/* 스프린트 구성원 변경 이력에 추가한다.*/
 				int result5 = mapper.insertSprintMembersHistory2(map);
 				
-				
 				if(result3 > 0 && result5 > 0) {
 					
 					message = "담당하고 있는 태스크가 없기 때문에 스프린트 구성원에서 제외 됩니다.";
@@ -264,21 +264,19 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public boolean checkTasksContent(int projectCode) {
+	public boolean updateTaskProgress(Map<String, Integer> map) {
+
+		boolean result = false;
 		
-		boolean result = true;
+		int result1 = mapper.updateTaskProgress(map);
 		
-		List<TaskDTO> taskList = mapper.selectTaskList(projectCode);
+		int result2 = mapper.insertTaskProgressHistory2(map);
 		
-		for(int i  = 0; i < taskList.size(); i++) {
+		if(result1 > 0 && result2 > 0) {
 			
-			TaskDTO task = taskList.get(i);
-			
-			if(task.getTitle().isEmpty() || task.getStartDate() == null || task.getEndDate() == null || task.getBody().isEmpty()) {
-				
-				result = false;
-			}
+			result = true;
 		}
+		
 		return result;
 	}
 

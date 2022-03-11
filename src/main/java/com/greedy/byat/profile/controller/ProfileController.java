@@ -44,16 +44,13 @@ public class ProfileController {
 	}
 	
 	@RequestMapping("/mypage")
-	public String showPic(Model model) {
+	public String goProfile(Model model) {
 		
 		int memberNo = ((MemberDTO) model.getAttribute("loginMember")).getNo();
 		
 		AttachmentDTO attachment = profileService.selectAttachment(memberNo);
 		
 		model.addAttribute("attachment", attachment);
-		
-		System.out.println(model.getAttribute("loginMember"));
-		System.out.println(model.getAttribute("attachment"));
 		
 		return "/member/profile";
 	}
@@ -71,11 +68,7 @@ public class ProfileController {
 		member.setEmail(email);
 		member.setPhone(phone);
 		
-		System.out.println(member);
-		
 		String message = profileService.modifyProfile(member);
-		
-		System.out.println(message);
 		
 		request.getSession().setAttribute("loginMember", member);
 		
@@ -91,11 +84,8 @@ public class ProfileController {
 		
 		String message = null;
 		member = (MemberDTO) model.getAttribute("loginMember");
-		
-		System.out.println(request.getParameter("requestOriginPwd"));
 
 		String requestOriginPwd = request.getParameter("requestOriginPwd");
-		System.out.println("requestOriginPwd(encoded): " + requestOriginPwd);
 		
 		if(!profileService.isPwdMatch(member, requestOriginPwd)) {
 			message = "입력하신 비밀번호가 일치하지 않습니다!";
@@ -107,7 +97,8 @@ public class ProfileController {
 				if(!requestNewPwd.equals(requestNewAgain)) {
 					message = "변경할 비밀번호가 일치하지 않습니다.";					
 				} else {
-					message = profileService.modifyPassword(requestNewPwd, member.getId());
+					String encodedPwd = passwordEncoder.encode(requestNewPwd);
+					message = profileService.modifyPassword(encodedPwd, member.getId());
 					request.getSession().setAttribute("loginMember", member);
 				}
 			} else {
@@ -148,10 +139,8 @@ public class ProfileController {
 				if(uploadedImg.getSize() > 0) {
 
 					String orgName = uploadedImg.getOriginalFilename();
-					System.out.println("orgName : " + orgName);
 					String ext = orgName.substring(orgName.lastIndexOf("."));
 					String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
-					System.out.println("변경한 이름 : " + savedName);
 
 					uploadedImg.transferTo(new File(uploadDirectory + "/" + savedName));
 
@@ -173,8 +162,6 @@ public class ProfileController {
 
 				/* 해당하는 멤버의 식별자 삽입 */
 				attachment.setMemberNo(((MemberDTO) model.getAttribute("loginMember")).getNo());
-
-				System.out.println("attachment :" + attachment);
 
 				message = profileService.registAttachment(attachment);
 

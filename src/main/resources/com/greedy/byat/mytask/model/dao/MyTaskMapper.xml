@@ -67,7 +67,7 @@
  	</resultMap>
  	
   	<select id="selectMyTaskProjectList" resultMap="projectResultMap">
- 		SELECT
+		   		SELECT
 			   A.PROJECT_CODE
 			 , A.PROJECT_TITLE
 			 , A.PROJECT_START_DATE
@@ -78,10 +78,12 @@
 			 , A.PROJECT_DELETE_STATUS
 			 , A.PROJECT_WRITER
 		  FROM TBL_PROJECT A
-		  JOIN TBL_MEMBER B ON(A.PROJECT_WRITER = B.MEMBER_NAME)
-		  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
-		 WHERE C.MEMBER_NO = #{memberNumber}
+		  JOIN TBL_PROJECT_MEMBERS B ON(A.PROJECT_CODE = B.PROJECT_CODE)
+		  JOIN TBL_MEMBER C ON(C.MEMBER_NO = B.MEMBER_NO)
+		 WHERE C.MEMBER_NO = '14'
 		   AND A.PROJECT_DELETE_STATUS = 'N'
+		   AND B.PROJECT_PARTICIPATION_YN ='Y'
+		   ORDER BY A.PROJECT_CODE DESC
  	</select>
  	
  	<select id="selectMyTaskProjectMembers" resultMap="projectMembersResultMap">
@@ -110,7 +112,7 @@
           FROM TBL_TASK A
          WHERE A.MEMBER_NO = #{memberNo}
            AND A.TASK_DELETE_STATUS = 'N'
-           AND A.TASK_PROGRESS NOT IN ('완료')
+           AND A.TASK_PROGRESS NOT LIKE '%미완료%'
      </select>
      
      <select id="selectTaskListForProject" resultMap="taskResultMap">
@@ -126,6 +128,7 @@
          WHERE A.MEMBER_NO = #{memberNo}
            AND A.PROJECT_CODE = #{projectCode}
            AND A.TASK_DELETE_STATUS = 'N'
+           AND A.TASK_PROGRESS NOT LIKE '%미완료%'
      </select>
  	
  	<select id="selectMyTaskToDoList" resultMap="toDoListResultMap">

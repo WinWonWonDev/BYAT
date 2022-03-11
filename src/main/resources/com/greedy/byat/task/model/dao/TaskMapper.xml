@@ -91,6 +91,7 @@
  			   A.SPRINT_CODE
  		  FROM TBL_SPRINT A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND SPRINT_PROGRESS IN ('진행중', '진행전')
  	</select>
  	
  	<insert id="insertTask" parameterType="TaskDTO">
@@ -607,16 +608,53 @@
 		 						   AND B.SPRINT_PROGRESS IN ('진행전','진행중'))
 	</select>
 	
+	<update id="updateTaskProgress" parameterType="hashmap">
+		UPDATE
+		       TBL_TASK A
+		<if test="taskProgressCode == 1">
+		   SET A.TASK_PROGRESS = '진행중'
+		</if>
+		<if test="taskProgressCode == 2">
+		   SET A.TASK_PROGRESS = '완료'
+		</if>
+		 WHERE A.TASK_CODE = #{ taskCode }
+	</update>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	<insert id="insertTaskProgressHistory2" parameterType="hashmap">
+		INSERT
+		  INTO TBL_TASK_PROGRESS_HISTORY A
+		(
+		  A.TASK_PROGRESS_HISTORY_NO
+		, A.TASK_PROGRESS_HISTORY_UPDATE_DATE
+		, A.TASK_CODE
+		, A.TASK_PROGRESS_HISTORY_STATUS
+		, A.TASK_PROGRESS_HISTORY_START_DATE
+		, A.TASK_PROGRESS_HISTORY_END_DATE
+		, A.TASK_PROGRESS_HISTORY_UPDATE_MEMBER
+		)
+		VALUES
+		(
+		  SEQ_TASK_PROGRESS_HISTORY_NO.NEXTVAL
+		, SYSDATE
+		, #{ taskCode }
+	<if test="taskProgressCode == 1">
+		, '진행중'
+	</if>
+	<if test="taskProgressCode == 2">
+		, '완료'
+	</if>
+		, (SELECT
+				  B.TASK_START_DATE
+			 FROM TBL_TASK B
+			WHERE B.TASK_CODE = #{ taskCode })
+		, (SELECT
+				  C.TASK_END_DATE
+			 FROM TBL_TASK C
+			WHERE C.TASK_CODE = #{ taskCode })
+		, (SELECT
+				  D.MEMBER_NAME
+			 FROM TBL_MEMBER D
+			WHERE D.MEMBER_NO = #{ memberNo })
+		)
+	</insert>
  </mapper>

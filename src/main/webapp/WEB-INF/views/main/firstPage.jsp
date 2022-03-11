@@ -82,7 +82,7 @@
 	}
    
 </style>
-<title>Insert title here</title>
+<title>Better-than-Your-Agile-Tool</title>
 </head>
 <body>
 	<!-- 초기페이지 -->

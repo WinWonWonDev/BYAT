@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 
-<title>Insert title here</title>
+<title>Better-than-Your-Agile-Tool</title>
 <script>
 	const message = '${ requestScope.message }';
 	if (message != null && message != '') {
@@ -576,7 +576,6 @@ html, body {
 								    			if($("#forSubmitTing2").val() == 2) {
 								    				AuthTimer = clearInterval(AuthTimer);
 								    				AuthTimer.timer = clearInterval(AuthTimer.timer);
-								    				console.log("아 지워져야하는데 이거 나와야됨 ㅠㅠ ");
 								    			}
 		
 											} else {
@@ -646,7 +645,7 @@ html, body {
 				success : function(data, status, xhr) {
 					
 					if(data > 0) {
-						alert("비밀번호 변경이 완료되었습니다 야호!");
+						alert("비밀번호 변경이 완료되었습니다!");
 						document.getElementById("inputEmailVeficationModal").style.display="none";
 						document.getElementById("passwordFindModal").style.display="none";
 						document.getElementById("inputIdModal").style.display="none";

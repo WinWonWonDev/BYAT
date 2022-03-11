@@ -52,9 +52,15 @@ public class SprintController {
 	public ModelAndView selectAllList(HttpServletRequest request, ModelAndView mv) {
 
 		int projectCode = Integer.parseInt(request.getParameter("code"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
+		
+		Map<String, Integer> map = new HashMap<>();
+		map.put("projectCode", projectCode);
+		map.put("memberNo", memberNo);
 		
 		System.out.println("list 프로젝트 코드 : " +projectCode);
 		
+		String roleName = sprintService.selectMemberRoleName(map);
 		String projectProgress = sprintService.selectProjectProgress(projectCode);
 		List<SprintDTO> sprintList = sprintService.selectSprintList(projectCode);
 		List<BacklogDTO> backlogList = sprintService.selectBacklogList(projectCode);
@@ -62,6 +68,7 @@ public class SprintController {
 		System.out.println(projectProgress);
 		System.out.println(sprintList);
 		
+		mv.addObject("roleName", roleName);
 		mv.addObject("backlogList", backlogList);
 		mv.addObject("sprintList", sprintList);
 		mv.addObject("projectProgress", projectProgress);
@@ -129,11 +136,13 @@ public class SprintController {
 		
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
+		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
 		
-		System.out.println("프로젝토 꼬드 : " + projectCode);
-		System.out.println("스뿌린뜨 꼬드 : " + sprintCode);
+		Map<String, Integer> map = new HashMap<>();
+		map.put("memberNo", memberNo);
+		map.put("sprintCode", sprintCode);
 		
-		sprintService.removeSprint(sprintCode);
+		sprintService.removeSprint(map);
 		
 		rttr.addFlashAttribute("message", "스프린트 삭제 완료");
 		

@@ -16,7 +16,7 @@ public interface SprintService {
 
 	SprintDTO selectSprint(int sprintCode);
 
-	void removeSprint(int sprintCode);
+	void removeSprint(Map<String, Integer> map);
 
 	String selectProjectProgress(int projectCode);
 
@@ -29,5 +29,7 @@ public interface SprintService {
 	List<BacklogDTO> selectBacklogList(int projectCode);
 
 	String endSprint(Map<String, Integer> map);
+
+	String selectMemberRoleName(Map<String, Integer> map);
 
 }

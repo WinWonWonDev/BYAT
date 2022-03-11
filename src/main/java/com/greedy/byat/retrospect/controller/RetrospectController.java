@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.FieldNamingPolicy;
@@ -42,6 +43,8 @@ public class RetrospectController {
 		
 		List<RetrospectDTO> retrospectList = retrospectService.selectRetrospectList(projectCode);
 		
+		System.out.println(retrospectList);
+		
 		mv.addObject("retrospectList", retrospectList);
 		mv.addObject("code", projectCode);
 		mv.setViewName("/retrospect/list");
@@ -49,15 +52,16 @@ public class RetrospectController {
 		return mv;
 	}
 	
-	@PostMapping("/regist")
-	public String registRetrospectComment(HttpServletRequest request) {
+	@PostMapping(value = "/regist", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String registRetrospectiveComment(HttpServletRequest request) {
 		
-		int retrospectCode = Integer.parseInt(request.getParameter("retrospectCode"));
+		int retrospectiveCode = Integer.parseInt(request.getParameter("retrospectCode"));
 		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
 		String body = request.getParameter("body");
 		
 		RetrospectCommentDTO retrospectComment = new RetrospectCommentDTO();
-		retrospectComment.setCode(retrospectCode);
+		retrospectComment.setCode(retrospectiveCode);
 		retrospectComment.setMemberNo(memberNo);
 		retrospectComment.setBody(body);
 		
@@ -70,6 +74,25 @@ public class RetrospectController {
 				.create();
 		
 		List<RetrospectCommentDTO> retrospectCommentList = retrospectService.registRetrospectComment(retrospectComment);
+		
+		return gson.toJson(retrospectCommentList);
+	}
+	
+	@GetMapping(value = "/remove", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String removeRetrospectiveComment(HttpServletRequest request) {
+		
+		int retrospectiveCommentNo = Integer.parseInt(request.getParameter("no"));
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		List<RetrospectCommentDTO> retrospectCommentList = retrospectService.removeRetrospectComment(retrospectiveCommentNo);
 		
 		return gson.toJson(retrospectCommentList);
 	}

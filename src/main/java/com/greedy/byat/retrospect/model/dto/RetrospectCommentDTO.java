@@ -17,6 +17,7 @@ import lombok.ToString;
 @ToString 
 public class RetrospectCommentDTO {
 	
+	private int no;
 	private int code;
 	private int memberNo;
 	private String memberName;

@@ -68,6 +68,15 @@
          WHERE A.BACKLOG_CODE = #{ code }
  	</delete>
  	
+ 	<select id="checkSprintProgress" parameterType="hashmap" resultType="_int">
+        SELECT
+               COUNT(*)
+          FROM TBL_SPRINT
+         WHERE PROJECT_CODE = #{ projectCode }
+           AND SPRINT_PROGRESS IN('진행중', '진행전')
+           AND SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
  	<insert id="insertBacklogTasklize" parameterType="hashmap">
         INSERT
           INTO TBL_TASK A
@@ -86,15 +95,10 @@
              , B.BACKLOG_TITLE
              , B.BACKLOG_BODY
              , C.SPRINT_CODE
-             , #{ projectCode }
-             , (SELECT
-                       D.MEMBER_NO
-                  FROM TBL_MEMBER D
-                 WHERE D.MEMBER_NAME = #{ name }
-               )
+             , B.PROJECT_CODE
+             , #{ memberNo }
           FROM TBL_BACKLOG B, TBL_SPRINT C
-         WHERE B.BACKLOG_CODE = #{ code }
+         WHERE B.BACKLOG_CODE = #{ backlogCode }
            AND C.SPRINT_CODE = #{ sprintCode }
  	</insert>
- 	
  </mapper>

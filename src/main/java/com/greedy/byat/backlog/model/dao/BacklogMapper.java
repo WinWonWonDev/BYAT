@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.greedy.byat.backlog.model.dto.BacklogDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;
 
 public interface BacklogMapper {
 	
@@ -17,5 +18,9 @@ public interface BacklogMapper {
 	
 	int deleteBacklog(int code);
 	
-	int insertBacklogTasklize(HashMap<String, Object> infoMap);
+	int insertBacklogTasklize(HashMap<String, Integer> infoMap);
+	
+	List<TaskDTO> selectTaskList(int sprintCode);
+
+	int checkSprintProgress(HashMap<String, Integer> infoMap);
 }

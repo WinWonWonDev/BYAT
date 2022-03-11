@@ -537,9 +537,9 @@ $(document).ready(function() {
 					<h3>멤버계정 생성</h3>
 				</div>
 				<div class="modal_content-box">
-					<input type="text" class="managementModalInputNameforCreate" name="name" id="name" placeholder="멤버 이름"> 
+					<input type="text" class="managementModalInputNameforCreate" name="name" id="name" placeholder="멤버 이름" required="required"> 
 					<br> 
-					<input type="text" class="managementModalInputIdforCreate" name="id" id="id" placeholder="ID(사번)"> 
+					<input type="text" class="managementModalInputIdforCreate" name="id" id="id" placeholder="ID(사번)" required="required"> 
 					<br> 
 					
 					<select name="managementRoleforCreate" class="role">

@@ -42,8 +42,6 @@ public class ProfileServiceImpl implements ProfileService {
 	@Override
 	public boolean isPwdMatch(MemberDTO member, String requestOriginPwd) {
 		
-		System.out.println("encryptedPwd : " + mapper.selectEncryptedPwd(member));
-		
 		return passwordEncoder.matches(requestOriginPwd, mapper.selectEncryptedPwd(member));
 
 	}
@@ -82,9 +80,9 @@ public class ProfileServiceImpl implements ProfileService {
 		String message = null;
 		int updateStatusResult = mapper.updateAttachmentStatus(attachment.getMemberNo());
 		
-		if(updateStatusResult > 0) {
-			
-			System.out.println("상태 변경 성공 !!!");
+		if(!(updateStatusResult > 0) && (mapper.selectAttachment(attachment.getMemberNo()) != null)) {
+			message = "프로필 사진 수정 실패 ...";
+		} else {
 			
 			int registResult = mapper.insertAttachment(attachment);
 			
@@ -93,8 +91,6 @@ public class ProfileServiceImpl implements ProfileService {
 			} else {
 				message = "프로필 사진 수정 성공 !!!";
 			}
-		} else {
-			message = "프로필 사진 수정 실패 ...";
 		}
 		
 		return message;

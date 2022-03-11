@@ -858,7 +858,7 @@
 	}   
    
 </script>
-<title>Insert title here</title>
+<title>프로젝트</title>
 </head>
 <body style="overflow:hidden;">
 	<div id="whiteBoard">

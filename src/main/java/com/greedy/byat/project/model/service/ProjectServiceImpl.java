@@ -273,14 +273,14 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException, ProjectModifyCalendarException {
 
-		int result = mapper.updateProject(project);
-		
 		ProjectDTO projectDetail = mapper.selectProjectDetail(project.getCode());
+
+		int result = mapper.updateProject(project);
 
 		List<ProjectMembersDTO> projectMembers = mapper.selectProjectMemberList(project.getCode());
 		
 		NoticeDTO notice = new NoticeDTO();
-		notice.setBody("\'" + project.getTitle() + "\' 프로젝트가 수정되었습니다.");
+		notice.setBody("\'" + projectDetail.getTitle() + "\' 프로젝트가 " + "\'" + project.getTitle() + "\'(으)로 수정되었습니다.");
 		notice.setCategory(1);
 		notice.setProjectCode(project.getCode());
 		notice.setUrl("/project/list");

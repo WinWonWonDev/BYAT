@@ -27,6 +27,6 @@ public interface TaskService {
 
 	String removeTaskMembers(Map<String, Integer> map);
 
-	boolean checkTasksContent(int projectCode);
+	boolean updateTaskProgress(Map<String, Integer> map);
 
 }

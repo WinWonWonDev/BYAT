@@ -61,7 +61,7 @@ public interface SprintMapper {
 
 	int checkProjectProgress(Map<String, Integer> map);
 
-	int checkSprintProgress3(Map<String, Integer> map);
+	String checkSprintProgress3(Map<String, Integer> map);
 
 	SprintDTO selectSprint2(Map<String, Integer> map);
 
@@ -117,10 +117,16 @@ public interface SprintMapper {
 
 	List<Integer> selectIssueList3(int sprintCode);
 
-	int insertSprintVersionHistory3(int sprintCode);
+	int insertSprintVersionHistory3(SprintDTO sprint);
 
 	int insertIssueProgressHistory3(int issueCode);
 
+	int updateIssueMembersParticipation2(int issueCode);
 
+	List<Integer> selectSprintMemberList4(int sprintCode);
+
+	int insertRemoveSprintNotice(Map<String, Integer> map);
+
+	String selectProjectMembersRoleNamee(Map<String, Integer> map);
 
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.greedy.byat.backlog.model.dto.BacklogDTO;
+import com.greedy.byat.task.model.dto.TaskDTO;
 
 public interface BacklogService {
 
@@ -17,5 +18,5 @@ public interface BacklogService {
 	
 	String removeBacklog(int code);
 	
-	String registBacklogTasklize(HashMap<String, Object> infoMap);
+	String registBacklogTasklize(HashMap<String, Integer> infoMap);
 }

@@ -91,7 +91,8 @@
 					  com.greedy.byat.issue.model.dao,
 					  com.greedy.byat.meetinglog.model.dao,
 					  com.greedy.byat.profile.model.dao,
-					  com.greedy.byat.history.model.dao" />
+					  com.greedy.byat.history.model.dao,
+					  com.greedy.byat.common.filter.model.dao" />
 
 	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	
