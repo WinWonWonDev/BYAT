@@ -851,6 +851,16 @@
 	.switch input {
 		display:none;
 	}
+		.backlog-tasklize-button {
+		position: absolute;
+		top: 20%;
+		left: 80%;
+		font-size: 5px;
+		background: #E0F2FA;
+		border: 1px;
+		border-radius: 2px;
+		cursor: pointer;
+	} 
 	
 	.slider {
 		position: absolute;
@@ -1060,6 +1070,7 @@
 						<input type="hidden" name="projectCode" id="projectCode" value="${ requestScope.code }">
 						<input type="hidden" name="code"  id="backlogCode" value="${ backlog.code }">
 						<div class="backlog-status" id="backlog-status">${ backlog.progress }</div>
+						<input type="button" class="backlog-tasklize-button" id="backlog-tasklize-button" value="담기" style="display: none;">
 						<input type="button" class="backlog-update-modal-open" id="backlog-update-open-btn" value="조회  / 수정">
 						<button type="button" class="backlog-delete-modal-open" id="backlog-delete-open-btn" onclick="location.href='${ pageContext.servletContext.contextPath }/backlog/remove?projectCode=${ requestScope.code }&code=${ backlog.code }'">삭제</button>
 					</div>
@@ -1827,6 +1838,8 @@
     if(document.querySelectorAll("#sprint-box div")){
     	
     	const $sprintItems = document.querySelectorAll("#sprintItem");
+   		const $backlogTaskBtns = document.querySelectorAll("#backlog-tasklize-button");
+		const $backCodes = document.querySelectorAll("#backlogCode");
     
    		console.log($sprintItems);
     
@@ -1841,6 +1854,15 @@
 					
 					console.log($sprintCodes[i].value);
 					console.log('으응으으으으으으'+$sprintProgress2[i].value);
+					
+					for(let j = 0; j < $backlogTaskBtns.length; j++) {
+	    				$backlogTaskBtns[j].style.display="block";
+	    				
+	    				/* 백로그 태스크화 */
+						$backlogTaskBtns[j].onclick = function() {
+	    					location.href="/byat/backlog/tasklize?projectCode=" + ${ requestScope.code } + "&sprintCode=" + $sprintCodes[i].value + "&backlogCode=" + $backCodes[j].value;
+	    				};
+	    			}
 					
 					/* 태스크 목록 조회*/
 					$.ajax({
