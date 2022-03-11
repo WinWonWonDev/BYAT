@@ -469,6 +469,7 @@
 	.description {
 		margin-top: 20px;
 		width: 400px;
+		resize: none;
 	}
 	.task-participation-box {
 		border-radius: 20px;
@@ -1383,13 +1384,10 @@
     </div>
 <script>
 
-	/* 인근이형이 추가하라고 한거 */
 	document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + ${ requestScope.code };
-	
-	/* 수빈이형이 추가하라고 한거*/
 	document.getElementById("selectMeetingLogList").href = document.getElementById("selectMeetingLogList").href + ${ requestScope.code };
-	
 	document.getElementById("selectRetrospectList").href = document.getElementById("selectRetrospectList").href + ${ requestScope.code };
+	document.getElementById("selectSprintList").href = document.getElementById("selectSprintList").href + ${ requestScope.code };
 	
 	/* 이슈 부분 */
 	let taskAndIssueSlidebar = $("#taskAndIssueSlidebar");
