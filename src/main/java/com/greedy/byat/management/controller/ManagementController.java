@@ -127,7 +127,7 @@ public class ManagementController {
 			rttr.addFlashAttribute("message", "회원계정 복구 실패! 다시 시도해주세요!");
 		}
 		
-		return "redirect:/management/removedList";
+		return "redirect:/management/removedlist";
 	}
 
 }
