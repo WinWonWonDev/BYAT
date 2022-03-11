@@ -102,7 +102,7 @@ public class ManagementController {
 		
 	}
 	
-	@GetMapping("removedList")
+	@GetMapping("removedlist")
 	public ModelAndView selectManagementRemovedList(ModelAndView mv) {
 		
 		List<ManagementDTO> deletedManagementList = managementService.selectManagementRemovedList();
