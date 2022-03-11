@@ -184,7 +184,7 @@
 	}
 	
 </style>
-<title>Insert title here</title>
+<title>알림 설정</title>
 </head>
 <body style="overflow:hidden;">
 	<div id="whiteBoard">

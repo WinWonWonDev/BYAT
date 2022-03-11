@@ -233,7 +233,7 @@ public class IssueController {
 	}
 	
 	@PostMapping("regist")
-	public String registIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueRegistMemberException, IssueRegistException, IssueInsertVersionHistoryException, IssueRegistStatusHistoryException, IssueRegistNoticeException {
+	public String registIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueRegistMemberException, IssueRegistException, IssueInsertVersionHistoryException, IssueRegistStatusHistoryException, IssueRegistNoticeException, IssueInsertMemberHistoryException {
 		
 		MemberDTO writer = ((MemberDTO) request.getSession().getAttribute("loginMember"));
 		
@@ -276,7 +276,7 @@ public class IssueController {
 		
 		rttr.addFlashAttribute("message", "이슈 생성 성공!");
 		
-		return "redirect:/issue/sprint?code=" + projectCode;
+		return "redirect:/sprint/list?code=" + projectCode;
 	}
 
 	

@@ -56,4 +56,6 @@ public interface IssueMapper {
 
 	int insertNoticeIssueFirst(NoticeDTO notice);
 
+	int insertIssueFirstMembersHistory(IssueMembersDTO issueMembersDTO);
+
 }

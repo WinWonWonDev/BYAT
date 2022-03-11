@@ -357,7 +357,7 @@
  		, #{ title }
  		, #{ body }
  		, SYSDATE
- 		, '진행전'
+ 		, '해결전'
  		, 1
  		, 'N'
  		, #{ writer }
@@ -425,7 +425,7 @@
  		(
  		  SEQ_ISSUE_PROGRESS_HISTORY_NO.NEXTVAL
  		, SYSDATE
- 		, '진행전'
+ 		, '해결전'
  		, SEQ_ISSUE_CODE.CURRVAL
  		, #{ name }
  		)
@@ -464,6 +464,29 @@
  		, null
  		, null
  		, SYSDATE
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertIssueFirstMembersHistory" parameterType="IssueMembersDTO">
+ 		INSERT
+ 		  INTO TBL_ISSUE_MEMBERS_HISTORY A
+ 		(
+ 		  A.ISSUE_CODE
+ 		, A.MEMBER_NO
+ 		, A.ISSUE_MEMBERS_HISTORY_PARTICIPATION_YN
+ 		, A.ISSUE_MEMBERS_HISTORY_MEMBER
+ 		, A.ISSUE_MEMBERS_HISTORY_NO
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_CODE.CURRVAL
+ 		, #{ no }
+ 		, 'Y'
+ 		, (SELECT
+ 		          B.MEMBER_NAME
+ 		     FROM TBL_MEMBER B
+ 		    WHERE B.MEMBER_NO = #{ changeMemberNo })
+ 		, SEQ_ISSUE_MEMBERS_HISTORY_NO.NEXTVAL
  		)
  	</insert>
  	

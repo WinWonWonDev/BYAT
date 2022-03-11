@@ -8,7 +8,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>전체 알림</title>
 <style>
 	body {
 		width: 100%;
@@ -104,10 +104,20 @@
 	
 	#delete_modal {
 		display: none;
-		position:relative;
+		position:fixed;
 		width:100%;
 		height:100%;
 		z-index:2000;
+	}
+	
+	#delete_modal .modal_layer {
+		position:fixed;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+		background:rgba(0, 0, 0, 0.5);
+		z-index:-1;
 	}
 	
 	#delete_modal button {

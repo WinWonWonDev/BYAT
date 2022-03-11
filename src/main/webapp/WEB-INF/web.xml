@@ -24,7 +24,6 @@
 	</filter-mapping>
 
 		
-<!-- 페이지는 만들어두되 개발할 시는 주석처리(에러 이유 알기 어려움 ) 
 	<error-page>
 		<error-code>403</error-code>
 		<location>/WEB-INF/views/common/error403.jsp</location>
@@ -36,9 +35,15 @@
 	<error-page>
 		<error-code>500</error-code>
 		<location>/WEB-INF/views/common/error500.jsp</location>
-	</error-page> -->
+	</error-page>
+    <error-page>
+    	<location>/WEB-INF/views/common/errorDefault.jsp</location>
+    </error-page>
+    <error-page>
+	    <exception-type>java.lang.Exception</exception-type>
+	    <location>/WEB-INF/views/common/errorDefault.jsp</location>
+	</error-page>
 
-	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

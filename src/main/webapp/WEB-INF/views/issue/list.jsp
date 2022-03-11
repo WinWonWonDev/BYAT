@@ -588,7 +588,10 @@
 	<script>
 	
 		document.getElementById("selectIssueList").href = document.getElementById("selectIssueList").href + "${pjCode}";
-	
+		document.getElementById("selectSprintList").href = document.getElementById("selectSprintList").href + "${pjCode}";
+		document.getElementById("selectRetrospectList").href = document.getElementById("selectRetrospectList").href + "${pjCode}";
+		document.getElementById("selectMeetingLogList").href = document.getElementById("selectMeetingLogList").href + "${pjCode}";
+		
 		let checkFirst = 0;
 		let newProgress = "";
 		let memberCount = 0;
@@ -979,10 +982,12 @@
 								
 								list.addEventListener('drop', function(e) {
 									
-									if(j == 0) {  //해결전
+									if(j == 0 && checkFirst == 0) {  //해결전
 										draggedItem.children[0].style.backgroundColor = 'red';
 									
 										issueAjaxCode = draggedItem.children[1].value;
+										
+										console.log("확인용");
 										
 										$.ajax({
 											url : "/byat/issue/modifyissuestatus",
@@ -1001,7 +1006,7 @@
 										
 										
 										
-									} else if(j == 1) { //해결중
+									} else if(j == 1 && checkFirst == 0) { //해결중
 
 										draggedItem.children[0].style.backgroundColor = '#FBC254';
 									
@@ -1023,7 +1028,7 @@
 										});
 										
 										
-									} else { //완료
+									} else if(j == 2 && checkFirst == 0) { //완료
 									
 										draggedItem.children[0].style.backgroundColor = '#2EE957';
 										
@@ -1563,114 +1568,6 @@
 			</c:forEach>
 		}
 		
-		if(checkFirst == 0) {
-			
-			for(let i = 0; i < issueKanban.length; i++) {
-				const item = issueKanban[i];
-				
-				item.addEventListener('dragstart', function() {
-					draggedItem = item;
-					setTimeout(function() {
-						item.style.display = 'none';
-					}, 0);
-				});
-				
-				item.addEventListener('dragend', function() {
-					setTimeout(function() {
-						draggedItem.style.display = 'inline-block';
-						draggedItem = null;
-					}, 0);
-				});
-				
-			}
-			
-			for(let j = 0; j < kanbanArea.length; j++) {
-				const list = kanbanArea[j];
-				
-				list.addEventListener('dragover', function(e) {
-					e.preventDefault();
-				});
-				
-				list.addEventListener('dragenter', function(e) {
-					e.preventDefault();
-				});
-				
-				list.addEventListener('dragleave', function(e) {
-					
-				});
-				
-				list.addEventListener('drop', function(e) {
-					
-					if(j == 0) {  //해결전
-						draggedItem.children[0].style.backgroundColor = 'red';
-					
-						issueAjaxCode = draggedItem.children[1].value;
-						
-						$.ajax({
-							url : "/byat/issue/modifyissuestatus",
-							type : "get",
-							data : {
-								issueCode : issueAjaxCode,
-								progress : "해결전"
-							},
-							success : function(data, status, xhr) {
-								console.log(xhr);
-							},
-							error : function(xhr, status, error) {
-								console.log(xhr);
-							}
-						});
-						
-						
-						
-					} else if(j == 1) { //해결중
-						draggedItem.children[0].style.backgroundColor = '#FBC254';
-					
-						issueAjaxCode = draggedItem.children[1].value;
-						
-						 $.ajax({
-							url : "/byat/issue/modifyissuestatus",
-							type : "get",
-							data : {
-								issueCode : issueAjaxCode,
-								progress : "해결중"
-							},
-							success : function(data, status, xhr) {
-								console.log(xhr);
-							},
-							error : function(xhr, status, error) {
-								console.log(xhr);
-							}
-						});
-						
-						
-					} else { //완료
-						draggedItem.children[0].style.backgroundColor = '#2EE957';
-						
-						issueAjaxCode = draggedItem.children[1].value;
-
-						$.ajax({
-							url : "/byat/issue/modifyissuestatus",
-							type : "get",
-							data : {
-								issueCode : issueAjaxCode,
-								progress : "완료"
-							},
-							success : function(data, status, xhr) {
-								console.log(xhr);
-							},
-							error : function(xhr, status, error) {
-								console.log(xhr);
-							}
-						});
-					}
-					
-					this.append(draggedItem);
-				});
-			}
-			
-		}
-		
 		let removeResult = 0;
 		
 		$(document).ready(function() {
@@ -1997,7 +1894,7 @@
 	            
 	            issueModifyMemberListChildNodes.removeChild(issueModifyMemberListChildNodes.firstChild);
 	            
-	         }
+	        }
 			
 			while(modifyMemberSelectBoxChildNodes.hasChildNodes()) {
 				
