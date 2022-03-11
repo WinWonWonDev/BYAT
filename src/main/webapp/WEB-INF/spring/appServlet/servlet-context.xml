@@ -81,4 +81,59 @@
       <beans:property name="maxUploadSize" value="10000000"/> <!-- 대략 10Mbyte 용량의 파일 업로드만 허용 -->
    </beans:bean>
 	
+	<!-- Interceptors -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/home"/>
+			<beans:bean id="mainInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/member/*"/>
+			<exclude-mapping path="/member/login"/>
+			<exclude-mapping path="/member/selectemail"/>
+			<exclude-mapping path="/member/checkverification"/>
+			<exclude-mapping path="/member/modifypassword"/>
+			<beans:bean id="memberInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/profile/*"/>
+			<beans:bean id="profileInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/project/*"/>
+			<beans:bean id="projectInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/meetinglog/*"/>
+			<beans:bean id="meetinglogInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/issue/*"/>
+			<beans:bean id="issueInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/notice/*"/>
+			<beans:bean id="noticeInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/mytask/*"/>
+			<beans:bean id="myTaskInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>	
+		<interceptor>
+			<mapping path="/task/*"/>
+			<beans:bean id="taskInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/sprint/*"/>
+			<beans:bean id="sprintInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/retrospective/*"/>
+			<beans:bean id="retrospectiveInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/management/*"/>
+			<beans:bean id="managementInterceptor" class="com.greedy.byat.common.filter.AuthLoginInterceptor"/>
+		</interceptor>
+	</interceptors>
 </beans:beans>

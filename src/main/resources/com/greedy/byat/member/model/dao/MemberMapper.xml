@@ -239,8 +239,8 @@
          WHERE A.MEMBER_NO = #{ no }
 	</update>
 	
-	<insert id="insertAttachment">
-        INSERT /* com.greedy.byat.member.model.dao.MemberMapper#updateAttachment() */
+	<insert id="insertAttachment" parameterType="attachmentDTO">
+        INSERT /* com.greedy.byat.member.model.dao.MemberMapper#insertAttachment() */
           INTO TBL_ATTACHMENT A
           (
             A.ATTACHMENT_CODE
