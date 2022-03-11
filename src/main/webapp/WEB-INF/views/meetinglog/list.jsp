@@ -512,7 +512,7 @@
 		document.getElementById("selectSprintList").href = document.getElementById("selectSprintList").href + ${ requestScope.code };
 
 		//회고록 서브메뉴
-		//document.getElementById("selectRetrospectList").href = document.getElementById("selectRetrospectList").href + ${ requestScope.code };
+		document.getElementById("selectRetrospectList").href = document.getElementById("selectRetrospectList").href + ${ requestScope.code };
 
 	
 	
