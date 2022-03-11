@@ -843,7 +843,7 @@
 								
 								for(let i in notice) {
 									
-									if(notice[i].status != "Y") {
+									if(notice[i].status != "Y" && noticeCount < 100) {
 										noticeCount++;
 									} else {
 										alreadyConfirmCount++;
