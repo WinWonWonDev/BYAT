@@ -223,6 +223,7 @@
 		height:30px;
 		width:100px;
 		font-size:1.5em;
+		cursor: pointer;
 	}
 	
 	#profileAndLogoutWhiteBoard {
@@ -421,7 +422,8 @@
       position: absolute;
       width: 50px;
       height: 55px;
-      right:-10%;
+      right:-13%;
+      cursor: pointer;
    }
 	
 </style>
