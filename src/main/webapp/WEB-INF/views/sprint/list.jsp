@@ -473,7 +473,7 @@
 	}
 	.task-participation-box {
 		border-radius: 20px;
-		border: 1px red solid;
+		border: 1px black solid;
 		width: 40px;
 		height: 40px;
 		margin: 0px;
@@ -483,6 +483,7 @@
 		line-height: 20px;
 		word-spacing: 20px;
 		font-weight: bold;
+		cursor: pointer;
 	}
 	.sprint-area {
 		position: absolute;
@@ -571,6 +572,7 @@
 		margin-bottom: 7px;
 		border-radius: 10px; 
 		position: relative;
+		cursor: pointer;
 	}
 	.task-participation{
 		color: white;
@@ -667,6 +669,7 @@
 		padding-top: 5px;
 		border-radius: 10px;
 		float: left;
+		cursor: pointer;
 	}
 	.task-title {
 		margin-top: 5px;;

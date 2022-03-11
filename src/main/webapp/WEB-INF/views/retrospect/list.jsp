@@ -124,6 +124,7 @@
 		text-align: center;
 		line-height: 40px;
 		border:1px solid black;
+		cursor: pointer;
 	}
 	#comments {
 		position:absolute;
@@ -158,6 +159,7 @@
 		float: none;
 		right: 10px;
 		border: white;
+		cursor: pointer;
 	}
 	.commentMemberName {
 		margin-left: 12px;
@@ -166,6 +168,9 @@
 		margin-left: 9px;
 		width: 150px;	
 		float: left;
+	}
+	#regist-comment {
+		cursor: pointer;
 	}
 </style>
 </head>
