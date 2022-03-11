@@ -230,7 +230,7 @@
 		left:1300px;
 		top:-15px;
 		width:150px;
-		height:47px;
+		height:43px;
 		background:white;
 	}
 	
@@ -417,6 +417,13 @@
 		padding-top:6px;
 	}
 	
+	div.user-image {
+      position: absolute;
+      width: 50px;
+      height: 55px;
+      right:0.5%;
+   }
+	
 </style>
 
 <script type="text/javascript">-
@@ -487,7 +494,7 @@
 				${ sessionScope.loginMember.name }
 			</div>
 			<div class="user-image">
-               <img src="${ pageContext.servletContext.contextPath }${ requestScope.attachment.thumbnailPath }">
+			<img src="${ pageContext.servletContext.contextPath }${ sessionScope.attachment.thumbnailPath }" alt="프로필사진" onerror="this.src='${ pageContext.servletContext.contextPath }/resources/images/defaultProfile.png'">
          	</div>
 			</div>
         </div>
