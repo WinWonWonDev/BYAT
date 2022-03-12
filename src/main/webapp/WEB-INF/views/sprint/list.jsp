@@ -1189,8 +1189,8 @@
 					<h5>시작일</h5>
 					<h5>종료일</h5>
 					<br clear="both">
-					<input type='date' class="start-day" name='startDate'/>
-					<input type='date' class="end-day" name='endDate'/>
+					<input type='date' class="start-day" name='startDate' max="9999-12-31" required="required"/>
+					<input type='date' class="end-day" name='endDate' max="9999-12-31" required="required"/>
 					<textarea class="description" id="taskDescription" name="body" rows="13" cols="51" placeholder="Task Detail Description"></textarea>
 	            </div>
 	            <div class="modal_button">
@@ -1243,8 +1243,8 @@
 					<h5>시작일</h5>
 					<h5>종료일</h5>
 	       			<br clear="both">
-	       			<input type='date' class="start-day" name='startDate' id="taskStartDate3"/>
-	       			<input type='date' class="end-day" name='endDate' id="taskEndDate3"/>
+	       			<input type='date' class="start-day" name='startDate' id="taskStartDate3" max="9999-12-31"/>
+	       			<input type='date' class="end-day" name='endDate' id="taskEndDate3" max="9999-12-31"/>
 	       			<textarea class="description" id="taskDescription3" name="body" rows="13" cols="51" placeholder="Task Detail Description"></textarea>
 	       		</div>
 	        	<button type="submit" id="task-update">Ok</button>
