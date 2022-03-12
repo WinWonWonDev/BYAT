@@ -29,4 +29,6 @@ public interface TaskService {
 
 	boolean updateTaskProgress(Map<String, Integer> map);
 
+	List<TaskDTO> selectTaskList(int sprintCode);
+
 }

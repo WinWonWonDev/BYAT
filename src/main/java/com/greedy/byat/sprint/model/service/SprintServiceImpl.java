@@ -86,7 +86,7 @@ public class SprintServiceImpl implements SprintService {
 				result5 += mapper.insertIssueProgressHistory2(map);
 			}
 			
-			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0) && !(result5 == issueList.size())) {
+			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0) && !(result4 > 0) && !(result5 == issueList.size())) {
 				
 				result = "스프린트 생성 실패";
 			} else {
@@ -187,14 +187,6 @@ public class SprintServiceImpl implements SprintService {
 		String projectProgress = mapper.selectProjectProgress(projectCode);
 		
 		return projectProgress;
-	}
-
-	@Override
-	public List<TaskDTO> selectTaskList(int sprintCode) {
-		
-		List<TaskDTO> taskList = mapper.selectTaskList(sprintCode);
-		
-		return taskList;
 	}
 
 	@Override
@@ -381,7 +373,7 @@ public class SprintServiceImpl implements SprintService {
 						cnt++;
 					}
 					
-				/* 긴급 태스크로 생성된 태스크이면서 진행상태가 완료라면 이상없음*/
+				/* 긴급 태스크로 생성된 태스크이면서 진행상태가 완료라면 변경사항없음*/
 				} else {
 					
 					cnt++;
