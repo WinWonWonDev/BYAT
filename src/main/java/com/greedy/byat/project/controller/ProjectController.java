@@ -218,7 +218,7 @@ public class ProjectController {
 	 * @ param mv 반환하는 url에서 사용할 값들을 담아서 전달하기 위해 사용하는 ModelAndView
 	 * @ param request 현재 session에 담겨져 있는 값을 사용하기 위한 HttpServletRequest
 	 * @ return jsp에서 사용해야 하는 값들을 담아 반환
-	 * @ exception 날짜에 따라 프로젝트의 진행도가 바뀌기 때문에 상태 변경 이력 테이블에 값을 넣을 때 처리하는 예외
+	 * @ exception 날짜에 따라 프로젝트의 진행도가 바뀌기 때문에 상태 변경 이력 테이블에 값을 넣을 때 처리하는 예외 
 	 * */
 	@RequestMapping(value="/searchmembers", method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
