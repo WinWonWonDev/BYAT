@@ -50,11 +50,23 @@ public class MemberController {
 		this.memberService = memberService;
 	}
 
+   /*
+    * 메소드 goLogin에 관한 문서화 주석
+    * @ return : /login로 이동
+    */
 	@GetMapping("/login")
 	public void goLogin() {
 		
 	}
 
+   /*
+    * 메소드 loginMember에 관한 문서화 주석
+    * @ param first : MemberDTO 자체를 파라미터로 사용하기 위함입니다.
+    * @ param second : addAttributes로 값을 담아 jsp로 전달하기 위함입니다.
+    * @ param third : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ return result : 로그인 하려는 멤버의 정보를 String 담아 return 합니다. 
+    * @ exception LoginFailedException : 로그인 실패 시 발생하는 예외입니다. 
+    */
 	@PostMapping("/login")
 	public String loginMember(@ModelAttribute MemberDTO member, Model model
 			, RedirectAttributes rttr) throws LoginFailedException {
@@ -64,44 +76,15 @@ public class MemberController {
 		return result; 
 		
 	}
-//	혹시 모르니 일단 남겨두기
-//	@PostMapping("/login")
-//	public String loginMember(@ModelAttribute MemberDTO member, Model model
-//			, RedirectAttributes rttr) throws LoginFailedException {
-//		
-//		/* 초기 계정인 경우 */
-//		if(memberService.selectMember(member).equals("Y")) {
-//			
-//			model.addAttribute("loginMember", memberService.initLogin(member));
-//			
-//			if(memberService.initLogin(member) != null) {
-//				rttr.addFlashAttribute("message","로그인 성공!");
-//				return "redirect:/home";
-//				
-//			} else {
-//				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
-//				return "redirect:/member/login";
-//			}
-//			
-//			
-//		} else {
-//			
-//			/* 초기 계정이 아닌 경우 */
-//			model.addAttribute("loginMember", memberService.login(member));
-//			
-//			if(memberService.login(member) != null) {
-//				rttr.addFlashAttribute("message","로그인 성공!");
-//				return "redirect:/home";
-//				
-//			} else {
-//				rttr.addFlashAttribute("message", "로그인 실패! 아이디나 비밀번호를 확인해주세요!");
-//				return "redirect:/member/login";
-//			}
-//			
-//			
-//		}
-//	}
 	
+   /*
+    * 메소드 emailduplicationCheck에 관한 문서화 주석
+    * @ param first : email중복체크를 위한  
+    * @ param second : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param third : response 시 json 설정을 하기 위함입니다.
+    * @ return return값에 대한 설명
+    * @ exception 예외 이유에 대한 설명
+    */
 	@GetMapping("emailduplicationcheckforinit")
 	@ResponseBody
 	public Object emailduplicationCheck(String emailAddress, RedirectAttributes rttr, HttpServletResponse response) {

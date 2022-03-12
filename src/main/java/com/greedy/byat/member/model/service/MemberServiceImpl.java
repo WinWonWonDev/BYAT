@@ -44,6 +44,13 @@ public class MemberServiceImpl implements MemberService {
 		this.mailSender = mailSender;
 	}
 
+   /*
+    * 메소드 selectMember에 관한 문서화 주석
+    * @ param first : MemberDTO 자체를 파라미터로 사용하기 위함입니다.
+    * @ param second : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param third : addAttributes로 값을 담아 jsp로 전달하기 위함입니다.
+    * @ return : if문으로 나눠진 결과에 따라 /member/login 또는 /home으로 redirect합니다.
+    */
 	@Override
 	public String selectMember(MemberDTO member, RedirectAttributes rttr, Model model) {
 		
@@ -90,41 +97,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 	}
 
-//혹시 모르니 남겨두기	
-//	@Override
-//	public MemberDTO login(MemberDTO member) {
-//		
-//		if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
-//			return null;
-//			
-//		} else {
-//			
-//			return mapper.login(member);
-//		}
-//		
-//	}
-//	
-//	@Override
-//	public MemberDTO initLogin(MemberDTO member) {
-//		
-//		
-//		if(!passwordEncoder.matches(member.getPwd(), mapper.selectEncryptedPwd(member))) {
-//			return null;
-//			
-//		} else {
-//			
-//			return mapper.initLogin(member);
-//		}
-//	}
-//	
-//	@Override
-//	public String selectMember(MemberDTO member) {
-//		
-//		return mapper.selectInitPasswordYN(member);
-//	}
-
 	
-
 	@Override
 	public int selectEmailById(String id) throws NotexistEmailException {
 		

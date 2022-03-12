@@ -154,7 +154,7 @@ public class SprintServiceImpl implements SprintService {
 		List<Integer> issueList = mapper.selectIssueList3(sprintCode);
 		
 		int result4 = 0;
-
+		
 		for(int i = 0; i < issueList.size(); i++) {
 			
 			int issueCode = issueList.get(i);

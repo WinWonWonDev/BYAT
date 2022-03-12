@@ -18,16 +18,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/*")
 public class MainController {
-
+	
+   /*
+    * 메소드 defaultLocation에 관한 문서화 주석
+    * @ return : url("/") 요청 시 main폴더 내의 firstPage.jsp로 이동할 수 있도록 하였습니다. 
+    */
 	@RequestMapping("/")
 	public String defaultLocation() {
 		
 		return "/main/firstPage";
 	}
 	
+   /*
+    * 메소드 main에 관한 문서화 주석
+    * @ return : url("/main") 요청 시 'main.jsp'으로 이동할 수 있도록 하였습니다. 
+    */
 	@RequestMapping("main")
 	public void main() {}
 	
+	/* 
+	 * 메소드 home에 관한 문서화 주석
+	 * @ return : url("/home") 요청 시 main폴더 내의 main.jsp로 이동할 수 있도록 하였습니다.
+	 * */
 	@RequestMapping("home")
 	public String home() {
 		

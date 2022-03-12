@@ -221,7 +221,8 @@
 		height:40px;
 		top: 91.5%;
 		left: 97.5%;
-		border:none;
+		border: none;
+		cursor: pointer;
 	}
 	
 	input.img-button {
@@ -541,7 +542,6 @@ $(document).ready(function() {
 					<br> 
 					<input type="text" class="managementModalInputIdforCreate" name="id" id="id" placeholder="ID(사번)" required="required"> 
 					<br> 
-					
 					<select name="managementRoleforCreate" class="role">
 						<option value="PM">PM</option>
 						<option value="일반 멤버" selected="selected">일반 멤버</option>
@@ -573,7 +573,7 @@ $(document).ready(function() {
 				<div class="modal_button">
 					<button type="submit" id="management-update">Ok</button>
 					<button type="button" id="management-update-close-btn">Cancel</button>
-					<button type="button" id="management-delete">delete</button>
+					<button type="button" id="management-delete">Delete</button>
 				</div>
 			</form>
 		</div> 
@@ -582,7 +582,7 @@ $(document).ready(function() {
 			<div class="modal_content2">
 				<div class="modal_head2">System Message</div>
 				<div class="modal_content_message">
-					<br>정말 삭제하시겠습니까? <br>삭제한 멤버의 정보는 복구할 수 없습니다.
+					<br>정말 삭제하시겠습니까? <br>삭제한 멤버의 정보는<font color="red">복구</font>할 수 없습니다.
 				</div>
 				<div class="modal_button2">
 					<button type="button" id="modal_ok_btn" class="modal_ok_btn">Ok</button>
@@ -592,9 +592,7 @@ $(document).ready(function() {
 		</div>
 	</div>
 
-
-	<script>
-	
+<script>
 	var permitName = document.querySelectorAll("#permitName");
 	var arrayList = new Array();
 	var managementforPermit = $("#managementRoleforUpdate");
@@ -602,7 +600,6 @@ $(document).ready(function() {
 	<c:forEach var="management" items="${ requestScope.managementList }" varStatus="status">
 		arrayList.push("${ management.permitName }");
 	</c:forEach>
-	
 	
 		document.getElementById("plusButton").onclick = function() {
 			document.getElementById("management-create-modal").style.display = "block";
@@ -636,8 +633,6 @@ $(document).ready(function() {
 			let memberNoInput = document.getElementById("memberNoforUpdate");
 			let memberNameInput = document.getElementById("managementModalInputNameforUpdate");
 			let memberIdInput = document.getElementById("managementModalInputIdforUpdate");
-			
-			
 			
 		if(document.querySelectorAll("#managementTable tbody tr")) {
 			const $tr = document.querySelectorAll("#managementTable tbody tr");
@@ -697,7 +692,6 @@ $(document).ready(function() {
 			}
 		}
 		
-		
-	</script>
+</script>
 </body>
 </html>

@@ -59,50 +59,6 @@
     	 WHERE ABSENCE_YN = 'N'
  	</select> 
  
- 
- <!-- 	<select id="selectProjectCalendarListForSelectBox" resultMap="scheduleResultMap">
- 		 SELECT
- 		       A.SCHEDULE_CODE
- 		     , A.SCHEDULE_TITLE
- 		     , A.SCHEDULE_START_DATE
- 		     , A.SCHEDULE_END_DATE
- 		     , A.SCHEDULE_BODY
- 		     , A.MEMBER_NO
- 		     , A.SCHEDULE_WRITER
- 		     , A.CALENDAR_SCHEDULE_TYPE_CODE
- 		     , A.PROJECT_CODE
- 		     , A.SCHEDULE_DELETE_STATUS
- 		     , B.PROJECT_DELETE_STATUS 
- 		  	 , B.PROJECT_TITLE 
- 		  FROM TBL_CALENDAR_SCHEDULE A 
- 		  JOIN TBL_PROJECT B ON (A.PROJECT_CODE = B.PROJECT_CODE)
- 	      JOIN TBL_PROJECT_MEMBERS C ON (A.MEMBER_NO = C.MEMBER_NO AND A.PROJECT_CODE = C.PROJECT_CODE)
- 		 WHERE A.MEMBER_NO = #{ memberNoForMove }
- 		   AND A.CALENDAR_SCHEDULE_TYPE_CODE = 1
- 		   AND A.SCHEDULE_DELETE_STATUS = 'N'
- 		   AND B.PROJECT_DELETE_STATUS = 'N'
- 		   AND C.PROJECT_PARTICIPATION_YN = 'Y'	
- 	</select>
- 
- 	<select id="selectCalendarListForSelectBox" resultMap="scheduleResultMap">
- 		SELECT
- 		       A.SCHEDULE_CODE
- 		     , A.SCHEDULE_TITLE
- 		     , A.SCHEDULE_START_DATE
- 		     , A.SCHEDULE_END_DATE
- 		     , A.SCHEDULE_BODY
- 		     , A.MEMBER_NO
- 		     , A.SCHEDULE_WRITER
- 		     , A.CALENDAR_SCHEDULE_TYPE_CODE
- 		     , A.PROJECT_CODE
- 		     , A.SCHEDULE_DELETE_STATUS
- 		  FROM TBL_CALENDAR_SCHEDULE A 
- 		 WHERE A.MEMBER_NO = #{ memberNoForMove }
- 		   AND A.CALENDAR_SCHEDULE_TYPE_CODE != 1
- 		   AND A.SCHEDULE_DELETE_STATUS = 'N'
- 	</select> -->
- 
- 
  	<select id="selectProjectListByMemberOne" resultMap="scheduleResultMap">
  	    SELECT
  		       A.SCHEDULE_CODE
