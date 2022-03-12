@@ -101,8 +101,6 @@ public class BacklogController {
 		int backlogCode = Integer.parseInt(request.getParameter("backlogCode"));
 		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		
-		System.out.println("backlogCode : " + backlogCode + ", projectCode : " + projectCode);
-		
 		String message = backlogService.removeBacklog(backlogCode);
 		
 		rttr.addFlashAttribute("message", message);

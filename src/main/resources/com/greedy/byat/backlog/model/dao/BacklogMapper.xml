@@ -69,7 +69,7 @@
  	</delete>
  	
  	<select id="checkSprintProgress" parameterType="hashmap" resultType="_int">
-        SELECT
+        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#checkSprintProgress() */
                COUNT(*)
           FROM TBL_SPRINT
          WHERE PROJECT_CODE = #{ projectCode }
@@ -78,7 +78,7 @@
  	</select>
  	
  	<insert id="insertBacklogTasklize" parameterType="hashmap">
-        INSERT
+        INSERT /* com.greedy.byat.backlog.model.dao.BacklogMapper#insertBacklogTasklize() */
           INTO TBL_TASK A
         (
           A.TASK_CODE
