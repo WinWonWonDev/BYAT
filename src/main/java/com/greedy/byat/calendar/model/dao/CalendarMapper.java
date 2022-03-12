@@ -14,8 +14,6 @@ public interface CalendarMapper {
 
 	List<Integer> selectAllMemberNo();
 
-//	List<ScheduleDTO> selectCalendarList(int memberNo);
-
 	List<ScheduleDTO> selectCalendarListByAdmin(int memberNo);
 
 	int selectProjectCodes(MemberDTO loginMember);

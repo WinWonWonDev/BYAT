@@ -60,15 +60,13 @@ public class CalendarServiceImpl implements CalendarService {
 	public int registSchedule(List<Map<String, Object>> calendarList, MemberDTO loginMember) throws ParseException {
 		
 		int memberNo = loginMember.getNo();
-		String memberName = loginMember.getName();
 		int deleteAllCalendar = 0;
 		int result = 0;
+		String memberName = loginMember.getName();
 			
 		List<Integer> memberNumbers = mapper.selectAllMemberNo();
-		  
 		
 		if(loginMember.getPermitCode() == 1) {
-			
 			deleteAllCalendar = mapper.deleteAllCalendarByAdmin();
 
 			for(Map<String, Object> calendarListInfo : calendarList) { 
@@ -87,7 +85,6 @@ public class CalendarServiceImpl implements CalendarService {
 					map.put("memberName", memberName);
 					
 					for(int i = 0; i < memberNumbers.size(); i++) {
-
 						map.put("memberNo", memberNumbers.get(i));
 						result = mapper.insertScheduleByAdmin(map);
 					}
@@ -99,19 +96,12 @@ public class CalendarServiceImpl implements CalendarService {
 			deleteAllCalendar = mapper.deleteAllCalendar(memberNo);
 			
 			for(Map<String, Object> calendarListInfo : calendarList) { 
-				
 				String calendarStartDate = (String) calendarListInfo.get("startDate"); 
 				String calendarEndDate = (String) calendarListInfo.get("endDate");
 				String calendarTitle = (String) calendarListInfo.get("title");
 
-				System.out.println("calendarStartDate : " + calendarStartDate);
-				System.out.println("calendarEndDate : " + calendarEndDate);
-
 				String realCalendarStartDate = calendarStartDate.split("T")[0].toString();
 				String realCalendarEndDate = calendarEndDate.split("T")[0].toString();
-				
-				System.out.println("startDate : " + realCalendarStartDate);
-				System.out.println("EndDate : " + realCalendarEndDate);
 				
 				Map<String, Object> map = new HashMap<>();
 				map.put("title", calendarTitle);
@@ -121,7 +111,6 @@ public class CalendarServiceImpl implements CalendarService {
 				map.put("memberName", memberName);
 				
 				result = mapper.insertScheduleByMember(map);
-				
 			}
 		}
 			
@@ -140,37 +129,6 @@ public class CalendarServiceImpl implements CalendarService {
 		
 		return selectAllMemberList;
 	}
-
-//	@Override
-//	public List<ScheduleDTO> selectCalendarListForSelectBox(int memberNoForMove) {
-//		
-//		List<ScheduleDTO> totalCalendarList = null;
-//		List<ScheduleDTO> calendarList = null;
-//		
-//		System.out.println("서비스는 올는데");
-//		totalCalendarList = mapper.selectProjectCalendarListForSelectBox(memberNoForMove);
-//		System.out.println("토탈조차 안되는건가");
-//		calendarList = mapper.selectCalendarListForSelectBox(memberNoForMove);
-//		System.out.println("여기가 안나온느건가?");
-//		totalCalendarList.addAll(calendarList);
-//		
-//		System.out.println("여기 잘 이거 나와야함!!! 나옴? : " + totalCalendarList);
-//		
-//		return totalCalendarList;
-//		
-//		
-//	}
-
-
-
-	
-
-
-
-
-
-
-
 }
 
 

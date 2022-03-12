@@ -1,7 +1,5 @@
 package com.greedy.byat.management.model.dto;
 
-import com.greedy.byat.member.model.dto.MemberDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
