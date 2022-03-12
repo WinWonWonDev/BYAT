@@ -69,9 +69,9 @@ public class MemberController {
     */
 	@PostMapping("/login")
 	public String loginMember(@ModelAttribute MemberDTO member, Model model
-			, RedirectAttributes rttr) throws LoginFailedException {
+			, RedirectAttributes rttr, HttpServletRequest request) throws LoginFailedException {
 
-		String result = memberService.selectMember(member, rttr, model);
+		String result = memberService.selectMember(member, rttr, model, request);
 		
 		return result; 
 		

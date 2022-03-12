@@ -22,8 +22,6 @@ public interface SprintService {
 
 	void modifySprint(SprintDTO sprint);
 
-	List<TaskDTO> selectTaskList(int sprintCode);
-
 	String startSprint(Map<String, Integer> map);
 
 	List<BacklogDTO> selectBacklogList(int projectCode);

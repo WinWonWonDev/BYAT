@@ -149,25 +149,6 @@ public class SprintController {
 		return "redirect:/sprint/list?code=" + projectCode;
 	}
 	
-	@GetMapping(value = "/selecttasks", produces = "application/json; charset=UTF-8")
-	@ResponseBody
-	public String selectTaskList(HttpServletRequest request) {
-		
-		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
-		
-		Gson gson = new GsonBuilder()
-				.setDateFormat("yyyy-MM-dd")
-				.setPrettyPrinting()
-				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-				.serializeNulls()
-				.disableHtmlEscaping()
-				.create();
-		
-		List<TaskDTO> taskList = sprintService.selectTaskList(sprintCode);
-		
-		return gson.toJson(taskList);
-	}
-	
 	@GetMapping("/start")
 	public String startSprint(HttpServletRequest request, RedirectAttributes rttr) {
 		

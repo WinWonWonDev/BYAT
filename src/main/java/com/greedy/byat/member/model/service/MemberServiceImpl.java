@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.greedy.byat.common.exception.member.LoginFailedException;
 import com.greedy.byat.common.exception.member.NotexistEmailException;
 import com.greedy.byat.member.model.dao.MemberMapper;
 import com.greedy.byat.member.model.dto.MemberDTO;
+import com.greedy.byat.profile.model.dto.AttachmentDTO;
 
 /* 
 * <pre>
@@ -52,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
     * @ return : if문으로 나눠진 결과에 따라 /member/login 또는 /home으로 redirect합니다.
     */
 	@Override
-	public String selectMember(MemberDTO member, RedirectAttributes rttr, Model model) {
+	public String selectMember(MemberDTO member, RedirectAttributes rttr, Model model, HttpServletRequest request) {
 		
 		if(mapper.selectInitPasswordYN(member).equals("Y")) {
 			//초기계정인경우
@@ -86,6 +87,14 @@ public class MemberServiceImpl implements MemberService {
 					} else {
 						model.addAttribute("loginMember", mapper.login(member));
 						rttr.addFlashAttribute("message","로그인 성공!");
+
+						int memberNo = ((MemberDTO) model.getAttribute("loginMember")).getNo();
+						System.out.println(memberNo);
+						AttachmentDTO attachment = mapper.selectAttachment(memberNo);
+						System.out.println("attachment : " + attachment);
+						
+						request.getSession().setAttribute("attachment", attachment);
+						
 						return "redirect:/home";
 					}
 					
@@ -303,8 +312,6 @@ public class MemberServiceImpl implements MemberService {
 		
 		return result;
 	}
-
-
 }
 
 
