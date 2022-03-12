@@ -12,6 +12,17 @@ import com.greedy.byat.task.model.dao.TaskMapper;
 import com.greedy.byat.task.model.dto.TaskDTO;
 import com.greedy.byat.task.model.dto.TaskMembersDTO;
 
+/**
+ * <pre>
+ * Class : TaskServiceImpl
+ * Comment : TaskService를 상속바아 메소드들을 재정의한 클래스
+ * History
+ * 2021/02/17 (박상범) 처음 작성
+ * </pre>
+ * @version 1.0.0
+ * @author 박상범
+ * @see TaskController.java, TaskServiceImpl.java, TaskMapper.java
+ * */
 @Service
 public class TaskServiceImpl implements TaskService {
  
@@ -21,7 +32,12 @@ public class TaskServiceImpl implements TaskService {
 	public TaskServiceImpl(TaskMapper mapper) {
 		this.mapper = mapper;
 	}
-
+	
+	/**
+	* 메소드 selectTaskList에 관한 문서화 주석
+	* @param int sprintCode : TaskController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectTaskList2메소드의 결과값을 리턴합니다.
+	*/
 	@Override
 	public List<TaskDTO> selectTaskList(int sprintCode) {
 		
@@ -30,12 +46,17 @@ public class TaskServiceImpl implements TaskService {
 		return taskList;
 	}
 	
+	/**
+	* 메소드 endSprint에 관한 문서화 주석
+	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	*/
 	@Override
 	public String registTask(TaskDTO task) {
 		
-		int projectCode = task.getProjectCode();
-		
 		String message = null;
+		
+		int projectCode = task.getProjectCode();
 		
 		/* 진행중이거나 진행전인 스프린트가 있는지 확인 결과 */
 		int progressSprintResult = mapper.checkSprintProgress(projectCode);
@@ -59,25 +80,24 @@ public class TaskServiceImpl implements TaskService {
 			/* 태스크 상태변경 이력 생성 결과 */
 			int result3 = mapper.insertTaskProgressHistory(task);
 			
-			System.out.println(result1);
-			System.out.println(result2);
-			System.out.println(result3);
-			
 			if(!(result1 > 0) && !(result2 > 0) && !(result3 > 0)) {
-				
-				message = "태스크 생성 실패";
-			} else {
-				
 				message = "태스크를 생성하였습니다.";
+			} else {
+				message = "태스크 생성 실패";
 			}
-		} else {
 			
+		} else {
 			message = "진행중인 스프린트가 없습니다.";
 		}
 		
 		return message;
 	}
 
+	/**
+	* 메소드 selectTaskDetail에 관한 문서화 주석
+	* @param int taskCode : TaskController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectTask메소드의 결과값을 리턴합니다.
+	*/
 	@Override
 	public TaskDTO selectTaskDetail(int taskCode) {
 
@@ -86,6 +106,11 @@ public class TaskServiceImpl implements TaskService {
 		return task;
 	}
 
+	/**
+	* 메소드 selectProjectMembers에 관한 문서화 주석
+	* @param int projectCode : TaskController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectProjectMembers메소드의 결과값을 리턴합니다.
+	*/
 	@Override
 	public List<MemberDTO> selectProjectMembers(int projectCode) {
 		
@@ -94,6 +119,11 @@ public class TaskServiceImpl implements TaskService {
 		return projectMembers;
 	}
 
+	/**
+	* 메소드 selectTaskParticipation에 관한 문서화 주석
+	* @param Map<String, Integer> taskParticipation : TaskController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectTaskParticipation메소드의 결과값에 따라 문자열을 리턴합니다.
+	*/
 	@Override
 	public String selectTaskParticipation(Map<String, Integer> taskParticipation) {
 
@@ -102,6 +132,11 @@ public class TaskServiceImpl implements TaskService {
 		return (result > 0)? "Y" : "N";
 	}
 
+	/**
+	* 메소드 registTaskMembers에 관한 문서화 주석
+	* @param Map<String, Integer> taskParticipation : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	*/
 	@Override
 	public String registTaskMembers(Map<String, Integer> taskParticipation) {
 
@@ -127,41 +162,35 @@ public class TaskServiceImpl implements TaskService {
 			int checkResult2 = mapper.checkWasSprintMembers(taskParticipation);
 			
 			if(checkResult2 > 0) {																	
-				
 				sprintMembersResult = 1;
 			} else {
-				
 				sprintMembersResult = mapper.changeSprintMembersParticipation(taskParticipation);	//참가를 했었던 적이 있으면
 			}
 		}
 		
 		if(checkResult1 > 0) {
-			
 			taskMemberResult = mapper.changeTaskMembersParticipation(taskParticipation);
 		} else {
-			
 			taskMemberResult = mapper.insertTaskMembers(taskParticipation);
 		}
 
 		int historyResult2 = mapper.insertSprintMembersHistory(taskParticipation);
 		int historyResult1 = mapper.insertTaskMembersHistory(taskParticipation);
 
-		System.out.println(taskMemberResult);
-		System.out.println(sprintMembersResult);
-		System.out.println(historyResult1);
-		System.out.println(historyResult2);
-		
 		if(sprintMembersResult > 0 && taskMemberResult > 0 && historyResult1 > 0 && historyResult2 > 0) {
-			
 			message = "태스크에 참가하셨습니다.";
 		} else {
-			
 			message = "참가 실패";
 		}
 		
 		return message;
 	}
 
+	/**
+	* 메소드 selectTaskMembers에 관한 문서화 주석
+	* @param int taskCode : TaskController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectTaskMembers메소드의 결과값을 리턴합니다.
+	*/
 	@Override
 	public List<TaskMembersDTO> selectTaskMembers(int taskCode) {
 		
@@ -170,6 +199,11 @@ public class TaskServiceImpl implements TaskService {
 		return taskMembers;
 	}
 
+	/**
+	* 메소드 modifyTask에 관한 문서화 주석
+	* @param TaskDTO task : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	*/
 	@Override
 	public String modifyTask(TaskDTO task) {
 		
@@ -188,42 +222,44 @@ public class TaskServiceImpl implements TaskService {
 		return message;
 	}
 
-	
+	/**
+	* 메소드 modifyTask에 관한 문서화 주석
+	* @param Map<String, Integer> map : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	*/
 	@Override
 	public String removeTask(Map<String, Integer> map) {
 		
 		String message = null;
 		
-		/* 태스크의 상태를 Y로 바꿔준다. */
+		/* 태스크의 상태를 Y로 바꿔줍니다. */
 		int result1 = mapper.deleteTask(map);
 		
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@result1 : " + result1);
-		
 		int taskCode = map.get("taskCode");
+		
 		/* 삭제할 태스크의 내용를 불러온다*/
 		TaskDTO task = mapper.selectTask(taskCode);
 		
-		
 		/* 태스크를 삭제하는 멤버의 번호를 추가*/
 		task.setUpdateMemberNo(map.get("updateMemberNo"));
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@task : " + task);
 		
 		/* 태스크 버전 이력에 추가한다.*/
 		int result2 = mapper.insertTaskVersionHistory3(task);
 		
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@result2 : " + result2);
-		
 		if(result1 > 0 && result2 > 0) {
-			
 			message = "태스크를 삭제 하였습니다.";
 		} else {
-			
 			message = "태스크 삭제 실패";
 		}
 		
 		return message;
 	}
 
+	/**
+	* 메소드 removeTaskMembers에 관한 문서화 주석
+	* @param Map<String, Integer> map : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	*/
 	@Override
 	public String removeTaskMembers(Map<String, Integer> map) {
 		
@@ -242,7 +278,6 @@ public class TaskServiceImpl implements TaskService {
 			
 			/* 다른 진행 중인 태스크가 없으면(0이면) 스프린트 구성원에서 제외한다.*/
 			if(result2 > 0) {
-				
 				message = "해당 태스크에서 제외되었습니다.";
 			} else {
 				
@@ -253,18 +288,21 @@ public class TaskServiceImpl implements TaskService {
 				int result5 = mapper.insertSprintMembersHistory2(map);
 				
 				if(result3 > 0 && result5 > 0) {
-					
 					message = "담당하고 있는 태스크가 없기 때문에 스프린트 구성원에서도 제외 됩니다.";
 				}
 			}
 		} else {
-			
 			message = "태스크 참가 포기 실패";
 		}
 		
 		return message;
 	}
 
+	/**
+	* 메소드 updateTaskProgress에 관한 문서화 주석
+	* @param Map<String, Integer> map : TaskController에서 넘어온 값을 담기 위함입니다.
+	* @return : mapper메소드의 동작을 확인한 후 결과에 따라 boolean타입의 result를 리턴합니다.
+	*/
 	@Override
 	public boolean updateTaskProgress(Map<String, Integer> map) {
 
@@ -275,22 +313,10 @@ public class TaskServiceImpl implements TaskService {
 		int result2 = mapper.insertTaskProgressHistory2(map);
 		
 		if(result1 > 0 && result2 > 0) {
-			
 			result = true;
 		}
 		
 		return result;
 	}
-
-
-
-
-	
-
-
-
-
-
-
 
 }
