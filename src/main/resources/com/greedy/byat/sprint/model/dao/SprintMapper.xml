@@ -608,7 +608,7 @@
  		UPDATE
  			   TBL_BACKLOG A
  		   SET A.BACKLOG_PROGRESS = '완료'
- 		 WHERE A.BACKLOG_CODE = #{ code }
+ 		 WHERE A.BACKLOG_CODE = #{ backlogCode }
  	</update>
  	
  	<insert id="insertBacklogProgressHistory3">
@@ -886,6 +886,7 @@
  		   SET A.SPRINT_CODE = SEQ_SPRINT_CODE.CURRVAL
  		   	 , A.ISSUE_PROGRESS = '해결전'
  		 WHERE A.ISSUE_PROGRESS = '보류'
+ 		   AND A.PROJECT_CODE = #{ projectCode }
  	</update>
  	
  	<insert id="insertIssueProgressHistory2" parameterType="hashmap">
