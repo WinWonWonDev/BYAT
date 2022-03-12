@@ -62,8 +62,6 @@ public class IssueController {
 		mv.addObject("pjCode", projectCode);
 		mv.setViewName("/issue/list");
 
-		System.out.println("sprintList : " + sprintList);
-		
 		return mv;
 	}
 	
@@ -111,6 +109,7 @@ public class IssueController {
 		return mv;
 	}
 	
+	//이슈 수정에서 스프린트 멤버 확인할 때
 	@PostMapping("sprintmemberlist")
 	public ModelAndView selectSprintMembers(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 
@@ -215,6 +214,7 @@ public class IssueController {
 		return "redirect:/issue/list?code=" + projectCode;
 	}
 	
+	//스프린트 페이지에서 이슈 생성시 담당자 지정 할 때
 	@PostMapping("selectsprintmemberlist")
 	public ModelAndView selectSprintMemberList(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 		
