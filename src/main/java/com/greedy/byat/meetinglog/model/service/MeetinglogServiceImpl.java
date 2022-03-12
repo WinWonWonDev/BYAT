@@ -8,6 +8,18 @@ import com.greedy.byat.meetinglog.model.dao.MeetinglogMapper;
 import com.greedy.byat.meetinglog.model.dto.MeetinglogDTO;
 import com.greedy.byat.notice.model.dto.NoticeDTO;
 
+/** 
+* <pre>
+* Class : MeetinglogServiceImpl
+* Comment : 회의록  서비스
+* History
+* 2022/02/17  박수빈 
+* </pre>
+* @version 1.0.0
+* @author 박수빈
+* @see MeetinglogMapper, MeetinglogService
+*
+*/
 @Service
 public class MeetinglogServiceImpl implements MeetinglogService {
  
@@ -18,6 +30,14 @@ public class MeetinglogServiceImpl implements MeetinglogService {
 		this.mapper = mapper;
 	}
 
+	/**
+	 * 메소드 selectMeetinglogList에 관한 문서화 주석
+	 * mapper에 회의록 조회 요청한다.
+	 * @param projectCode : 프로젝트 코드
+	 * @return meetinglog : 프로젝트 코드로 조회한 회의록 배열
+	 * 
+	 * @author 박수빈
+	 */
 	@Override
 	public List<MeetinglogDTO> selectMeetinglogList(int projectCode) {
 
@@ -28,6 +48,14 @@ public class MeetinglogServiceImpl implements MeetinglogService {
 		return meetinglog;
 	}
 
+	/**
+	 * 메소드 registMeetinglog에 관한 문서화 주석
+	 * 회의록 생성 하는 매소드입니다. 생성 성공시 알림 생성
+	 * @param meetinglog : 생성할 회의록 MeetinglogDTO 정보
+	 * @return message : controller에 결과 메세지 전달
+	 * 
+	 * @author 박수빈
+	 */
 	@Override
 	public String registMeetinglog(MeetinglogDTO meetinglog) {
 
@@ -68,6 +96,14 @@ public class MeetinglogServiceImpl implements MeetinglogService {
 		return message;
 	}
 
+	/**
+	 * 메소드 selectMeetinglogDetail에 관한 문서화 주석
+	 * 회의록 상세 조회
+	 * @param projectCode : 프로젝트 코드
+	 * @return meetinglog : 프로젝트 코드로 조회한 회의록 배열
+	 * 
+	 * @author 박수빈
+	 */
 	@Override
 	public MeetinglogDTO selectMeetinglogDetail(int meetinglogCode) {
 		System.out.println("selectMeetinglogDetail 히스토리 값 넣기전 : " );
@@ -79,6 +115,14 @@ public class MeetinglogServiceImpl implements MeetinglogService {
 		return meetinglog;
 	}
 
+	/**
+	 * 메소드 selectMeetinglogList에 관한 문서화 주석
+	 * 회의록 수정 
+	 * @param projectCode : 프로젝트 코드
+	 * @return meetinglog : 프로젝트 코드로 조회한 회의록 배열
+	 * 
+	 * @author 박수빈
+	 */
 	@Override
 	public String modifyMeetinglog(MeetinglogDTO meetinglog) {
 		System.out.println("//modifyMeetinglog//meetinglog 전: " + meetinglog );
@@ -118,6 +162,14 @@ public class MeetinglogServiceImpl implements MeetinglogService {
 		return message ;
 	}
 
+	/**
+	 * 메소드 selectProjectName에 관한 문서화 주석
+	 * 프로젝트 제목 조회
+	 * @param projectCode :  해당 프로젝트 코드
+	 * @return project : 조회한 프로젝트 제목 
+	 * 
+	 * @author 박수빈
+	 */
 	@Override
 	public String selectProjectName(int projectCode) {
 		
@@ -126,6 +178,14 @@ public class MeetinglogServiceImpl implements MeetinglogService {
 		return project;
 	}
 
+	/**
+	 * 메소드 removeMeetinglog에 관한 문서화 주석
+	 * 회의록 삭제  성공시 알람 생성
+	 * @param meetinglogCode :  삭제할 회의록 고유 번호
+	 * @return message : 회의록 삭제 결과 메세지  
+	 * 
+	 * @author 박수빈
+	 */
 	@Override
 	public String removeMeetinglog(int meetinglogCode) {
 		System.out.println("remove meetinglog : " + meetinglogCode);
