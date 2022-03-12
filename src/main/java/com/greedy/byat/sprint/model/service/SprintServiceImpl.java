@@ -388,31 +388,7 @@ public class SprintServiceImpl implements SprintService {
 					result2 += mapper.insertEndSprintNotice(map);
 				}
 				
-				/* 아직 미완료인 모든 이슈리스트를 가져온다. */
-				List<Integer> issueList = mapper.selectIssueList(map);
-				
-				Map<String, Integer> issueMap = new HashMap<>();
-				issueMap.put("memberNo", loginMemberNo);
-				
-				int result3 = 0;
-				int result4 = 0;
-				int result5 = 0;
-				
-				for(int j = 0; j < issueList.size(); j++) {
-					
-					int issueCode = issueList.get(j);
-					
-					issueMap.put("issueCode", issueCode);
-					
-					result3 += mapper.updateIssueProgress(issueCode);
-					
-					result4 += mapper.insertIssueProgressHistory(issueMap);
-					
-					/* 이슈 구성원들의 참여 상태를 N으로 바꾼다. */
-					result5 += mapper.updateIssueMembersParticipation(issueCode);
-				}
-				
-				if(result1 > 0 && result2 == sprintMemberList.size() && result3 == issueList.size() && result4 == issueList.size() && result5 == issueList.size()) {
+				if(result1 > 0 && result2 == sprintMemberList.size()) {
 					
 					int result6 = mapper.updateSprintProgress2(sprintCode);
 					

@@ -886,18 +886,6 @@
  		  FROM DUAL
  	</select>
  	
- 	<!-- <update id="updateIssueSprintCode">
- 		UPDATE
- 		       TBL_ISSUE A
- 		   SET A.SPRINT_CODE = (SELECT
- 			   						   B.SPRINT_CODE
- 									   FROM TBL_SPRINT B
- 								 WHERE B.SPRINT_PROGRESS IN ('진행전', '진행중')
- 		  						   AND B.PROJECT_CODE = #{ projectCode })
- 		   	 , A.ISSUE_PROGRESS = '해결전'
- 		 WHERE A.ISSUE_PROGRESS = '보류'
- 	</update> -->
- 	
  	<insert id="insertIssueProgressHistory2" parameterType="hashmap">
  		INSERT
  		  INTO TBL_ISSUE_PROGRESS_HISTORY A
