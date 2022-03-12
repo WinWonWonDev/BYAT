@@ -524,7 +524,7 @@ $(document).ready(function() {
 				   </c:forEach>
 			   </tbody>
 			</table>
-			<input type="button" id="moveDeletedManagementList" class="moveDeletedManagementButton" onclick="location.href='${ pageContext.servletContext.contextPath }/management/removedList'"/>
+			<input type="button" id="moveDeletedManagementList" class="moveDeletedManagementButton" onclick="location.href='${ pageContext.servletContext.contextPath }/management/removedlist'"/>
 		</div>
 	</div>
 	
