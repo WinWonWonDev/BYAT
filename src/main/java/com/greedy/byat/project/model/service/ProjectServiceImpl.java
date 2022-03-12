@@ -298,8 +298,6 @@ public class ProjectServiceImpl implements ProjectService {
 			calendarMember.setNo(projectMembers.get(i).getNo());
 			calendarProject.setWriterMember(calendarMember);
 			
-			System.out.println("!: " + calendarProject);
-			
 			updateCalendarProjectResult = mapper.updateCalendarProject(calendarProject);
 			
 			if(!(updateCalendarProjectResult > 0)) {
@@ -523,8 +521,6 @@ public class ProjectServiceImpl implements ProjectService {
 		for(int i = 0; i < members.size(); i++) {
 			
 			members.get(i).setParticipationYn("Y");
-			
-			System.out.println("! : " + members.get(i));
 			
 			ProjectMembersDTO projectMemberBeforeDetail = mapper.selectProjectMember(members.get(i));
 			

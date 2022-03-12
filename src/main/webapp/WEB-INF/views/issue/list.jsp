@@ -834,7 +834,7 @@
 								
 								kanbanArea[1].appendChild(kanbanBox);
 								
-							} else {
+							} else if(sprintIssueList[i].progress == "완료") {
 								
 								memberCount = 0;
 								
@@ -1337,7 +1337,7 @@
 									
 									kanbanArea[1].appendChild(kanbanBox);
 									
-								} else {
+								} else if(sprintIssueList[i].progress == "완료") {
 									
 									memberCount = 0;
 									
