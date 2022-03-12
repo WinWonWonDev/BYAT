@@ -1124,7 +1124,7 @@
 				<h3>백로그 생성</h3>
 	    	</div>
        		<div class="modal_content-box">
-       			<input type="text" class="title" name="title" placeholder="BacklogTitle">
+       			<input type="text" class="title" name="title" placeholder="BacklogTitle" required="required">
        			<input type="hidden" id="projectCode" name="projectCode" value="${ requestScope.code }">
        			
        			<br clear="both">
@@ -1149,7 +1149,7 @@
 		    	</div>
        			<div class="modal_content-box">
        				<input type="hidden" id="backlogCode2" name="code">
-       				<input type="text" class="title" name="title" id="backlogTitle" placeholder="BacklogTitle">
+       				<input type="text" class="title" name="title" id="backlogTitle" placeholder="BacklogTitle" required="required">
        				<input type="hidden" id="projectCode" name="projectCode" value="${ requestScope.code }">
 
        				<br clear="both">
@@ -1184,7 +1184,7 @@
                		<h3>태스크 생성</h3>
 	            </div>
 	            <div class="modal_content-box">
-	              	<input type="text" class="title" name="title"  placeholder="Task Title">
+	              	<input type="text" class="title" name="title"  placeholder="Task Title" required="required">
 	               
 					<h5>시작일</h5>
 					<h5>종료일</h5>
@@ -1237,7 +1237,7 @@
 	       		<div class="modal_content-box">
 		   			<input type="hidden" name="projectCode" id="projectCode3">
 		   			<input type="hidden" name="code" id="taskCode3">
-	       			<input type="text" class="title" name="title" id="taskTitle3" placeholder="TaskTitle">
+	       			<input type="text" class="title" name="title" id="taskTitle3" placeholder="TaskTitle" required="required">
 	       			
 	       			<button type="button" id="task-members-list">구성원 목록</button>
 					<h5>시작일</h5>
@@ -1291,7 +1291,7 @@
 	    	</div>
        		<div class="modal_content-box" id="sprintCreate">
        			<input type="hidden" name="code" id="projectCode2" value="${ requestScope.code }"> 
-       			<input type="text" class="title" name="title" placeholder="Sprint Title">
+       			<input type="text" class="title" name="title" placeholder="Sprint Title" required="required">
 				<h5>시작일</h5>
 				<h5>종료일</h5>
        			<br clear="both" style="height: 5px;">
@@ -1319,7 +1319,7 @@
        			<div class="modal_content-box" id="sprintUpdate">
        				<input type="hidden" name="writer" value="${ sessionScope.loginMember.name }">
        				<input type="hidden" name="projectCode" value="${ requestScope.code }">
-       				<input type="text" class="title" name="title" id="sprintTitle2" placeholder="Sprint Title">
+       				<input type="text" class="title" name="title" id="sprintTitle2" placeholder="Sprint Title" required="required">
        				<input type="text" class="sprint-code" name="code" id="sprintCode2" readonly="readonly">
 					<h3>스프린트 코드는 자동으로 생성됩니다.</h3>       		
 					<h5>시작일</h5>
@@ -1348,6 +1348,7 @@
 		</div>
 		<div class="system-message">
 			<br>정말로 삭제하시겠습니까?
+			<br>삭제한 백로그는 <font color="red">복구</font>할 수 없습니다.
 		</div>
 		<button type="button" id="backlog-delete">Ok</button>
 		<button type="button" id="backlog-cloes-btn3">Cancel</button>
@@ -1359,6 +1360,7 @@
 		</div>
 		<div class="system-message">
 			<br>정말로 삭제하시겠습니까?
+			<br>삭제한 스프린트는 <font color="red">복구</font>할 수 없습니다.
 		</div>
 		<button type="button" id="sprint-delete">Ok</button>
 		<button type="button" id="sprint-cloes-btn3">Cancel</button>
@@ -1370,6 +1372,7 @@
 		</div>
 		<div class="system-message">
 			<br>정말로 삭제하시겠습니까?
+			<br>삭제한 태스크는 <font color="red">복구</font>할 수 없습니다.
 		</div>    
 		<button type="button" id="task-delete">Ok</button>
 		<button type="button" id="task-cloes-btn3">Cancel</button>
@@ -1867,7 +1870,7 @@
 					
 					/* 태스크 목록 조회*/
 					$.ajax({
-						url: "/byat/sprint/selecttasks",
+						url: "/byat/task/list",
 						type: "get",
 						data: { "sprintCode": $sprintCodes[i].value },
 						success: function(data, status, xhr){
@@ -1993,7 +1996,7 @@
 													$.ajax({
 														url: "/byat/task/detail",
 														type: "get",
-														data: { "taskCode": $taskCodes[k].value },
+														data: { "taskCode": $taskCodes[j].value },
 														success: function(data, status, xhr){
 															console.table(data);
 															

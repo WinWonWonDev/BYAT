@@ -23,6 +23,14 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
+	public List<TaskDTO> selectTaskList(int sprintCode) {
+		
+		List<TaskDTO> taskList = mapper.selectTaskList2(sprintCode);
+		
+		return taskList;
+	}
+	
+	@Override
 	public String registTask(TaskDTO task) {
 		
 		int projectCode = task.getProjectCode();
@@ -99,8 +107,10 @@ public class TaskServiceImpl implements TaskService {
 
 		String message = null;
 		
+		/* 태스크 구성원이였었는지 확인 여부*/
 		int checkResult1 = mapper.checkWasTaskMembers(taskParticipation);
-		int checkResult2 = mapper.checkWasSprintMembers(taskParticipation);
+		
+		/* 스프린트 구성원인지 확인 여부*/
 		int checkResult3 = mapper.checkIsSprintMembers(taskParticipation);
 		
 		int taskMemberResult = 0;
@@ -113,7 +123,10 @@ public class TaskServiceImpl implements TaskService {
 			sprintMembersResult = mapper.insertSprintMembers(taskParticipation);
 		} else {
 			
-			if(checkResult2 > 0) {																	//참가를 했던 경험이 있는지
+			/* 스프린트 구성원이였는지 확인 여부*/
+			int checkResult2 = mapper.checkWasSprintMembers(taskParticipation);
+			
+			if(checkResult2 > 0) {																	
 				
 				sprintMembersResult = 1;
 			} else {
@@ -175,6 +188,7 @@ public class TaskServiceImpl implements TaskService {
 		return message;
 	}
 
+	
 	@Override
 	public String removeTask(Map<String, Integer> map) {
 		
@@ -193,25 +207,7 @@ public class TaskServiceImpl implements TaskService {
 		/* 태스크 버전 이력에 추가한다.*/
 		int result2 = mapper.insertTaskVersionHistory3(task);
 		
-		/* 태스크 구성원의 번호를 모두 불러 온다. */
-		List<Integer> taskMembersNo = mapper.selectTaskMembersList(map);
-		
-		/* 태스크 구성원의 참여 상태를 N으로 바꿔준다.*/
-		int result3 = mapper.deleteTaskMembers(map);
-		
-		int result4 = 0;
-		
-		for(int i = 0; i < taskMembersNo.size(); i++) {
-			
-			int memberNo = taskMembersNo.get(i);
-			
-			map.put("memberNo", memberNo);
-			
-			/* 태스크 구성원 변경 이력에 불러온 태스크 구성원들을 추가한다. */
-			result4 += mapper.insertTaskMembersHistory2(map);
-		}
-		
-		if(result1 > 0 && result2 > 0 && result3 > 0 && (taskMembersNo.size() == result4)) {
+		if(result1 > 0 && result2 > 0) {
 			
 			message = "태스크를 삭제 하였습니다.";
 		} else {
@@ -252,7 +248,7 @@ public class TaskServiceImpl implements TaskService {
 				
 				if(result3 > 0 && result5 > 0) {
 					
-					message = "담당하고 있는 태스크가 없기 때문에 스프린트 구성원에서 제외 됩니다.";
+					message = "담당하고 있는 태스크가 없기 때문에 스프린트 구성원에서도 제외 됩니다.";
 				}
 			}
 		} else {

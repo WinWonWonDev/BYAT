@@ -37,6 +37,25 @@ public class TaskController {
 		this.taskService = taskService;
 	}
 	
+	@GetMapping(value = "/list", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String selectTaskList(HttpServletRequest request) {
+		
+		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		List<TaskDTO> taskList = taskService.selectTaskList(sprintCode);
+		
+		return gson.toJson(taskList);
+	}
+	
 	@PostMapping("/regist")
 	public String registTask(@ModelAttribute TaskDTO task, HttpServletRequest request, RedirectAttributes rttr) {
 		
