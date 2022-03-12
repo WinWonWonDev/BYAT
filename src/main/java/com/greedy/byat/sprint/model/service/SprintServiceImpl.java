@@ -374,7 +374,7 @@ public class SprintServiceImpl implements SprintService {
 					}
 					
 				/* 긴급 태스크로 생성된 태스크이면서 진행상태가 완료라면 변경사항없음*/
-				} else {
+				} else if("완료".equals(task.getProgress()) && 0 >= task.getBacklogCode()){
 					
 					cnt++;
 				}
