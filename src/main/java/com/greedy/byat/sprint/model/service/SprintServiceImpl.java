@@ -65,28 +65,8 @@ public class SprintServiceImpl implements SprintService {
 			int result2 = mapper.insertSprintVersionHistory(sprint);
 		
 			int result3 = mapper.insertSprintProgressHistory(sprint);
-		
-			/* 이슈 상태 변경 이력에 추가해야 하기 때문에 보류중인 이슈 코드들을 가져온다. */
-			List<Integer> issueList = mapper.selectIssueList2(sprint);
 			
-			/* 보류중인 이슈가 있으면 해당 스프린트에 추가한다.*/
-			int result4 = mapper.updateIssueSprintCode(projectCode);
-			
-			int result5 = 0;
-			
-			Map<String, Integer> map = new HashMap<>();
-			map.put("projectCode", projectCode);
-			map.put("memberNo", sprint.getMemberNo());
-			
-			for(int i = 0; i < issueList.size(); i++) {
-				
-				map.put("issueCode", issueList.get(i));
-				
-				/* 이슈 상태 변경 이력 추가*/
-				result5 += mapper.insertIssueProgressHistory2(map);
-			}
-			
-			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0) && !(result4 > 0) && !(result5 == issueList.size())) {
+			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0)) {
 				
 				result = "스프린트 생성 실패";
 			} else {
