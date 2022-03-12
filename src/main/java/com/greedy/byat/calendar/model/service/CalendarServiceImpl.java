@@ -34,6 +34,11 @@ public class CalendarServiceImpl implements CalendarService {
 		this.mapper = mapper;
 	}
 
+   /**
+    * 메소드 selectCalendarList에 관한 문서화 주석
+    * @ param MemberDTO loginMember : 현재 로그인 한 멤버의 세션을 MemberDTO형식으로 변환하여 값을 전달하는 파라미터입니다. 
+    * @ return : permitCode로 인해 나뉘어진 경우에 수에 따라 List<ScheduleDTO> totalCalendarList를 반환합니다. 
+    */
 	@Override
 	public List<ScheduleDTO> selectCalendarList(MemberDTO loginMember) {
 		
@@ -43,10 +48,10 @@ public class CalendarServiceImpl implements CalendarService {
 		int memberNo = loginMember.getNo();
 		int permitCode = loginMember.getPermitCode();
 		
-		if(permitCode == 1) { //관리자의 경우
+		if(permitCode == 1) { 
 			totalCalendarList = mapper.selectCalendarListByAdmin(memberNo);
 			
-		} else { //일반멤버,PM의 경우(나머지 2,3인 경우) -> 관리자일정, 프로젝트일정, 개인일정 다 보여야 되잖아? 
+		} else { 
 			totalCalendarList = mapper.selectProjectListByMemberOne(memberNo);
 			calendarList = mapper.selectCalendarListByMemberOne(memberNo);
 
@@ -56,8 +61,14 @@ public class CalendarServiceImpl implements CalendarService {
 		return totalCalendarList;
 	}
 
+   /**
+    * 메소드 registSchedule에 관한 문서화 주석
+    * @ param List<Map<String, Object>> calendarList : 캘린더의 제목, 시작/종료일, 작성자 등의 값을 mapper로 한번에 전달하기 위한 파라미터입니다. 
+    * @ param MemberDTO loginMember : 현재 접속한(세션) 멤버의 넘버, 이름 등이 MemberDTO형식으로 담긴 파라미터입니다.  
+    * @ return : 캘린더 일정 등록 성공 여부를 담은 결과 값을 int result에 담아 return합니다. 
+    */
 	@Override
-	public int registSchedule(List<Map<String, Object>> calendarList, MemberDTO loginMember) throws ParseException {
+	public int registSchedule(List<Map<String, Object>> calendarList, MemberDTO loginMember) {
 		
 		int memberNo = loginMember.getNo();
 		int deleteAllCalendar = 0;
@@ -122,6 +133,11 @@ public class CalendarServiceImpl implements CalendarService {
 		
 	}
 
+
+   /**
+    * 메소드 selectAllMemberList에 관한 문서화 주석
+    * @ return : selectBox에 모든 멤버를 담아주기 위해 모든 멤버의 정보를 조회하는 selectAllMemberList의 값을 반환합니다.
+    */
 	@Override
 	public List<MemberDTO> selectAllMemberList() {
 

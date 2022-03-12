@@ -34,7 +34,7 @@ import net.sf.json.JSONArray;
 * History
 * 2022/02/25 이소현  처음 작성
 * </pre>
-* @version 1.1.0
+* @version 1.0.0
 * @author 이소현
 * @see CalendarService, CalendarServiceImpl, ScheduleDTO, CalendarMapper  
 *
@@ -52,9 +52,13 @@ public class CalendarController {
 		this.calendarService = calendarService;
 	}
 	
-	
+   /**
+    * 메소드 selectCalendarList에 관한 문서화 주석
+    * @ param HttpServletRequest request : 현재 로그인 한 멤버의 세션을 가져오고, selectBox로 선택된 멤버의 no를 getParameter로 가져오기 위한 파라미터입니다. 
+    * @ return : calendar폴더 내의 calendar.jsp로 return합니다. 
+    */
 	@RequestMapping(value="/list", produces="application/json; charset=UTF-8", method=RequestMethod.GET)
-	public String selectCalendarList(Model model, HttpServletRequest request) {
+	public String selectCalendarList(HttpServletRequest request) {
 		
 		List<ScheduleDTO> calendarList = null;
 		MemberDTO loginMember = ((MemberDTO) request.getSession().getAttribute("loginMember"));
@@ -77,9 +81,15 @@ public class CalendarController {
 		return "/calendar/calendar";
 	}
 	
+   /**
+    * 메소드 registSchedule에 관한 문서화 주석
+    * @ param HttpServletRequest request : 현재 로그인 한 멤버의 세션을 가져오고, getParamenter를 통해 'alldate'의 값을 가져오기 위한 파라미터입니다. 
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다. 
+    * @ return : 캘린더 일정 등록 성공 여부를 담은 결과 값을 int result에 담아 return합니다. 
+    */
 	@PostMapping(value="regist", produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public int registSchedule(HttpServletRequest request, RedirectAttributes rttr, @ModelAttribute ScheduleDTO schedule, MemberDTO member) throws ParseException {
+	public int registSchedule(HttpServletRequest request, RedirectAttributes rttr) {
 		
 		String allData = request.getParameter("alldata"); 
 		
@@ -101,6 +111,10 @@ public class CalendarController {
 		}
 	}
 
+   /**
+    * 메소드 selectAllMemberForSelectBox에 관한 문서화 주석
+    * @ return : selectBox에 모든 멤버를 담아주기 위해 모든 멤버의 정보를 조회하는 selectAllMemberList의 값을 반환합니다.
+    */
 	@GetMapping("/selectallmember")
 	@ResponseBody
 	public List<MemberDTO> selectAllMemberForSelectBox() {

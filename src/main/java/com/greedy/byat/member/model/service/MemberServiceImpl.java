@@ -109,7 +109,7 @@ public class MemberServiceImpl implements MemberService {
 
 	
    /*
-    * 메소드 selectEmailById에 관한 문서화 주석 (작성중)
+    * 메소드 selectEmailById에 관한 문서화 주석 
     * @ param String id : 해당 id를 가진 멤버의 Email과 Number를 가져오기 위한 inputId 입니다.
     * @ return : 해당 이메일에 인증번호 전송결과 여부에 따른 결과를 int result 담아 return 합니다.
     * @ exception : NotexistEmailException(입력한 아이디가 존재하지 않는 경우에 대한 익셉션입니다.)
@@ -156,6 +156,11 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	}
 
+   /**
+    * 메소드 matchVerificationNumber에 관한 문서화 주석
+    * @ param String inputVerificationNum : DB에 저장된 인증번호와 비교하기 위한 인증번호 넘버가 담긴 파라미터입니다.
+    * @ return : 인증번호 일치 성공 여부를 int result에 담아 return 합니다. 
+    */
 	@Override
 	public int matchVerificationNumber(String inputVerificationNum) {
 		
@@ -172,6 +177,12 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+   /*
+    * 메소드 modifyMemberPwd에 관한 문서화 주석
+    * @ param String inputPassword : 비밀번호 변경을 위해 새로 입력한 비밀번호가 담긴 파라미터입니다.
+    * @ param String inpuId : inputId에 담긴 멤버ID로 멤버 비밀번호를 업데이트 해주기 위해 멤버ID 값을 담은 파라미터입니다.
+    * @ return : 비밀번호 변경 성공 여부에 따른 결과가 int result에 담겨 return 됩니다. 
+    */
 	@Override
 	public int modifyMemberPwd(String inputPassword, String inputId) {
 
@@ -303,6 +314,12 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+   /*
+    * 메소드 matchVerificationNumberForInit에 관한 문서화 주석
+    * @ param String inputVerificationNum : DB에 저장된 인증번호와 비교하기 위해 입력한 인증번호 넘버가 담긴 파라미터입니다.
+    * @ param int inputNo : DB에 저장된 인증번호를 찾기위한 멤버 넘버가 저장된 파라미터입니다.
+    * @ return : 최초 로그인 시 DB에 저장된 인증번호가 일치하는 여부에 따른 결과가 int result에 담겨 return 됩니다. 
+    */
 	@Override
 	public int matchVerificationNumberForInit(String inputVerificationNum, int inputNo) {
 
@@ -323,6 +340,16 @@ public class MemberServiceImpl implements MemberService {
 
 	}
 
+	
+   /*
+    * 메소드 initialInputInfo에 관한 문서화 주석
+    * @ param String newPassword : 최초 로그인 시 정보 입력을 위해 새로 입력한 비밀번호가 담긴 파라미터입니다.
+    * @ param String newPasswordConfirm : 최초 로그인 시 정보 입력을 위해 새로 입력한 비밀번호 확인값이 담긴 파라미터입니다.
+    * @ param String emailAddress : 최초 로그인 시 정보 입력을 위해 새로 입력한 이메일이 담긴 파라미터입니다.
+    * @ param String phoneNumber : 최초 로그인 시 정보 입력을 위해 새로 입력한 전화번호가 담긴 파라미터입니다.
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ return : 최초 로그인 시 정보 저장 성공 여부에 따른 결과가 int result에 담겨 return 됩니다. 
+    */
 	@Override
 	public int initialInputInfo(String emailAddress, String phoneNumber, String newPassword, int inputNo) {
 

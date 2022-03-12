@@ -45,8 +45,13 @@ public class ManagementController {
 		this.managementService = managementService;
 	}
 	
+   /**
+    * 메소드 selectManagementList에 관한 문서화 주석
+    * @ param ModelAndView : addObject를 통해 managementList값을 담고, 그 담은 값을 setViewName을 통해 management.jsp로 보내주기 위한 파라미터입니다.
+    * @ return : view에서 사용해야하는 값에 managementList를 담아 mv를 반환합니다.
+    */
 	@GetMapping("list")
-	public ModelAndView selectManagementList(HttpServletRequest request, ModelAndView mv) {
+	public ModelAndView selectManagementList(ModelAndView mv) {
 		
 		List<ManagementDTO> managementList = managementService.selectManagementList();
 
@@ -56,8 +61,15 @@ public class ManagementController {
 		return mv;
 	}
 	
+   /**
+    * 메소드 registManagement에 관한 문서화 주석
+    * @ param MemberDTO member : jsp에서 넘기는 멤버 이름,사번  MemberDTO형식에 담아 전달하기 위한 파라미터입니다. 
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param String managementRoleforCreate : 멤버 권한의 값을 String으로 담은 파라미터입니다.
+    * @ return : /management/list로 재요청하기 위한 return 입니다.
+    */
 	@PostMapping("regist")
-	public String registManagement(HttpServletRequest request, Model model, MemberDTO member, RedirectAttributes rttr, String managementRoleforCreate) {
+	public String registManagement(MemberDTO member, RedirectAttributes rttr, String managementRoleforCreate) {
 			
 		int result = managementService.registManagement(member, managementRoleforCreate);
 		
@@ -71,6 +83,12 @@ public class ManagementController {
 		
 	}
 	
+   /**
+    * 메소드 modifyManagement에 관한 문서화 주석
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param ManagementDTO manegement : jsp에서 넘기는 멤버 이름,사번, 권한을  ManagementDTO형식에 담아 전달하기 위한 파라미터입니다. 
+    * @ return : /management/list로 재요청하기 위한 return 입니다.
+    */
 	@PostMapping("modify")
 	public String modifyManagement(RedirectAttributes rttr, ManagementDTO management) {
 
@@ -85,6 +103,12 @@ public class ManagementController {
 		return "redirect:/management/list";
 	}
 
+   /**
+    * 메소드 removeManagement에 관한 문서화 주석
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param HttpServletRequest request : 멤버 넘버를 jsp에서 getParameter로 가져오기 위한 파라미터입니다. 
+    * @ return : /management/list로 재요청하기 위한 return 입니다.
+    */
 	@GetMapping("remove") 
 	public String removeManagement(RedirectAttributes rttr, HttpServletRequest request) {
 		
@@ -102,6 +126,11 @@ public class ManagementController {
 		
 	}
 	
+   /**
+    * 메소드 selectManagementRemovedList에 관한 문서화 주석
+    * @ param ModelAndView : addObject를 통해 deletedManagementList의 값을 담고, 그 담은 값을 setViewName을 통해 deletedMangementList.jsp로 보내주기 위한 파라미터입니다.
+    * @ return : view에서 사용해야하는 값에 deletedManagementList를 담아 mv를 반환합니다.
+    */
 	@GetMapping("removedlist")
 	public ModelAndView selectManagementRemovedList(ModelAndView mv) {
 		
@@ -113,6 +142,12 @@ public class ManagementController {
 		return mv; 
 	}
 	
+   /**
+    * 메소드 restoreManagement에 관한 문서화 주석
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param HttpServletRequest request : 멤버 넘버를 jsp에서 getParameter로 가져오기 위한 파라미터입니다. 
+    * @ return : /management/removedlist로 재요청하기 위한 return 입니다.
+    */
 	@GetMapping("restore")
 	public String restoreManagement(RedirectAttributes rttr, HttpServletRequest request) {
 	

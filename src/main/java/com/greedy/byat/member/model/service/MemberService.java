@@ -11,6 +11,17 @@ import com.greedy.byat.common.exception.member.NotexistEmailException;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.profile.model.dto.AttachmentDTO;
 
+/**
+ * <pre>
+ * Class : MemberService
+ * Comment : MemberController의 요청을 처리하는 Interface
+ * History
+ * 2021/02/17 (이소현) 처음 작성
+ * </pre>
+ * @version 1.0.0
+ * @author 이소현
+ * @see MemberController, MemberServiceImpl, MemberMapper, MemberDTO
+ * */
 public interface MemberService {
 
 	String selectMember(MemberDTO member, RedirectAttributes rttr, Model model, HttpServletRequest request);
