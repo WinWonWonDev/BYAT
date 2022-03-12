@@ -28,7 +28,7 @@ import com.greedy.byat.member.model.service.MemberService;
 /* 
 * <pre>
 * Class : MemberController
-* Comment : Member관련 메소드를 모아놓기 위한 Controller입니다.
+* Comment : Member관련 메소드를 모아놓은 Controller입니다.
 * History
 * 2022/02/17 이소현  처음 작성
 * </pre>
@@ -41,7 +41,7 @@ import com.greedy.byat.member.model.service.MemberService;
 @RequestMapping("/member")
 @SessionAttributes("loginMember")
 public class MemberController {
-
+	
 	private final MemberService memberService;
 
 	@Autowired
@@ -61,11 +61,12 @@ public class MemberController {
 
    /*
     * 메소드 loginMember에 관한 문서화 주석
-    * @ param first : MemberDTO 자체를 파라미터로 사용하기 위함입니다.
-    * @ param second : addAttributes로 값을 담아 jsp로 전달하기 위함입니다.
-    * @ param third : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
-    * @ return result : 로그인 하려는 멤버의 정보를 String 담아 return 합니다. 
-    * @ exception LoginFailedException : 로그인 실패 시 발생하는 예외입니다. 
+    * @ param MemberDTO member : MemberDTO 자체를 파라미터로 사용하기 위함입니다.
+    * @ param Model model : addAttributes로 값을 담아 jsp로 전달하기 위함입니다.
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param HttpServletRequest request : attachment를 세션에 담기 위함입니다.
+    * @ return : 로그인 하려는 멤버의 정보를 String result에 담아 return 합니다. 
+    * @ exception : LoginFailedException(로그인 실패 시 발생하는 예외입니다.) 
     */
 	@PostMapping("/login")
 	public String loginMember(@ModelAttribute MemberDTO member, Model model
@@ -79,11 +80,10 @@ public class MemberController {
 	
    /*
     * 메소드 emailduplicationCheck에 관한 문서화 주석
-    * @ param first : email중복체크를 위한  
-    * @ param second : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
-    * @ param third : response 시 json 설정을 하기 위함입니다.
-    * @ return return값에 대한 설명
-    * @ exception 예외 이유에 대한 설명
+    * @ param String emailAddress : email중복체크를 위한  
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param HttpServletResponse response : response 시 json 설정을 하기 위함입니다.
+    * @ return : 초기계정의 이메일 중복 체크 결과를 String test에 담아 return 합니다. 
     */
 	@GetMapping("emailduplicationcheckforinit")
 	@ResponseBody
@@ -104,6 +104,15 @@ public class MemberController {
 		return test;
 	}
 	
+   /*
+    * 메소드 registVerificationNumber에 관한 문서화 주석
+    * @ param String emailAddress : DB에 저장된 email과의 비교(중복체크)를 위한 emailAddress입니다. 
+    * @ param String inputId : Member Number를 가져오기 위한 Member id가 담긴 inputId입니다.
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param HttpServletResponse response : response 시 json 설정을 하기 위함입니다.
+    * @ return : 초기계정의 이메일 중복 체크 결과를 String test에 담아 return 합니다. 
+    * @ exception : NotexistEmailException(입력한 아이디가 존재하지 않는 경우에 대한 익셉션입니다.)
+    */
 	@GetMapping("/registverification")
 	@ResponseBody
 	public int registVerificationNumber(String emailAddress, String inputId, RedirectAttributes rttr, HttpServletResponse response) throws NotexistEmailException {
@@ -127,9 +136,15 @@ public class MemberController {
 	}
 	
 
+   /*
+    * 메소드 selectemail에 관한 문서화 주석
+    * @ param String inputId : 해당 id를 가진 멤버의 Email과 Number를 가져오기 위한 inputId 입니다.
+    * @ return : 해당 이메일에 인증번호 전송결과를 json으로 변환해 String으로 return 합니다. 
+    * @ exception : NotexistEmailException(입력한 아이디가 존재하지 않는 경우에 대한 익셉션입니다.)
+    */
 	@PostMapping(value="selectemail", produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public String selectemail(String inputId, @ModelAttribute MemberDTO member, HttpServletResponse response, Model model, HttpServletRequest request, RedirectAttributes rttr) throws NotexistEmailException, IOException {
+	public String selectemail(String inputId) throws NotexistEmailException {
 		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
@@ -144,9 +159,16 @@ public class MemberController {
 		
 	}
 
+   /*
+    * 메소드 resubmitVerificationNum에 관한 문서화 주석
+    * @ param String inputId : 해당 id를 가진 멤버의 Email과 Number를 가져오기 위한 inputId 입니다.
+    * @ param String emailAddress : 해당 emailAddress를 가진 멤버의 Email과 Number를 가져오기 위한 inputId 입니다.
+    * @ return : 해당 이메일에 인증번호 재전송결과를 json으로 변환해 String으로 return 합니다. 
+    * @ exception : NotexistEmailException(입력한 아이디가 존재하지 않는 경우에 대한 익셉션입니다.)
+    */
 	@GetMapping(value="resubmitverificationnum", produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public String resubmitVerificationNum(String inputId, String emailAddress, HttpServletResponse response, Model model, HttpServletRequest request, RedirectAttributes rttr) throws NotexistEmailException, IOException {
+	public String resubmitVerificationNum(String inputId, String emailAddress) throws NotexistEmailException {
 		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
@@ -160,9 +182,16 @@ public class MemberController {
 		
 	}
 	
+   /*
+    * 메소드 matchVerificationNumber에 관한 문서화 주석
+    * @ param String inputId : 해당 id를 가진 멤버의 Email과 Number를 가져오기 위한 inputId 입니다.
+    * @ param String emailAddress : 해당 emailAddress를 가진 멤버의 Email과 Number를 가져오기 위한 inputId 입니다.
+    * @ return : 해당 이메일에 인증번호 재전송결과를 json으로 변환해 String으로 return 합니다. 
+    * @ exception : NotexistEmailException(입력한 아이디가 존재하지 않는 경우에 대한 익셉션입니다.)
+    */
 	@PostMapping(value="checkverification", produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public int matchVerificationNumber(String inputVerificationNum, RedirectAttributes rttr) {
+	public int matchVerificationNumber(String inputVerificationNum) {
 		
 		Gson gson = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd hh:mm:ss:SSS")
