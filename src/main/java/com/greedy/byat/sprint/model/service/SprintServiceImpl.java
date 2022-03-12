@@ -368,7 +368,7 @@ public class SprintServiceImpl implements SprintService {
 					
 					int result5 = mapper.insertBacklogVersionHistory(task);
 					
-					if(result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0 && result5 > 0) {
+					if (result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0  && result5 > 0 ) {
 						
 						cnt++;
 					}
