@@ -66,6 +66,7 @@
  		<result property="rolName" column="ROLE_NAME"/>
  	</resultMap>
  	
+ 	<!-- MyTask 목록 조회 -->
   	<select id="selectMyTaskProjectList" resultMap="projectResultMap">
 		   		SELECT
 			   A.PROJECT_CODE

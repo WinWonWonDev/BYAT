@@ -852,39 +852,7 @@
       	  		}
         	}
         });
-    	//혹시몰라 남겨둠
-       /*   for(let i = 0; i < $membersModalButton.length; i++){
-        	
-        	 $membersModalButton[i].onclick = function(e) {
-        		 
-        		 $.ajax({
-  	  				url: "/byat/mytask/selectmembermodal",
-  	  				type: "post",
-  	  				data: { "projectCode" : $projectCode[i].value},
-  	  				success:function(data, status, xhr){
-						const $table = $("#modalTable tbody");
-						$table.html("");
-					
-						for(let index in data) {
-							const $tr = $("<tr>");
-							const $noTd = $("<td>").text(data[index].id);
-							const $nameTd = $("<td>").text(data[index].name);
-							const $roleNameTd = $("<td>").text(data[index].roleName);
-							
-							$tr.append($noTd);
-							$tr.append($nameTd);
-							$tr.append($roleNameTd);
-						
-							$table.append($tr);
-  	  					}
-  	  					$('#myModal').show(); 
-  	  				},
-					error: function(xhr, status, error) {
-					   console.log(xhr);
-					}
-  	  			}); 
-         	}
-        }  */
+    	
         
         let $toDoListTextStyle = "";
         let checked = "";

@@ -11,14 +11,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-//(필드 넣어준다음에 주석 풀어주시기 바랍니다)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString 
 public class MyTaskDTO {
-	private List<ProjectDTO> projectDTO;
-	private List<ToDoListDTO> todolistDTO;
-	private List<TaskDTO> taskDTO;
+	private List<ProjectDTO> projectDTO; 						// 프로젝트 정보 
+	private List<ToDoListDTO> todolistDTO;						// ToDoList 정보
+	private List<TaskDTO> taskDTO;								// Task 정보
 }
