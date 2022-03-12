@@ -47,9 +47,10 @@ public class MemberServiceImpl implements MemberService {
 
    /*
     * 메소드 selectMember에 관한 문서화 주석
-    * @ param first : MemberDTO 자체를 파라미터로 사용하기 위함입니다.
-    * @ param second : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
-    * @ param third : addAttributes로 값을 담아 jsp로 전달하기 위함입니다.
+    * @ param MemberDTO member : MemberDTO 자체를 파라미터로 사용하기 위함입니다.
+    * @ param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+    * @ param Model model : addAttributes로 값을 담아 jsp로 전달하기 위함입니다.
+    * @ param HttpServletRequest request :  attachment를 세션에 담기 위함입니다.
     * @ return : if문으로 나눠진 결과에 따라 /member/login 또는 /home으로 redirect합니다.
     */
 	@Override
@@ -107,6 +108,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	
+   /*
+    * 메소드 selectEmailById에 관한 문서화 주석 (작성중)
+    * @ param String id : 해당 id를 가진 멤버의 Email과 Number를 가져오기 위한 inputId 입니다.
+    * @ return : 해당 이메일에 인증번호 전송결과 여부에 따른 결과를 int result 담아 return 합니다.
+    * @ exception : NotexistEmailException(입력한 아이디가 존재하지 않는 경우에 대한 익셉션입니다.)
+    */
 	@Override
 	public int selectEmailById(String id) throws NotexistEmailException {
 		
@@ -179,6 +186,11 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	}
 
+   /*
+    * 메소드 emailDuplicationCheck에 관한 문서화 주석
+    * @ param String emailAddress : DB에 존재하는 이메일과 비교할 emailAddress 입니다.
+    * @ return : existEmail에 값이 담김 여부에 따라 발생하는 result를 return 합니다.
+    */
 	@Override
 	public Object emailDuplicationCheck(String emailAddress) {
 		
@@ -195,6 +207,13 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	}
 
+   /*
+    * 메소드 registVerificationNumber에 관한 문서화 주석
+    * @ param String emailAddress : DB에 존재하는 이메일과 비교할 emailAddress 입니다.
+    * @ param String inputId : Member Number를 가져오기 위한 Member id가 담긴 inputId입니다.
+    * @ return : 이메일 인증 성공 시 결과를 int result에 담아 return 합니다.
+    * @ exception : NotexistEmailException(입력한 아이디가 존재하지 않는 경우에 대한 익셉션입니다.)
+    */
 	@Override
 	public int registVerificationNumber(String emailAddress, String inputId) throws NotexistEmailException {
 		
@@ -236,6 +255,13 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	}
 
+   /*
+    * 메소드 selectResubmitVerificationNum에 관한 문서화 주석
+    * @ param String inputId : 해당 id를 가진 멤버의 Email과 Number를 가져오기 위한 inputId 입니다.
+    * @ param String emailAddress : 해당 emailAddress를 가진 멤버의 Email과 Number를 가져오기 위한 inputId 입니다.
+    * @ return : 해당 이메일에 인증번호 재전송결과를 int result에 담아 return 합니다.
+    * @ exception : NotexistEmailException(입력한 아이디가 존재하지 않는 경우에 대한 익셉션입니다.)
+    */
 	@Override
 	public int selectResubmitVerificationNum(String inputId, String emailAddress) throws NotexistEmailException {
 		

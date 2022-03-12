@@ -2062,7 +2062,7 @@
 			$.ajax({
 				url: "/byat/task/progress",
 				type: "get",
-				data: { "taskCode": $taskCode,
+				data: { "taskCode": $(this).parent('div')[0].children[0].value,
 						"taskProgress": $(this).val() },
 				success: function(data, status, xhr){
 					console.table(data);
