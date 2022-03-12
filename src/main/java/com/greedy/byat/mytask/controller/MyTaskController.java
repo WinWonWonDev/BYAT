@@ -140,7 +140,7 @@ public class MyTaskController {
 	 * 메소드 registToDoList에 관한 문서화 주석
 	 * ToDoList 생성요청 하는 메서드입니다.
 	 * @param request : 뷰에서 MemberDTO의 값을controller에  가져오기 위해 사용합니다.
-	 * @return : redirect을 통해서 mytask/list URL로 요청을 보낸다.
+	 * @return : redirect을 통해서 mytask/list URL로 이동합니다.
 	 */
 	@GetMapping("/regist")
 	public String registToDoList(HttpServletRequest request) {
