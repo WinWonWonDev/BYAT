@@ -10,6 +10,17 @@ import com.greedy.byat.backlog.model.dao.BacklogMapper;
 import com.greedy.byat.backlog.model.dto.BacklogDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 
+/**
+ * <pre>
+ * Class : BacklogServiceImpl
+ * Comment : BacklogService를 상속받아 method들을 재정의한 Class
+ * History
+ * 2021/02/17 (황인수) 처음 작성함
+ * </pre>
+ * @version 1.0.0
+ * @author 황인수
+ * @see BacklogController, BacklogService, BacklogMapper
+ * */
 @Service
 public class BacklogServiceImpl implements BacklogService {
  
@@ -20,16 +31,13 @@ public class BacklogServiceImpl implements BacklogService {
 		this.mapper = mapper;
 	}
 	
-	/* Backlog 전체 조회용 메서드 */
-	@Override
-	public List<BacklogDTO> selectBacklogList(int projectCode) {
-		
-		List<BacklogDTO> backlogList = mapper.selectBacklogList(projectCode);
-		
-		return backlogList;
-	}
-	
-	/* Backlog 생성용 메서드 */
+	/**
+	 * Backlog 생성용 메서드
+	 * 
+	 * @method registBacklog
+	 * @param backlog 생성하려는 백로그의 정보
+	 * @return message mapper 수행 결과에 따른 message
+	 * */
 	@Override
 	public String registBacklog(BacklogDTO backlog) {
 		
@@ -46,7 +54,13 @@ public class BacklogServiceImpl implements BacklogService {
 		return message;
 	}
 	
-	/* Backlog 상세 조회용 메서드 */
+	/**
+	 * Backlog 상세 조회용 메서드
+	 * 
+	 * @method selectBacklogDetail
+	 * @param code 조회하려는 backlog의 code
+	 * @return backlog 조회하려는 backlog의 정보
+	 * */
 	@Override
 	public BacklogDTO selectBacklogDetail(int code) {
 		
@@ -55,7 +69,13 @@ public class BacklogServiceImpl implements BacklogService {
 		return backlog;
 	}
 	
-	/* Backlog 수정용 메서드 */
+	/**
+	 * Backlog 수정용 메서드
+	 * 
+	 * @method modifyBacklog
+	 * @param backlog 수정하려는 backlog의 정보
+	 * @return message mapper 수행 결과에 따른 message
+	 * */
 	@Override
 	public String modifyBacklog(BacklogDTO backlog) {
 		
@@ -71,7 +91,13 @@ public class BacklogServiceImpl implements BacklogService {
 		return message;
 	}
 	
-	/* Backlog 삭제용 메서드 */
+	/**
+	 * Backlog 삭제용 메서드
+	 * 
+	 * @method removeBacklog
+	 * @param code 삭제하려는 backlog의 code
+	 * @return message mapper 수행 결과에 따른 message
+	 * */
 	@Override
 	public String removeBacklog(int code) {
 		
@@ -86,7 +112,14 @@ public class BacklogServiceImpl implements BacklogService {
 		
 		return message;
 	}
-
+	
+	/**
+	 * Backlog task화 메서드
+	 * 
+	 * @method registBacklogTasklize
+	 * @param infoMap mapper를 수행하기 위한 변수들이 담겨 있는 HashMap
+	 * @return message mapper 수행 결과에 따른 message
+	 * */
 	@Override
 	public String registBacklogTasklize(HashMap<String, Integer> infoMap) {
 		
@@ -104,18 +137,7 @@ public class BacklogServiceImpl implements BacklogService {
 			message = "진행중인 스프린트가 없습니다.";
 		}
 		
-		
 		return message;
 	}
 
-	
-
-
-
-
-
-
-
 }
-
-

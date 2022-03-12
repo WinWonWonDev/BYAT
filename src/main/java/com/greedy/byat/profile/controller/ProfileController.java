@@ -25,6 +25,17 @@ import com.greedy.byat.profile.model.service.ProfileService;
 
 import net.coobird.thumbnailator.Thumbnails;
 
+/**
+ * <pre>
+ * Class : ProfileController
+ * Comment : "/profile/*" 요청을 처리하는 Controller
+ * History
+ * 2021/02/17 (황인수) 처음 작성
+ * </pre>
+ * @version 1.0.0
+ * @author 황인수
+ * @see ProfileService, ProfileServiceImpl, MemberMapper, BCryptPasswordEncoder, MemberDTO, AttachmentDTO
+ * */
 @Controller
 @RequestMapping("/profile")
 @SessionAttributes("loginMember")
@@ -40,6 +51,14 @@ public class ProfileController {
 		this.passwordEncoder = passwordEncoder;
 	}
 	
+	/**
+	 * profile 페이지 이동 method
+	 * 
+	 * @method goProfile
+	 * @param model 세션의 값을 꺼내오기 위한 Model 객체
+	 * @param session 세션에 값을 넣어주기 위한 HttpSession 객체
+	 * @return url 이동해 줄 jsp의 경로
+	 * */
 	@RequestMapping("/mypage")
 	public String goProfile(Model model, HttpSession session) {
 		
@@ -54,7 +73,16 @@ public class ProfileController {
 		
 		return "/member/profile";
 	}
-
+	
+	/**
+	 * 프로필 수정 메서드
+	 * 
+	 * @method modifyProfile
+	 * @param member 수정하려는 멤버의 정보
+	 * @param request 요청 정보
+	 * @param rttr redirect 객체를 전달하기 위한 RedirectAttributes 객체
+	 * @return url redirect 해 줄 경로
+	 * */
 	@PostMapping(value="/modify", produces = "application/json; charset=UTF-8")
 	public String modifyProfile(@ModelAttribute MemberDTO member, HttpServletRequest request, RedirectAttributes rttr, Model model) {
 		
@@ -79,6 +107,15 @@ public class ProfileController {
 		return "redirect:/profile/mypage";
 	}
 	
+	/**
+	 * 비밀번호 변경 메서드
+	 * 
+	 * @method modifyPassword
+	 * @param member 변경하려는 멤버의 정보
+	 * @param request 요청 정보
+	 * @param rttr redirect 객체를 전달하기 위한 RedirectAttributes 객체
+	 * @return url redirect 해 줄 경로
+	 * */
 	@PostMapping("/modifypwd")
 	public String modifyPassword(@ModelAttribute MemberDTO member, HttpServletRequest request, RedirectAttributes rttr, Model model) {
 		
