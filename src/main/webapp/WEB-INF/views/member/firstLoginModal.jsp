@@ -29,7 +29,6 @@
 		width: 700px;
 		height: 300px;
 		margin: 100px auto;
-		/* padding:20px 10px; */
 		background: #fff;
 		border: 2px solid #666;
 	}
@@ -333,9 +332,7 @@
 				<br>
 				<p id="contentHead">환영합니다!</p>
 				<br>
-				<p id="contentBody">
-					처음 이용하기 전 <font color="red">프로필</font>을 설정해주세요!
-				</p>
+				<p id="contentBody">처음 이용하기 전 <font color="red">프로필</font>을 설정해주세요!</p>
 			</div>
 			<div class="modalButton">
 				<button type="button" id="modalOkBtn">Ok</button>
@@ -372,9 +369,7 @@
 			<div class="modalHead">Alert Message</div>
 			<div class="modalContentMessageforEmail">
 				<br> <br>
-				<p id="contentBody">
-					등록된 이메일로 인증번호가 전송되었습니다.
-				</p>
+				<p id="contentBody">등록된 이메일로 인증번호가 전송되었습니다.</p>
 			</div>
 			<input type="text" class="inputVerificationNum" id="inputVerificationNum" name="verificationNum" placeholder="인증번호를 입력해주세요">
 			<div id="timerDiv">
@@ -419,7 +414,6 @@
 						document.getElementById("initInfoSettingModal").style.display="block";
 						document.getElementById("oneOrEmail").value = data;  
 						document.getElementById("isDidDuplicate").value = 2;
-	    				
 	    			}
 	    		},
 	    		error : function(error) {
@@ -435,7 +429,6 @@
     });
 
 	function $ComTimer(){
-	    //prototype extend
 	}
 	
 	$ComTimer.prototype = {
@@ -459,9 +452,6 @@
 	    }
 	}
 
-	//인증번호 한번 ok되면 여기에 1이 드가서 안되야 되는데 ㅋㅋㅋ 미치겟네..일ㄷ단...
-	 /* if($("#gotVerificate").val() != 1) {
-		 console.log("오냐? : " + $("#gotVerificate").val()); */
     $("#AuthenticationNumber").click(function () {
     	if($("#isDidDuplicate").val() == 2) { 
     		if($("#oneOrEmail").val() != 1) {
@@ -501,7 +491,6 @@
 														document.getElementById("initInfoSettingModal").style.display="none";
 														document.getElementById("inputEmailVeficationModal").style.display="block";
 														AuthTimer.timer = clearInterval(AuthTimer.timer);
-														/* AuthTimer = clearInterval(AuthTimer); */
 														
 														AuthTimer = new $ComTimer();
 											   	 			
@@ -530,7 +519,6 @@
 								document.getElementById("inputEmailVeficationModal").style.display="none";
 							}
 						},
-							
 						error : function(error) {
 							alert("에러가 발생했습니다. 다시 시도해주세요.");
 						}
@@ -549,7 +537,6 @@
    			alert("중복체크 먼저 해주세요!");
    		}
     });
-/* 	 } */
 	    
 	
     $("#modalOkBtn2").click(function () {
@@ -566,7 +553,6 @@
 					document.getElementById("initInfoSettingModal").style.display="block";
 					document.getElementById("inputEmailVeficationModal").style.display="none";
 					document.getElementById("gotVerificate").value = 1;
-					console.log("왜 안드갖? 1이 : " + $("#gotVerificate").val());
 				
     			} else {
     				alert("인증이 실패하였습니다! 다시 입력해주세요!");
@@ -610,24 +596,21 @@
 							document.getElementById("modal").style.display="none";
 							document.getElementById("inputEmailVeficationModal").style.display="none";
 							document.getElementById("initInfoSettingModal").style.display="none";
-							//아 여기서.. 시간 초과되는 알림창 안떠야되는ㄷ
-							//clearInterval(AuthTimer.timer);
 							
 						} else {
 							alert("정보 등록 실패! 다시 시도해주세요!");
 						}
 					}
 		    	});
+		    	
 		    } else {
 		    	alert("전화번호 형식이 맞지 않습니다! 다시 입력해주세요!");
 		    } 
 		    	
 	    } else {
-	    	
 	    	alert("이메일 인증을 먼저 해주시기 바랍니다!");
 	    }
    });
-	    
     
     
 </script>

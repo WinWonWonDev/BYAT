@@ -71,14 +71,10 @@ public class CalendarController {
 			request.setAttribute("memberNos", loginMember.getNo());
 			
 		}
-		
 		request.setAttribute("calendarList", calendarList);
-		request.setAttribute("loginMemberForDelete", loginMember); //
-		System.out.println("이거 나오냐 ? : " + loginMember);
-		System.out.println("calendarList : " + calendarList);
+		request.setAttribute("loginMemberForDelete", loginMember); 
 		
 		return "/calendar/calendar";
-		
 	}
 	
 	@PostMapping(value="regist", produces="application/json; charset=UTF-8")
@@ -103,7 +99,6 @@ public class CalendarController {
 			rttr.addFlashAttribute("message", "일정 등록 실패! 다시 시도해주세요!");
 			return 0;
 		}
-		
 	}
 
 	@GetMapping("/selectallmember")
@@ -111,8 +106,6 @@ public class CalendarController {
 	public List<MemberDTO> selectAllMemberForSelectBox() {
 		
 		List<MemberDTO> selectAllMemberList = calendarService.selectAllMemberList();
-		
-		System.out.println(selectAllMemberList);
 		
 		return selectAllMemberList;
 	}

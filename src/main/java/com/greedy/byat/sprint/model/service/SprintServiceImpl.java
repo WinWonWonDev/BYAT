@@ -134,7 +134,7 @@ public class SprintServiceImpl implements SprintService {
 		List<Integer> issueList = mapper.selectIssueList3(sprintCode);
 		
 		int result4 = 0;
-
+		
 		for(int i = 0; i < issueList.size(); i++) {
 			
 			int issueCode = issueList.get(i);
@@ -306,6 +306,8 @@ public class SprintServiceImpl implements SprintService {
 			TaskDTO task = new TaskDTO();
 			int cnt = 0;
 			
+			System.out.println("taskDTO에 뭐가 담기냐? : " + task);
+			
 			for(int i = 0; i < taskCodeList.size(); i++) {
 				
 				task = taskCodeList.get(i);
@@ -355,6 +357,9 @@ public class SprintServiceImpl implements SprintService {
 					
 				/* 긴급 태스크로 생성된 태스크이면서 진행상태가 완료라면 변경사항없음*/
 				} else if("완료".equals(task.getProgress()) && 0 >= task.getBacklogCode()){
+					
+					System.out.println("긴급태스크로 만들어진 완료애가 뭐가나오 ?(진행상태) : " + task.getProgress());
+					System.out.println("긴급태스크로 만들어진 완료애가 뭐가나오 ?(백로그코드) : " + task.getBacklogCode());
 					
 					cnt++;
 				}

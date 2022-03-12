@@ -17,7 +17,7 @@ public class ScheduleDTO {
 	private String title;
 	private java.sql.Date startDate;
 	private java.sql.Date endDate;
-	private String body; //string이려나
+	private String body; 
 	private String writer;
 	private int memberNo;
 	private int typeCode;
