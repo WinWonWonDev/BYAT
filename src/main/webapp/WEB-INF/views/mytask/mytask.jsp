@@ -633,7 +633,7 @@
 				 <table class="myTaskDoToList-left">
 						<c:forEach items="${ todoList }" var="todolist" varStatus="status">
 				 			<c:choose>	
-				 				<c:when test="${status.index % 2 == 1}">	
+				 				<c:when test="${status.index % 2 == 0}">	
 									<tr id="todolistTr" class="todolistTrStyle">
 										<td>
 											<input type ="hidden" id="toDoListNo" value="${todolist.no}" maxlength='5'/>
@@ -648,7 +648,7 @@
 				<table class="myTaskDoToList-right">
 					<c:forEach items="${ todoList }" var="todolist" varStatus="status">
 						<c:choose>	
-							<c:when test="${status.index % 2 == 0}">	
+							<c:when test="${status.index % 2 == 1}">	
 								<tr id="todolistTr" class="todolistTrStyle">
 									<td>
 										<input type ="hidden" id="toDoListNo" value="${ todolist.no }" maxlength='5'/>

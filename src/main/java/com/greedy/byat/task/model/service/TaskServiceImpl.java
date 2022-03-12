@@ -197,15 +197,21 @@ public class TaskServiceImpl implements TaskService {
 		/* 태스크의 상태를 Y로 바꿔준다. */
 		int result1 = mapper.deleteTask(map);
 		
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@result1 : " + result1);
+		
 		int taskCode = map.get("taskCode");
 		/* 삭제할 태스크의 내용를 불러온다*/
 		TaskDTO task = mapper.selectTask(taskCode);
 		
+		
 		/* 태스크를 삭제하는 멤버의 번호를 추가*/
 		task.setUpdateMemberNo(map.get("updateMemberNo"));
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@task : " + task);
 		
 		/* 태스크 버전 이력에 추가한다.*/
 		int result2 = mapper.insertTaskVersionHistory3(task);
+		
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@result2 : " + result2);
 		
 		if(result1 > 0 && result2 > 0) {
 			

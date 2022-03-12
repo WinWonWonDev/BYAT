@@ -463,9 +463,9 @@
  		UPDATE
  			   TBL_TASK A
  		   SET A.TASK_VERSION = (SELECT
- 		   								B.TASK_VERSION + 1
+ 		   								B.TASK_VERSION
  		   						   FROM TBL_TASK B
- 		   						  WHERE B.TASK_CODE = #{ taskCode })
+ 		   						  WHERE B.TASK_CODE = #{ taskCode }) + 1
  		   	 , A.TASK_DELETE_STATUS = 'Y'
  		 WHERE A.TASK_CODE = #{ taskCode }
  	</update>
@@ -477,7 +477,7 @@
 		 WHERE A.TASK_CODE = #{ taskCode }
 	</select>
 	
-	<insert id="insertTaskVersionHistory3" parameterType="TaskDTO">
+	<insert id="insertTaskVersionHistory3">
 		INSERT
 		  INTO TBL_TASK_VERSION_HISTORY A
 		(
@@ -502,11 +502,8 @@
 				        										  JOIN TBL_SPRINT C ON (G.SPRINT_CODE = C.SPRINT_CODE)
 				       											 WHERE G.TASK_CODE = #{ code }
 				 	 										   ) || CHR(41)
-		, #{ body }
-		, (SELECT
-				  E.TASK_VERSION
-			 FROM TBL_TASK E
-			WHERE E.TASK_CODE = #{ code })
+		, #{ body, jdbcType=VARCHAR}
+		, #{ version }
 		, (SELECT
 				  F.MEMBER_NAME
 			 FROM TBL_MEMBER F
