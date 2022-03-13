@@ -27,7 +27,7 @@
  	</resultMap>
  	
  	<select id="selectEncryptedPwd" resultType="java.lang.String">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.MemberMapper#selectEncryptedPwd() */
  		       A.MEMBER_PWD
  		  FROM TBL_MEMBER A
  		 WHERE A.ABSENCE_YN = 'N'
@@ -36,7 +36,7 @@
  	</select>
  
  	<select id="login" resultMap="memberResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.MemberMapper#login() */
  		       A.MEMBER_NO
  		     , A.PERMIT_CODE
  		     , A.MEMBER_ID
@@ -55,7 +55,7 @@
  	</select>
  
  	<select id="initLogin" resultMap="memberResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.MemberMapper#initLogin() */
  		       A.MEMBER_NO
  		     , A.PERMIT_CODE
  		     , A.MEMBER_ID
@@ -73,14 +73,14 @@
  	</select>
  	
 	<select id="selectInitPasswordYN" resultType="java.lang.String">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.MemberMapper#selectInitPasswordYN() */
 		       A.INIT_PWD_YN
 		  FROM TBL_MEMBER A
 		 WHERE A.MEMBER_ID = #{ id }
 	</select> 
 		
 	<select id="selectEmailById" resultType="java.lang.String">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.MemberMapper#selectEmailById() */
 		       A.MEMBER_EMAIL
 		  FROM TBL_MEMBER A
 		 WHERE A.ABSENCE_YN = 'N'
@@ -88,7 +88,7 @@
 	</select>
 	
 	<select id="selectMemberNo" resultType="_int">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.MemberMapper#selectMemberNo() */
 		       A.MEMBER_NO
 		  FROM TBL_MEMBER A
 		 WHERE A.ABSENCE_YN = 'N'
@@ -96,7 +96,7 @@
 	</select>
 	
 	<insert id="insertverification" parameterType="hashmap">
-		INSERT 
+		INSERT /* com.greedy.byat.member.model.dao.MemberMapper#insertverification() */
 		  INTO TBL_VERIFICATION A 
 		( 
 		   A.VERIFICATION_NUM_CODE
@@ -120,7 +120,7 @@
 	</insert>
 	
 	<insert id="insertverificationforInit" parameterType="hashmap">
-		INSERT 
+		INSERT /* com.greedy.byat.member.model.dao.MemberMapper#insertverificationforInit() */ 
 		  INTO TBL_VERIFICATION A 
 		( 
 		   A.VERIFICATION_NUM_CODE
@@ -145,7 +145,7 @@
 	
 	
 	<select id="mathchVerificationNumber" resultType="java.lang.String">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.MemberMapper#mathchVerificationNumber() */ 
 			   A.VERIFICATION_NUM_KEY
 	      FROM TBL_VERIFICATION A
 	     WHERE A.VERIFICATION_NUM_DESTRUCTION_YN = 'N'
@@ -153,7 +153,7 @@
 	</select>
 	
 	<select id="mathchVerificationNumberForInit" resultType="java.lang.String">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.MemberMapper#mathchVerificationNumberForInit() */
 			   A.VERIFICATION_NUM_KEY
 	      FROM TBL_VERIFICATION A
 	     WHERE A.VERIFICATION_NUM_DESTRUCTION_YN = 'N'
@@ -163,7 +163,7 @@
 	
 	
 	<update id="updateVerficiation" parameterType="java.lang.String">
-		UPDATE
+		UPDATE /* com.greedy.byat.member.model.dao.MemberMapper#updateVerficiation() */
 		       TBL_VERIFICATION A
 		   SET A.VERIFICATION_NUM_USED_DATE = (SELECT SYSDATE FROM DUAL)
 		     , A.VERIFICATION_NUM_DESTRUCTION_YN = 'Y'
@@ -172,7 +172,7 @@
 	</update>
 
 	<update id="updateVerficiationForInit" parameterType="java.lang.String">
-		UPDATE
+		UPDATE /* com.greedy.byat.member.model.dao.MemberMapper#updateVerficiationForInit() */
 		       TBL_VERIFICATION A
 		   SET A.VERIFICATION_NUM_USED_DATE = (SELECT SYSDATE FROM DUAL)
 		     , A.VERIFICATION_NUM_DESTRUCTION_YN = 'Y'
@@ -181,7 +181,7 @@
 	</update>
 
 	<update id="initialInputInfo" parameterType="hashmap">
-		UPDATE
+		UPDATE /* com.greedy.byat.member.model.dao.MemberMapper#initialInputInfo() */
 		       TBL_MEMBER A 
 		   SET A.MEMBER_EMAIL = #{ email }
 		     , A.MEMBER_PHONE = #{ phone }
@@ -193,7 +193,7 @@
 
 	
 	<update id="updateMemberPwd" parameterType="hashmap">
-		UPDATE
+		UPDATE /* com.greedy.byat.member.model.dao.MemberMapper#updateMemberPwd() */
 		       TBL_MEMBER A
 		   SET A.MEMBER_PWD = #{ encodedFirstPwd }
 		 WHERE A.ABSENCE_YN = 'N'
@@ -201,7 +201,7 @@
 	</update>
 	
 	<select id="emailDuplicationCheck" resultType="java.lang.String">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.MemberMapper#emailDuplicationCheck() */
 		       A.MEMBER_EMAIL
 		  FROM TBL_MEMBER A
 		 WHERE A.MEMBER_EMAIL = #{ emailAddress	}
@@ -233,7 +233,7 @@
 	</select>
 	
 	<update id="updateAttachmentStatus">
-        UPDATE
+        UPDATE /* com.greedy.byat.member.model.dao.MemberMapper#updateAttachmentStatus() */
                TBL_ATTACHMENT A
            SET A.ATTACHMENT_STATUS = 'N'
          WHERE A.MEMBER_NO = #{ no }

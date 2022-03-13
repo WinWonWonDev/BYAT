@@ -44,7 +44,7 @@
  	</resultMap>
  
  	<select id="selectAllMemberList" resultMap="memberResultMap">
- 		SELECT 
+ 		SELECT /* com.greedy.byat.calendar.model.dao.CalendarMapper#selectAllMemberList() */
  			   A.MEMBER_ID
  			 , A.MEMBER_NO
  			 , A.MEMBER_NAME
@@ -53,14 +53,14 @@
  	</select>
  
     <select id="selectAllMemberNo" resultType="_int">
- 		SELECT 
+ 		SELECT /* com.greedy.byat.calendar.model.dao.CalendarMapper#selectAllMemberNo() */
  		       MEMBER_NO
  	      FROM TBL_MEMBER 
     	 WHERE ABSENCE_YN = 'N'
  	</select> 
  
  	<select id="selectProjectListByMemberOne" resultMap="scheduleResultMap">
- 	    SELECT
+ 	    SELECT /* com.greedy.byat.calendar.model.dao.CalendarMapper#selectProjectListByMemberOne() */
  		       A.SCHEDULE_CODE
  		     , A.SCHEDULE_TITLE
  		     , A.SCHEDULE_START_DATE
@@ -84,7 +84,7 @@
  	</select>
  	
  	<select id="selectCalendarListByMemberOne" resultMap="scheduleResultMap">
- 		 SELECT
+ 		 SELECT /* com.greedy.byat.calendar.model.dao.CalendarMapper#selectCalendarListByMemberOne() */
  		       A.SCHEDULE_CODE
  		     , A.SCHEDULE_TITLE
  		     , A.SCHEDULE_START_DATE
@@ -102,7 +102,7 @@
  	</select>
  
  	<select id="selectCalendarListByAdmin" resultMap="scheduleResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.calendar.model.dao.CalendarMapper#selectCalendarListByAdmin() */
  		       A.SCHEDULE_CODE 
 	 		 , A.SCHEDULE_TITLE
 	 		 , A.SCHEDULE_START_DATE
@@ -117,7 +117,7 @@
  	</select>
  	
  	<insert id="insertScheduleByMember">
- 		INSERT
+ 		INSERT /* com.greedy.byat.calendar.model.dao.CalendarMapper#insertScheduleByMember() */
  		  INTO TBL_CALENDAR_SCHEDULE A 
  		(
  		  A.SCHEDULE_CODE 
@@ -141,7 +141,7 @@
  	</insert>
 
  	<insert id="insertScheduleByAdmin">
- 		INSERT
+ 		INSERT /* com.greedy.byat.calendar.model.dao.CalendarMapper#insertScheduleByMember() */
  		  INTO TBL_CALENDAR_SCHEDULE A 
  		(
  		  A.SCHEDULE_CODE 
@@ -165,12 +165,14 @@
  	</insert>
  	
  	<delete id="deleteAllCalendar">
- 		DELETE TBL_CALENDAR_SCHEDULE A
+ 		DELETE /* com.greedy.byat.calendar.model.dao.CalendarMapper#deleteAllCalendar() */
+ 		  	   TBL_CALENDAR_SCHEDULE A
  		 WHERE A.MEMBER_NO = #{ memberNo }
  	</delete>
  	
  	<delete id="deleteAllCalendarByAdmin">
- 		DELETE TBL_CALENDAR_SCHEDULE A 
+ 		DELETE /* com.greedy.byat.calendar.model.dao.CalendarMapper#deleteAllCalendarByAdmin() */
+ 			   TBL_CALENDAR_SCHEDULE A 
  		 WHERE A.CALENDAR_SCHEDULE_TYPE_CODE = 3
  	</delete>
  	

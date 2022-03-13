@@ -13,14 +13,17 @@ import com.greedy.byat.management.model.dto.ManagementDTO;
 import com.greedy.byat.member.model.dto.MemberDTO;
 
 
-/* 
+/** 
 * <pre>
 * Class : ManagementServiceImpl
-* Comment : ManagementController에 필요한 메소드들의 로직을 작성하는 Service입니다.
+* Comment : ManagementController에 필요한 메소드들의 로직을 작성하는 Service
 * History
-* 2022/02/24 이소현  처음 작성
+* 2022/02/24 (이소현) 처음 작성, 관리 목록 조회
+* 2022/02/25 (이소현) 회원 계정 수정,
+* 2022/02/26 (이소현) 회원 계정 수정, 삭제, 삭제된 멤버 목록 조회, 삭제된 멤버 검색
+* 2022/02/27 (이소현) 회원 계정 삭제 jsp 작성, 삭제된 계정 복구
 * </pre>
-* @version 1.0.0
+* @version 4
 * @author 이소현
 * @see ManagementService, ManagementController, ManagementDTO, PermitDTO, ManagementMapper  
 *
@@ -39,7 +42,7 @@ public class ManagementServiceImpl implements ManagementService {
 
    /**
     * 메소드 selectManagementList에 관한 문서화 주석
-    * @ return : controller에 managementList를 반환합니다.
+    * @return controller에 managementList를 return
     */
 	@Override
 	public List<ManagementDTO> selectManagementList() {
@@ -51,9 +54,9 @@ public class ManagementServiceImpl implements ManagementService {
 
    /**
     * 메소드 registManagement에 관한 문서화 주석
-    * @ param MemberDTO member : jsp에서 넘기는 멤버 이름,사번  MemberDTO형식에 담아 전달하기 위한 파라미터입니다. 
-    * @ param String managementRoleforCreate : 멤버 권한의 값을 String으로 담아 그 값에 따라 permitNo를 지정해주기 위한 파라미터입니다.
-    * @ return : 멤버 생성 성공 여부에 따른 결과 값이 int result 담아 return 됩니다.
+    * @param MemberDTO member jsp에서 넘기는 멤버 이름,사번  MemberDTO형식에 담아 전달하기 위한 파라미터 
+    * @param String managementRoleforCreate 멤버 권한의 값을 String으로 담아 그 값에 따라 permitNo를 지정해주기 위한 파라미터
+    * @return 멤버 생성 성공 여부에 따른 결과 값이 int result 담아 return
     */
 	@Override
 	public int registManagement(MemberDTO member, String managementRoleforCreate) {
@@ -85,8 +88,8 @@ public class ManagementServiceImpl implements ManagementService {
 
    /**
     * 메소드 modifyManagement에 관한 문서화 주석
-    * @ param ManagementDTO manegement : jsp에서 넘기는 멤버 이름,사번, 권한을  ManagementDTO형식에 담아 전달하기 위한 파라미터입니다. 
-    * @ return : 멤버 계정 수정 성공 여부에 따른 결과 값을 int result에 담아 return합니다.
+    * @param ManagementDTO manegement jsp에서 넘기는 멤버 이름,사번, 권한을  ManagementDTO형식에 담아 전달하기 위한 파라미터 
+    * @return 멤버 계정 수정 성공 여부에 따른 결과 값을 int result에 담아 return
     */
 	@Override
 	public int modifyManagement(ManagementDTO management) {
@@ -106,8 +109,8 @@ public class ManagementServiceImpl implements ManagementService {
 
    /**
     * 메소드 removeManagement에 관한 문서화 주석
-    * @ param int memberNo : 삭제할 멤버의 넘버를 담은 파라미터입니다.
-    * @ return : 멤버 삭제 성공 여부에 따른 결과 값을 int result에 담아 return합니다.
+    * @param int memberNo 삭제할 멤버의 넘버를 담은 파라미터
+    * @return 멤버 삭제 성공 여부에 따른 결과 값을 int result에 담아 return
     */
 	@Override
 	public int removeManagement(int memberNo) {
@@ -119,7 +122,7 @@ public class ManagementServiceImpl implements ManagementService {
 
    /**
     * 메소드 selectManagementRemovedList에 관한 문서화 주석
-    * @ return : controller에 managementDeletedList를 반환합니다.
+    * @return controller에 managementDeletedList를 return
     */
 	@Override
 	public List<ManagementDTO> selectManagementRemovedList() {
@@ -129,6 +132,11 @@ public class ManagementServiceImpl implements ManagementService {
 		return managementDeletedList;
 	}
 
+   /**
+    * 메소드 restoreManagement에 관한 문서화 주석
+    * @param int no 복구할 멤버의 넘버를 담은 파라미터
+    * @return controller에 복구 성공 결과를 담은 int result를 return
+    */
 	@Override
 	public int restoreManagement(int no) {
 		
