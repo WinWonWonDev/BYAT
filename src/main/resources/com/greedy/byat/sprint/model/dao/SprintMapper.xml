@@ -66,7 +66,7 @@
  	</resultMap>
  	
  	<select id="selectBacklogList" resultMap="generalBacklogResultMap">
-        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectAllBacklogList() */
+        SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectBacklogList() */
                A.BACKLOG_CODE
              , A.BACKLOG_TITLE
              , A.BACKLOG_PROGRESS
@@ -81,7 +81,7 @@
  	</select>
  	
  	<select id="selectSprintList" resultMap="sprintResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintList() */
  		       A.SPRINT_CODE
  		     , A.SPRINT_TITLE
  		     , A.SPRINT_START_DATE
@@ -98,14 +98,14 @@
  	</select>
  	
  	<select id="selectProjectProgress" resultType="java.lang.String">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectProjectProgress() */
  			   A.PROJECT_PROGRESS
  		  FROM TBL_PROJECT A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
  	</select>
  	
  	<insert id="insertSprint">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprint() */
  		  INTO TBL_SPRINT A
  		(
  		  A.SPRINT_CODE
@@ -131,7 +131,7 @@
  	</insert>
  	
  	<insert id="insertSprintVersionHistory">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintVersionHistory() */
 		  INTO TBL_SPRINT_VERSION_HISTORY A
 		(
 		  A.SPRINT_VERSION_HISTORY_NO
@@ -163,7 +163,7 @@
  	</insert>
  	
  	<insert id="insertSprintProgressHistory">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintProgressHistory() */
   		  INTO TBL_SPRINT_PROGRESS_HISTORY A
         (
   		  A.SPRINT_PROGRESS_HISTORY_NO
@@ -187,7 +187,7 @@
  	</insert>
  	
  	<update id="updateSprint">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateSprint() */
  			   TBL_SPRINT A
  		   SET A.SPRINT_TITLE = #{ title }
  		     , A.SPRINT_START_DATE = #{ startDate }
@@ -198,7 +198,7 @@
  	</update>
  	
  	<select id="selectSprint" parameterType="_int"  resultMap="sprintResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprint() */
  			   A.SPRINT_CODE
  		     , A.SPRINT_TITLE
  		     , A.SPRINT_START_DATE
@@ -214,7 +214,7 @@
  	</select>
  	
  	<update id="deleteSprint">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#deleteSprint() */
  		       TBL_SPRINT A
  		   SET A.SPRINT_DELETE_STATUS = 'Y'
  		     , A.SPRINT_PROGRESS = '완료'
@@ -222,7 +222,7 @@
  	</update>
  	
  	<select id="checkSprintProgress" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#checkSprintProgress() */
 	   		   COUNT(*)
   		  FROM TBL_SPRINT
  		 WHERE PROJECT_CODE = #{ projectCode }
@@ -230,7 +230,7 @@
  	</select>
  	
  	<insert id="insertSprintVersionHistory2">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintVersionHistory2() */
  		  INTO TBL_SPRINT_VERSION_HISTORY A
  		(
  		  A.SPRINT_VERSION_HISTORY_NO
@@ -267,7 +267,7 @@
  	<!-- 스프린트 시작 -->
  	<!-- 프로젝트가 진행중인지 확인한다. -->
  	<select id="checkProjectProgress" parameterType="hashmap" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#checkProjectProgress() */
  			   COUNT(*)
  		  FROM TBL_PROJECT
  		 WHERE PROJECT_CODE = #{ projectCode }
@@ -277,7 +277,7 @@
  	
  	<!-- 스프린트의 진행 상태를 확인한다. -->
  	<select id="checkSprintProgress3" parameterType="hashmap" resultType="java.lang.String">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#checkSprintProgress3() */
  			   A.SPRINT_PROGRESS
  		  FROM TBL_SPRINT A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
@@ -287,7 +287,7 @@
  	
  	<!-- 프로젝트의 진행중인 스프린트를 가져온다. -->
  	<select id="selectSprint2" parameterType="hashmap" resultMap="sprintResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprint2() */
  		       A.SPRINT_CODE
  		     , A.SPRINT_TITLE
  		     , A.SPRINT_START_DATE
@@ -302,7 +302,7 @@
  	
  	<!-- 진행중인 스프린트의 모든 태스크를 가져온다. -->
  	<select id="selectTaskList2" parameterType="hashmap" resultMap="taskResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectTaskList2() */
  			   A.TASK_CODE
  			 , A.BACKLOG_CODE
  			 , A.SPRINT_CODE
@@ -327,7 +327,7 @@
  	
  	<!-- 태스크를 진행중으로 변경한다. -->
  	<update id="updateTaskProgress">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateTaskProgress() */
  			   TBL_TASK A
  		   SET A.TASK_PROGRESS = '진행중'
  		 WHERE A.TASK_CODE = #{ code }
@@ -336,7 +336,7 @@
  	
  	<!-- 태스크 진행 상태 변경 이력에 추가 -->
  	<insert id="insertTaskProgressHistory">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertTaskProgressHistory() */
  		  INTO TBL_TASK_PROGRESS_HISTORY A
  		(
  		  A.TASK_PROGRESS_HISTORY_NO
@@ -364,7 +364,7 @@
  	
  	<!-- 백로그의 진행 상태도 진행중으로 변경한다. -->
  	<update id="updateBacklogProgress">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateBacklogProgress() */
  		       TBL_BACKLOG A
  		   SET A.BACKLOG_PROGRESS = '진행중'
  		 WHERE A.BACKLOG_CODE = #{ backlogCode }
@@ -372,7 +372,7 @@
  	</update>
  	
  	<insert id="insertBacklogProgressHistory">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklogProgressHistory() */
  		  INTO TBL_BACKLOG_PROGRESS_HISTORY A
  		(
  		  A.BACKLOG_PROGRESS_HISTORY_NO
@@ -395,7 +395,7 @@
  	</insert>
  	
  	<update id="updatesprintProgress" parameterType="hashmap">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updatesprintProgress() */
  			   TBL_SPRINT A
  		   SET A.SPRINT_PROGRESS = '진행중'
  		 WHERE A.PROJECT_CODE = #{ projectCode }
@@ -404,7 +404,7 @@
  	</update>
  	
  	<insert id="insertSprintProgressHistory3" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintProgressHistory3() */
  		  INTO TBL_SPRINT_PROGRESS_HISTORY A
  		(
  		  A.SPRINT_PROGRESS_HISTORY_NO
@@ -445,10 +445,8 @@
  		)
  	</insert>
  	
- 	<!-- 스프린트 종료  -->
- 	<!-- 스프린트가 진행중인지 확인한다. -->
  	<select id="checkSprintProgress2" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#checkSprintProgress2() */
  			   COUNT(*)
  		  FROM TBL_SPRINT
  		 WHERE PROJECT_CODE = #{ projectCode }
@@ -457,7 +455,7 @@
  	</select>
  	
  	<select id="selectSprintTaskCodeList" parameterType="hashmap" resultMap="taskResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintTaskCodeList() */
  			   A.TASK_CODE
  			 , A.BACKLOG_CODE
  			 , A.SPRINT_CODE
@@ -481,14 +479,14 @@
  	</select>
  	
  	<update id="updateTaskProgress3">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateTaskProgress3() */
  		       TBL_TASK A
  		   SET A.TASK_PROGRESS = '미완료'
  		 WHERE A.TASK_CODE = #{ code }
  	</update>
  	
  	<insert id="insertTaskProgressHistory2">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertTaskProgressHistory2() */
  		  INTO TBL_TASK_PROGRESS_HISTORY A
  		(
  		  A.TASK_PROGRESS_HISTORY_NO
@@ -515,7 +513,7 @@
  	</insert>
  	
  	<insert id="insertBacklog">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklog() */
  		  INTO TBL_BACKLOG A
  		(
  		  A.BACKLOG_CODE
@@ -542,7 +540,7 @@
  	</insert>
  	
  	<insert id="insertBacklogProgressHistory2">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklogProgressHistory2() */
  		  INTO TBL_BACKLOG_PROGRESS_HISTORY A
  		(
  		  A.BACKLOG_PROGRESS_HISTORY_NO
@@ -570,7 +568,7 @@
  			   SEQ_BACKLOG_CODE.CURRVAL
  		  FROM DUAL
  		</selectKey>
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklogVersionHistory() */
  		  INTO TBL_BACKLOG_VERSION_HISTORY A
  		(
  		  A.BACKLOG_VERSION_HISTORY_NO
@@ -605,14 +603,14 @@
  	</insert>
  	
  	<update id="updateBacklogProgress2">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateBacklogProgress2() */
  			   TBL_BACKLOG A
  		   SET A.BACKLOG_PROGRESS = '완료'
  		 WHERE A.BACKLOG_CODE = #{ backlogCode }
  	</update>
  	
  	<insert id="insertBacklogProgressHistory3">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklogProgressHistory3() */
  		  INTO TBL_BACKLOG_PROGRESS_HISTORY A
  		(
  		  A.BACKLOG_PROGRESS_HISTORY_NO
@@ -635,21 +633,21 @@
  	</insert>
  	
  	<update id="updateTaskProgress2">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateTaskProgress2() */
  			   TBL_TASK A
  		   SET A.TASK_PROGRESS = '미완료'
  		 WHERE A.TASK_CODE = #{ code }
  	</update>
  	
  	<update id="updateBacklogProgress3">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateBacklogProgress3() */
  			   TBL_BACKLOG A
  		   SET A.BACKLOG_PROGRESS = '미완료'
  		 WHERE A.BACKLOG_CODE = #{ backlogCode }
  	</update>
  	
  	<select id="selectSprintCode" parameterType="hashmap" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintCode() */
  			   A.SPRINT_CODE
  		  FROM TBL_SPRINT A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
@@ -657,14 +655,14 @@
  	</select>
  	
  	<update id="updateSprintProgress2">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateSprintProgress2() */
  			   TBL_SPRINT A
  		   SET A.SPRINT_PROGRESS = '완료'
  		 WHERE A.SPRINT_CODE = #{ sprintCode }
  	</update>
  	
  	<insert id="insertSprintProgressHistory4" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintProgressHistory4() */
  		  INTO TBL_SPRINT_PROGRESS_HISTORY A
  		(
  		  A.SPRINT_PROGRESS_HISTORY_NO
@@ -697,7 +695,7 @@
  	</insert>
  	
  	<insert id="insertRetrospective">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertRetrospective() */
  		  INTO TBL_RETROSPECTIVE A
  		(
  		  A.RETROSPECTIVE_CODE
@@ -711,7 +709,7 @@
  	</insert>
  	
  	<insert id="insertStartSprintNotice" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertStartSprintNotice() */
  		  INTO TBL_NOTICE A
  		(
  		  A.NOTICE_CODE
@@ -745,7 +743,7 @@
  	</insert>
  	
  	<select id="selectSprintMemberList" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintMemberList() */
  			   A.MEMBER_NO
  		  FROM TBL_SPRINT_MEMBERS A
  		 WHERE A.SPRINT_CODE = (SELECT
@@ -757,7 +755,7 @@
  	</select>
  	
  	<select id="selectSprintMemberList2" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintMemberList2() */
  			   A.MEMBER_NO
  		  FROM TBL_SPRINT_MEMBERS A
  		 WHERE A.SPRINT_CODE = #{ sprintCode }
@@ -765,7 +763,7 @@
  	</select>
  	
  	<insert id="insertEndSprintNotice" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertEndSprintNotice() */
  		  INTO TBL_NOTICE A
  		(
  		  A.NOTICE_CODE
@@ -797,7 +795,7 @@
  	</insert>
  	
  	<select id="selectSprintMemberList3" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintMemberList3() */
  			   A.MEMBER_NO
  		  FROM TBL_SPRINT_MEMBERS A
  		 WHERE A.SPRINT_CODE = #{ code }
@@ -805,7 +803,7 @@
  	</select>
  	
  	<insert id="insertUpdateSprintNotice" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertUpdateSprintNotice() */
  		  INTO TBL_NOTICE A
  		(
  		  A.NOTICE_CODE
@@ -837,22 +835,15 @@
  	</insert>
  	
  	<select id="selectIssueList" parameterType="hashmap" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectIssueList() */
  			   A.ISSUE_CODE
  		  FROM TBL_ISSUE A
  		 WHERE A.SPRINT_CODE = #{ sprintCode }
  		   AND A.ISSUE_PROGRESS IN ('해결전', '해결중')
  	</select>
  	
- 	<update id="updateIssueProgress" >
- 		UPDATE
- 		       TBL_ISSUE A
- 		   SET A.ISSUE_PROGRESS = '보류'
- 		 WHERE A.ISSUE_CODE = #{ issueCode }
- 	</update>
- 	
  	<insert id="insertIssueProgressHistory" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertIssueProgressHistory() */
  		  INTO TBL_ISSUE_PROGRESS_HISTORY A
  		(
  		  A.ISSUE_PROGRESS_HISTORY_NO
@@ -872,7 +863,7 @@
  	</insert>
  	
  	<select id="selectIssueList2" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectIssueList2() */
  			   A.ISSUE_CODE
  		  FROM TBL_ISSUE A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
@@ -881,13 +872,13 @@
  	</select>
  	
  	<select id="updateIssueSprintCode" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#updateIssueSprintCode() */
  		       SEQ_SPRINT_CODE.CURRVAL
  		  FROM DUAL
  	</select>
  	
  	<insert id="insertIssueProgressHistory2" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertIssueProgressHistory2() */
  		  INTO TBL_ISSUE_PROGRESS_HISTORY A
  		(
  		  A.ISSUE_PROGRESS_HISTORY_NO
@@ -910,14 +901,14 @@
  	</insert>
  	
  	<update id="updateIssueMembersParticipation">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateIssueMembersParticipation() */
  		       TBL_ISSUE_MEMBERS A
  		   SET A.ISSUE_PARTICIPATION_YN = 'N'
  		 WHERE A.ISSUE_CODE = #{ issueCode }
  	</update>
  	
  	<update id="updateIssueProgress2">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateIssueProgress2() */
  		       TBL_ISSUE A
  		   SET A.ISSUE_PROGRESS = '보류'
  		 WHERE A.SPRINT_CODE = (SELECT
@@ -928,7 +919,7 @@
  	</update>
  	
  	<select id="selectIssueList3" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectIssueList3() */
  			   A.ISSUE_CODE
  		  FROM TBL_ISSUE A
  		 WHERE A.SPRINT_CODE = #{ sprintCode }
@@ -936,7 +927,7 @@
  	</select>
  	
  	<insert id="insertSprintVersionHistory3">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintVersionHistory3() */
  		  INTO TBL_SPRINT_VERSION_HISTORY A
  		(
  		  A.SPRINT_VERSION_HISTORY_NO
@@ -963,21 +954,21 @@
  	</insert>
  	
  	<update id="updateIssueMembersParticipation2">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateIssueMembersParticipation2() */
  		       TBL_ISSUE_MEMBERS A
  		   SET A.ISSUE_PARTICIPATION_YN = 'N'
  		 WHERE A.ISSUE_CODE = #{ issueCode }
  	</update>
  	
  	<select id="selectSprintMemberList4" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintMemberList4() */
  			   A.MEMBER_NO
  		  FROM TBL_SPRINT_MEMBERS A
  		 WHERE A.SPRINT_CODE = #{ sprintCode }
  	</select>
  	
  	<insert id="insertRemoveSprintNotice" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertRemoveSprintNotice() */
  		  INTO TBL_NOTICE A
  		(
  		  A.NOTICE_CODE
@@ -1004,7 +995,7 @@
  	</insert>
  	
  	<select id="selectProjectMembersRoleNamee" parameterType="hashmap" resultType="java.lang.String">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectProjectMembersRoleNamee() */
  			   A.ROLE_NAME
  		  FROM TBL_ROLE A
  		 WHERE A.MEMBER_NO = #{ memberNo }

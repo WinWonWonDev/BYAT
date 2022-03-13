@@ -71,7 +71,7 @@
  	</resultMap>
  	
  	<select id="selectTaskList2" resultMap="taskResultMap3">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectTaskList2() */
  			   A.TASK_CODE
  			 , A.TASK_TITLE
  			 , A.TASK_START_DATE
@@ -93,7 +93,7 @@
  	</select>
  	
  	<select id="selectMembersRoleList" resultMap="taskMembersRoleResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectMembersRoleList() */
 	   		   A.PROJECT_CODE
 	 		 , B.TASK_CODE 
 	 		 , A.MEMBER_NO  
@@ -107,7 +107,7 @@
  	</select>
  	
  	<select id="selectTask" resultMap="taskResultMap2">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectTask() */
  			   A.TASK_CODE
  			 , A.TASK_TITLE
  			 , A.TASK_START_DATE
@@ -125,7 +125,7 @@
  	</select>
  
  	<select id="checkSprintProgress" parameterType="_int" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#checkSprintProgress() */
  			   COUNT(*)
  		  FROM TBL_SPRINT
  		 WHERE PROJECT_CODE = #{ projectCode }
@@ -133,7 +133,7 @@
  	</select>
  	
  	<select id="selectSprintCode" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectSprintCode() */
  			   A.SPRINT_CODE
  		  FROM TBL_SPRINT A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
@@ -141,7 +141,7 @@
  	</select>
  	
  	<insert id="insertTask" parameterType="TaskDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTask() */
  		  INTO TBL_TASK A
  		(
  		  A.TASK_CODE
@@ -171,7 +171,7 @@
  	</insert>
  	
  	<select id="selectSprintTitle" parameterType="TaskDTO" resultType="java.lang.String">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectSprintTitle() */
 			   A.SPRINT_TITLE
 		  FROM TBL_SPRINT A
 		  JOIN TBL_TASK B ON (A.SPRINT_CODE = B.SPRINT_CODE)
@@ -184,7 +184,7 @@
 		 	   SEQ_TASK_CODE.CURRVAL
 		  FROM DUAL
 		</selectKey>
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTaskVersionHistory() */
  		  INTO TBL_TASK_VERSION_HISTORY A
  		(
  		  A.TASK_VERSION_HISTORY_NO
@@ -216,7 +216,7 @@
 		 	   SEQ_TASK_CODE.currval
 		  FROM DUAL
  		</selectKey>
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTaskProgressHistory() */
  		  INTO TBL_TASK_PROGRESS_HISTORY A
  		(
  		  A.TASK_PROGRESS_HISTORY_NO
@@ -241,7 +241,7 @@
  	</insert>
  	
  	<select id="checkWasTaskMembers" parameterType="hashmap" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#checkWasTaskMembers() */
  			   COUNT(*)
  		  FROM TBL_TASK_MEMBERS
  		 WHERE TASK_CODE = #{ taskCode }
@@ -249,7 +249,7 @@
  	</select>
  	
  	<update id="changeTaskMembersParticipation" parameterType="hashmap">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.TaskMapper#changeTaskMembersParticipation() */
  		       TBL_TASK_MEMBERS A
  		   SET A.TASK_PARTICIPATION_YN = 'Y'
  		 WHERE A.TASK_CODE = #{ taskCode }
@@ -257,7 +257,7 @@
  		   AND A.TASK_PARTICIPATION_YN = 'N'
  	</update>
  	<insert id="insertTaskMembers" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTaskMembers() */
  		  INTO TBL_TASK_MEMBERS A
  		(
  		  A.TASK_CODE
@@ -276,7 +276,7 @@
  	</insert>
  	
  	<insert id="insertSprintMembers" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertSprintMembers() */
  		  INTO TBL_SPRINT_MEMBERS A
  		(
  		  A.MEMBER_NO
@@ -298,7 +298,7 @@
  	</insert>
  	
  	<select id="checkIsSprintMembers" parameterType="hashmap" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#checkIsSprintMembers() */
  			   COUNT(*)
  		  FROM TBL_SPRINT_MEMBERS
  		 WHERE MEMBER_NO = #{ memberNo }
@@ -309,7 +309,7 @@
  	</select>
  	
  	<select id="checkWasSprintMembers" parameterType="hashmap" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#checkWasSprintMembers() */
  		       COUNT(*)
  		  FROM TBL_SPRINT_MEMBERS
  		 WHERE MEMBER_NO = #{ memberNo }
@@ -321,7 +321,7 @@
  	</select>
  	
  	<insert id="changeSprintMembersParticipation" parameterType="hashmap">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.TaskMapper#changeSprintMembersParticipation() */
  			   TBL_SPRINT_MEMBERS A
  		   SET A.SPRINT_PARTICIPATION_YN = 'Y'
  		 WHERE A.MEMBER_NO = #{ memberNo }
@@ -333,7 +333,7 @@
  	</insert>
  	
  	<select id="selectTaskParticipation" parameterType="hashmap" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectTaskParticipation() */
  			   COUNT(*)
  		  FROM TBL_TASK_MEMBERS
  		 WHERE TASK_CODE = #{ taskCode }
@@ -342,7 +342,7 @@
  	</select>
  	
  	<insert id="insertTaskMembersHistory" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTaskMembersHistory() */
  		  INTO TBL_TASK_MEMBERS_HISTORY A
  		(
  		  A.TASK_MEMBERS_HISTORY_NO
@@ -367,7 +367,7 @@
  	</insert>
  	
  	<insert id="insertSprintMembersHistory" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertSprintMembersHistory() */
  		  INTO TBL_SPRINT_MEMBERS_HISTORY A
  		(
  		  A.SPRINT_MEMBERS_HISTORY_NO
@@ -395,7 +395,7 @@
  	</insert>
  	
  	<select id="selectTaskMembers" resultMap="taskMembersResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectTaskMembers() */
  			   C.MEMBER_ID
  			 , C.MEMBER_NAME
  			 , B.PERMIT_NAME
@@ -407,7 +407,7 @@
  	</select>
  	
  	<update id="updateTask">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.TaskMapper#updateTask() */
  		       TBL_TASK A
  		   SET A.TASK_TITLE = #{ title }
  		     , A.TASK_START_DATE = #{ startDate }
@@ -421,7 +421,7 @@
  	</update>
  	
  	<insert id="insertTaskVersionHistory2">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTaskVersionHistory2() */
  		  INTO TBL_TASK_VERSION_HISTORY A
  		(
  		  A.TASK_VERSION_HISTORY_NO
@@ -460,7 +460,7 @@
  	</insert>
  	
  	<update id="deleteTask" parameterType="hashmap">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.TaskMapper#deleteTask() */
  			   TBL_TASK A
  		   SET A.TASK_VERSION = (SELECT
  		   								B.TASK_VERSION
@@ -471,14 +471,14 @@
  	</update>
  	
 	<select id="selectTaskBody" parameterType="hashmap" resultType="java.lang.String">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectTaskBody() */
 			   A.TASK_BODY
 		  FROM TBL_TASK A
 		 WHERE A.TASK_CODE = #{ taskCode }
 	</select>
 	
 	<insert id="insertTaskVersionHistory3">
-		INSERT
+		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTaskVersionHistory3() */
 		  INTO TBL_TASK_VERSION_HISTORY A
 		(
 		  A.TASK_VERSION_HISTORY_NO
@@ -514,7 +514,7 @@
 	</insert>
 	
 	<select id="selectTaskMembersList" parameterType="hashmap" resultType="_int">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectTaskMembersList() */
 			   A.MEMBER_NO
 		  FROM TBL_TASK_MEMBERS A
 		 WHERE A.TASK_CODE = #{ taskCode }
@@ -522,14 +522,14 @@
 	</select>
 	
 	<update id="deleteTaskMembers" parameterType="hashmap">
-		UPDATE
+		UPDATE /* com.greedy.byat.member.model.dao.TaskMapper#deleteTaskMembers() */
 		       TBL_TASK_MEMBERS A
 		   SET A.TASK_PARTICIPATION_YN = 'N'
 		 WHERE A.TASK_CODE = #{ taskCode }
 	</update>	
 	
 	<insert id="insertTaskMembersHistory2" parameterType="hashmap">
-		INSERT
+		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTaskMembersHistory2() */
 		  INTO TBL_TASK_MEMBERS_HISTORY A
 		(
 		  A.TASK_MEMBERS_HISTORY_NO
@@ -554,7 +554,7 @@
 	</insert>
 	
 	<update id="deleteTaskMembers2" parameterType="hashmap">
-		UPDATE
+		UPDATE /* com.greedy.byat.member.model.dao.TaskMapper#deleteTaskMembers2() */
 			   TBL_TASK_MEMBERS A
 		   SET A.TASK_PARTICIPATION_YN = 'N'
 		 WHERE A.TASK_CODE = #{ taskCode }
@@ -562,7 +562,7 @@
 	</update>
 	
 	<select id="checkOtherTaskMembers" parameterType="hashmap" resultType="_int">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#checkOtherTaskMembers() */
 			   COUNT(*)
 		  FROM TBL_TASK_MEMBERS
 		 WHERE SPRINT_CODE = (SELECT
@@ -574,7 +574,7 @@
 	</select>
 	
 	<update id="deleteSprintMembers">
-		UPDATE
+		UPDATE /* com.greedy.byat.member.model.dao.TaskMapper#deleteSprintMembers() */
 			   TBL_SPRINT_MEMBERS A
 		   SET A.SPRINT_PARTICIPATION_YN = 'N'
 		 WHERE A.SPRINT_CODE = (SELECT
@@ -585,7 +585,7 @@
 	</update>
 	
 	<insert id="insertSprintMembersHistory2" parameterType="hashmap">
-		INSERT
+		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertSprintMembersHistory2() */
 		  INTO TBL_SPRINT_MEMBERS_HISTORY A
 		(
 		  A.SPRINT_MEMBERS_HISTORY_NO
@@ -613,7 +613,7 @@
 	</insert>
 	
 	<insert id="insertTaskMembersHistory3" parameterType="hashmap">
-		INSERT
+		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTaskMembersHistory3() */
 		  INTO TBL_TASK_MEMBERS_HISTORY A
 		(
 		  A.TASK_MEMBERS_HISTORY_NO
@@ -638,7 +638,7 @@
 	</insert>
 	
 	<select id="selectTaskList" resultMap="taskResultMap">
-		SELECT
+		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectTaskList() */
 			   A.TASK_TITLE
 			 , A.TASK_START_DATE
 			 , A.TASK_END_DATE
@@ -652,7 +652,7 @@
 	</select>
 	
 	<update id="updateTaskProgress" parameterType="hashmap">
-		UPDATE
+		UPDATE /* com.greedy.byat.member.model.dao.TaskMapper#updateTaskProgress() */
 		       TBL_TASK A
 		<if test="taskProgressCode == 1">
 		   SET A.TASK_PROGRESS = '진행중'
@@ -664,7 +664,7 @@
 	</update>
 	
 	<insert id="insertTaskProgressHistory2" parameterType="hashmap">
-		INSERT
+		INSERT /* com.greedy.byat.member.model.dao.TaskMapper#insertTaskProgressHistory2() */
 		  INTO TBL_TASK_PROGRESS_HISTORY A
 		(
 		  A.TASK_PROGRESS_HISTORY_NO
