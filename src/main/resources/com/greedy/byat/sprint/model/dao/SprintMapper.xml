@@ -95,6 +95,7 @@
  		JOIN TBL_PROJECT B ON(A.PROJECT_CODE = B.PROJECT_CODE)
  	   WHERE B.PROJECT_CODE = #{ no }
  	     AND A.SPRINT_DELETE_STATUS = 'N'
+ 	   ORDER BY 1
  	</select>
  	
  	<select id="selectProjectProgress" resultType="java.lang.String">
