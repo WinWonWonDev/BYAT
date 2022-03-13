@@ -52,7 +52,7 @@
 </style>
 <title>Insert title here</title>
 </head>
-<body>
+<body style="overflow-y:hidden; overflow-x:hidden;">
    <div class="errorMessage">
       <p class="error403page"><strong>403<br>ooops, you cannot access<br>it with your authority!</strong></p>
    </div>

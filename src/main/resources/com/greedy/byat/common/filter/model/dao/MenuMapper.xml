@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.greedy.byat.common.filter.model.dao.MenuMapper">
+	
+	<select id="selectMenuCodeByURL" resultType="_int">
+        SELECT /* com.greedy.byat.common.filter.model.dao.MenuMapper#selectMenuCodeByURL() */
+               A.COMMON_MENU_CODE
+          FROM TBL_COMMON_MENU A
+         WHERE A.COMMON_MENU_URL = #{ url }
+	</select>
+	
+	<select id="selectPermitInURL" parameterType="_int" resultType="_int">
+        SELECT /* com.greedy.byat.common.filter.model.dao.MenuMapper#selectPermitInURL() */
+               A.PERMIT_CODE
+          FROM TBL_MENU_BY_PERMIT A
+         WHERE COMMON_MENU_CODE = #{ menuCode }
+	</select>
+</mapper>

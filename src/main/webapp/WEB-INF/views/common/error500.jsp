@@ -51,7 +51,7 @@
 </style>
 <title>Insert title here</title>
 </head>
-<body>
+<body style="overflow-y:hidden; overflow-x:hidden;">
 	<div class="errorMessage">
 		<p class="error500page"><strong>500<br>ooops, it's our fault.<br>sorry.</strong></p>
 	</div>

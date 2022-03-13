@@ -28,6 +28,7 @@ public class SprintDTO {
 	private int version;
 	private String deleteStatus;
 	private String writer;
+	private int memberNo;
 	private MemberDTO writerMember;
 	private List<TaskDTO> taskList;
 	private List<IssueDTO> issueList;

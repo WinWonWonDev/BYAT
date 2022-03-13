@@ -17,4 +17,7 @@ public class TaskMembersDTO {
 	private int memberNo;
 	private int projectCode;
 	private String roleName;
+	private String permitName;
+	private String memberName;
+	private String memberId;
 }

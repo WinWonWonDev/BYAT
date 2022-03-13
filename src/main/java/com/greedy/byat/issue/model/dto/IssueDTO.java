@@ -1,5 +1,7 @@
 package com.greedy.byat.issue.model.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +26,6 @@ public class IssueDTO {
 	private int sprintCode;
 	private int projectCode;
 	private String name;
+	private List<IssueMembersDTO> issueMemberList; 
 	
 }

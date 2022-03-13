@@ -4,5 +4,124 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.notice.model.dao.NoticeMapper">
  
+ 	<resultMap type="NoticeDTO" id="noticeResultMap">
+ 		<id property="code" column="NOTICE_CODE"/>
+ 		<result property="body" column="NOTICE_BODY"/>
+ 		<result property="url" column="NOTICE_URL"/>
+ 		<result property="status" column="NOTICE_STATUS"/>
+ 		<result property="category" column="NOTICE_CATEGORY_CODE"/>
+ 		<result property="no" column="MEMBER_NO"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		<result property="issueCode" column="ISSUE_CODE"/>
+ 		<result property="scheduleCode" column="SCHEDULE_CODE"/>
+ 		<result property="backlogCode" column="BACKLOG_CODE"/>
+ 		<result property="meetinglogCode" column="MEETINGLOG_CODE"/>
+ 		<result property="sprintCode" column="SPRINT_CODE"/>
+ 		<result property="createdTime" column="NOTICE_TIME"/>
+ 	</resultMap>
+ 	
+ 	<resultMap type="NoticeSettingDTO" id="noticeSettingResultMap">
+ 		<id property="no" column="MEMBER_NO"/>
+ 		<result property="projectSetting" column="PROJECT_NOTIFICATION_SETTING"/>
+ 		<result property="sprintSetting" column="SPRINT_NOTIFICATION_SETTING"/>
+ 		<result property="backlogSetting" column="BACKLOG_NOTIFICATION_SETTING"/>
+ 		<result property="issueSetting" column="ISSUE_NOTIFICATION_SETTING"/>
+ 		<result property="meetinglogSetting" column="MEETINGLOG_NOTIFICATION_SETTING"/>
+ 		<result property="calendarSetting" column="CALENDAR_NOTIFICATION_SETTING"/>
+ 	</resultMap>
+
+	<select id="selectNoticeList" resultMap="noticeResultMap">
+		SELECT /* com.greedy.byat.notice.model.dao.NoticeMapper#selectNoticeList() */
+		       A.NOTICE_CODE
+		     , A.NOTICE_BODY
+		     , A.NOTICE_URL
+		     , A.NOTICE_STATUS
+		     , A.NOTICE_CATEGORY_CODE
+		     , A.MEMBER_NO
+		     , A.PROJECT_CODE
+		     , A.ISSUE_CODE
+		     , A.SCHEDULE_CODE
+		     , A.BACKLOG_CODE
+		     , A.MEETINGLOG_CODE
+		     , A.SPRINT_CODE
+		     , A.NOTICE_TIME
+		  FROM TBL_NOTICE A
+		 WHERE A.MEMBER_NO = #{ no }
+		   AND A.NOTICE_STATUS != 'REMOVE'
+		 ORDER BY A.NOTICE_CODE DESC
+	</select>
+	
+	<select id="selectNoticeSetting" resultMap="noticeSettingResultMap">
+		SELECT /* com.greedy.byat.notice.model.dao.NoticeMapper#selectNoticeSetting() */
+		       A.PROJECT_NOTIFICATION_SETTING
+		     , A.SPRINT_NOTIFICATION_SETTING
+		     , A.BACKLOG_NOTIFICATION_SETTING
+		     , A.ISSUE_NOTIFICATION_SETTING
+		     , A.MEETINGLOG_NOTIFICATION_SETTING
+		     , A.CALENDAR_NOTIFICATION_SETTING
+		  FROM TBL_NOTIFICATION_BY_MEMBER A
+		 WHERE A.MEMBER_NO = #{ no }
+	</select>
+	
+	<update id="updateNoticeStatus" parameterType="NoticeDTO">
+		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#updateNoticeStatus() */
+		       TBL_NOTICE A
+		   SET A.NOTICE_STATUS = 'Y'
+		 WHERE A.NOTICE_CODE = #{ code }
+		   AND A.MEMBER_NO = #{ no }
+	</update>
+	
+	<update id="deleteConfirmNotice" parameterType="_int">
+		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#deleteConfirmNotice() */
+		       TBL_NOTICE A
+		   SET A.NOTICE_STATUS = 'REMOVE'
+		 WHERE A.MEMBER_NO = #{ no }
+		   AND A.NOTICE_STATUS = 'Y'
+	</update>
+	
+	<update id="updateNoticeSetting" parameterType="NoticeSettingDTO">
+		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#updateNoticeSetting() */
+		       TBL_NOTIFICATION_BY_MEMBER A
+		   <if test="projectSetting != null">
+		   SET A.PROJECT_NOTIFICATION_SETTING = #{ projectSetting }
+		   </if>
+		   <if test="sprintSetting != null">
+		   SET A.SPRINT_NOTIFICATION_SETTING = #{ sprintSetting }
+		   </if>
+		   <if test="backlogSetting != null">
+		   SET A.BACKLOG_NOTIFICATION_SETTING = #{ backlogSetting }
+		   </if>
+		   <if test="issueSetting != null">
+		   SET A.ISSUE_NOTIFICATION_SETTING = #{ issueSetting }
+		   </if>
+		   <if test="meetinglogSetting != null">
+		   SET A.MEETINGLOG_NOTIFICATION_SETTING = #{ meetinglogSetting }
+		   </if>
+		   <if test="calendarSetting != null">
+		   SET A.CALENDAR_NOTIFICATION_SETTING = #{ calendarSetting }
+		   </if>
+		 WHERE A.MEMBER_NO = #{ no }
+	</update>
+ 	
+ 	<update id="updateNoticeStatusChange" parameterType="NoticeDTO">
+ 		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#updateNoticeStatusChange() */
+ 		       TBL_NOTICE A
+ 		   <if test='"Y".equals(status)'>
+ 		   SET A.NOTICE_STATUS = 'N'
+ 		   </if>
+ 		   <if test='"N".equals(status)'>
+ 		   SET A.NOTICE_STATUS = 'Y'
+ 		   </if>
+ 		 WHERE A.NOTICE_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }
+ 	</update>
+ 	
+ 	<update id="deleteNotice" parameterType="NoticeDTO">
+ 		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#deleteNotice() */
+ 		       TBL_NOTICE A
+ 		   SET A.NOTICE_STATUS = 'REMOVE'
+ 		 WHERE A.NOTICE_CODE = #{ code }
+ 		   AND A.MEMBER_NO = #{ no }
+ 	</update>
  	
  </mapper>

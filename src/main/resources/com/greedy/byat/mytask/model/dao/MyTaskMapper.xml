@@ -3,16 +3,16 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.mytask.model.dao.MyTaskMapper">
- 	<resultMap id="memberResultMap" type="MemberDTO">
- 		<id property="no" column="MEMBER_NO"/>
- 		<result property="permit" column="MEMBER_PERMIT"/>
- 		<result property="id" column="MEMBER_ID"/>
- 		<result property="name" column="MEMBER_NAME"/>
- 		<result property="pwd" column="MEMBER_PWD"/>
- 		<result property="phone" column="MEMBER_PHONE"/>
- 		<result property="email" column="MEMBER_EMAIL"/>
- 	</resultMap>
  	
+ 	<resultMap id="memberResultMap" type="MemberDTO">
+ 		<id property="memberNo" column="MEMBER_NO"/>
+ 		<result property="permitCode" column="PERMIT_CODE"/>
+ 		<result property="memberId" column="MEMBER_ID"/>
+ 		<result property="memberName" column="MEMBER_NAME"/>
+ 		<result property="memberPwd" column="MEMBER_PWD"/>
+ 		<result property="memberPhone" column="MEMBER_PHONE"/>
+ 		<result property="memberEmail" column="MEMBER_EMAIL"/>
+ 	</resultMap>
  	
  	<resultMap id="projectResultMap" type="ProjectDTO">
  		<id property="code" column="PROJECT_CODE"/>
@@ -31,6 +31,7 @@
 	<resultMap id ="projectMembersResultMap" type="ProjectMembersDTO">
  		<id property="code" column="PROJECT_CODE"/>
  		<id property="no" column="MEMBER_NO"/>
+ 		<result property="id" column="MEMBER_ID"/>
  		<result property="participationYn" column="PROJECT_PARTICIPATION_YN"/>
  		<result property="name" column="MEMBER_NAME"/>
  		<result property="roleName" column="ROLE_NAME"/>
@@ -41,33 +42,33 @@
        <result property ="writingTime" column="TODOlIST_WRITING_TIME"/>
        <result property="title" column="TODOLIST_TITLE"/>
        <result property="checkStatus" column="TODOLIST_CHECK_STATUS"/>
-       <result property="deleteStatus" column="TODOLIST_DELETESTATUS"/>
+       <result property="deleteStatus" column="TODOLIST_DELETE_STATUS"/>
+       <result property="memberNo" column="MEMBER_NO"/>
     </resultMap>
     
-    
- 	
- 	
- 	<!-- <resultMap id ="taskResultMap" type="TaskDTO">
- 		<id property="code" column="SPRINT_CODE"/>
- 		<id property="no" column="MEMBER_NO"/>
- 		<id property="code" column="PROJECT_CODE"/>
+    <resultMap id ="taskResultMap" type="TaskDTO">
  		<id property="code" column="TASK_CODE"/>
- 		<result property="version" column="TASK_VERSION"/>
  		<result property="title" column="TASK_TITLE"/>
  		<result property="startDate" column="TASK_START_DATE"/>
  		<result property="progress" column="TASK_PROGRESS"/>
- 		<result property="manager" column="TASK_MANAGER"/>
  		<result property="endDate" column="TASK_END_DATE"/>
  		<result property="deleteStatus" column="TASK_DELETE_STATUS"/>
- 		<result property="sprintCode" column="TASK_CODE"/>
  		<result property="projectCode" column="PROJECT_CODE"/>
- 		<result property="backLogCode" column="BACKLOG_CODE"/>
+ 		<result property="memberNo" column="MEMBER_NO"/>
  		
- 	</resultMap> -->
+  	</resultMap>
  	
- 	
+ 	<resultMap id ="taskMembersResultMap" type="TaskMembersDTO">
+ 		
+ 		<id property="taskCode" column="TASK_CODE"/>
+ 		<result property="memberNo" column="MEMBER_NO"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		<result property="rolName" column="ROLE_NAME"/>
+ 	</resultMap>
+ 	 
+ 	 
   	<select id="selectMyTaskProjectList" resultMap="projectResultMap">
- 		SELECT
+		SELECT  /* com.greedy.byat.mytask.dao.MyTaskMapper#selectMyTaskProjectList() */
 			   A.PROJECT_CODE
 			 , A.PROJECT_TITLE
 			 , A.PROJECT_START_DATE
@@ -78,15 +79,16 @@
 			 , A.PROJECT_DELETE_STATUS
 			 , A.PROJECT_WRITER
 		  FROM TBL_PROJECT A
-		  JOIN TBL_MEMBER B ON(A.PROJECT_WRITER = B.MEMBER_NAME)
-		  JOIN TBL_PROJECT_MEMBERS C ON(A.PROJECT_CODE = C.PROJECT_CODE)
-		 WHERE C.MEMBER_NO = #{ no }
+		  JOIN TBL_PROJECT_MEMBERS B ON(A.PROJECT_CODE = B.PROJECT_CODE)
+		  JOIN TBL_MEMBER C ON(C.MEMBER_NO = B.MEMBER_NO)
+		 WHERE C.MEMBER_NO = #{writer}
 		   AND A.PROJECT_DELETE_STATUS = 'N'
-		 ORDER BY PROJECT_CODE DESC
+		   AND B.PROJECT_PARTICIPATION_YN ='Y'
+		   ORDER BY A.PROJECT_CODE DESC
  	</select>
  	
  	<select id="selectMyTaskProjectMembers" resultMap="projectMembersResultMap">
-		SELECT
+		SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectMyTaskProjectMembers() */
 		       A.PROJECT_CODE 
 		     , A.MEMBER_NO
 		     , A.PROJECT_PARTICIPATION_YN
@@ -95,12 +97,43 @@
 		  FROM TBL_PROJECT_MEMBERS A
 		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
 		  JOIN TBL_ROLE C ON(A.PROJECT_CODE = C.PROJECT_CODE)
-		 WHERE A.PROJECT_CODE = #{ code }
+		 WHERE A.PROJECT_CODE = #{projectCode}
 		   AND B.MEMBER_NO = C.MEMBER_NO
- 	</select>
+		 	</select>
+ 	
+ 	<select id="selectTaskList" resultMap="taskResultMap">
+        SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectTaskList() */
+               A.TASK_CODE
+             , A.TASK_TITLE
+             , A.TASK_START_DATE
+             , A.TASK_PROGRESS
+             , A.TASK_END_DATE
+             , A.TASK_DELETE_STATUS
+             , A.PROJECT_CODE
+          FROM TBL_TASK A
+         WHERE A.MEMBER_NO = #{memberNo}
+           AND A.TASK_DELETE_STATUS = 'N'
+           AND A.TASK_PROGRESS NOT LIKE '%미완료%'
+     </select>
+     
+     <select id="selectTaskListForProject" resultMap="taskResultMap">
+        SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectTaskListForProject() */
+               A.TASK_CODE
+             , A.TASK_TITLE
+             , A.TASK_START_DATE
+             , A.TASK_PROGRESS
+             , A.TASK_END_DATE
+             , A.TASK_DELETE_STATUS
+             , A.PROJECT_CODE
+          FROM TBL_TASK A
+         WHERE A.MEMBER_NO = #{memberNo}
+           AND A.PROJECT_CODE = #{projectCode}
+           AND A.TASK_DELETE_STATUS = 'N'
+           AND A.TASK_PROGRESS NOT LIKE '%미완료%'
+     </select>
  	
  	<select id="selectMyTaskToDoList" resultMap="toDoListResultMap">
-        SELECT
+        SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectMyTaskToDoList() */
         	   A.TODOLIST_NO
              , A.TODOLIST_WRITING_TIME
              , A.TODOLIST_TITLE
@@ -108,31 +141,12 @@
              , A.TODOLIST_DELETE_STATUS
              , A.MEMBER_NO
           FROM TBL_TODOLIST A
-         WHERE A.MEMBER_NO= #{ memberNo }
+         WHERE A.MEMBER_NO = #{ memberNumber}
            AND A.TODOLIST_DELETE_STATUS = 'N'
-         ORDER BY A.TODOLIST_NO DESC
     </select>
- 	
- 	<!-- <select id="selectTaskList" resultMap="taskListResultMap">
-        SELECT
-             , A.TASK_CODE
-             , A.TASK_TITLE
-             , A.TASK_PROGRESS
-             , A.PROJECT_CODE
-             , A.TASK_DELETE_STATUS
-             , A.MEMBER_NO
-             , A.SPRING_CODE
-             , A.TASK_STATRT_DATE
-             , A.TASK_END_DATE
-          FROM TBL_TASK
-          JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
-          JOIN TBL_
-         WHERE A.PROJECT_CODE = #{ projectCode }
-           AND A.MEMBER_NO = #{ memberNo }
-     </select> -->
- 	
- 	<insert id = "reqistToDoList" parameterType="_int" >
-        INSERT
+
+ 	<insert id ="registToDoList" parameterType="int" >
+        INSERT /* com.greedy.byat.mytask.dao.MyTaskMapper#registToDoList() */
           INTO TBL_TODOLIST A
         (
           A.TODOLIST_NO
@@ -145,27 +159,50 @@
  		VALUES
  		(
  		  SEQ_PROJECT_NO.NEXTVAL
- 		, TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
+ 		, TO_DATE(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
  		, NULL
  		, 'N'
  		, 'N'
- 		, #{ memberNo }
+ 		, #{ memberNumber }
  		)
  	</insert>
  	
- 	
- 	<update id = "removeToDoList" parameterType="_int">
-       UPDATE 
+ 	<update id = "removeToDoList" parameterType="int">
+       UPDATE /* com.greedy.byat.mytask.dao.MyTaskMapper#removeToDoList() */
  		       TBL_TODOLIST A
  		   SET A.TODOLIST_DELETE_STATUS= 'Y'
- 		 WHERE A.TODOLIST_NO = #{ todolistNo }
+ 		 WHERE A.TODOLIST_NO = #{todoListNumber}
  	</update>
 
- 	<update id = "modifyToDoListStatus" >
-       UPDATE 
+ 	<update id = "modifyToDoListStatus" parameterType="ToDoListDTO">
+       UPDATE /* com.greedy.byat.mytask.dao.MyTaskMapper#modifyToDoListStatus() */
  		       TBL_TODOLIST A
- 		   SET A.TODOLIST_CHECK_STATUS = #{ checkStatus }
- 		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY.MM.DD HH24:MI:SS')
- 		 WHERE A.TODOLIST_NO = #{ no }
+ 		   SET A.TODOLIST_CHECK_STATUS = #{checkStatus}
+ 		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+ 		 WHERE A.TODOLIST_NO = #{no}
  	</update>
+ 	
+ 	<select id="selectMemberModal" resultMap="projectMembersResultMap">
+		SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectMemberModal() */
+		       A.PROJECT_CODE 
+		     , A.MEMBER_NO
+		     , A.PROJECT_PARTICIPATION_YN
+		     , B.MEMBER_NAME
+		     , B.MEMBER_ID
+		     , C.ROLE_NAME
+		  FROM TBL_PROJECT_MEMBERS A
+		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
+		  JOIN TBL_ROLE C ON(A.PROJECT_CODE = C.PROJECT_CODE)
+		 WHERE A.PROJECT_CODE = #{projectNum}
+		   AND B.MEMBER_NO = C.MEMBER_NO
+ 	</select>
+ 	
+ 	<update id ="modifyToDoList" parameterType="ToDoListDTO">
+       UPDATE /* com.greedy.byat.mytask.dao.MyTaskMapper#modifyToDoList() */
+ 		       TBL_TODOLIST A
+ 		   SET A.TODOLIST_TITLE = #{title}
+ 		     , A.TODOLIST_WRITING_TIME = #{ writingTime }
+ 		 WHERE A.TODOLIST_NO = #{no}
+ 	</update>
+ 	
  </mapper>

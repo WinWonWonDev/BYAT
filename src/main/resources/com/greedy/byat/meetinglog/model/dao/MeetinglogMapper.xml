@@ -3,6 +3,168 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.meetinglog.model.dao.MeetinglogMapper">
+ 	
+ 	<resultMap id ="meetinglogResultMap" type="MeetinglogDTO">
+ 		<id property="code" column="MEETINGLOG_CODE"/>
+ 		<result property="title" column="MEETINGLOG_TITLE"/>
+ 		<result property="body" column="MEETINGLOG_BODY"/>
+ 		<result property="writingDate" column="MEETINGLOG_WRITING_DATE"/>
+ 		<result property="version" column="MEETINGLOG_VERSION"/>
+ 		<result property="deleteStatus" column="MEETINGLOG_DELETE_STATUS"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		<result property="memberNo" column="MEMBER_NO"/>
+ 		<result property="memberName" column="MEMBER_NAME"/>
+ 	</resultMap>
+
+	<resultMap id="noticeResultMap" type="NoticeDTO" >
+		<id property="code" column="NOTICE_CODE"/>
+		<id property="no" column="MEMBER_NO"/>
+		<result property="body" column="NOTICE_BODY"/>
+		<result property="url" column="NOTICE_URL"/>
+		<result property="status" column="NOTICE_STATUS"/>
+		<result property="category" column="NOTICE_CATEGORY_CODE"/>
+		<result property="meetinglogCode" column="MEETINGLOG_CODE"/>
+		<result property="createdTime" column="NOTICE_TIME"/>
+	</resultMap>
+
+	<resultMap id="proejectMemberMap" type="ProjectMembersDTO">
+		<id property="projectCode" column="PROJECT_CODE"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="projectParticipationYN" column="PROJECT_PARTICIPATION_YN"/>
+	</resultMap>
+	
+	
+	<select id ="selectProjectMembers" resultType="_int">
+        SELECT	/* com.greedy.byat.meetinglog.dao.MeetinglogMapper#selectProjectMembers() */
+               A.MEMBER_NO
+          FROM TBL_PROJECT_MEMBERS A
+         WHERE A.PROJECT_CODE = #{projectCode}
+           AND A.PROJECT_PARTICIPATION_YN = 'Y'
+	</select>
+
+ 	 	<select id="selectProjectName" resultType="string">
+ 		SELECT  /* com.greedy.byat.meetinglog.dao.MeetinglogMapper#selectProjectName() */
+ 		       A.PROJECT_TITLE
+ 		  FROM TBL_PROJECT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 	</select>
+ 	
+ 	<select id="selectMeetinglogList" resultMap="meetinglogResultMap">
+ 		SELECT /* com.greedy.byat.meetinglog.dao.MeetinglogMapper#selectMeetinglogList() */
+			   A.MEETINGLOG_CODE
+			 , A.MEETINGLOG_TITLE
+			 , A.MEETINGLOG_BODY
+			 , A.MEETINGLOG_WRITING_DATE
+			 , A.MEETINGLOG_VERSION
+			 , A.MEETINGLOG_DELETE_STATUS
+			 , A.PROJECT_CODE
+			 , A.MEMBER_NO
+			 , A.MEMBER_NAME 
+		  FROM TBL_MEETINGLOG A
+		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
+		 WHERE A.PROJECT_CODE = #{ projectCode }
+		   AND A.MEETINGLOG_DELETE_STATUS = 'N'
+		 ORDER BY MEETINGLOG_CODE DESC 
+ 	</select>
+ 	
+ 	<select id="selectMeetinglogDetail" resultMap = "meetinglogResultMap">
+ 		SELECT /* com.greedy.byat.meetinglog.dao.MeetinglogMapper#selectMeetinglogDetail() */
+			   A.MEETINGLOG_CODE
+			 , A.MEETINGLOG_TITLE
+			 , A.MEETINGLOG_BODY
+			 , A.MEETINGLOG_WRITING_DATE
+			 , A.MEETINGLOG_VERSION
+			 , A.MEETINGLOG_DELETE_STATUS
+			 , A.PROJECT_CODE
+			 , A.MEMBER_NO
+			 , A.MEMBER_NAME 
+		  FROM TBL_MEETINGLOG A 
+		  JOIN TBL_MEMBER B ON(A.MEMBER_NO = B.MEMBER_NO)
+		 WHERE A.MEETINGLOG_CODE = #{ code }
+		 ORDER BY MEETINGLOG_CODE DESC
+ 	</select>
+
+ 	
+ 	<insert id="registMeetinglog" parameterType="MeetinglogDTO">
+ 		INSERT /* com.greedy.byat.meetinglog.dao.MeetinglogMapper#registMeetinglog() */
+ 		  INTO TBL_MEETINGLOG A
+ 		(
+ 		  A.MEETINGLOG_CODE
+		, A.MEETINGLOG_TITLE
+		, A.MEETINGLOG_BODY
+		, A.MEETINGLOG_WRITING_DATE
+		, A.MEETINGLOG_VERSION
+		, A.MEETINGLOG_DELETE_STATUS
+		, A.MEMBER_NO
+		, A.PROJECT_CODE
+		, A.MEMBER_NAME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_MEETINGLOG_CODE.NEXTVAL
+ 		, #{ title } 
+ 		, #{ body }
+ 		, #{ writingDate }
+ 		, #{ version }
+ 		, #{ deleteStatus }
+ 		, #{ memberNo }
+ 		, #{ projectCode }
+ 		, #{ memberName }
+ 		)
+ 	</insert>
+
+ 	<update id="modifyMeetinglog" parameterType="MeetinglogDTO">
+ 		UPDATE /* com.greedy.byat.meetinglog.dao.MeetinglogMapper#modifyMeetinglog() */
+ 		       TBL_MEETINGLOG A
+ 		   SET A.MEETINGLOG_TITLE = #{ title }
+			 , A.MEETINGLOG_WRITING_DATE = TO_DATE(SYSDATE)
+ 		     , A.MEETINGLOG_BODY = #{ body }
+ 		 WHERE A.MEETINGLOG_CODE = #{ code }
+ 	</update>
+ 	
+ 	<update id="insertVersion">
+        UPDATE /* com.greedy.byat.meetinglog.dao.MeetinglogMapper#insertVersion() */
+               TBL_MEETINGLOG A
+           SET A.MEETINGLOG_VERSION = (SELECT B.MEETINGLOG_VERSION
+                                  FROM TBL_MEETINGLOG B
+                                 WHERE B.MEETINGLOG_CODE = #{ code }
+                               ) + 1
+         WHERE A.MEETINGLOG_CODE = #{ code }
+	</update>
+	
+	<update id="removeMeetinglog">
+		UPDATE /* com.greedy.byat.meetinglog.dao.MeetinglogMapper#removeMeetinglog() */
+ 		       TBL_MEETINGLOG A
+ 		   SET A.MEETINGLOG_DELETE_STATUS = 'Y'
+ 		 WHERE A.MEETINGLOG_CODE = #{ meetingCode }
+	
+	</update>
+ 
+ 	<insert id="registMeetinglogNotice">
+ 	INSERT /* com.greedy.byat.meetinglog.dao.MeetinglogMapper#registMeetinglogNotice() */
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE				
+		, A.NOTICE_BODY
+		, A.NOTICE_URL
+		, A.NOTICE_STATUS
+		, A.NOTICE_CATEGORY_CODE
+		, A.MEMBER_NO
+		, A.MEETINGLOG_CODE
+		, A.NOTICE_TIME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, #{ body } 
+ 		, #{ url }
+ 		, #{ status }
+ 		, #{ category }
+ 		, #{ no }
+ 		, SEQ_MEETINGLOG_CODE.CURRVAL
+ 		, TO_DATE(SYSDATE)
+ 		)
+ 	</insert>
  
  	
  </mapper>

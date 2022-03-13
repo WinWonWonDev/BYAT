@@ -49,34 +49,39 @@
  		<result property="projectCode" column="PROJECT_CODE"/>
  		
  		<association property="managerRole" resultMap="roleResultMap"/>
- 		
  	</resultMap>
  	
- 	<select id="selectTaskList" resultMap="taskResultMap">
- 		SELECT
- 			   A.TASK_CODE
- 			 , A.TASK_TITLE
- 			 , A.TASK_START_DATE
- 			 , A.TASK_END_DATE
- 			 , A.TASK_PROGRESS
- 			 , A.TASK_BODY
- 			 , A.TASK_VERSION
- 			 , A.TASK_DELETE_STATUS
- 			 , A.MEMBER_NO
- 			 , A.PROJECT_CODE
- 			 , A.BACKLOG_CODE
- 			 , A.SPRINT_CODE
- 			 , B.ROLE_NAME
- 		  FROM TBL_TASK A
- 		  JOIN TBL_ROLE B ON (A.MEMBER_NO = B.MEMBER_NO)
- 		  JOIN TBL_SPRINT C ON (A.PROJECT_CODE = C.PROJECT_CODE)
- 		 WHERE A.SPRINT_CODE = #{ sprintCode }
- 		   AND A.TASK_DELETE_STATUS = 'N'
+ 	<resultMap type="BacklogDTO" id="generalBacklogResultMap">
+ 		<id property="code" column="BACKLOG_CODE"/>
+ 		<result property="title" column="BACKLOG_TITLE"/>
+ 		<result property="progress" column="BACKLOG_PROGRESS"/>
+ 		<result property="body" column="BACKLOG_BODY"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		<result property="version" column="BACKLOG_VERSION"/>
+ 		<result property="deleteStatus" column="BACKLOG_DELETE_STATUS"/>
+ 		<result property="writer" column="BACKLOG_WRITER"/>
+ 		
+ 		<!-- writer는 String으로 받아오기 때문에 association이 필요없을 거 같음 -->
+ 		<!-- <association property="writer" resultMap="memberResultMap"/> -->
+ 	</resultMap>
+ 	
+ 	<select id="selectBacklogList" resultMap="generalBacklogResultMap">
+        SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectBacklogList() */
+               A.BACKLOG_CODE
+             , A.BACKLOG_TITLE
+             , A.BACKLOG_PROGRESS
+             , A.BACKLOG_BODY
+             , A.PROJECT_CODE
+             , A.BACKLOG_VERSION
+             , A.BACKLOG_DELETE_STATUS
+             , A.BACKLOG_WRITER
+          FROM TBL_BACKLOG A
+         WHERE A.BACKLOG_DELETE_STATUS = 'N'
+           AND A.PROJECT_CODE = #{ projectCode }
  	</select>
  	
- 	
  	<select id="selectSprintList" resultMap="sprintResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintList() */
  		       A.SPRINT_CODE
  		     , A.SPRINT_TITLE
  		     , A.SPRINT_START_DATE
@@ -93,14 +98,14 @@
  	</select>
  	
  	<select id="selectProjectProgress" resultType="java.lang.String">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectProjectProgress() */
  			   A.PROJECT_PROGRESS
  		  FROM TBL_PROJECT A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
  	</select>
  	
  	<insert id="insertSprint">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprint() */
  		  INTO TBL_SPRINT A
  		(
  		  A.SPRINT_CODE
@@ -126,7 +131,7 @@
  	</insert>
  	
  	<insert id="insertSprintVersionHistory">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintVersionHistory() */
 		  INTO TBL_SPRINT_VERSION_HISTORY A
 		(
 		  A.SPRINT_VERSION_HISTORY_NO
@@ -158,7 +163,7 @@
  	</insert>
  	
  	<insert id="insertSprintProgressHistory">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintProgressHistory() */
   		  INTO TBL_SPRINT_PROGRESS_HISTORY A
         (
   		  A.SPRINT_PROGRESS_HISTORY_NO
@@ -182,7 +187,7 @@
  	</insert>
  	
  	<update id="updateSprint">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateSprint() */
  			   TBL_SPRINT A
  		   SET A.SPRINT_TITLE = #{ title }
  		     , A.SPRINT_START_DATE = #{ startDate }
@@ -193,7 +198,7 @@
  	</update>
  	
  	<select id="selectSprint" parameterType="_int"  resultMap="sprintResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprint() */
  			   A.SPRINT_CODE
  		     , A.SPRINT_TITLE
  		     , A.SPRINT_START_DATE
@@ -209,7 +214,7 @@
  	</select>
  	
  	<update id="deleteSprint">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#deleteSprint() */
  		       TBL_SPRINT A
  		   SET A.SPRINT_DELETE_STATUS = 'Y'
  		     , A.SPRINT_PROGRESS = '완료'
@@ -217,7 +222,7 @@
  	</update>
  	
  	<select id="checkSprintProgress" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#checkSprintProgress() */
 	   		   COUNT(*)
   		  FROM TBL_SPRINT
  		 WHERE PROJECT_CODE = #{ projectCode }
@@ -225,7 +230,7 @@
  	</select>
  	
  	<insert id="insertSprintVersionHistory2">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintVersionHistory2() */
  		  INTO TBL_SPRINT_VERSION_HISTORY A
  		(
  		  A.SPRINT_VERSION_HISTORY_NO
@@ -258,4 +263,742 @@
 		, #{ code }
  		)
  	</insert>
+ 	
+ 	<!-- 스프린트 시작 -->
+ 	<!-- 프로젝트가 진행중인지 확인한다. -->
+ 	<select id="checkProjectProgress" parameterType="hashmap" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#checkProjectProgress() */
+ 			   COUNT(*)
+ 		  FROM TBL_PROJECT
+ 		 WHERE PROJECT_CODE = #{ projectCode }
+ 		   AND PROJECT_PROGRESS = '진행중'
+ 		   AND PROJECT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<!-- 스프린트의 진행 상태를 확인한다. -->
+ 	<select id="checkSprintProgress3" parameterType="hashmap" resultType="java.lang.String">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#checkSprintProgress3() */
+ 			   A.SPRINT_PROGRESS
+ 		  FROM TBL_SPRINT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.SPRINT_PROGRESS IN ('진행전', '진행전')
+ 		   AND A.SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<!-- 프로젝트의 진행중인 스프린트를 가져온다. -->
+ 	<select id="selectSprint2" parameterType="hashmap" resultMap="sprintResultMap">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprint2() */
+ 		       A.SPRINT_CODE
+ 		     , A.SPRINT_TITLE
+ 		     , A.SPRINT_START_DATE
+ 		     , A.SPRINT_END_DATE
+ 		     , A.SPRINT_BODY
+ 		     , A.PROJECT_CODE
+ 		  FROM TBL_SPRINT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.SPRINT_PROGRESS = '진행전'
+ 		   AND A.SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<!-- 진행중인 스프린트의 모든 태스크를 가져온다. -->
+ 	<select id="selectTaskList2" parameterType="hashmap" resultMap="taskResultMap">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectTaskList2() */
+ 			   A.TASK_CODE
+ 			 , A.BACKLOG_CODE
+ 			 , A.SPRINT_CODE
+ 			 , A.PROJECT_CODE
+ 			 , A.TASK_TITLE
+ 			 , A.TASK_START_DATE
+ 			 , A.TASK_END_DATE
+ 			 , A.TASK_PROGRESS
+ 			 , A.TASK_BODY
+ 			 , A.TASK_VERSION
+ 			 , A.TASK_DELETE_STATUS
+ 			 , A.MEMBER_NO
+ 		  FROM TBL_TASK A
+ 		 WHERE A.SPRINT_CODE = (SELECT
+ 									   B.SPRINT_CODE
+ 								  FROM TBL_SPRINT B
+ 								 WHERE B.SPRINT_PROGRESS = '진행전'
+ 								   AND B.PROJECT_CODE = #{ projectCode }
+ 								   AND B.SPRINT_DELETE_STATUS = 'N')
+ 		   AND A.TASK_DELETE_STATUS = 'N' 
+ 	</select>
+ 	
+ 	<!-- 태스크를 진행중으로 변경한다. -->
+ 	<update id="updateTaskProgress">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateTaskProgress() */
+ 			   TBL_TASK A
+ 		   SET A.TASK_PROGRESS = '진행중'
+ 		 WHERE A.TASK_CODE = #{ code }
+ 		   AND A.TASK_DELETE_STATUS = 'N'
+ 	</update>
+ 	
+ 	<!-- 태스크 진행 상태 변경 이력에 추가 -->
+ 	<insert id="insertTaskProgressHistory">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertTaskProgressHistory() */
+ 		  INTO TBL_TASK_PROGRESS_HISTORY A
+ 		(
+ 		  A.TASK_PROGRESS_HISTORY_NO
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.TASK_CODE
+ 		, A.TASK_PROGRESS_HISTORY_STATUS
+ 		, A.TASK_PROGRESS_HISTORY_START_DATE
+ 		, A.TASK_PROGRESS_HISTORY_END_DATE
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, #{ code }
+ 		, '진행중'
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<!-- 백로그의 진행 상태도 진행중으로 변경한다. -->
+ 	<update id="updateBacklogProgress">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateBacklogProgress() */
+ 		       TBL_BACKLOG A
+ 		   SET A.BACKLOG_PROGRESS = '진행중'
+ 		 WHERE A.BACKLOG_CODE = #{ backlogCode }
+ 		   AND A.BACKLOG_DELETE_STATUS = 'N'
+ 	</update>
+ 	
+ 	<insert id="insertBacklogProgressHistory">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklogProgressHistory() */
+ 		  INTO TBL_BACKLOG_PROGRESS_HISTORY A
+ 		(
+ 		  A.BACKLOG_PROGRESS_HISTORY_NO
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.BACKLOG_CODE
+ 		, A.BACKLOG_PROGRESS_HISTORY_STATUS
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, #{ backlogCode }
+ 		, '진행중'
+ 		, (SELECT
+ 		          B.MEMBER_NAME
+ 		     FROM TBL_MEMBER B
+ 		    WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updatesprintProgress" parameterType="hashmap">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updatesprintProgress() */
+ 			   TBL_SPRINT A
+ 		   SET A.SPRINT_PROGRESS = '진행중'
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.SPRINT_DELETE_STATUS = 'N'
+ 		   AND A.SPRINT_PROGRESS = '진행전'
+ 	</update>
+ 	
+ 	<insert id="insertSprintProgressHistory3" parameterType="hashmap">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintProgressHistory3() */
+ 		  INTO TBL_SPRINT_PROGRESS_HISTORY A
+ 		(
+ 		  A.SPRINT_PROGRESS_HISTORY_NO
+ 		, A.SPRINT_PROGRESS
+ 		, A.SPRINT_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_START_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_END_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, '진행중'
+ 		, SYSDATE
+ 		, (SELECT
+ 				  B.SPRINT_START_DATE
+ 			 FROM TBL_SPRINT B
+ 			WHERE B.PROJECT_CODE = #{ projectCode }
+ 			  AND B.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 			  AND B.SPRINT_DELETE_STATUS = 'N')
+ 		, (SELECT
+ 				  C.SPRINT_END_DATE
+ 			 FROM TBL_SPRINT C
+ 			WHERE C.PROJECT_CODE = #{ projectCode }
+ 			  AND C.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 			  AND C.SPRINT_DELETE_STATUS = 'N')
+ 		, (SELECT
+ 				  D.MEMBER_NAME
+ 			 FROM TBL_MEMBER D
+ 			WHERE D.MEMBER_NO = #{ memberNo })
+ 		, (SELECT
+ 				  E.SPRINT_CODE
+ 			 FROM TBL_SPRINT E
+ 			WHERE E.PROJECT_CODE = #{ projectCode }
+ 			  AND E.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 			  AND E.SPRINT_DELETE_STATUS = 'N')	  
+ 		)
+ 	</insert>
+ 	
+ 	<select id="checkSprintProgress2" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#checkSprintProgress2() */
+ 			   COUNT(*)
+ 		  FROM TBL_SPRINT
+ 		 WHERE PROJECT_CODE = #{ projectCode }
+ 		   AND SPRINT_PROGRESS = '진행중'
+ 		   AND SPRINT_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<select id="selectSprintTaskCodeList" parameterType="hashmap" resultMap="taskResultMap">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintTaskCodeList() */
+ 			   A.TASK_CODE
+ 			 , A.BACKLOG_CODE
+ 			 , A.SPRINT_CODE
+ 			 , A.PROJECT_CODE
+ 			 , A.TASK_TITLE
+ 			 , A.TASK_START_DATE
+ 			 , A.TASK_END_DATE
+ 			 , A.TASK_PROGRESS
+ 			 , A.TASK_BODY
+ 			 , A.TASK_VERSION
+ 			 , A.TASK_DELETE_STATUS
+ 			 , A.MEMBER_NO
+ 		  FROM TBL_TASK A
+ 		 WHERE A.TASK_DELETE_STATUS = 'N'
+ 		   AND A.SPRINT_CODE = (SELECT
+ 		   							   B.SPRINT_CODE
+ 		   						  FROM TBL_SPRINT B
+ 		   						 WHERE B.PROJECT_CODE = #{ projectCode }
+ 		   						   AND B.SPRINT_PROGRESS = '진행중'
+ 		   						   AND B.SPRINT_DELETE_STATUS = 'N')
+ 	</select>
+ 	
+ 	<update id="updateTaskProgress3">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateTaskProgress3() */
+ 		       TBL_TASK A
+ 		   SET A.TASK_PROGRESS = '미완료'
+ 		 WHERE A.TASK_CODE = #{ code }
+ 	</update>
+ 	
+ 	<insert id="insertTaskProgressHistory2">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertTaskProgressHistory2() */
+ 		  INTO TBL_TASK_PROGRESS_HISTORY A
+ 		(
+ 		  A.TASK_PROGRESS_HISTORY_NO
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.TASK_CODE
+ 		, A.TASK_PROGRESS_HISTORY_STATUS
+ 		, A.TASK_PROGRESS_HISTORY_START_DATE
+ 		, A.TASK_PROGRESS_HISTORY_END_DATE
+ 		, A.TASK_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_TASK_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, #{ code }
+ 		, '미완료'
+ 		, #{ startDate }
+ 		, #{ endDate }
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertBacklog">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklog() */
+ 		  INTO TBL_BACKLOG A
+ 		(
+ 		  A.BACKLOG_CODE
+ 		, A.BACKLOG_TITLE
+ 		, A.BACKLOG_PROGRESS
+ 		, A.BACKLOG_BODY
+ 		, A.PROJECT_CODE
+ 		, A.BACKLOG_VERSION
+ 		, A.BACKLOG_WRITER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_CODE.NEXTVAL
+ 		, #{ title }
+ 		, '미완료'
+ 		, #{ body }
+ 		, #{ projectCode }
+ 		, 1
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertBacklogProgressHistory2">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklogProgressHistory2() */
+ 		  INTO TBL_BACKLOG_PROGRESS_HISTORY A
+ 		(
+ 		  A.BACKLOG_PROGRESS_HISTORY_NO
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.BACKLOG_CODE
+ 		, A.BACKLOG_PROGRESS_HISTORY_STATUS
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, SEQ_BACKLOG_CODE.CURRVAL
+ 		, '미완료'
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertBacklogVersionHistory">
+ 		<selectKey keyProperty="code" order="BEFORE" resultType="_int">
+ 		SELECT
+ 			   SEQ_BACKLOG_CODE.CURRVAL
+ 		  FROM DUAL
+ 		</selectKey>
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklogVersionHistory() */
+ 		  INTO TBL_BACKLOG_VERSION_HISTORY A
+ 		(
+ 		  A.BACKLOG_VERSION_HISTORY_NO
+ 		, A.BACKLOG_VERSION_HISTORY_BODY
+ 		, A.BACKLOG_VERSION_HISTORY_VERSION
+ 		, A.BACKLOG_CODE
+ 		, A.BACKLOG_VERSION_HISTORY_TITLE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_VERSION_HISTORY_NO.NEXTVAL
+ 		, (SELECT
+ 				  B.BACKLOG_BODY
+ 			 FROM TBL_BACKLOG B
+ 			WHERE B.BACKLOG_CODE = #{ code } )
+ 		, (SELECT
+ 				  C.BACKLOG_VERSION
+ 			 FROM TBL_BACKLOG C
+ 			WHERE C.BACKLOG_CODE = #{ code})
+ 		, #{ code }
+ 		, CHR(39) || (SELECT
+						     D.BACKLOG_TITLE
+				        FROM TBL_BACKLOG D
+				       WHERE D.BACKLOG_CODE = #{ code }
+				 	 ) || CHR(39) || ' 백로그 생성 ' || CHR(40) || (SELECT
+				   								    			  		E.PROJECT_TITLE 
+				   											 	   FROM TBL_PROJECT E
+				   											 	   JOIN TBL_BACKLOG F ON (E.PROJECT_CODE = F.PROJECT_CODE) 
+				   							   					  WHERE F.BACKLOG_CODE = #{ code }
+				   							 					) || CHR(41)
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updateBacklogProgress2">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateBacklogProgress2() */
+ 			   TBL_BACKLOG A
+ 		   SET A.BACKLOG_PROGRESS = '완료'
+ 		 WHERE A.BACKLOG_CODE = #{ backlogCode }
+ 	</update>
+ 	
+ 	<insert id="insertBacklogProgressHistory3">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertBacklogProgressHistory3() */
+ 		  INTO TBL_BACKLOG_PROGRESS_HISTORY A
+ 		(
+ 		  A.BACKLOG_PROGRESS_HISTORY_NO
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.BACKLOG_CODE
+ 		, A.BACKLOG_PROGRESS_HISTORY_STATUS
+ 		, A.BACKLOG_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_BACKLOG_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, #{ backlogCode }
+ 		, '완료'
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updateTaskProgress2">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateTaskProgress2() */
+ 			   TBL_TASK A
+ 		   SET A.TASK_PROGRESS = '미완료'
+ 		 WHERE A.TASK_CODE = #{ code }
+ 	</update>
+ 	
+ 	<update id="updateBacklogProgress3">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateBacklogProgress3() */
+ 			   TBL_BACKLOG A
+ 		   SET A.BACKLOG_PROGRESS = '미완료'
+ 		 WHERE A.BACKLOG_CODE = #{ backlogCode }
+ 	</update>
+ 	
+ 	<select id="selectSprintCode" parameterType="hashmap" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintCode() */
+ 			   A.SPRINT_CODE
+ 		  FROM TBL_SPRINT A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.SPRINT_PROGRESS = '진행중'
+ 	</select>
+ 	
+ 	<update id="updateSprintProgress2">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateSprintProgress2() */
+ 			   TBL_SPRINT A
+ 		   SET A.SPRINT_PROGRESS = '완료'
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 	</update>
+ 	
+ 	<insert id="insertSprintProgressHistory4" parameterType="hashmap">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintProgressHistory4() */
+ 		  INTO TBL_SPRINT_PROGRESS_HISTORY A
+ 		(
+ 		  A.SPRINT_PROGRESS_HISTORY_NO
+ 		, A.SPRINT_PROGRESS
+ 		, A.SPRINT_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_START_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_END_DATE
+ 		, A.SPRINT_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, '완료'
+ 		, SYSDATE
+ 		, (SELECT
+ 				  B.SPRINT_START_DATE
+ 			 FROM TBL_SPRINT B
+ 			WHERE B.SPRINT_CODE = #{ sprintCode })
+ 		, (SELECT
+ 				  C.SPRINT_END_DATE
+ 			 FROM TBL_SPRINT C
+ 			WHERE C.SPRINT_CODE = #{ sprintCode })
+ 		, (SELECT
+ 				  D.MEMBER_NAME
+ 			 FROM TBL_MEMBER D
+ 			WHERE D.MEMBER_NO = #{ memberNo })
+ 		, #{ sprintCode }
+ 		)
+ 	</insert>
+ 	
+ 	<insert id="insertRetrospective">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertRetrospective() */
+ 		  INTO TBL_RETROSPECTIVE A
+ 		(
+ 		  A.RETROSPECTIVE_CODE
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_RETROSPECTIVE_CODE.NEXTVAL
+ 		, #{ sprintCode }
+ 		)  
+ 	</insert>
+ 	
+ 	<insert id="insertStartSprintNotice" parameterType="hashmap">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertStartSprintNotice() */
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, CHR(39) || (SELECT
+ 							 B.SPRINT_TITLE
+ 						FROM TBL_SPRINT B
+ 					   WHERE B.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 					     AND B.PROJECT_CODE = #{ projectCode }) || CHR(39) || '스프린트가 시작되었습니다.'
+ 		, '/sprint/list?code=' || #{ projectCode }
+ 		, 'Y'
+ 		, 2
+ 		, #{ memberNo }
+ 		, (SELECT
+ 				  C.SPRINT_CODE
+ 			 FROM TBL_SPRINT C
+ 			WHERE C.SPRINT_PROGRESS IN ('진행전', '진행중')
+ 			  AND C.PROJECT_CODE = #{ projectCode })
+ 		, SYSDATE
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectSprintMemberList" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintMemberList() */
+ 			   A.MEMBER_NO
+ 		  FROM TBL_SPRINT_MEMBERS A
+ 		 WHERE A.SPRINT_CODE = (SELECT
+ 		 							   B.SPRINT_CODE
+ 		 						  FROM TBL_SPRINT B
+ 		 						 WHERE B.PROJECT_CODE = #{ projectCode }
+ 		 						   AND B.SPRINT_PROGRESS IN ('진행전', '진행중'))
+ 		   AND A.SPRINT_PARTICIPATION_YN = 'Y'
+ 	</select>
+ 	
+ 	<select id="selectSprintMemberList2" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintMemberList2() */
+ 			   A.MEMBER_NO
+ 		  FROM TBL_SPRINT_MEMBERS A
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		   AND A.SPRINT_PARTICIPATION_YN = 'Y'
+ 	</select>
+ 	
+ 	<insert id="insertEndSprintNotice" parameterType="hashmap">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertEndSprintNotice() */
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, CHR(39) || (SELECT
+ 							 B.SPRINT_TITLE
+ 					    FROM TBL_SPRINT B
+ 					   WHERE B.SPRINT_CODE = #{ sprintCode }) || CHR(39) || '스프린트가 종료 되었습니다.'
+ 		, '/sprint/list?code=' || (SELECT
+ 										  C.PROJECT_CODE
+ 									 FROM TBL_SPRINT C
+ 									WHERE C.SPRINT_CODE = #{ sprintCode })
+ 		, 'Y'
+ 		, 2
+ 		, #{ memberNo }
+ 		, #{ sprintCode }
+ 		, SYSDATE
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectSprintMemberList3" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintMemberList3() */
+ 			   A.MEMBER_NO
+ 		  FROM TBL_SPRINT_MEMBERS A
+ 		 WHERE A.SPRINT_CODE = #{ code }
+ 		   AND A.SPRINT_PARTICIPATION_YN = 'Y'
+ 	</select>
+ 	
+ 	<insert id="insertUpdateSprintNotice" parameterType="hashmap">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertUpdateSprintNotice() */
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		, A.NOTICE_TIME
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, CHR(39) || (SELECT
+ 							 B.SPRINT_TITLE
+ 					    FROM TBL_SPRINT B
+ 					   WHERE B.SPRINT_CODE = #{ sprintCode }) || CHR(39) || '스프린트가 수정 되었습니다.'
+ 		, '/sprint/list?code=' || (SELECT
+ 										  C.PROJECT_CODE
+ 									 FROM TBL_SPRINT C
+ 									WHERE C.SPRINT_CODE = #{ sprintCode }) 
+ 		, 'Y'
+ 		, 2
+ 		, #{ memberNo }
+ 		, #{ sprintCode }
+ 		, SYSDATE
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectIssueList" parameterType="hashmap" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectIssueList() */
+ 			   A.ISSUE_CODE
+ 		  FROM TBL_ISSUE A
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		   AND A.ISSUE_PROGRESS IN ('해결전', '해결중')
+ 	</select>
+ 	
+ 	<insert id="insertIssueProgressHistory" parameterType="hashmap">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertIssueProgressHistory() */
+ 		  INTO TBL_ISSUE_PROGRESS_HISTORY A
+ 		(
+ 		  A.ISSUE_PROGRESS_HISTORY_NO
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.ISSUE_PROGRESS_HISTORY_STATUS
+ 		, A.ISSUE_CODE
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, '보류'
+ 		, #{ issueCode }
+ 		, #{ memberNo }
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectIssueList2" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectIssueList2() */
+ 			   A.ISSUE_CODE
+ 		  FROM TBL_ISSUE A
+ 		 WHERE A.PROJECT_CODE = #{ projectCode }
+ 		   AND A.ISSUE_PROGRESS = '보류'
+ 		   AND A.ISSUE_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<select id="updateIssueSprintCode" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#updateIssueSprintCode() */
+ 		       SEQ_SPRINT_CODE.CURRVAL
+ 		  FROM DUAL
+ 	</select>
+ 	
+ 	<insert id="insertIssueProgressHistory2" parameterType="hashmap">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertIssueProgressHistory2() */
+ 		  INTO TBL_ISSUE_PROGRESS_HISTORY A
+ 		(
+ 		  A.ISSUE_PROGRESS_HISTORY_NO
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_DATE
+ 		, A.ISSUE_PROGRESS_HISTORY_STATUS
+ 		, A.ISSUE_CODE
+ 		, A.ISSUE_PROGRESS_HISTORY_UPDATE_MEMBER
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_ISSUE_PROGRESS_HISTORY_NO.NEXTVAL
+ 		, SYSDATE
+ 		, '해결전'
+ 		, #{ issueCode }
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updateIssueMembersParticipation">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateIssueMembersParticipation() */
+ 		       TBL_ISSUE_MEMBERS A
+ 		   SET A.ISSUE_PARTICIPATION_YN = 'N'
+ 		 WHERE A.ISSUE_CODE = #{ issueCode }
+ 	</update>
+ 	
+ 	<update id="updateIssueProgress2">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateIssueProgress2() */
+ 		       TBL_ISSUE A
+ 		   SET A.ISSUE_PROGRESS = '보류'
+ 		 WHERE A.SPRINT_CODE = (SELECT
+ 		 							   B.SPRINT_CODE
+ 		 						  FROM TBL_SPRINT B
+ 		 						 WHERE B.PROJECT_CODE = #{ projectCode }
+ 		 						   AND B.SPRINT_PROGRESS IN ('진행중', '진행전'))
+ 	</update>
+ 	
+ 	<select id="selectIssueList3" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectIssueList3() */
+ 			   A.ISSUE_CODE
+ 		  FROM TBL_ISSUE A
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		   AND A.ISSUE_DELETE_STATUS = 'N'
+ 	</select>
+ 	
+ 	<insert id="insertSprintVersionHistory3">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertSprintVersionHistory3() */
+ 		  INTO TBL_SPRINT_VERSION_HISTORY A
+ 		(
+ 		  A.SPRINT_VERSION_HISTORY_NO
+ 		, A.SPRINT_VERSION_HISTORY_TITLE
+ 		, A.SPRINT_VERSION_HISTORY_BODY
+ 		, A.SPRINT_HISTORY_VERSION
+ 		, A.SPRINT_HISTORY_UPDATE_DATE
+ 		, A.SPRINT_HISTORY_UPDATE_MEMBER
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_SPRINT_VERSION_HISTORY_NO.NEXTVAL
+ 		, #{ title }
+ 		, #{ body }
+ 		, #{ version }
+ 		, SYSDATE
+ 		, (SELECT
+ 				  B.MEMBER_NAME
+ 			 FROM TBL_MEMBER B
+ 			WHERE B.MEMBER_NO = #{ memberNo })
+ 		, #{ code }
+ 		)
+ 	</insert>
+ 	
+ 	<update id="updateIssueMembersParticipation2">
+ 		UPDATE /* com.greedy.byat.member.model.dao.SprintMapper#updateIssueMembersParticipation2() */
+ 		       TBL_ISSUE_MEMBERS A
+ 		   SET A.ISSUE_PARTICIPATION_YN = 'N'
+ 		 WHERE A.ISSUE_CODE = #{ issueCode }
+ 	</update>
+ 	
+ 	<select id="selectSprintMemberList4" resultType="_int">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectSprintMemberList4() */
+ 			   A.MEMBER_NO
+ 		  FROM TBL_SPRINT_MEMBERS A
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 	</select>
+ 	
+ 	<insert id="insertRemoveSprintNotice" parameterType="hashmap">
+ 		INSERT /* com.greedy.byat.member.model.dao.SprintMapper#insertRemoveSprintNotice() */
+ 		  INTO TBL_NOTICE A
+ 		(
+ 		  A.NOTICE_CODE
+ 		, A.NOTICE_BODY
+ 		, A.NOTICE_URL
+ 		, A.NOTICE_STATUS
+ 		, A.NOTICE_CATEGORY_CODE
+ 		, A.MEMBER_NO
+ 		, A.SPRINT_CODE
+ 		)
+ 		VALUES
+ 		(
+ 		  SEQ_NOTICE_CODE.NEXTVAL
+ 		, CHR(39) || (SELECT
+ 							 B.SPRINT_TITLE
+ 					    FROM TBL_SPRINT B
+ 					   WHERE B.SPRINT_CODE = #{ sprintCode }) || CHR(39) || '스프린트가 삭제 되었습니다.'
+ 		, '/sprint/list'
+ 		, 'Y'
+ 		, 2
+ 		, #{ memberNo }
+ 		, #{ sprintCode }
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectProjectMembersRoleNamee" parameterType="hashmap" resultType="java.lang.String">
+ 		SELECT /* com.greedy.byat.member.model.dao.SprintMapper#selectProjectMembersRoleNamee() */
+ 			   A.ROLE_NAME
+ 		  FROM TBL_ROLE A
+ 		 WHERE A.MEMBER_NO = #{ memberNo }
+ 		   AND A.PROJECT_CODE = #{ projectCode }
+ 	</select>
  </mapper>

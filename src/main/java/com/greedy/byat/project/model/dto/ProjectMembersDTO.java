@@ -1,9 +1,5 @@
 package com.greedy.byat.project.model.dto;
 
-import java.util.List;
-
-import com.greedy.byat.member.model.dto.MemberDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

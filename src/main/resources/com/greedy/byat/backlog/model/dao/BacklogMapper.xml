@@ -4,27 +4,20 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.greedy.byat.backlog.model.dao.BacklogMapper">
  	<resultMap type="BacklogDTO" id="generalBacklogResultMap">
- 		<id property="code" column="BACKLOG_NO"/>
+ 		<id property="code" column="BACKLOG_CODE"/>
  		<result property="title" column="BACKLOG_TITLE"/>
- 		<result property="startDate" column="BACKLOG_START_DATE"/>
- 		<result property="endDate" column="BACKLOG_END_DATE"/>
  		<result property="progress" column="BACKLOG_PROGRESS"/>
  		<result property="body" column="BACKLOG_BODY"/>
  		<result property="projectCode" column="PROJECT_CODE"/>
  		<result property="version" column="BACKLOG_VERSION"/>
  		<result property="deleteStatus" column="BACKLOG_DELETE_STATUS"/>
  		<result property="writer" column="BACKLOG_WRITER"/>
- 		
- 		<!-- writer는 String으로 받아오기 때문에 association이 필요없을 거 같음 -->
- 		<!-- <association property="writer" resultMap="memberResultMap"/> -->
  	</resultMap>
  	
- 	<select id="selectBacklogList" resultMap="generalBacklogResultMap">
-        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectAllBacklogList() */
+ 	<select id="selectBacklogDetail" resultMap="generalBacklogResultMap">
+        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectBacklogDetail() */
                A.BACKLOG_CODE
              , A.BACKLOG_TITLE
-             , A.BACKLOG_START_DATE
-             , A.BACKLOG_END_DATE
              , A.BACKLOG_PROGRESS
              , A.BACKLOG_BODY
              , A.PROJECT_CODE
@@ -33,24 +26,6 @@
              , A.BACKLOG_WRITER
           FROM TBL_BACKLOG A
          WHERE A.BACKLOG_DELETE_STATUS = 'N'
-           AND A.PROJECT_CODE = #{ projectCode }
- 	</select>
- 	
- 	<select id="selectBacklogDetail" resultMap="generalBacklogResultMap">
-        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectBacklogDetail() */
-               A.BACKLOG_CODE
-             , A.BACKLOG_TITLE
-             , A.BACKLOG_START_DATE
-             , A.BACKLOG_END_DATE
-             , A.BACKLOG_PROGRESS
-             , A.BACKLOG_BODY
-             , A.PROJECT_CODE
-             , A.BACKLOG_VERSION
-             , A.BACKLOG_DELETE_STATUS
-             , A.BACKLOG_DELETE_STATUS
-             , A.BACKLOG_WRITER
-          FROM TBL_BACKLOG A
-         WHERE A.BACKLOG_DELETE_STAUTS = 'N'
            AND A.BACKLOG_CODE = #{ code }
  	</select>
  	
@@ -60,6 +35,7 @@
         (
           A.BACKLOG_CODE
         , A.BACKLOG_TITLE
+        , A.BACKLOG_BODY
         , A.PROJECT_CODE
         , A.BACKLOG_WRITER
         )
@@ -67,6 +43,7 @@
         (
           SEQ_BACKLOG_CODE.NEXTVAL
         , #{ title }
+        , #{ body }
         , #{ projectCode }
         , #{ writer }
         )
@@ -84,12 +61,41 @@
  	<delete id="deleteBacklog" parameterType="_int">
         UPDATE /* com.greedy.byat.backlog.model.dao.BacklogMapper#deleteBacklog() */
                TBL_BACKLOG A
-           SET A.BACKLOG_DELETE_STATUS = 'N'
+           SET A.BACKLOG_DELETE_STATUS = 'Y'
          WHERE A.BACKLOG_CODE = #{ code }
  	</delete>
  	
- 	<update id="updateBacklogTasklize" parameterType="BacklogDTO">
-        
- 	</update>
+ 	<select id="checkSprintProgress" parameterType="hashmap" resultType="_int">
+        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#checkSprintProgress() */
+               COUNT(*)
+          FROM TBL_SPRINT
+         WHERE PROJECT_CODE = #{ projectCode }
+           AND SPRINT_PROGRESS IN('진행중', '진행전')
+           AND SPRINT_DELETE_STATUS = 'N'
+ 	</select>
  	
+ 	<insert id="insertBacklogTasklize" parameterType="hashmap">
+        INSERT /* com.greedy.byat.backlog.model.dao.BacklogMapper#insertBacklogTasklize() */
+          INTO TBL_TASK A
+        (
+          A.TASK_CODE
+        , A.BACKLOG_CODE
+        , A.TASK_TITLE
+        , A.TASK_BODY
+        , A.SPRINT_CODE
+        , A.PROJECT_CODE
+        , A.MEMBER_NO
+        )
+        SELECT 
+               SEQ_TASK_CODE.NEXTVAL
+             , B.BACKLOG_CODE
+             , B.BACKLOG_TITLE
+             , B.BACKLOG_BODY
+             , C.SPRINT_CODE
+             , B.PROJECT_CODE
+             , #{ memberNo }
+          FROM TBL_BACKLOG B, TBL_SPRINT C
+         WHERE B.BACKLOG_CODE = #{ backlogCode }
+           AND C.SPRINT_CODE = #{ sprintCode }
+ 	</insert>
  </mapper>

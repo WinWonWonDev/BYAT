@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 
-<title>Insert title here</title>
+<title>Better-than-Your-Agile-Tool</title>
 <script>
 	const message = '${ requestScope.message }';
 	if (message != null && message != '') {
@@ -19,298 +19,299 @@
 </script>
 
 <style>
-html, body {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	background: url("/byat/resources/images/byatBackground.png") no-repeat;
-	background-size: cover;
-	overflow-y: hidden;
-	overflow-x: hidden
-}
-
-#byatLogoDiv {
-	width: 100%;
-	float: left;
-}
-
-#firstDIV {
-	float: left;
-	width: 30%;
-	height: 60%;
-}
-
-#secondDIV {
-	position: absolute;
-	top: 10%;
-	left: 30%;
-	border: 1px solid white;
-	background-color: white;
-	float: left;
-	width: 40%;
-	height: 80%;
-	border-radius: 50px;
-}
-
-#loginTitle {
-	font-family: 'Ubuntu', sans-serif;
-	font-size: 30px;
-	color: #191970;
-}
-
-#loginForm {
-	width: 80%;
-	height: 40%;
-}
-
-/* #loginMemberId {
-	 	
-	 		width: 100%;
-			height:80%; 
-			float:center;	
-		} */
-
-.btn {
-	width: 130px;
-	height: 50px;
-	border-radius: 10px;
-	color: white;
-}
-
-.btn-yg {
-	background-color: #191970;
-}
-
-.btn-or {
-	background-color: #191970;
-	margin-right: 20px;
-}
-
-.idBox input {
-	width: 100%;
-	height: 43px;
-}
-
-#firstDIV2 {
-	float: left;
-	width: 30%;
-	height: 60%;
-}
-
-#secondDIV2 {
-	position: absolute;
-	top: 10%;
-	left: 30%;
-	border: 1px solid white;
-	background-color: white;
-	float: left;
-	width: 40%;
-	height: 80%;
-	border-radius: 50px;
-}
-
-#loginTitle2 {
-	font-family: 'Ubuntu', sans-serif;
-	font-size: 30px;
-	color: #191970;
-}
-
-#passwordResetForm {
-	width: 80%;
-	height: 40%;
-}
-
-#inputIdModal {
-	display: none;
-	position: relative;
-	width: 100%;
-	height: 100%;
-	z-index: 1050;
-}
-
-#inputEmailVeficationModal {
-	display: none;
-	position: relative;
-	width: 100%;
-	height: 100%;
-	z-index: 1050;
-}
-
-.modalHead {
-	width: 100.1%;
-	height: 35px;
-	background-color: rgb(25, 25, 112);
-	color: white;
-	text-align: center;
-	font-size: 20px;
-	float: right;
-}
-
-
-#inputIdModal h2 {
-	margin: 0;
-}
-
-
- .modalContent {
-	width: 700px;
-	height: 300px;
-	margin: 100px auto;
-	background: #fff;
-	border: 2px solid #666;
-}
-
-.modalContentMessage {
-	width: 100%;
-	height: 30%;
-	float: right;
-	padding: 0px;
-}
-
-.modalButton {
-	width: 100%;
-	height: 30%;
-	float: right;
-	position: relative;
-}
-
-#contentHead {
-	font-size: 40px;
-	text-align: center;
-	font-weight: bold;
-	margin-top: -10px;
-}
-
-#contentBody {
-	font-size: 25px;
-	text-align: center;
-	margin-top: -20px;
-}
-
-#findPassword {
-
-	border: none;
-	cursor: pointer;
-	width: 180px;
-	height: 15px;
-	position: relative;
-	left: 35%;
-	
-	
-}
-
-.inputId {
-	position: relative;
-	left: 20%;
-	width: 430px;
-	height: 35px;
-
-}
-
-.inputPassword {
-	position: relative;
-	left: 20%;
-	width: 430px;
-	height: 35px;
-
-}
-
-.inputVerificationNum {
-	position: relative;
-	left: 20%;
-	width: 430px;
-	height: 35px;
-}
-
-#modalOkBtn {
-	background-color: rgb(25, 25, 112);
-	color: white;
-	text-align: center;
-	cursor: pointer;
-	width: 80px;
-	height: 30px;
-	position: absolute;
-	right: 55%;
-	top: 35%;
-	}
-
-#modalOkBtn2 {
-	background-color: rgb(25, 25, 112);
-	color: white;
-	text-align: center;
-	cursor: pointer;
-	width: 80px;
-	height: 30px;
-	position: absolute;
-	right: 55%;
-	top: 35%;
-	}
-
-#modalOkBtn3 {
-	background-color: rgb(25, 25, 112);
-	color: white;
-	text-align: center;
-	cursor: pointer;
-	width: 80px;
-	height: 30px;
-	position: absolute;
-	right: 55%;
-	top: 65%;
+	html, body {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		background: url("/byat/resources/images/byatBackground.png") no-repeat;
+		background-size: cover;
+		overflow-y: hidden;
+		overflow-x: hidden
 	}
 	
-#modalCancelBtn {
-	background-color: rgb(25, 25, 112);
-	color: white;
-	text-align: center;
-	cursor: pointer;
-	width: 80px;
-	height: 30px;
-	position: absolute;
-	right: 35%;
-	top: 35%;
-}
-
-#modalCancelBtn2 {
-	background-color: rgb(25, 25, 112);
-	color: white;
-	text-align: center;
-	cursor: pointer;
-	width: 80px;
-	height: 30px;
-	position: absolute;
-	right: 35%;
-	top: 35%;
-}
-
-#modalCancelBtn3 {
-	background-color: rgb(25, 25, 112);
-	color: white;
-	text-align: center;
-	cursor: pointer;
-	width: 80px;
-	height: 30px;
-	position: absolute;
-	right: 30%;
-	top: 65%;
-}
-
-#reSubmitBtn {
-	background-color: rgb(25, 25, 112);
-	color: white;
-	text-align: center;
-	cursor: pointer;
-	width: 80px;
-	height: 30px;
-	position: absolute;
-	right: 29%;
-	top: 18.5%;
-}
-
-#timerDiv {
-	position: relative;
-	left: 38%;
+	#byatLogoDiv {
+		width: 100%;
+		float: left;
+	}
 	
-}
+	#firstDIV {
+		float: left;
+		width: 30%;
+		height: 60%;
+	}
+	
+	#secondDIV {
+		position: absolute;
+		top: 10%;
+		left: 30%;
+		border: 1px solid white;
+		background-color: white;
+		float: left;
+		width: 40%;
+		height: 80%;
+		border-radius: 50px;
+	}
+	
+	#loginTitle {
+		font-family: 'Ubuntu', sans-serif;
+		font-size: 30px;
+		color: #191970;
+	}
+	
+	#loginForm {
+		width: 80%;
+		height: 40%;
+	}
+	
+	.btn {
+		width: 130px;
+		height: 50px;
+		border-radius: 10px;
+		color: white;
+	}
+	
+	.btn-yg {
+		background-color: #191970;
+	}
+	
+	.btn-or {
+		background-color: #191970;
+		margin-right: 20px;
+	}
+	
+	.idBox input {
+		width: 100%;
+		height: 43px;
+	}
+	
+	#firstDIV2 {
+		float: left;
+		width: 30%;
+		height: 60%;
+	}
+	
+	#secondDIV2 {
+		position: absolute;
+		top: 10%;
+		left: 30%;
+		border: 1px solid white;
+		background-color: white;
+		float: left;
+		width: 40%;
+		height: 80%;
+		border-radius: 50px;
+	}
+	
+	#loginTitle2 {
+		font-family: 'Ubuntu', sans-serif;
+		font-size: 30px;
+		color: #191970;
+	}
+	
+	#passwordResetForm {
+		width: 80%;
+		height: 40%;
+	}
+	
+	#inputIdModal {
+		display: none;
+		position: relative;
+		width: 100%;
+		height: 100%;
+		z-index: 1050;
+	}
+	
+	#inputEmailVeficationModal {
+		display: none;
+		position: relative;
+		width: 100%;
+		height: 100%;
+		z-index: 1050;
+	}
+	
+	.modalHead {
+		width: 100.1%;
+		height: 35px;
+		background-color: rgb(25, 25, 112);
+		color: white;
+		text-align: center;
+		font-size: 20px;
+		float: right;
+	}
+	
+	
+	#inputIdModal h2 {
+		margin: 0;
+	}
+	
+	
+	 .modalContent {
+		width: 700px;
+		height: 300px;
+		margin: 100px auto;
+		background: #fff;
+		border: 2px solid #666;
+	}
+	
+	.modalContentMessage {
+		width: 100%;
+		height: 30%;
+		float: right;
+		padding: 0px;
+	}
+	
+	.modalButton {
+		width: 100%;
+		height: 30%;
+		float: right;
+		position: relative;
+	}
+	
+	#contentHead {
+		font-size: 40px;
+		text-align: center;
+		font-weight: bold;
+		margin-top: -10px;
+	}
+	
+	#contentBody {
+		font-size: 25px;
+		text-align: center;
+		margin-top: -20px;
+	}
+	
+	#findPassword {
+	
+		border: none;
+		cursor: pointer;
+		width: 180px;
+		height: 15px;
+		position: relative;
+		left: 35%;
+		
+		
+	}
+	
+	.inputId {
+		position: relative;
+		left: 20%;
+		width: 430px;
+		height: 35px;
+	
+	}
+	
+	.inputPassword {
+		position: relative;
+		left: 20%;
+		width: 430px;
+		height: 35px;
+	
+	}
+	
+	.inputVerificationNum {
+		position: relative;
+		left: 20%;
+		width: 430px;
+		height: 35px;
+	}
+	
+	#modalOkBtn {
+		background-color: rgb(25, 25, 112);
+		color: white;
+		text-align: center;
+		cursor: pointer;
+		width: 80px;
+		height: 30px;
+		position: absolute;
+		right: 55%;
+		top: 35%;
+		}
+	
+	#modalOkBtn2 {
+		background-color: rgb(25, 25, 112);
+		color: white;
+		text-align: center;
+		cursor: pointer;
+		width: 80px;
+		height: 30px;
+		position: absolute;
+		right: 55%;
+		top: 35%;
+		}
+	
+	#modalOkBtn3 {
+		background-color: rgb(25, 25, 112);
+		color: white;
+		text-align: center;
+		cursor: pointer;
+		width: 80px;
+		height: 30px;
+		position: absolute;
+		right: 55%;
+		top: 65%;
+		}
+		
+	#modalCancelBtn {
+		background-color: rgb(25, 25, 112);
+		color: white;
+		text-align: center;
+		cursor: pointer;
+		width: 80px;
+		height: 30px;
+		position: absolute;
+		right: 35%;
+		top: 35%;
+	}
+	
+	#modalCancelBtn2 {
+		background-color: rgb(25, 25, 112);
+		color: white;
+		text-align: center;
+		cursor: pointer;
+		width: 80px;
+		height: 30px;
+		position: absolute;
+		right: 35%;
+		top: 35%;
+	}
+	
+	#modalCancelBtn3 {
+		background-color: rgb(25, 25, 112);
+		color: white;
+		text-align: center;
+		cursor: pointer;
+		width: 80px;
+		height: 30px;
+		position: absolute;
+		right: 30%;
+		top: 65%;
+	}
+	
+	#reSubmitBtn {
+		background-color: rgb(25, 25, 112);
+		color: white;
+		text-align: center;
+		cursor: pointer;
+		width: 80px;
+		height: 30px;
+		position: absolute;
+		right: 29%;
+		top: 18.5%;
+	}
+	
+	#timerDiv {
+		position: relative;
+		left: 38%;
+		
+	}
+	
+	#adminNumber {
+		position:absolute;
+		top:86%;
+		left:46%;
+		color:gray;
+		
+	}
 
 </style>
 </head>
@@ -334,35 +335,8 @@ html, body {
 					<div class="idBox" align="center">
 						<input type="text" name="id" id="loginMemberId" placeholder="Id">
 						<br>
-						<!-- 아이디 예외처리 -->
-						<c:choose>
-							<c:when test="">
-								<input type="text" name="errorId" value="아이디를 입력해주세요."
-									style="color: red">
-							</c:when>
-							<c:when test="">
-								<input type="text" name="errorId" value="아이디를 찾을 수 없습니다."
-									style="color: red">
-							</c:when>
-
-
-						</c:choose>
-						<br> <input type="password" name="pwd" id="loginMemberPwd"
-							placeholder="Password"> <br>
-
-						<!-- 비밀번호 예외처리 -->
-						<c:choose>
-							<c:when test="">
-								<input type="text" name="errorPwd" value="비밀번호를 입력해주세요."
-									style="color: red">
-							</c:when>
-							<c:when test="">
-								<input type="text" name="errorPwd" value="비밀번호가 일치하지 않습니다."
-									style="color: red">
-							</c:when>
-						</c:choose>
-						<br>
-
+						<br> <input type="password" name="pwd" id="loginMemberPwd" placeholder="Password"> 
+						<br><br>
 					</div>
 					<br>
 						<div id="findPassword">비밀번호를 잊으셨나요?</div>
@@ -428,29 +402,15 @@ html, body {
 			<div id="loginTitle2" align="center">
 				<h1>새 비밀번호 설정</h1>
 			</div>
-
 			<div id="passwordResetForm">
 				<div class="idBox" align="center">
 				<br><br><br><br>
 					<input type="password" name="inputPassword" id="inputPassword" placeholder="Change Password"> <br>
-					<br> <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Change Password"> <br>
-					
-					<!-- 비밀번호 예외처리 -->
-					<c:choose>
-						<c:when test="">
-							<input type="text" name="errorPwd" value="비밀번호를 입력해주세요."
-								style="color: red">
-						</c:when>
-						<c:when test="">
-							<input type="text" name="errorPwd" value="비밀번호가 일치하지 않습니다."
-								style="color: red">
-						</c:when>
-					</c:choose>
-					
+					<br> 
+					<input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Change Password"> <br>
 					<br>
 				</div>
 				<br> <br> <br>
-
 				<div class="btns" align="center">
 					<input type="button" class="btn btn-or" value="Ok" id="modalOkBtn3"> 
 					<input type="button" class="btn btn-yg" value="cancel" id="modalCancelBtn3">
@@ -458,6 +418,7 @@ html, body {
 			</div>
 		</div>
 	</div>
+	<div id="adminNumber">tel: 010-6222-0160</div>
 	
 	<input type="hidden" id="forSubmitTing" name="forSubmitTing">
 	<input type="hidden" id="forSubmitTing2" name="forSubmitTing2">
@@ -465,7 +426,6 @@ html, body {
 	<script>
 
 		function $ComTimer(){
-		    //prototype extend
 		}
 		
 		$ComTimer.prototype = {
@@ -554,7 +514,6 @@ html, body {
 												document.getElementById("inputIdModal").style.display="none";
 												
 												AuthTimer.timer = clearInterval(AuthTimer.timer);
-												/* AuthTimer = clearInterval(AuthTimer); */
 												
 												AuthTimer = new $ComTimer();
 									   	 			
@@ -567,7 +526,6 @@ html, body {
 								    			if($("#forSubmitTing2").val() == 2) {
 								    				AuthTimer = clearInterval(AuthTimer);
 								    				AuthTimer.timer = clearInterval(AuthTimer.timer);
-								    				console.log("아 지워져야하는데 이거 나와야됨 ㅠㅠ ");
 								    			}
 		
 											} else {
@@ -598,7 +556,7 @@ html, body {
 		
 		
 			/* ok 버튼 눌러서 비밀번호 변경으로 갔을 시 시간이 나중에 되는 거*/
- 	 	  $("#modalOkBtn2").on("click",function() {
+ 	 	 $("#modalOkBtn2").on("click",function() {
  	 		   $.ajax({
  	 			url : "checkverification",
 				type : "POST",
@@ -637,7 +595,7 @@ html, body {
 				success : function(data, status, xhr) {
 					
 					if(data > 0) {
-						alert("비밀번호 변경이 완료되었습니다 야호!");
+						alert("비밀번호 변경이 완료되었습니다!");
 						document.getElementById("inputEmailVeficationModal").style.display="none";
 						document.getElementById("passwordFindModal").style.display="none";
 						document.getElementById("inputIdModal").style.display="none";

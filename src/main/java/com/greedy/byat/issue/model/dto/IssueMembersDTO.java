@@ -18,5 +18,7 @@ public class IssueMembersDTO {
 	private int sprintCode;
 	private String participationYn;
 	private String name;
+	private String id;
+	private int changeMemberNo;
 	
 }

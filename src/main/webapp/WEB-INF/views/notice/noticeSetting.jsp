@@ -31,7 +31,7 @@
       	height:78%;
 	}
 	
-		.switch {
+	.switch {
 		position: relative;
 		display: inline-block;
 		width: 60px;
@@ -184,7 +184,7 @@
 	}
 	
 </style>
-<title>Insert title here</title>
+<title>알림 설정</title>
 </head>
 <body style="overflow:hidden;">
 	<div id="whiteBoard">
@@ -233,7 +233,7 @@
 				<div class="switchArea">
 					<p>OFF</p>
 					<label class="switch">
-						<input type="checkbox" id="mettingLogCheck">
+						<input type="checkbox" id="meetingLogCheck">
 						<span class="slider round"></span>
 					</label>
 					<p>ON</p>				
@@ -268,10 +268,207 @@
 		</div>
 	</div>
 	<script>
-		var check = $("#projectCheck");
-		check.click(function(){
-			console.log(check);
+		
+		let projectSettingCheck = $("#projectCheck");
+		let sprintSettingCheck = $("#sprintCheck");
+		let backlogSettingCheck = $("#backlogCheck");
+		let issueSettingCheck = $("#issueCheck");
+		let meetingLogSettingCheck = $("#meetingLogCheck");
+		let calendarSettingCheck = $("#calendarCheck");
+		
+		
+		if("${ noticeSetting.projectSetting }" === "Y") {
+			projectSettingCheck[0].checked = true;
+		} else {
+			projectSettingCheck[0].cheched = false;
+		}
+		
+		if("${ noticeSetting.sprintSetting }" === "Y") {
+			sprintSettingCheck[0].checked = true;
+		} else {
+			sprintSettingCheck[0].checked = false;
+		}
+		
+		if("${ noticeSetting.backlogSetting }" === "Y") {
+			backlogSettingCheck[0].checked = true;
+		} else {
+			backlogSettingCheck[0].checked = false;
+		}
+		
+		if("${ noticeSetting.issueSetting }" === "Y") {
+			issueSettingCheck[0].checked = true;
+		} else {
+			issueSettingCheck[0].checked = false;
+		}
+		
+		if("${ noticeSetting.meetinglogSetting }" === "Y") {
+			meetingLogSettingCheck[0].checked = true;
+		} else {
+			meetingLogSettingCheck[0].checked = false;
+		}
+		
+		if("${ noticeSetting.calendarSetting }" === "Y") {
+			calendarSettingCheck[0].checked = true;
+		} else {
+			calendarSettingCheck[0].checked = false;
+		}
+		
+		projectSettingCheck.click(function(){
+			//off 면 false, on 이면 true
+			
+			if(projectSettingCheck[0].checked == true) {
+				alert("프로젝트 관련 알림을 수신합니다.");
+			} else {
+				alert("프로젝트 관련 알림을 수신하지 않습니다.");
+			}
+			
+			$.ajax({
+				url:"/byat/notice/modifyNoticeSetting",
+				type:"post",
+				data:{ 
+					no : "${ sessionScope.loginMember.no }",
+					projectSetting : projectSettingCheck[0].checked
+				},
+				success: function(data, status, xhr) {
+					console.log("프로젝트 알림 설정 변경 성공");
+				},
+				error: function(xhr, status, error) {
+					console.log(xhr);
+				}
+			});
+			
 		});
+		
+		sprintSettingCheck.click(function(){
+			//off 면 false, on 이면 true
+			
+			if(sprintSettingCheck[0].checked == true) {
+				alert("스프린트 관련 알림을 수신합니다.");
+			} else {
+				alert("스프린트 관련 알림을 수신하지 않습니다.");
+			}
+			
+			$.ajax({
+				url:"/byat/notice/modifyNoticeSetting",
+				type:"post",
+				data:{ 
+					no : "${ sessionScope.loginMember.no }",
+					sprintSetting : sprintSettingCheck[0].checked
+				},
+				success: function(data, status, xhr) {
+					console.log("스프린트 알림 설정 변경 성공");
+				},
+				error: function(xhr, status, error) {
+					console.log(xhr);
+				}
+			});
+			
+		});
+		
+		backlogSettingCheck.click(function(){
+			//off 면 false, on 이면 true
+			
+			if(backlogSettingCheck[0].checked == true) {
+				alert("백로그 관련 알림을 수신합니다.");
+			} else {
+				alert("백로그 관련 알림을 수신하지 않습니다.");
+			}
+			
+			$.ajax({
+				url:"/byat/notice/modifyNoticeSetting",
+				type:"post",
+				data:{ 
+					no : "${ sessionScope.loginMember.no }",
+					backlogSetting : backlogSettingCheck[0].checked
+				},
+				success: function(data, status, xhr) {
+					console.log("백로그 알림 설정 변경 성공");
+				},
+				error: function(xhr, status, error) {
+					console.log(xhr);
+				}
+			});
+			
+		});
+		
+		issueSettingCheck.click(function(){
+			//off 면 false, on 이면 true
+			
+			if(issueSettingCheck[0].checked == true) {
+				alert("이슈 관련 알림을 수신합니다.");
+			} else {
+				alert("이슈 관련 알림을 수신하지 않습니다.");
+			}
+			
+			$.ajax({
+				url:"/byat/notice/modifyNoticeSetting",
+				type:"post",
+				data:{ 
+					no : "${ sessionScope.loginMember.no }",
+					issueSetting : issueSettingCheck[0].checked
+				},
+				success: function(data, status, xhr) {
+					console.log("이슈 알림 설정 변경 성공");
+				},
+				error: function(xhr, status, error) {
+					console.log(xhr);
+				}
+			});
+			
+		});
+		
+		meetingLogSettingCheck.click(function(){
+			//off 면 false, on 이면 true
+			
+			if(meetingLogSettingCheck[0].checked == true) {
+				alert("회의록 관련 알림을 수신합니다.");
+			} else {
+				alert("회의록 관련 알림을 수신하지 않습니다.");
+			}
+			
+			$.ajax({
+				url:"/byat/notice/modifyNoticeSetting",
+				type:"post",
+				data:{ 
+					no : "${ sessionScope.loginMember.no }",
+					meetinglogSetting : meetingLogSettingCheck[0].checked
+				},
+				success: function(data, status, xhr) {
+					console.log("회의록 알림 설정 변경 성공");
+				},
+				error: function(xhr, status, error) {
+					console.log(xhr);
+				}
+			});
+			
+		});
+		
+		calendarSettingCheck.click(function(){
+			//off 면 false, on 이면 true
+			
+			if(calendarSettingCheck[0].checked == true) {
+				alert("캘린더 관련 알림을 수신합니다.");
+			} else {
+				alert("캘린더 관련 알림을 수신하지 않습니다.");
+			}
+			
+			$.ajax({
+				url:"/byat/notice/modifyNoticeSetting",
+				type:"post",
+				data:{ 
+					no : "${ sessionScope.loginMember.no }",
+					calendarSetting : calendarSettingCheck[0].checked
+				},
+				success: function(data, status, xhr) {
+					console.log("캘린더 알림 설정 변경 성공");
+				},
+				error: function(xhr, status, error) {
+					console.log(xhr);
+				}
+			});
+			
+		});
+		
 	</script>
 </body>
 </html>

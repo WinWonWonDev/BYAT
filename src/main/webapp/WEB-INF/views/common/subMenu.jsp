@@ -29,7 +29,7 @@
  		background:#4E73DF;
  		width:220px;
  		height:195px;
- 		z-index: 1;
+ 		z-index: 1100;
  	}
  	
 	.subMenuUlTag {
@@ -63,13 +63,13 @@
 		<div id="subMenuTitles">
 			<ul class="subMenuUlTag">
 				<!-- 이거 href경로 추가해서 적어줘야함 쿠쿠르삥뽕 -->
-				<li><a href="/byat/WEB-INF/views/sprint/ " class="subMenuATag">※ SPRINT</a></li>
+				<li><a href="/byat/sprint/list?code=" class="subMenuATag" id="selectSprintList">※ SPRINT</a></li>
 				<hr>
 				<li><a href="/byat/issue/list?code=" class="subMenuATag" id="selectIssueList">※ ISSUE</a></li>
 				<hr>
-				<li><a href="/byat/WEB-INF/views/retrospect/ " class="subMenuATag">※ RETROSPECET</a></li>
+				<li><a href="/byat/retrospect/list?code=" class="subMenuATag" id="selectRetrospectList">※ RETROSPECET</a></li>
 				<hr>
-				<li><a href="/byat/WEB-INF/views/meetingLog/ " class="subMenuATag">※ MEETING LOG</a></li>
+				<li><a href="/byat/meetinglog/list?code=" class="subMenuATag" id="selectMeetingLogList">※ MEETING LOG</a></li>
 				<hr>
 			</ul>
 		

@@ -1,11 +1,18 @@
- <%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
      <%@ include file="../common/menubar.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script>
+	const message = '${ requestScope.message }';
+	if(message != null && message != '') {
+		alert(message);
+	}
+</script>
 <style>
 
    html  {
@@ -59,12 +66,25 @@
    
    }
    
-   #updatePic {
+   #updateImg {
       position:absolute;
       background:white;
       border:1px solid black;
       top:67.4%;
       left:5%;
+      width:50px;
+      height:16px;
+      font-size:2px;
+      text-align:center;
+      cursor:pointer;
+   }
+   
+   #updateImgBtn {
+      position:absolute;
+      background:white;
+      border:1px solid black;
+      top:67.4%;
+      left:17%;
       width:50px;
       height:16px;
       font-size:2px;
@@ -251,29 +271,36 @@
       <div id="myProfileTitle"><br><h1>My Profile</h1></div>
          <div id="grayBoard">
             <div id="PicBoard">
+	            <img id="profileImg" width="100%" height="100%" src="${ pageContext.servletContext.contextPath }/resources/upload/original/${ requestScope.attachment.savedName }" onerror="this.src='${ pageContext.servletContext.contextPath }/resources/images/defaultProfileBig.png'"/><br>
             </div>
-               <div>
-               <button type="button" id="updatePic">업로드..</button> 
-               </div>
-            
-            <div class="memberInfo Info1" id="textIdTitle">Id : <input id="textId" type="text" readonly="readonly"></div>
-            <div class="memberInfo Info2" id="textNameTitle">name : <input id="textName" type="text" readonly="readonly"></div>
-            <div class="memberInfo Info3" id="textEmailTitle">email : <input id="textEmail" type="text" readonly="readonly"></div>
-            <div class="memberInfo Info4" id="textPhoneTitle">phone : <input id="textPhone" type="text" readonly="readonly"> </div>
-            
-   
-            <div class="btns" align="center">
-               <input type="button" class="btn btn-yg" value="비밀번호변경" id="regist">
-               <input type="button" class="btn btn-or" value="수정" id="update">
-               
-               <div id="updateModalButtons1" style="display:none;">
-               <input type="button" class="btn btn-or" value="cancel" id="updateCancelButton">
-               </div>
-               <!-- 수정 버튼을 누르면 생기도록 하고 싶다!  -->
-               <div id="updateModalButtons2" style="display:none;">
-               <input type="button" class="btn btn-or2" value="ok" id="updateOk">
-               </div>
-            </div>
+            <form action="${ pageContext.servletContext.contextPath }/profile/uploadimage" method="post" enctype="multipart/form-data">
+				<div>
+					<input type="file" id="imageFile" name="uploadedImg" style="display:none"/>
+					<button type="button" id="updateImg" disabled>선택..</button>
+					<button type="submit" id="updateImgBtn" style="display: none;">업로드</button>
+				</div>
+            </form>
+            <form action="${ pageContext.servletContext.contextPath }/profile/modify" method="post">
+            	<div class="memberInfo Info1" id="textIdTitle">Id : <input id="textId" name="id" type="text" readonly="readonly" value="${ sessionScope.loginMember.id }"></div>
+            	<div class="memberInfo Info2" id="textNameTitle">name : <input id="textName" name="name" type="text" readonly="readonly" value="${ sessionScope.loginMember.name }"></div>
+            	<div class="memberInfo Info3" id="textEmailTitle">email : <input id="textEmail" name="email" type="text" readonly="readonly" value="${ sessionScope.loginMember.email }"></div>
+            	<div class="memberInfo Info4" id="textPhoneTitle">phone : <input id="textPhone" name="phone" type="text" readonly="readonly" value="${ sessionScope.loginMember.phone }"></div>
+
+
+				<div class="btns" align="center">
+					<input type="button" class="btn btn-yg" value="비밀번호변경" id="regist">
+					<input type="button" class="btn btn-or" value="수정" id="update">
+
+					<div id="updateModalButtons1" style="display: none;">
+						<input type="button" class="btn btn-or" value="cancel"
+							id="updateCancelButton">
+					</div>
+					<!-- 수정 버튼을 누르면 생기도록 하고 싶다!  -->
+					<div id="updateModalButtons2" style="display: none;">
+						<input type="submit" class="btn btn-or2" value="ok" id="updateOk">
+					</div>
+				</div>
+			</form>
       
       </div>
    </div>
@@ -283,20 +310,20 @@
    <div id="profile-create-modal">
    
          <div class="modal_content">
-            <form action="" method="post">
+            <form action="${ pageContext.servletContext.contextPath }/profile/modifypwd" method="post">
                <div class="modal_head">
                   <h3>비밀번호 변경 </h3>
                 </div>
                    <div class="modal_content-box">
-                      <input type="text" class="profileModalInput Pwd" name="profileOriginalPwd" placeholder="기존 비밀번호">
+                      <input type="password" class="profileModalInput Pwd" name="requestOriginPwd" placeholder="기존 비밀번호">
                       <br>
-                      <input type="text" class="profileModalInput newPwd" name="profileNewPwd" placeholder="변경할 비밀번호">
+                      <input type="password" class="profileModalInput newPwd" name="requestNewPwd" placeholder="변경할 비밀번호">
                       <br>
-                      <input type="text" class="profileModalInput newPwdAgain" name="profileNewPwd" placeholder="변경할 비밀번호 확인">
+                      <input type="password" class="profileModalInput newPwdAgain" name="requestNewPwdAgain" placeholder="변경할 비밀번호 확인">
                       <br>
                    </div>
                    <div class="modal_button">
-                    <button type="button" id="profile-create">Ok</button>
+                    <button type="submit" id="profile-create">Ok</button>
                     <button type="button" id="profile-close-btn">Cancel</button>
                    </div>
                   </form>
@@ -308,7 +335,24 @@
    
 <script>
 
+	$("#updateImg").click(function(e) {
+		e.preventDefault();
+		$("#imageFile").click();
+	});
 
+	
+	
+	/* Image 미리보기 함수 (File API 활용) */
+	document.getElementById("imageFile").onchange = function() {
+		
+		const reader = new FileReader();
+		
+		reader.onload = function(e) {
+			document.getElementById("profileImg").src = e.target.result;
+		};
+		
+		reader.readAsDataURL(this.files[0]);
+	};
 
    document.getElementById("regist").onclick = function() {
        document.getElementById("profile-create-modal").style.display="block";
@@ -319,8 +363,8 @@
     }
    
    document.getElementById("update").onclick = function() {
-      document.getElementById("textId").readOnly = false;
-      document.getElementById("textName").readOnly = false;
+	  document.getElementById("updateImg").disabled = false;
+	  document.getElementById("updateImgBtn").style.display = "block";
       document.getElementById("textEmail").readOnly = false;
       document.getElementById("textPhone").readOnly = false;  
       document.getElementById("textIdTitle").style.color = "#29428C";
@@ -331,24 +375,28 @@
       document.getElementById("updateModalButtons2").style.display = "block";
       document.getElementById("updateModalButtons1").style.display = "block";
       document.getElementById("grayBoard").style.background = "rgba(0, 0, 0, 0.5)";
+      
+      /* 전화번호 hyphen('-') 자동 삽입 */
+      $(document).on("keyup", "#textPhone", function() {
+    	  $(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+      });
    }
    
-   document.getElementById("updateCancelButton").onclick = function() {
-        document.getElementById("textId").readOnly = true;
-        document.getElementById("textName").readOnly = true;
-        document.getElementById("textEmail").readOnly = true;
-        document.getElementById("textPhone").readOnly = true;
-        document.getElementById("textIdTitle").style.color = "#7F7FAE";
-        document.getElementById("textNameTitle").style.color = "#7F7FAE";
-        document.getElementById("textEmailTitle").style.color = "#7F7FAE";
-        document.getElementById("textPhoneTitle").style.color = "#7F7FAE"; 
-      	document.getElementById("updateModalButtons2").style.display = "none";
-      	document.getElementById("updateModalButtons1").style.display = "none";
-     	document.getElementById("grayBoard").style.background = "#F6F6F6";
-      
-    }
 
-
+	document.getElementById("updateCancelButton").onclick = function() {
+		document.getElementById("updateImg").disabled = true;
+		document.getElementById("updateImgBtn").style.display = "none";
+		document.getElementById("textEmail").readOnly = true;
+		document.getElementById("textPhone").readOnly = true;
+		document.getElementById("textIdTitle").style.color = "#7F7FAE";
+		document.getElementById("textNameTitle").style.color = "#7F7FAE";
+		document.getElementById("textEmailTitle").style.color = "#7F7FAE";
+		document.getElementById("textPhoneTitle").style.color = "#7F7FAE";
+		document.getElementById("updateModalButtons2").style.display = "none";
+		document.getElementById("updateModalButtons1").style.display = "none";
+		document.getElementById("grayBoard").style.background = "#F6F6F6";
+	}
+	
 </script>
 </body>
 </html>

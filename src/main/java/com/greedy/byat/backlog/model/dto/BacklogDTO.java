@@ -16,8 +16,6 @@ public class BacklogDTO {
 	
 	private int code;
 	private String title;
-	private java.sql.Date startDate;
-	private java.sql.Date endDate;
 	private String progress;
 	private String body;
 	private int projectCode;
