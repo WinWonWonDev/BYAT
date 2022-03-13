@@ -880,14 +880,11 @@
  		   AND A.ISSUE_DELETE_STATUS = 'N'
  	</select>
  	
- 	<update id="updateIssueSprintCode">
- 		UPDATE
- 		       TBL_ISSUE A
- 		   SET A.SPRINT_CODE = SEQ_SPRINT_CODE.CURRVAL
- 		   	 , A.ISSUE_PROGRESS = '해결전'
- 		 WHERE A.ISSUE_PROGRESS = '보류'
- 		   AND A.PROJECT_CODE = #{ projectCode }
- 	</update>
+ 	<select id="updateIssueSprintCode" resultType="_int">
+ 		SELECT
+ 		       SEQ_SPRINT_CODE.CURRVAL
+ 		  FROM DUAL
+ 	</select>
  	
  	<insert id="insertIssueProgressHistory2" parameterType="hashmap">
  		INSERT

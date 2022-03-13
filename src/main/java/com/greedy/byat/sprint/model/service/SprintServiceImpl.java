@@ -8,12 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.greedy.byat.backlog.model.dto.BacklogDTO;
-import com.greedy.byat.common.exception.sprint.RegistSprintException;
-import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.sprint.model.dao.SprintMapper;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 
+/**
+ * <pre>
+ * Class : SprintServiceImpl
+ * Comment : SprintService를 상속바아 메소드들을 재정의한 클래스
+ * History
+ * 2021/02/17 (박상범) 처음 작성
+ * </pre>
+ * @version 1.0.0
+ * @author 박상범
+ * @see SprintController.java, SprintServiceImpl.java, SprintMapper.java
+ * */
 @Service
 public class SprintServiceImpl implements SprintService {
  
@@ -24,6 +33,14 @@ public class SprintServiceImpl implements SprintService {
 		this.mapper = mapper;
 	}
 
+	
+	
+	
+   /**
+	* 메소드 selectSprintList에 관한 문서화 주석
+	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectSprintList메소드의 결과값을 리턴합니다.
+	*/
 	@Override
 	public List<SprintDTO> selectSprintList(int projectNo) {
 
@@ -32,6 +49,11 @@ public class SprintServiceImpl implements SprintService {
 		return sprintList;
 	}
 	
+	/**
+	* 메소드 selectBacklogList에 관한 문서화 주석
+	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectBacklogList메소드의 결과값을 리턴합니다.
+	*/
 	@Override
 	public List<BacklogDTO> selectBacklogList(int projectCode) {
 		
@@ -40,6 +62,11 @@ public class SprintServiceImpl implements SprintService {
 		return backlogList;
 	}
 
+	/**
+	* 메소드 selectMemberRoleName에 관한 문서화 주석
+	* @param Map<String, Integer> map : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectProjectMembersRoleNamee메소드의 결과값을 리턴합니다.
+	*/
 	@Override
 	public String selectMemberRoleName(Map<String, Integer> map) {
 		
@@ -48,15 +75,21 @@ public class SprintServiceImpl implements SprintService {
 		return roleName;
 	}
 	
+	
+	/**
+	* 메소드 registSprint에 관한 문서화 주석
+	* @param SprintDTO sprint : SprintDTO 자체를 파라미터로 사용하기 위함입니다.
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	*/
 	@Override
 	public String registSprint(SprintDTO sprint) {
 		
+		String message = null;
+		
 		int projectCode = sprint.getProjectCode();
 		
-		/* 진행중이거나 진행전인 스프린트가 있으면 스프린트를 생성할 수 없다. */
+		/* 진행중이거나 진행전인 스프린트가 있으면 스프린트를 생성할 수 없습니다. */
 		int checkResult = mapper.checkSprintProgress(projectCode);
-		
-		String result = null;
 		
 		if(!(checkResult > 0)) {
 			
@@ -65,42 +98,22 @@ public class SprintServiceImpl implements SprintService {
 			int result2 = mapper.insertSprintVersionHistory(sprint);
 		
 			int result3 = mapper.insertSprintProgressHistory(sprint);
-		
-			/* 이슈 상태 변경 이력에 추가해야 하기 때문에 보류중인 이슈 코드들을 가져온다. */
-			List<Integer> issueList = mapper.selectIssueList2(sprint);
 			
-			/* 보류중인 이슈가 있으면 해당 스프린트에 추가한다.*/
-			int result4 = mapper.updateIssueSprintCode(projectCode);
-			
-			int result5 = 0;
-			
-			Map<String, Integer> map = new HashMap<>();
-			map.put("projectCode", projectCode);
-			map.put("memberNo", sprint.getMemberNo());
-			
-			for(int i = 0; i < issueList.size(); i++) {
-				
-				map.put("issueCode", issueList.get(i));
-				
-				/* 이슈 상태 변경 이력 추가*/
-				result5 += mapper.insertIssueProgressHistory2(map);
-			}
-			
-			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0) && !(result4 > 0) && !(result5 == issueList.size())) {
-				
-				result = "스프린트 생성 실패";
+			if (!(result1 > 0) && !(result2 > 0) && !(result3 > 0)) {
+				message = "스프린트 생성 실패";
 			} else {
-				
-				result = "스프린트를 생성하였습니다.";
+				message = "스프린트를 생성하였습니다.";
 			}
 		} else {
-			
-			result = "완료되지 않은 스프린트가 존재합니다.";
+			message = "완료되지 않은 스프린트가 존재합니다.";
 		}
-		
-		return result;
+		return message;
 	}
 
+	/**
+	* 메소드 modifySprint에 관한 문서화 주석
+	* @param SprintDTO sprint : SprintDTO 자체를 파라미터로 사용하기 위함입니다.
+	*/
 	@Override
 	public void modifySprint(SprintDTO sprint) {
 		
@@ -127,6 +140,11 @@ public class SprintServiceImpl implements SprintService {
 		}
 	}
 	
+	/**
+	* 메소드 selectSprint에 관한 문서화 주석
+	* @param int sprintCode : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectSprint메소드의 결과값을 리턴합니다.
+	*/
 	@Override
 	public SprintDTO selectSprint(int sprintCode) {
 		
@@ -135,6 +153,10 @@ public class SprintServiceImpl implements SprintService {
 		return sprint;
 	}
 	
+	/**
+	* 메소드 removeSprint에 관한 문서화 주석
+	* @param Map<String, Integer> map : SprintController에서 넘어온 값을 담기 위함입니다.
+	*/
 	@Override
 	public void removeSprint(Map<String, Integer> map) {
 		
@@ -181,6 +203,11 @@ public class SprintServiceImpl implements SprintService {
 		}
 	}
 
+	/**
+	* 메소드 selectProjectProgress에 관한 문서화 주석
+	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : selectProjectProgress메소드의 결과값을 리턴합니다.
+	*/
 	@Override
 	public String selectProjectProgress(int projectCode) {
 		
@@ -189,6 +216,11 @@ public class SprintServiceImpl implements SprintService {
 		return projectProgress;
 	}
 
+	/**
+	* 메소드 startSprint에 관한 문서화 주석
+	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	*/
 	@Override
 	public String startSprint(Map<String, Integer> map) {
 		
@@ -240,7 +272,6 @@ public class SprintServiceImpl implements SprintService {
 									int result4 = mapper.insertBacklogProgressHistory(task);
 									
 									if(result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0) {
-										
 										cnt++;
 									}
 									
@@ -257,7 +288,6 @@ public class SprintServiceImpl implements SprintService {
 									}
 								}
 							} else {
-								
 								message = "필수항목이 미기입된 태스크가 존재합니다.";
 								break;
 							}
@@ -280,34 +310,34 @@ public class SprintServiceImpl implements SprintService {
 							}
 							
 							if(result1 > 0 && result2 > 0 && result3 == sprintMemberList.size()) {
-								
 								message = "스프린트를 시작합니다.";
 							}
 						}
 						
 					} else {
-						
 						message = "태스크가 없습니다. 태스크를 생성해주세요.";
 					}
-				} else {
 					
+				} else {
 					message = "스프린트에 미기입된 항목이 있습니다.";
 				}
-			} else if("진행중".equals(sprintProgressResult)) {
 				
+			} else if("진행중".equals(sprintProgressResult)) {
 				message = "진행중인 스프린트가 존재합니다.";
 			} else {
-				
 				message = "시작할 스프린트가 존재하지 않습니다.";
 			}
 		} else {
-			
 			message = "프로젝트가 진행중이 아닙니다.";
 		}
-		
 		return message; 		
 	}
 
+	/**
+	* 메소드 endSprint에 관한 문서화 주석
+	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	*/
 	@Override
 	public String endSprint(Map<String, Integer> map) {
 		
@@ -341,7 +371,6 @@ public class SprintServiceImpl implements SprintService {
 					int result2 = mapper.updateBacklogProgress3(task);
 					
 					if(result1 > 0 && result2 > 0) {
-						
 						cnt++;
 					}
 					
@@ -353,7 +382,6 @@ public class SprintServiceImpl implements SprintService {
 					int result2 = mapper.insertBacklogProgressHistory3(task);
 					
 					if(result1 > 0 && result2 > 0) {
-						
 						cnt++;
 					}
 					
@@ -371,16 +399,11 @@ public class SprintServiceImpl implements SprintService {
 					int result5 = mapper.insertBacklogVersionHistory(task);
 					
 					if (result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0  && result5 > 0 ) {
-						
 						cnt++;
 					}
 					
 				/* 긴급 태스크로 생성된 태스크이면서 진행상태가 완료라면 변경사항없음*/
 				} else if("완료".equals(task.getProgress()) && 0 >= task.getBacklogCode()){
-					
-					System.out.println("긴급태스크로 만들어진 완료애가 뭐가나오 ?(진행상태) : " + task.getProgress());
-					System.out.println("긴급태스크로 만들어진 완료애가 뭐가나오 ?(백로그코드) : " + task.getBacklogCode());
-					
 					cnt++;
 				}
 			}
@@ -408,31 +431,7 @@ public class SprintServiceImpl implements SprintService {
 					result2 += mapper.insertEndSprintNotice(map);
 				}
 				
-				/* 아직 미완료인 모든 이슈리스트를 가져온다. */
-				List<Integer> issueList = mapper.selectIssueList(map);
-				
-				Map<String, Integer> issueMap = new HashMap<>();
-				issueMap.put("memberNo", loginMemberNo);
-				
-				int result3 = 0;
-				int result4 = 0;
-				int result5 = 0;
-				
-				for(int j = 0; j < issueList.size(); j++) {
-					
-					int issueCode = issueList.get(j);
-					
-					issueMap.put("issueCode", issueCode);
-					
-					result3 += mapper.updateIssueProgress(issueCode);
-					
-					result4 += mapper.insertIssueProgressHistory(issueMap);
-					
-					/* 이슈 구성원들의 참여 상태를 N으로 바꾼다. */
-					result5 += mapper.updateIssueMembersParticipation(issueCode);
-				}
-				
-				if(result1 > 0 && result2 == sprintMemberList.size() && result3 == issueList.size() && result4 == issueList.size() && result5 == issueList.size()) {
+				if(result1 > 0 && result2 == sprintMemberList.size()) {
 					
 					int result6 = mapper.updateSprintProgress2(sprintCode);
 					
@@ -441,30 +440,20 @@ public class SprintServiceImpl implements SprintService {
 					int result7 = mapper.insertSprintProgressHistory4(map);
 					
 					if(result6 > 0 && result7 > 0) {
-						
 						message = "스프린트를 종료합니다.";
 					} else {
-						
 						message = "스프린트 종료 실패3";
 					}
 				} else {
-					
 					message = "스프린트 종료 실패2";
 				}
 			} else {
 				message = "스프린트 종료 실패1";
 			}
 		} else {
-			
 			message = "스프린트가 진행중이지 않습니다.";
 		}
-		
 		return message;
 	}
 
-	
-
-
 }
-
-
