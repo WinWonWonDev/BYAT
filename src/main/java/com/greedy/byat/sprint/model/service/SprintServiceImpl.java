@@ -261,19 +261,19 @@ public class SprintServiceImpl implements SprintService {
 							TaskDTO task = taskList.get(i);
 							task.setMemberNo(map.get("memberNo"));
 							
-							/* 태스크들이  미기입된 항목이 있는지 체크한다.*/
+							/* 태스크들이  미기입된 항목이 있는지 체크힙니다.*/
 							if(task.getTitle() != null && task.getStartDate() != null && task.getEndDate() != null && task.getBody() != null) {
 								
-								/* 백로그코드가 있는 태스크면 태스크의 진행 상태를 진행중으로 바꾸고 백로그의 진행상태도 진행중으로 바꾼다.*/
+								/* 백로그코드가 있는 태스크면 태스크의 진행 상태를 진행중으로 바꾸고 백로그의 진행상태도 진행중으로 바꿉니다.*/
 								if(task.getBacklogCode() > 0) {
 									
-									/* 태스크의 진행상태를 진행중으로 바꾼다. */
+									/* 태스크의 진행상태를 진행중으로 바꿉니다. */
 									int result1 = mapper.updateTaskProgress(task);
 									
 									/* 태스크의 진행상태 변경 이력 추가 */
 									int result2 = mapper.insertTaskProgressHistory(task);
 									
-									/* 백로그의 진행상태도 진행중으로 바꿔준다. */
+									/* 백로그의 진행상태도 진행중으로 바꿔줍니다. */
 									int result3 = mapper.updateBacklogProgress(task);
 									
 									/* 백로그의 진행상태 변경 이력 추가 */
@@ -283,7 +283,7 @@ public class SprintServiceImpl implements SprintService {
 										cnt++;
 									}
 									
-									/* 백로그코드가 없는 태스크면 태스크의 진행 상태를 진행중으로 바꾼다.*/
+									/* 백로그코드가 없는 태스크면 태스크의 진행 상태를 진행중으로 바꿉니다. */
 								} else {
 									
 									int result1 = mapper.updateTaskProgress(task);
@@ -362,8 +362,6 @@ public class SprintServiceImpl implements SprintService {
 			
 			TaskDTO task = new TaskDTO();
 			int cnt = 0;
-			
-			System.out.println("taskDTO에 뭐가 담기냐? : " + task);
 			
 			for(int i = 0; i < taskCodeList.size(); i++) {
 				
