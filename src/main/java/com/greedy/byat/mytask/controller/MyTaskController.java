@@ -20,35 +20,26 @@ import com.google.gson.GsonBuilder;
 import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.mytask.model.dto.MyTaskDTO;
 import com.greedy.byat.mytask.model.dto.ToDoListDTO;
-import com.greedy.byat.mytask.model.service.MyTaskService;
 import com.greedy.byat.task.model.dto.TaskDTO;
+import com.greedy.byat.mytask.model.service.MyTaskService;
 
-/* 
+/** 
 * <pre>
 * Class : MyTaskController
 * Comment : MyTask관련 메소드를 모아놓은 controller
 * History
-* 2022/02/17  박수빈 
+* 2022/02/17  (박수빈) 초기 생성 세팅
+* 2022/02/19  (박수빈) selectMytask() 마이태스크 프로젝트 목록 조회 요청후 생성요청 후 작성
+* 2022/02/21  (박수빈) selectMytask() 마이태스크  태스크 조회, ToDoList 조회 요청후 생성 
+* 2022/02/22  (박수빈) registToDoList() ToDoList 생성요청 작성, removeToDoList() ToDoList 삭제요청 작성, modifyToDoList() ToDoList 수정요청 작성
+* 2022/02/23  (박수빈) modifyToDoListStatus() 상태 변경요청 작성
+* 2022/02/24  (박수빈) selectMytask() 프로젝트 구성원 상세 조회 요청 작성
+* 2022/02/26  (박수빈) selectMytask() 마이태스크  태스크 조회 요청 작성
 * </pre>
-* @version 1.0.0 
+* @version 1
 * @author 박수빈 
-* @see MyTaskDTO, ToDoListDTO, MyTaskMapper, MyTaskService, MyTaskServiceImple
+* @see MyTaskDTO, MyTaskDTO, ToDoListDTO, TaskDTO, MyTaskMapper, MyTaskService, MyTaskServiceImple
 */
-
-
-/**
- * <pre>
- * 간략 : .
- * 상세 : .
- * com.greedy.byat.mytask.controller
- *   |_ MyTaskController.java
- * </pre>
- * 
- * @Company : TommyLee
- * @Author  : soobeen
- * @Date    : 2022. 3. 13. 오전 2:44:11
- * @Version : 1.0
- */
 @Controller
 @RequestMapping("/mytask")
 public class MyTaskController {
@@ -64,9 +55,8 @@ public class MyTaskController {
 	
 	/**
 	 * 메소드 selectMytask에 관한 문서화 주석
-	 * MyTask 페이지의 의 모든 조회를 담당합니다.
-	 * @param request : 뷰에서  Session에 담겨있는 MemberDTO 값을 받아오기 위해 사용합니다.
-	 * @param model : Model을 통하여 뷰에게 프로젝트 상태 배열,  MyTask안에 담긴 ProjectDTO, ToDoListDTO, TaskDTO 값을 넘겨주기위해 사용합니다. 
+	 * @param request 뷰에서  Session에 담겨있는 MemberDTO 값을 받아오기 위해 사용합니다.
+	 * @param model Model을 통하여 뷰에게 프로젝트 상태 배열,  MyTask안에 담긴 ProjectDTO, ToDoListDTO, TaskDTO 값을 넘겨주기위해 사용합니다. 
 	 * @return : mytask/mytask.jsp 주소로 이동하기 위해 값을 넘겨줍니다.
 	 */
 	@GetMapping("/list")
@@ -108,10 +98,9 @@ public class MyTaskController {
 	
 	/**
 	 * 메소드 selectTaskListForProject에 관한 문서화 주석
-	 * 프로젝트 목록을 클릭 시 해당 프로젝트의 태스크목록을 조회합니다.
-	 * @param projectCode : 클릭한 프로젝트 번호입니다.
-	 * @param request : 뷰에서 MemberDTO의 값을controller에  가져오기 위해 사용합니다.
-	 * @param model :  projectCode 뷰로 넘겨주기 위해 사용합니다.
+	 * @param projectCode 클릭한 프로젝트 번호입니다.
+	 * @param request view 에서 MemberDTO의 값을  가져오기 위해 사용합니다.
+	 * @param model projectCode 뷰로 넘겨주기 위해 사용합니다.
 	 * @return : gson을통해서  List<TaskDTO> taskList의 값을 view로 넘겨준다.
 	 */
 	@GetMapping(value="/selecttasklistforproject", produces="application/json; charset=UTF-8")
@@ -138,8 +127,7 @@ public class MyTaskController {
 	
 	/**
 	 * 메소드 registToDoList에 관한 문서화 주석
-	 * ToDoList 생성요청 하는 메서드입니다.
-	 * @param request : 뷰에서 MemberDTO의 값을controller에  가져오기 위해 사용합니다.
+	 * @param request : view 에서 MemberDTO의 값을 가져오기 위해 사용합니다.
 	 * @return : redirect을 통해서 mytask/list URL로 이동합니다.
 	 */
 	@GetMapping("/regist")
@@ -154,7 +142,6 @@ public class MyTaskController {
 
 	/**
 	 * 메소드 removeToDoList에 관한 문서화 주석
-	 * ToDoList 삭제요청 하는 매서드입니다.
 	 * @param toDoListNo : 삭제할 ToDoList 번호
 	 * @return : 결과값 확인용
 	 */
@@ -171,7 +158,6 @@ public class MyTaskController {
 	
 	/**
      * 메소드 modifyToDoList에 관한 문서화 주석
-     * ToDoList 수정하기 메서드 입니다.
 	 * @param toDoListNo : 삭제할 ToDoListno 번호
 	 * @return : 결과값 확인용
 	 */
@@ -187,7 +173,6 @@ public class MyTaskController {
 	
 	/**
      * 메소드 modifyToDoListStatus에 관한 문서화 주석
-     * ToDoList 체크 상태를 수정하는 매서드입니다.
 	 * @param ToDoListDTO : 수정할 todoListDTO
 	 * @return : 결과값 확인용
 	 */

@@ -19,13 +19,19 @@ import com.greedy.byat.task.model.dto.TaskDTO;
  * <pre>
  * Class : MyTaskServiceImpl
  * Comment : MyTaskController의 요청을 처리하는 Interface
- * History
- * 2021/02/17 (박수빈) 처음 작성
+ * History 
+ * 2022/02/17  (박수빈) 초기 생성 세팅
+ * 2022/02/19  (박수빈) selectmyTaskList() 마이태스크 프로젝트 목록 조회 요청후 생성요청 후 작성
+ * 2022/02/21  (박수빈) selectmyTaskList() 마이태스크  태스크 조회, ToDoList 조회 요청후 생성 
+ * 2022/02/22  (박수빈) registToDoList() ToDoList 생성요청 작성, removeToDoList() ToDoList 삭제요청 작성, modifyToDoList() ToDoList 수정요청 작성
+ * 2022/02/23  (박수빈) modifyToDoListStatus() 상태 변경요청 작성
+ * 2022/02/24  (박수빈) selectTaskListForProject() 프로젝트 구성원 상세 조회 요청 작성
+ * 2022/02/26  (박수빈) selectmyTaskList() 마이태스크  태스크 조회 요청 작성
  * </pre>
  * @version 1.0.0
  * @author 박수빈
- * @see MyTaskMapper, MyTaskServiceImpl, MyTaskService
- * */
+ * @see MyTaskMapper, MyTaskServiceImpl, MyTaskService, MemberDTO, ToDoListDTO, ProjectMembersDTO, TaskDTO, ProjectDTO * */
+
 @Service
 public class MyTaskServiceImpl implements MyTaskService {
  
@@ -39,11 +45,8 @@ public class MyTaskServiceImpl implements MyTaskService {
 
 	/**
 	 * 메소드 selectmyTaskList에 관한 문서화 주석
-	 * MyTask 정보를 조회한다.
 	 * @param member : 로그인한 사용자의 정보 
-	 * @return mytask : MyTaskDTO정보 리턴
-	 * 
-	 * @author 박수빈
+	 * @return mytask : MyTaskDTO정보 전달
 	 */
 	@Override
 	public MyTaskDTO selectmyTaskList(MemberDTO member) {
@@ -82,9 +85,7 @@ public class MyTaskServiceImpl implements MyTaskService {
 	/**
 	 * 메소드 registToDoList에 관한 문서화 주석
 	 * @param memberNumber: 로그인 한 멤버 고유 번호
-	 * @return 결과 확인용
-	 * 
-	 * @author 박수빈
+	 * @return 결과값 전달
 	 */
 	@Override
 	public int registToDoList(int memberNo) {
@@ -99,9 +100,7 @@ public class MyTaskServiceImpl implements MyTaskService {
 	/**
 	 * 메소드 removeToDoList에 관한 문서화 주석
 	 * @param todoListNumber: 로그인 한 멤버 고유 번호
-	 * @return 결과 확인용
-	 * 
-	 * @author 박수빈
+	 * @return 결과값 전달
 	 */
 	@Override
 	public int removeToDoList(int todoListNumber) {
@@ -115,9 +114,7 @@ public class MyTaskServiceImpl implements MyTaskService {
 	/**
 	 * 메소드 modifyToDoListStatus에 관한 문서화 주석
 	 * @param ToDoListDTO: 수정될 ToDoListDTO 정보
-	 * @return 결과 확인용
-	 * 
-	 * @author 박수빈
+	 * @return 결과값 전달
 	 */
 	@Override
 	public int modifyToDoListStatus(ToDoListDTO toDoList) {
@@ -132,8 +129,6 @@ public class MyTaskServiceImpl implements MyTaskService {
 	 * 메소드 selectMemberModal에 관한 문서화 주석
 	 * @param code: 클릭한 프로젝트의 코드
 	 * @return projectMembers: 클릭한 프로제트의 구성원 정보 
-	 * 
-	 * @author 박수빈
 	 */
 	@Override
 	public List<ProjectMembersDTO> selectMemberModal(int code) {
@@ -148,9 +143,7 @@ public class MyTaskServiceImpl implements MyTaskService {
 	/**
 	 * 메소드 selectMemberModal에 관한 문서화 주석
 	 * @param todoList: 수정할 ToDoListDTO 정보
-	 * @return : 결과 확인
-	 * 
-	 * @author 박수빈
+	 * @return : 결과값 전달
 	 */
 	@Override 
 	public int modifyToDoList(ToDoListDTO todoList) {
@@ -167,12 +160,9 @@ public class MyTaskServiceImpl implements MyTaskService {
 
 	/**
 	 * 메소드 selectTaskListForProject에 관한 문서화 주석
-	 * 로그인한 멤버 번호와 프로젝트 코드를 mapper로 전해준다.
 	 * @param memberNo: 수정하는 멤버 번호
 	 * @param projectCode: 클릭한 project의 코드
-	 * @return taskList: 조회한 태스크 들을 리턴한다
-	 * 
-	 * @author 박수빈
+	 * @return taskList: 조회한  taskList값 전달
 	 */
 	@Override
 	public List<TaskDTO> selectTaskListForProject(int memberNo, int projectCode) {
