@@ -39,10 +39,29 @@ import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.sprint.model.dto.SprintMembersDTO;
 
+/**
+ * <pre>
+ * Class : IssueController
+ * Comment : Issue 관련 메소드를 모아놓은 Controller입니다.
+ * History
+ * 2022/02/25 (박인근) 처음 작성
+ * 2022/02/26 (박인근) 이슈 목록 조회 관련 코드 추가
+ * 2022/02/27 (박인근) 이슈 목록 조회, 이슈 상세 조회 관련 코드 추가
+ * 2022/02/28 (박인근) 이슈 상태 변경 관려 코드 추가
+ * 2022/03/01 (박인근) 이슈 수정 관련 코드 추가
+ * 2022/03/02 (박인근) 이슈 수정(담당자 변경), 이슈 담당자 제외 관련 코드 추가
+ * 2022/03/03 (박인근) 이슈 삭제 관련 코드 추가
+ * 2022/03/07 (박인근) 이슈 관련 알림 생성 코드 추가
+ * </pre>
+ * @version 8
+ * @author 박인근
+ * see IssueDTO, IssueMembersDTO, IssueService, IssueServiceImpl, IssueMapper.java, IssueMapper.xml, NoticeDTO, MemberDTO, SprintDTO, SprintMembersDTO
+ * */
 @Controller
 @RequestMapping("/issue")
 public class IssueController {
 
+	/** IssueService의 메소드를 사용하기 위한 전역 변수로 변경 불가능 하도록 final로 선언 */
 	private final IssueService issueService;
 	
 	@Autowired
@@ -51,6 +70,12 @@ public class IssueController {
 		this.issueService = issueService;
 	}
 	
+	/**
+	 * 메소드 selectIssueList에 관한 문서화 주석
+	 * @ param mv 반환하는 url에서 사용할 값들을 담아서 전달하기 위해 사용하는 파라미터
+	 * @ param request 현재 session에 담겨져 있는 값을 사용하기 위한 파라미터
+	 * @ return view에서 사용해야 하는 값들을 담아 반환
+	 * */
 	@GetMapping("list")
 	public ModelAndView selectIssueList(ModelAndView mv, HttpServletRequest request) {
 		
@@ -65,6 +90,14 @@ public class IssueController {
 		return mv;
 	}
 	
+	/**
+	 * 메소드 modifyIssueStatus에 관한 문서화 주석
+	 * @ param mv 반환하는 url에서 사용할 값들을 담아서 전달하기 위해 사용하는 파라미터
+	 * @ param request 요청한 view에서 전달한 값을 사용하기 위한 파라미터
+	 * @ param response 응답에 대한 설정을 변경하기 위해 사용하는 파라미터
+	 * @ return view에서 사용해야 하는 값들을 담아 반환
+	 * @ exception ModelAndView에 담아 보내줄 값의 자료형 변경 시 처리하는 예외, 이슈 상태 변경 실패 예외, 이슈 상태 변경 이력 생성 실패 예외, 이슈 상태 변경 알림 생성 실패 예외 처리
+	 * */
 	@GetMapping("modifyissuestatus")
 	public ModelAndView modifyIssueStatus(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws IssueModifyStatusException, JsonProcessingException, IssueRegistStatusHistoryException, IssueStatusModifyNoticeException {
 		
@@ -90,6 +123,14 @@ public class IssueController {
 		return mv;
 	}
 	
+	/**
+	 * 메소드 selectSprintIssueList에 관한 문서화 주석
+	 * @ param mv 반환하는 url에서 사용할 값들을 담아서 전달하기 위해 사용하는 파라미터
+	 * @ param request 요청한 view에서 전달한 값을 사용하기 위한 파라미터
+	 * @ param response 응답에 대한 설정을 변경하기 위해 사용하는 파라미터
+	 * @ return view에서 사용해야 하는 값들을 담아 반환
+	 * @ exception ModelAndView에 담아 보내줄 값의 자료형 변경 시 처리하는 예외
+	 * */
 	@GetMapping("issuelist")
 	public ModelAndView selectSprintIssueList(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 		
@@ -109,7 +150,14 @@ public class IssueController {
 		return mv;
 	}
 	
-	//이슈 수정에서 스프린트 멤버 확인할 때
+	/**
+	 * 메소드 selectSprintMembers에 관한 문서화 주석
+	 * @ param mv 반환하는 url에서 사용할 값들을 담아서 전달하기 위해 사용하는 파라미터
+	 * @ param request 요청한 view에서 전달한 값을 사용하기 위한 파라미터
+	 * @ param response 응답에 대한 설정을 변경하기 위해 사용하는 파라미터
+	 * @ return view에서 사용해야 하는 값들을 담아 반환
+	 * @ exception ModelAndView에 담아 보내줄 값의 자료형 변경 시 처리하는 예외
+	 * */
 	@PostMapping("sprintmemberlist")
 	public ModelAndView selectSprintMembers(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 
@@ -129,6 +177,13 @@ public class IssueController {
 		return mv;
 	}
 	
+	/**
+	 * 메소드 modifyIssue에 관한 문서화 주석
+	 * @ param request 요청한 view에서 전달한 값을 사용하기 위한 파라미터
+	 * @ param rttr redirect시 사용할 속성과 값을 담아 전달하기 위한 파라미터
+	 * @ return view를 redirect 하기 위해 url과 어떤 project인지 확인하기 위한 project의 식별 번호를 함께 반환
+	 * @ exception 이슈 담당자 변경 실패 예외, 이슈 내용 변경 실패 예외, 이슈 버전 히스토리 생성 실패 예외, 이슈 담당자 변경 이력 생성 실패, 이슈 수정 알림 생성 실패 예외 처리
+	 * */
 	@PostMapping("modify")
 	public String modifyIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueModifyMemberException, IssueUpdateContentException, IssueInsertVersionHistoryException, IssueInsertMemberHistoryException, IssueModifyNoticeException {
 		
@@ -175,6 +230,14 @@ public class IssueController {
 		return "redirect:/issue/list?code=" + projectCode;
 	}
 	
+	/**
+	 * 메소드 removeIssueMember에 관한 문서화 주석
+	 * @ param mv 반환하는 url에서 사용할 값들을 담아서 전달하기 위해 사용하는 파라미터
+	 * @ param request 요청한 view에서 전달한 값과 session에 담긴 값을 사용하기 위한 파라미터
+	 * @ param response 응답에 대한 설정을 변경하기 위해 사용하는 파라미터
+	 * @ return 요청한 view페이지로 비동기 방식의 jsonView 반환
+	 * @ exception 이슈 담당자 제외 실패 예외, 이슈 담당자 변경 이력 생성 실패 예외, 이슈 담당자 제외 알림 생성 실패 예외 처리
+	 * */
 	@PostMapping("removeissuemember")
 	public ModelAndView removeIssueMember(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws IssueRemoveMemberException, IssueInsertMemberHistoryException, IssueRemoveMemberNoticeException {
 		
@@ -200,6 +263,13 @@ public class IssueController {
 		return mv;
 	}
 	
+	/**
+	 * 메소드 removeIssue에 관한 문서화 주석
+	 * @ param request 요청한 view에서 전달한 값과 session에 담긴 값을 사용하기 위한 파라미터
+	 * @ param rttr redirect시 사용할 속성과 값을 담아 전달하기 위한 파라미터
+	 * @ return view를 redirect 하기 위해 url과 어떤 project인지 확인하기 위한 project의 식별 번호를 함께 반환
+	 * @ exception 이슈 삭제 실패 예외, 이슈 버전 히스토리 생성 실패 예외, 이슈 삭제 알림 생성 실패 예외 처리
+	 * */
 	@GetMapping("remove")
 	public String removeIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueRemoveException, IssueInsertVersionHistoryException, IssueDeleteNoticeException {
 		
@@ -214,7 +284,14 @@ public class IssueController {
 		return "redirect:/issue/list?code=" + projectCode;
 	}
 	
-	//스프린트 페이지에서 이슈 생성시 담당자 지정 할 때
+	/**
+	 * 메소드 selectSprintMemberList에 관한 문서화 주석
+	 * @ param mv 반환하는 url에서 사용할 값들을 담아서 전달하기 위해 사용하는 파라미터
+	 * @ param request 요청한 view에서 전달한 값을 사용하기 위한 파라미터
+	 * @ param response 응답에 대한 설정을 변경하기 위해 사용하는 파라미터
+	 * @ return view에서 사용해야 하는 값들을 담아 반환
+	 * @ exception ModelAndView에 담아 보내줄 값의 자료형 변경 시 처리하는 예외
+	 * */
 	@PostMapping("selectsprintmemberlist")
 	public ModelAndView selectSprintMemberList(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
 		
@@ -232,6 +309,13 @@ public class IssueController {
 		return mv;
 	}
 	
+	/**
+	 * 메소드 registIssue에 관한 문서화 주석
+	 * @ param request 요청한 view에서 전달한 값과 session에 담긴 값을 사용하기 위한 파라미터
+	 * @ param rttr redirect시 사용할 속성과 값을 담아 전달하기 위한 파라미터
+	 * @ return view를 redirect 하기 위해 url과 어떤 project인지 확인하기 위한 project의 식별 번호를 함께 반환
+	 * @ exception 이슈 담당자 지정 실패 예외, 이슈 생성 실패 예외, 이슈 버전 히스토리 생성 실패 예외, 이슈 상태 변경 이력 생성 실패 예외, 이슈 생성 알림 생성 실패 예외, 이슈 담당자 변경 이력 생성 실패 예외 처리
+	 * */
 	@PostMapping("regist")
 	public String registIssue(HttpServletRequest request, RedirectAttributes rttr) throws IssueRegistMemberException, IssueRegistException, IssueInsertVersionHistoryException, IssueRegistStatusHistoryException, IssueRegistNoticeException, IssueInsertMemberHistoryException {
 		
