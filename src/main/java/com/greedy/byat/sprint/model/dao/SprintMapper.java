@@ -7,6 +7,17 @@ import com.greedy.byat.backlog.model.dto.BacklogDTO;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 
+/**
+ * <pre>
+ * Class : SprintMapper
+ * Comment : mapper.xml의 id들이 담긴 Class
+ * History
+ * 2021/02/17 (박상범) 처음 작성
+ * </pre>
+ * @version 1.0.0
+ * @author 박상범
+ * @see SprintController.java, SprintService.java, SprintServiceImpl.java
+ * */
 public interface SprintMapper {
 
 	List<SprintDTO> selectSprintList(int projectNo);

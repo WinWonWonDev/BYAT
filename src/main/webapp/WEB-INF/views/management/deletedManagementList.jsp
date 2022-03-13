@@ -8,7 +8,6 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/dataTables.jqueryui.min.css"/>  
 <script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
-
 <style>
 
 	:root {
@@ -203,6 +202,7 @@
 		top: 91.5%;
 		left: 97%;
 		border:none;
+		cursor: pointer;
 	}
 	
 	#restoreInfoModal .modal_layer {
@@ -306,9 +306,7 @@
 </head>
 <script type="text/javascript">
 $(document).ready(function() {
-    
     $.extend( $.fn.dataTable.defaults, {
-       
        language: {
           url : "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Korean.json"
        }
@@ -374,27 +372,21 @@ $(document).ready(function() {
 		<div class="modal_layer"></div>
 		</div>
 
+<script>
+		var Okbutton = document.getElementById("modal_ok_btn");
 
-	<script>
-	
-	
 		if(document.querySelectorAll("#managementTable tbody tr")) {
 			const $tr = document.querySelectorAll("#managementTable tbody tr");
 	 		var memberNoForRestore = document.querySelectorAll("#memberNoForRestore");
-	
 			
 			for(let i = 0; i < $tr.length; i++) {
-				
 				$tr[i].onmouseenter = function() {
 					this.parentNode.style.cursor = "pointer";
 					
 				}
-				
 				$tr[i].onmouseout = function() {
 					this.parentNode.style.backgroundColor = "white";
 				}
-				
-					
 				$tr[i].ondblclick = function() {
 					document.getElementById("restoreInfoModal").style.display = "block";
 					document.getElementById("modal_ok_btn").value = memberNoForRestore[i].value;
@@ -402,20 +394,14 @@ $(document).ready(function() {
 				
 			}
 		}
- 		 		
  		
-		var Okbutton = document.getElementById("modal_ok_btn");
-		
 		Okbutton.onclick = function() {
  			location.href="${ pageContext.servletContext.contextPath }/management/restore?no=" + Okbutton.value;	
 		} 
-					
 	 	document.getElementById("modal_close_btn").onclick = function() {
 			document.getElementById("restoreInfoModal").style.display = "none";
-	 		
 	 	}
 		
-		
-	</script>
+</script>
 </body>
 </html>

@@ -5,14 +5,14 @@
 <mapper namespace="com.greedy.byat.common.filter.model.dao.MenuMapper">
 	
 	<select id="selectMenuCodeByURL" resultType="_int">
-        SELECT
+        SELECT /* com.greedy.byat.common.filter.model.dao.MenuMapper#selectMenuCodeByURL() */
                A.COMMON_MENU_CODE
           FROM TBL_COMMON_MENU A
          WHERE A.COMMON_MENU_URL = #{ url }
 	</select>
 	
 	<select id="selectPermitInURL" parameterType="_int" resultType="_int">
-        SELECT
+        SELECT /* com.greedy.byat.common.filter.model.dao.MenuMapper#selectPermitInURL() */
                A.PERMIT_CODE
           FROM TBL_MENU_BY_PERMIT A
          WHERE COMMON_MENU_CODE = #{ menuCode }

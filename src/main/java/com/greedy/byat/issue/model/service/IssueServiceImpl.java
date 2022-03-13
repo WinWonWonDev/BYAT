@@ -32,9 +32,28 @@ import com.greedy.byat.notice.model.dto.NoticeDTO;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 import com.greedy.byat.sprint.model.dto.SprintMembersDTO;
 
+/**
+ * <pre>
+ * Class : IssueServiceImpl
+ * Comment : IssueService의 메소드들을 실제로 처리하는 class 입니다.
+ * History
+ * 2022/02/25 (박인근) 처음 작성
+ * 2022/02/26 (박인근) 이슈 목록 조회 관련 코드 추가
+ * 2022/02/27 (박인근) 이슈 목록 조회, 이슈 상세 조회 관련 코드 추가
+ * 2022/02/28 (박인근) 이슈 상태 변경 관려 코드 추가
+ * 2022/03/01 (박인근) 이슈 수정 관련 코드 추가
+ * 2022/03/02 (박인근) 이슈 수정(담당자 변경), 이슈 담당자 제외 관련 코드 추가
+ * 2022/03/03 (박인근) 이슈 삭제 관련 코드 추가
+ * 2022/03/07 (박인근) 이슈 관련 알림 생성 코드 추가
+ * </pre>
+ * @version 8
+ * @author 박인근
+ * see IssueDTO, IssueMembersDTO, IssueController, IssueService, IssueMapper.java, IssueMapper.xml, NoticeDTO, MemberDTO, SprintDTO, SprintMembersDTO
+ * */
 @Service
 public class IssueServiceImpl implements IssueService {
  
+	/** IssueMapper의 메소드들을 호출하기 위해 사용하는 전역변수로 변경 불가능하도록 final로 선언 */
 	private final IssueMapper mapper;
 
 	@Autowired
@@ -42,6 +61,11 @@ public class IssueServiceImpl implements IssueService {
 		this.mapper = mapper;
 	}
 
+	/**
+	 * 메소드 selectIssueList에 관한 문서화 주석
+	 * @ param projectCode project의 sprint 목록을 조회하기 위한 project의 식별 번호인 파라미터
+	 * @ return project의 sprint 목록을 담은 SprintDTO List를 반환
+	 * */
 	@Override
 	public List<SprintDTO> selectSprintList(int projectCode) {
 
@@ -69,6 +93,12 @@ public class IssueServiceImpl implements IssueService {
 		return sprintList;
 	}
 
+	/**
+	 * 메소드 updateIssueStatus에 관한 문서화 주석
+	 * @ param issue 수정할 Issue의 정보를 담은 파라미터
+	 * @ return issue 수정 성공 또는 실패에 대한 결과를 반환
+	 * @ exception 이슈 상태 변경 실패 예외, 이슈 상태 변경 이력 생성 실패 예외, 이슈 상태 변경 알림 생성 실패 예외 처리
+	 * */
 	@Override
 	public int updateIssueStatus(IssueDTO issue) throws IssueModifyStatusException, IssueRegistStatusHistoryException, IssueStatusModifyNoticeException {
 		
@@ -113,6 +143,11 @@ public class IssueServiceImpl implements IssueService {
 		return result;
 	}
 
+	/**
+	 * 메소드 selectIssueList에 관한 문서화 주석
+	 * @ param code 선택한 sprint의 issue를 조회하기 위한 sprint의 식별 번호인 파라미터
+	 * @ return issue의 목록을 담은 IssueDTO List를 반환
+	 * */
 	@Override
 	public List<IssueDTO> selectIssueList(int code) {
 
@@ -133,6 +168,11 @@ public class IssueServiceImpl implements IssueService {
 		return issueList;
 	}
 
+	/**
+	 * 메소드 selectSprintMembers에 관한 문서화 주석
+	 * @ param code 선택한 sprint의 멤버 목록을 조회하기 위한 sprint의 식별 번호인 파라미터
+	 * @ return sprint의 구성원 목록을 담은 SprintMembersDTO List를 반환
+	 * */
 	@Override
 	public List<SprintMembersDTO> selectSprintMembers(int code) {
 		
@@ -141,6 +181,11 @@ public class IssueServiceImpl implements IssueService {
 		return sprintMemberList;
 	}
 
+	/**
+	 * 메소드 updateIssue에 관한 문서화 주석
+	 * @ param modifyIssue 수정할 issue의 내용을 담은 파라미터
+	 * @ exception 이슈 담당자 변경 실패 예외, 이슈 내용 변경 실패 예외, 이슈 버전 히스토리 생성 실패 예외, 이슈 담당자 변경 이력 생성 실패, 이슈 수정 알림 생성 실패 예외 처리
+	 * */
 	@Override
 	public void updateIssue(IssueDTO modifyIssue) throws IssueModifyMemberException, IssueUpdateContentException, IssueInsertVersionHistoryException, IssueInsertMemberHistoryException, IssueModifyNoticeException {
 
@@ -281,6 +326,12 @@ public class IssueServiceImpl implements IssueService {
 		
 	}
 
+	/**
+	 * 메소드 deleteIssueMember에 관한 문서화 주석
+	 * @ param removeMember 제외할 멤버의 정보를 담은 파라미터
+	 * @ return 담당자 제외 성공 또는 실패에 대한 결과를 반환
+	 * @ exception 이슈 담당자 제외 실패 예외, 이슈 담당자 변경 이력 생성 실패 예외, 이슈 담당자 제외 알림 생성 실패 예외 처리
+	 * */
 	@Override
 	public int deleteIssueMember(IssueMembersDTO removeMember) throws IssueRemoveMemberException, IssueInsertMemberHistoryException, IssueRemoveMemberNoticeException {
 
@@ -321,6 +372,13 @@ public class IssueServiceImpl implements IssueService {
 		return result;
 	}
 
+	/**
+	 * 메소드 deleteIssue에 관한 문서화 주석
+	 * @ param code 삭제할 issue의 식별 번호인 파라미터
+	 * @ param changeMemberNo 담당자를 변경한 멤버의 식별 번호인 파라미터
+	 * @ return issue 삭제 성공 또는 실패 결과를 반환
+	 * @ exception 이슈 삭제 실패 예외, 이슈 버전 히스토리 생성 실패 예외, 이슈 삭제 알림 생성 실패 예외 처리
+	 * */
 	@Override
 	public int deleteIssue(int code, int changeMemberNo) throws IssueRemoveException, IssueInsertVersionHistoryException, IssueDeleteNoticeException {
 		
@@ -374,6 +432,11 @@ public class IssueServiceImpl implements IssueService {
 		return issue.getProjectCode();
 	}
 
+	/**
+	 * 메소드 selectSprintMembersList에 관한 문서화 주석
+	 * @ param projectCode project의 진행전 또는 진행중인 sprint의 식별 번호를 알아내기 위한 파라미터
+	 * @ return sprint의 구성원 목록 정보를 담은 SprintMembersDTO List를 반환
+	 * */
 	@Override
 	public List<SprintMembersDTO> selectSprintMembersList(int projectCode) {
 	
@@ -384,6 +447,11 @@ public class IssueServiceImpl implements IssueService {
 		return selectSprintMemberList;
 	}
 
+	/**
+	 * 메소드 insertIssue에 관한 문서화 주석
+	 * @ param registIssue 생성할 issue의 정보를 담은 파라미터
+	 * @ exception 이슈 담당자 지정 실패 예외, 이슈 생성 실패 예외, 이슈 버전 히스토리 생성 실패 예외, 이슈 상태 변경 이력 생성 실패 예외, 이슈 생성 알림 생성 실패 예외, 이슈 담당자 변경 이력 생성 실패 예외 처리
+	 * */
 	@Override
 	public void insertIssue(IssueDTO registIssue) throws IssueRegistMemberException, IssueRegistException, IssueInsertVersionHistoryException, IssueRegistStatusHistoryException, IssueRegistNoticeException, IssueInsertMemberHistoryException {
 		

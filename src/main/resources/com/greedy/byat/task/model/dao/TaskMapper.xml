@@ -46,6 +46,52 @@
  		<result property="body" column="TASK_BODY"/>
  	</resultMap>
  	
+ 	<resultMap type="RoleDTO" id="roleResultMap">
+ 		<id property="code" column="ROLE_CODE"/>
+ 		<id property="memberNo" column="MEMBER_NO"/>
+ 		<id property="projectCode" column="PROJECT_CODE"/>
+ 		<result property="roleName" column="ROLE_NAME"/>
+ 	</resultMap>
+ 	
+ 	<resultMap type="TaskDTO" id="taskResultMap3">
+ 		<id property="code" column="TASK_CODE"/>
+ 		<result property="title" column="TASK_TITLE"/>
+ 		<result property="startDate" column="TASK_START_DATE"/>
+ 		<result property="endDate" column="TASK_END_DATE"/>
+ 		<result property="progress" column="TASK_PROGRESS"/>
+ 		<result property="body" column="TASK_BODY"/>
+ 		<result property="version" column="TASK_VERSION"/>
+ 		<result property="deleteStatus" column="TASK_DELETE_STATUS"/>
+ 		<result property="memberNo" column="MEMBER_NO"/>
+ 		<result property="backlogCode" column="BACKLOG_CODE"/>
+ 		<result property="sprintCode" column="SPRINT_CODE"/>
+ 		<result property="projectCode" column="PROJECT_CODE"/>
+ 		
+ 		<association property="managerRole" resultMap="roleResultMap"/>
+ 	</resultMap>
+ 	
+ 	<select id="selectTaskList2" resultMap="taskResultMap3">
+ 		SELECT
+ 			   A.TASK_CODE
+ 			 , A.TASK_TITLE
+ 			 , A.TASK_START_DATE
+ 			 , A.TASK_END_DATE
+ 			 , A.TASK_PROGRESS
+ 			 , A.TASK_BODY
+ 			 , A.TASK_VERSION
+ 			 , A.TASK_DELETE_STATUS
+ 			 , A.MEMBER_NO
+ 			 , A.PROJECT_CODE
+ 			 , A.BACKLOG_CODE
+ 			 , A.SPRINT_CODE
+ 			 , B.ROLE_NAME
+ 		  FROM TBL_TASK A
+ 		  JOIN TBL_ROLE B ON (A.MEMBER_NO = B.MEMBER_NO)
+ 		  JOIN TBL_SPRINT C ON (A.PROJECT_CODE = C.PROJECT_CODE)
+ 		 WHERE A.SPRINT_CODE = #{ sprintCode }
+ 		   AND A.TASK_DELETE_STATUS = 'N'
+ 	</select>
+ 	
  	<select id="selectMembersRoleList" resultMap="taskMembersRoleResultMap">
  		SELECT
 	   		   A.PROJECT_CODE
@@ -417,9 +463,9 @@
  		UPDATE
  			   TBL_TASK A
  		   SET A.TASK_VERSION = (SELECT
- 		   								B.TASK_VERSION + 1
+ 		   								B.TASK_VERSION
  		   						   FROM TBL_TASK B
- 		   						  WHERE B.TASK_CODE = #{ taskCode })
+ 		   						  WHERE B.TASK_CODE = #{ taskCode }) + 1
  		   	 , A.TASK_DELETE_STATUS = 'Y'
  		 WHERE A.TASK_CODE = #{ taskCode }
  	</update>
@@ -431,7 +477,7 @@
 		 WHERE A.TASK_CODE = #{ taskCode }
 	</select>
 	
-	<insert id="insertTaskVersionHistory3" parameterType="TaskDTO">
+	<insert id="insertTaskVersionHistory3">
 		INSERT
 		  INTO TBL_TASK_VERSION_HISTORY A
 		(
@@ -456,11 +502,8 @@
 				        										  JOIN TBL_SPRINT C ON (G.SPRINT_CODE = C.SPRINT_CODE)
 				       											 WHERE G.TASK_CODE = #{ code }
 				 	 										   ) || CHR(41)
-		, #{ body }
-		, (SELECT
-				  E.TASK_VERSION
-			 FROM TBL_TASK E
-			WHERE E.TASK_CODE = #{ code })
+		, #{ body, jdbcType=VARCHAR}
+		, #{ version }
 		, (SELECT
 				  F.MEMBER_NAME
 			 FROM TBL_MEMBER F

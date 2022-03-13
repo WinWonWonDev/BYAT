@@ -65,28 +65,6 @@
  		<!-- <association property="writer" resultMap="memberResultMap"/> -->
  	</resultMap>
  	
- 	<select id="selectTaskList" resultMap="taskResultMap">
- 		SELECT
- 			   A.TASK_CODE
- 			 , A.TASK_TITLE
- 			 , A.TASK_START_DATE
- 			 , A.TASK_END_DATE
- 			 , A.TASK_PROGRESS
- 			 , A.TASK_BODY
- 			 , A.TASK_VERSION
- 			 , A.TASK_DELETE_STATUS
- 			 , A.MEMBER_NO
- 			 , A.PROJECT_CODE
- 			 , A.BACKLOG_CODE
- 			 , A.SPRINT_CODE
- 			 , B.ROLE_NAME
- 		  FROM TBL_TASK A
- 		  JOIN TBL_ROLE B ON (A.MEMBER_NO = B.MEMBER_NO)
- 		  JOIN TBL_SPRINT C ON (A.PROJECT_CODE = C.PROJECT_CODE)
- 		 WHERE A.SPRINT_CODE = #{ sprintCode }
- 		   AND A.TASK_DELETE_STATUS = 'N'
- 	</select>
- 	
  	<select id="selectBacklogList" resultMap="generalBacklogResultMap">
         SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#selectAllBacklogList() */
                A.BACKLOG_CODE
@@ -630,7 +608,7 @@
  		UPDATE
  			   TBL_BACKLOG A
  		   SET A.BACKLOG_PROGRESS = '완료'
- 		 WHERE A.BACKLOG_CODE = #{ code }
+ 		 WHERE A.BACKLOG_CODE = #{ backlogCode }
  	</update>
  	
  	<insert id="insertBacklogProgressHistory3">
@@ -647,7 +625,7 @@
  		(
  		  SEQ_BACKLOG_PROGRESS_HISTORY_NO.NEXTVAL
  		, SYSDATE
- 		, #{ code }
+ 		, #{ backlogCode }
  		, '완료'
  		, (SELECT
  				  B.MEMBER_NAME
@@ -667,7 +645,7 @@
  		UPDATE
  			   TBL_BACKLOG A
  		   SET A.BACKLOG_PROGRESS = '미완료'
- 		 WHERE A.BACKLOG_CODE = #{ code }
+ 		 WHERE A.BACKLOG_CODE = #{ backlogCode }
  	</update>
  	
  	<select id="selectSprintCode" parameterType="hashmap" resultType="_int">
@@ -722,12 +700,12 @@
  		INSERT
  		  INTO TBL_RETROSPECTIVE A
  		(
- 		  A.RETROSPECT_CODE
+ 		  A.RETROSPECTIVE_CODE
  		, A.SPRINT_CODE
  		)
  		VALUES
  		(
- 		  SEQ_RETROSPECT_CODE.NEXTVAL
+ 		  SEQ_RETROSPECTIVE_CODE.NEXTVAL
  		, #{ sprintCode }
  		)  
  	</insert>
@@ -902,13 +880,11 @@
  		   AND A.ISSUE_DELETE_STATUS = 'N'
  	</select>
  	
- 	<update id="updateIssueSprintCode">
- 		UPDATE
- 		       TBL_ISSUE A
- 		   SET A.SPRINT_CODE = SEQ_SPRINT_CODE.CURRVAL
- 		   	 , A.ISSUE_PROGRESS = '해결전'
- 		 WHERE A.ISSUE_PROGRESS = '보류'
- 	</update>
+ 	<select id="updateIssueSprintCode" resultType="_int">
+ 		SELECT
+ 		       SEQ_SPRINT_CODE.CURRVAL
+ 		  FROM DUAL
+ 	</select>
  	
  	<insert id="insertIssueProgressHistory2" parameterType="hashmap">
  		INSERT

@@ -7,6 +7,17 @@ import com.greedy.byat.member.model.dto.MemberDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 import com.greedy.byat.task.model.dto.TaskMembersDTO;
 
+/**
+ * <pre>
+ * Class : TaskMapper
+ * Comment : mapper.xml의 id들이 담긴 Class
+ * History
+ * 2021/02/17 (박상범) 처음 작성
+ * </pre>
+ * @version 1.0.0
+ * @author 박상범
+ * @see TaskController.java, TaskService.java, TaskServiceImpl.java
+ * */
 public interface TaskMapper {
 
 	int insertTask(TaskDTO task);
@@ -75,8 +86,6 @@ public interface TaskMapper {
 
 	int insertSprintMembersHistory2(Map<String, Integer> map);
 
-	List<TaskDTO> selectTaskList(int projectCode);
-
 	List<Integer> selectTaskMembersList2(TaskDTO task);
 
 	int insertUpdateTaskNotice(Map<String, Integer> map);
@@ -84,4 +93,6 @@ public interface TaskMapper {
 	int updateTaskProgress(Map<String, Integer> map);
 
 	int insertTaskProgressHistory2(Map<String, Integer> map);
+
+	List<TaskDTO> selectTaskList2(int sprintCode);
 }

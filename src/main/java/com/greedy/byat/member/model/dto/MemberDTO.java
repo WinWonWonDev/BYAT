@@ -6,7 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-//(필드 넣어준다음에 주석 풀어주시기 바랍니다)
+/**
+ * <pre>
+ * Class : MemberDTO
+ * Comment : Member에 관련된 setter, getter, toString 등을 모아두는 DTO
+ * History
+ * 2021/02/17 (이소현)  처음 작성
+ * </pre>
+ * @version 1.0.0
+ * @author 이소현
+ * @see MemberController, MemberServiceImpl, MemberMapper
+ * */
 @Getter
 @Setter
 @AllArgsConstructor

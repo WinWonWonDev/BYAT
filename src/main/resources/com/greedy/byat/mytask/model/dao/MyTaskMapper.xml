@@ -65,10 +65,10 @@
  		<result property="projectCode" column="PROJECT_CODE"/>
  		<result property="rolName" column="ROLE_NAME"/>
  	</resultMap>
- 	
- 	<!-- MyTask 목록 조회 -->
+ 	 
+ 	 
   	<select id="selectMyTaskProjectList" resultMap="projectResultMap">
-		   		SELECT
+		SELECT  /* com.greedy.byat.mytask.dao.MyTaskMapper#selectMyTaskProjectList() */
 			   A.PROJECT_CODE
 			 , A.PROJECT_TITLE
 			 , A.PROJECT_START_DATE
@@ -88,7 +88,7 @@
  	</select>
  	
  	<select id="selectMyTaskProjectMembers" resultMap="projectMembersResultMap">
-		SELECT
+		SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectMyTaskProjectMembers() */
 		       A.PROJECT_CODE 
 		     , A.MEMBER_NO
 		     , A.PROJECT_PARTICIPATION_YN
@@ -102,7 +102,7 @@
 		 	</select>
  	
  	<select id="selectTaskList" resultMap="taskResultMap">
-        SELECT
+        SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectTaskList() */
                A.TASK_CODE
              , A.TASK_TITLE
              , A.TASK_START_DATE
@@ -117,7 +117,7 @@
      </select>
      
      <select id="selectTaskListForProject" resultMap="taskResultMap">
-        SELECT
+        SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectTaskListForProject() */
                A.TASK_CODE
              , A.TASK_TITLE
              , A.TASK_START_DATE
@@ -133,7 +133,7 @@
      </select>
  	
  	<select id="selectMyTaskToDoList" resultMap="toDoListResultMap">
-        SELECT
+        SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectMyTaskToDoList() */
         	   A.TODOLIST_NO
              , A.TODOLIST_WRITING_TIME
              , A.TODOLIST_TITLE
@@ -146,7 +146,7 @@
     </select>
 
  	<insert id ="registToDoList" parameterType="int" >
-        INSERT
+        INSERT /* com.greedy.byat.mytask.dao.MyTaskMapper#registToDoList() */
           INTO TBL_TODOLIST A
         (
           A.TODOLIST_NO
@@ -168,14 +168,14 @@
  	</insert>
  	
  	<update id = "removeToDoList" parameterType="int">
-       UPDATE
+       UPDATE /* com.greedy.byat.mytask.dao.MyTaskMapper#removeToDoList() */
  		       TBL_TODOLIST A
  		   SET A.TODOLIST_DELETE_STATUS= 'Y'
  		 WHERE A.TODOLIST_NO = #{todoListNumber}
  	</update>
 
  	<update id = "modifyToDoListStatus" parameterType="ToDoListDTO">
-       UPDATE 
+       UPDATE /* com.greedy.byat.mytask.dao.MyTaskMapper#modifyToDoListStatus() */
  		       TBL_TODOLIST A
  		   SET A.TODOLIST_CHECK_STATUS = #{checkStatus}
  		     , A.TODOLIST_WRITING_TIME = TO_DATE(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
@@ -183,7 +183,7 @@
  	</update>
  	
  	<select id="selectMemberModal" resultMap="projectMembersResultMap">
-		SELECT
+		SELECT /* com.greedy.byat.mytask.dao.MyTaskMapper#selectMemberModal() */
 		       A.PROJECT_CODE 
 		     , A.MEMBER_NO
 		     , A.PROJECT_PARTICIPATION_YN
@@ -198,7 +198,7 @@
  	</select>
  	
  	<update id ="modifyToDoList" parameterType="ToDoListDTO">
-       UPDATE 
+       UPDATE /* com.greedy.byat.mytask.dao.MyTaskMapper#modifyToDoList() */
  		       TBL_TODOLIST A
  		   SET A.TODOLIST_TITLE = #{title}
  		     , A.TODOLIST_WRITING_TIME = #{ writingTime }

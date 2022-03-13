@@ -21,7 +21,7 @@
 </resultMap>
  	
  	<select id="selectManagementList" resultMap="managementResultMap">
-		SELECT
+		SELECT /* com.greedy.byat.management.model.dao.ManagementMapper#selectManagementList() */
  		       A.MEMBER_NO
  		     , A.MEMBER_NAME
  		     , B.PERMIT_NAME
@@ -36,7 +36,7 @@
  	</select> 	
  	
  	<select id="selectManagementDeletedList" resultMap="managementResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.management.model.dao.ManagementMapper#selectManagementDeletedList() */
  		       A.MEMBER_NO
  		     , A.MEMBER_NAME
  		     , B.PERMIT_NAME
@@ -52,7 +52,7 @@
  	
  	
  	<insert id="insertManagement" parameterType="hashmap">
- 		INSERT
+ 		INSERT /* com.greedy.byat.management.model.dao.ManagementMapper#insertManagement() */
  		  INTO TBL_MEMBER A
  		 (
  		   A.MEMBER_NO
@@ -76,7 +76,7 @@
  	</insert>
  	
  	<update id="updateManagement">
- 		UPDATE TBL_MEMBER A
+ 		UPDATE TBL_MEMBER A /* com.greedy.byat.management.model.dao.ManagementMapper#updateManagement() */
  		   SET A.MEMBER_NAME = #{ memberName }
  		     , A.PERMIT_CODE = #{ permitCode }
  		     , A.MEMBER_ID = #{ memberId }
@@ -85,7 +85,7 @@
  	</update>
  	
  	<update id="deleteManagement">
- 		UPDATE TBL_MEMBER A
+ 		UPDATE TBL_MEMBER A /* com.greedy.byat.management.model.dao.ManagementMapper#deleteManagement() */
  		   SET A.ABSENCE_YN = 'Y'
  		 WHERE A.MEMBER_NO NOT IN (SELECT C.MEMBER_NO 
 						 			FROM TBL_PROJECT_MEMBERS C
@@ -99,14 +99,14 @@
  	
  	
  	<update id="restoreManagement">
- 		UPDATE TBL_MEMBER A
+ 		UPDATE TBL_MEMBER A /* com.greedy.byat.management.model.dao.ManagementMapper#restoreManagement() */
  		   SET A.ABSENCE_YN = 'N'
  		 WHERE A.MEMBER_NO = #{ no }
  	</update>
  	
  	
  	<insert id="insertNoticeSettingByOneMember">
- 		INSERT
+ 		INSERT /* com.greedy.byat.management.model.dao.ManagementMapper#insertNoticeSettingByOneMember() */
  		  INTO TBL_NOTIFICATION_BY_MEMBER A
  		(
  		  A.MEMBER_NO

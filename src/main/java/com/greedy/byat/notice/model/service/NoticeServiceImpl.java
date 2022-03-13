@@ -14,9 +14,23 @@ import com.greedy.byat.notice.model.dao.NoticeMapper;
 import com.greedy.byat.notice.model.dto.NoticeDTO;
 import com.greedy.byat.notice.model.dto.NoticeSettingDTO;
 
+/**
+ * <pre>
+ * Class : NoticeServiceImpl
+ * Comment : NoticeService의 메소드들을 실제로 처리하는 class 입니다.
+ * History
+ * 2022/03/05 (박인근) 처음 작성, 알림 생성, 알림 목록 조회, 알림 조회, 알림 삭제 관련 코드 추가
+ * 2022/03/06 (박인근) 알림 전체 목록 조회, 알림 삭제, 알림 설정 관련 코드 추가
+ * 2022/03/07 (박인근) 알림 삭제 관련 코드 추가
+ * </pre>
+ * @version 3
+ * @author 박인근
+ * see NoticeController, NoticeDTO, MemberDTO, NoticeServiceImpl, NoticeMapper.java, NoticeMapper.xml
+ * */
 @Service
 public class NoticeServiceImpl implements NoticeService {
  
+	/** NoticeMapper의 메소드들을 호출하기 위해 사용하는 전역변수로 변경 불가능하도록 final로 선언 */
 	private final NoticeMapper mapper;
 
 	@Autowired
@@ -24,6 +38,11 @@ public class NoticeServiceImpl implements NoticeService {
 		this.mapper = mapper;
 	}
 
+	/**
+	 * 메소드 selectNoticeList에 관한 문서화 주석
+	 * @ param no 로그인 한 멤버의 알림을 조회하기 위한 멤버의 식별 번호 파라미터
+	 * @ return 로그인 한 멤버의 알림 목록 정보인 NoticeDTO List 반환
+	 * */
 	@Override
 	public List<NoticeDTO> selectNoticeList(int no) {
 		
@@ -89,6 +108,12 @@ public class NoticeServiceImpl implements NoticeService {
 		return noticeFinalList;
 	}
 
+	/**
+	 * 메소드 updateNoticeStatus에 관한 문서화 주석
+	 * @ param no 로그인 한 멤버의 알림인지 확인하기 위한 멤버의 식별 번호인 파라미터
+	 * @ param code 멤버가 변경하려는 알림의 식별 번호인 파라미터
+	 * @ exception 알림의 상태 변경 실패 예외에 대한 처리
+	 * */
 	@Override
 	public void updateNoticeStatus(int no, int code) throws NoticeUpdateStatusExcepction {
 		
@@ -104,6 +129,11 @@ public class NoticeServiceImpl implements NoticeService {
 		
 	}
 
+	/**
+	 * 메소드 deleteConfirmNotice에 관한 문서화 주석
+	 * @ param no 로그인 한 멤버의 조회한 알림을 삭제하기 위한 멤버의 식별 번호인 파라미터
+	 * @ exception 조회한 알림 삭제 실패에 대한 예외 처리
+	 * */
 	@Override
 	public void deleteConfirmNotice(int no) throws NoticeConfirmRemoveException {
 		
@@ -115,6 +145,11 @@ public class NoticeServiceImpl implements NoticeService {
 		
 	}
 
+	/**
+	 * 메소드 selectNoticeSetting에 관한 문서화 주석
+	 * @ param no 로그인 한 멤버의 알림 설정 정보를 조회하기 위한 멤버의 식별 번호인 파라미터
+	 * @ return 로그인 한 멤버의 알림 설정 정보인 NoticeSettingDTO를 반환
+	 * */
 	@Override
 	public NoticeSettingDTO selectNoticeSetting(int no) {
 
@@ -123,6 +158,11 @@ public class NoticeServiceImpl implements NoticeService {
 		return noticeSetting;
 	}
 
+	/**
+	 * 메소드 updateNoticeSetting에 관한 문서화 주석
+	 * @ param noticeSetting 로그인한 멤버가 변경한 알림 설정 정보를 담고 있는 파라미터
+	 * @ exception 멤버의 알림 설정 변경 살패에 대한 예외 처리
+	 * */
 	@Override
 	public void updateNoticeSetting(NoticeSettingDTO noticeSetting) throws NoticeModifySettingException {
 		
@@ -135,6 +175,11 @@ public class NoticeServiceImpl implements NoticeService {
 		
 	}
 
+	/**
+	 * 메소드 changeNoticeStatus에 관한 문서화 주석
+	 * @ param notice 로그인 한 멤버의 식별 번호와 알림의 읽음 상태를 변경한 값을 담고 있는 파라미터
+	 * @ exception 멤버의 각각의 알림의 읽음 상태를 반대로 변경시 실패 예외 처리
+	 * */
 	@Override
 	public void chagenNoticeStatus(NoticeDTO notice) throws NoticeUpdateStatusExcepction {
 
@@ -147,6 +192,11 @@ public class NoticeServiceImpl implements NoticeService {
 		
 	}
 
+	/**
+	 * 메소드 deleteNotice에 관한 문서화 주석
+	 * @ param notice 로그인 한 멤버의 식별 번호와 삭제하려는 알림의 식별 번호를 담고 있는 파라미터
+	 * @ exception 삭제한 알림의 상태 변병 실패 예외, 알림 삭제 실패 예외 처리
+	 * */
 	@Override
 	public void deleteNotice(NoticeDTO notice) throws NoticeRemoveException {
 		

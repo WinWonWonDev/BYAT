@@ -26,6 +26,17 @@ import com.greedy.byat.task.model.dto.TaskDTO;
 import com.greedy.byat.task.model.dto.TaskMembersDTO;
 import com.greedy.byat.task.model.service.TaskService;
 
+/** 
+* <pre>
+* Class : TaskController
+* Comment : Task관련 메소드를 모아놓은 Controller입니다.
+* History
+* 2022/02/17 박상범  처음 작성
+* </pre>
+* @version 1.0.0
+* @author 박상범
+* @see TaskDTO.java, TaskService.java, TaskServiceImpl.java, TaskMapper.java 
+*/
 @Controller
 @RequestMapping("/task")
 public class TaskController {
@@ -37,10 +48,38 @@ public class TaskController {
 		this.taskService = taskService;
 	}
 	
-	@PostMapping("/regist")
-	public String registTask(@ModelAttribute TaskDTO task, HttpServletRequest request, RedirectAttributes rttr) {
+	/**
+	* 메소드 selectTaskList에 관한 문서화 주석
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
+	* @return : 비동기 방식으로 Json형태로 taskService메소드의 결과 값을 리턴합니다.
+	*/
+	@GetMapping(value = "/list", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String selectTaskList(HttpServletRequest request) {
 		
-		System.out.println("프로젝트 코드 : " + task.getProjectCode());
+		int sprintCode = Integer.parseInt(request.getParameter("sprintCode"));
+		
+		Gson gson = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd")
+				.setPrettyPrinting()
+				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+				.serializeNulls()
+				.disableHtmlEscaping()
+				.create();
+		
+		List<TaskDTO> taskList = taskService.selectTaskList(sprintCode);
+		
+		return gson.toJson(taskList);
+	}
+	
+	/**
+	* 메소드 registTask에 관한 문서화 주석
+	* @param TaskDTO task : TaskDTO 자체를 파라미터로 사용하기 위함입니다.
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect 합니다.
+	*/
+	@PostMapping("/regist")
+	public String registTask(@ModelAttribute TaskDTO task, RedirectAttributes rttr) {
 		
 		String message = taskService.registTask(task);
 		
@@ -49,6 +88,11 @@ public class TaskController {
 		return "redirect:/sprint/list?code=" + task.getProjectCode();
 	}
 	
+	/**
+	* 메소드 selectTaskDetail에 관한 문서화 주석
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
+	* @return : 비동기 방식으로 Json형태로 taskService메소드의 결과 값을 리턴합니다.
+	*/
 	@GetMapping(value = "/detail", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public String selectTaskDetail(HttpServletRequest request) {
@@ -65,43 +109,20 @@ public class TaskController {
 		
 		TaskDTO task = taskService.selectTaskDetail(taskCode);
 		
-		System.out.println(task);
-		
 		return gson.toJson(task);
 	}
 	
-	@GetMapping(value = "/manager", produces = "application/json; charset=UTF-8")
-	@ResponseBody
-	public String selectProjectMembers(HttpServletRequest request) {
-		
-		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
-		
-		System.out.println("내가 바로 프로젝트 코드 " + projectCode);
-		
-		Gson gson = new GsonBuilder()
-				.setDateFormat("yyyy-MM-dd")
-				.setPrettyPrinting()
-				.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-				.serializeNulls()
-				.disableHtmlEscaping()
-				.create();
-		
-		List<MemberDTO> projectMembers = taskService.selectProjectMembers(projectCode);
-		
-		System.out.println("프로젝트 구성원 : " + projectMembers);
-		
-		return gson.toJson(projectMembers);
-	}
-	
+	/**
+	* 메소드 selectTaskParticipation에 관한 문서화 주석
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
+	* @return : 비동기 방식으로 Json형태로 taskService메소드의 결과 값을 리턴합니다.
+	*/
 	@GetMapping(value = "/selectparticipation", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public String selectTaskParticipation(HttpServletRequest request, HttpServletResponse response) {
+	public String selectTaskParticipation(HttpServletRequest request) {
 		
 		int taskCode = Integer.parseInt(request.getParameter("taskCode"));
 		int memberNo = ((MemberDTO) request.getSession().getAttribute("loginMember")).getNo();
-		
-		System.out.println(taskCode);
-		System.out.println(memberNo);
 		
 		Map<String, Integer> taskParticipation = new HashMap<String, Integer>();
 		
@@ -118,11 +139,15 @@ public class TaskController {
 		
 		String result = taskService.selectTaskParticipation(taskParticipation);
 		
-		System.out.println(result);
-		
 		return gson.toJson(result);
 	}
 	
+	/**
+	* 메소드 registTask에 관한 문서화 주석
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect 합니다.
+	*/
 	@GetMapping("/participation")
 	public String registTaskMembers(HttpServletRequest request, RedirectAttributes rttr) {
 		
@@ -144,6 +169,11 @@ public class TaskController {
 		return "redirect:/sprint/list?code=" + projectCode;
 	}
 	
+	/**
+	* 메소드 selectTaskMembersList에 관한 문서화 주석
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
+	* @return : 비동기 방식으로 Json형태로 taskService메소드의 결과 값을 리턴합니다.
+	*/
 	@GetMapping(value = "/members", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public String selectTaskMembersList(HttpServletRequest request) {
@@ -163,6 +193,13 @@ public class TaskController {
 		return gson.toJson(taskMembers);
 	}
 	
+	/**
+	* 메소드 modifySprint에 관한 문서화 주석
+	* @param TaskDTO task : TaskDTO 자체를 파라미터로 사용하기 위함입니다.
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+	* @return : @ModelAttribute TaskDTO로 받은 task에서  getProjectCode()를 사용하여 /sprint/list로 redirect 합니다.
+	*/
 	@PostMapping("/modify")
 	public String modifyTask(@ModelAttribute TaskDTO task, HttpServletRequest request, RedirectAttributes rttr) {
 		
@@ -177,6 +214,12 @@ public class TaskController {
 		return "redirect:/sprint/list?code=" + task.getProjectCode();
 	}
 	
+	/**
+	* 메소드 removeTask에 관한 문서화 주석
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect 합니다.
+	*/
 	@GetMapping("/remove")
 	public String removeTask(HttpServletRequest request, RedirectAttributes rttr) {
 		
@@ -198,6 +241,12 @@ public class TaskController {
 		return "redirect:/sprint/list?code=" + projectCode; 
 	}
 	
+	/**
+	* 메소드 removeTask에 관한 문서화 주석
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
+	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect 합니다.
+	*/
 	@GetMapping("/giveup")
 	public String removeTaskMembers(HttpServletRequest request, RedirectAttributes rttr) {
 		
@@ -217,6 +266,11 @@ public class TaskController {
 		return "redirect:/sprint/list?code=" + projectCode; 
 	}
 	
+	/**
+	* 메소드 selectTaskMembersList에 관한 문서화 주석
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
+	* @return : 비동기 방식으로 Json형태로 taskService메소드의 결과 값을 리턴합니다.
+	*/
 	@GetMapping("/progress")
 	@ResponseBody
 	public String updateTaskProgress(HttpServletRequest request) {
