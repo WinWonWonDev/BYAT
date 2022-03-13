@@ -16,8 +16,11 @@ import com.greedy.byat.task.model.dto.TaskDTO;
  * Comment : BacklogService를 상속받아 method들을 재정의한 Class
  * History
  * 2021/02/17 (황인수) 처음 작성함
+ * 2021/20/21 (황인수) 프론트 연결 시 오류 부분 수정
+ * 2021/03/04 (황인수) 백로그 태스크화 구현 메서드 작성
+ * 2021/03/06 (황인수) 백로그 태스크화  조건 메서드 보완
  * </pre>
- * @version 1.0.0
+ * @version 4
  * @author 황인수
  * @see BacklogController, BacklogService, BacklogMapper
  * */
@@ -32,9 +35,7 @@ public class BacklogServiceImpl implements BacklogService {
 	}
 	
 	/**
-	 * Backlog 생성용 메서드
-	 * 
-	 * @method registBacklog
+	 * 메소드 registBacklog에 관한 문서화 주석
 	 * @param backlog 생성하려는 백로그의 정보
 	 * @return message mapper 수행 결과에 따른 message
 	 * */
@@ -54,10 +55,8 @@ public class BacklogServiceImpl implements BacklogService {
 		return message;
 	}
 	
-	/**
-	 * Backlog 상세 조회용 메서드
-	 * 
-	 * @method selectBacklogDetail
+	/** 
+	 * 메소드 selectBacklogDetail에 관한 문서화 주석
 	 * @param code 조회하려는 backlog의 code
 	 * @return backlog 조회하려는 backlog의 정보
 	 * */
@@ -70,9 +69,7 @@ public class BacklogServiceImpl implements BacklogService {
 	}
 	
 	/**
-	 * Backlog 수정용 메서드
-	 * 
-	 * @method modifyBacklog
+	 * 메소드 modifyBacklog에 관한 문서화 주석
 	 * @param backlog 수정하려는 backlog의 정보
 	 * @return message mapper 수행 결과에 따른 message
 	 * */
@@ -92,9 +89,7 @@ public class BacklogServiceImpl implements BacklogService {
 	}
 	
 	/**
-	 * Backlog 삭제용 메서드
-	 * 
-	 * @method removeBacklog
+	 * 메소드 removeBacklog에 관한 문서화 주석
 	 * @param code 삭제하려는 backlog의 code
 	 * @return message mapper 수행 결과에 따른 message
 	 * */
@@ -113,10 +108,8 @@ public class BacklogServiceImpl implements BacklogService {
 		return message;
 	}
 	
-	/**
-	 * Backlog task화 메서드
-	 * 
-	 * @method registBacklogTasklize
+	/** 
+	 * 메소드 registBacklogTasklize에 관한 문서화 주석
 	 * @param infoMap mapper를 수행하기 위한 변수들이 담겨 있는 HashMap
 	 * @return message mapper 수행 결과에 따른 message
 	 * */

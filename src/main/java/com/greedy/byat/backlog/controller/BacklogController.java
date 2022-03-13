@@ -25,10 +25,12 @@ import com.greedy.byat.member.model.dto.MemberDTO;
  * Class : BacklogController
  * Comment : "/backlog/*" 요청을 처리하는 Controller
  * History
- * 2021/02/17 (황인수) 처음 작성함
+ * 2021/02/18 (황인수) 처음 작성함
+ * 2021/20/21 (황인수) 프론트 연결 시 오류 부분 수정
+ * 2021/03/04 (황인수) 백로그 태스크화 구현 메서드 작성
  * </pre>
  * @author 황인수
- * @version 1.0.0
+ * @version 3
  * @see BacklogService, BacklogServiceImpl, BacklogMapper, BacklogDTO
  * */
 @Controller
@@ -44,9 +46,7 @@ public class BacklogController {
 	}
 	
 	/**
-	 * 백로그 생성
-	 * 
-	 * @method registBacklog
+	 * 메소드 registBacklog에 관한 문서화 주석
 	 * @param backlog 삽입할 백로그의 정보 (DTO)
 	 * @param request 요청 정보
 	 * @param rttr redirect 객체를 전달하기 위한  RedirectAttributes 객체
@@ -69,9 +69,7 @@ public class BacklogController {
 	}
 	
 	/**
-	 * 백로그 수정
-	 * 
-	 * @method modifyBacklog
+	 * 메소드 modifyBacklog에 관한 문서화 주석
 	 * @param backlog 수정하려는 backlog의 정보(DTO)
 	 * @param request 요청 정보
 	 * @param rttr redirect 객체를 전달하기 위한  RedirectAttributes 객체
@@ -87,10 +85,8 @@ public class BacklogController {
 		return "redirect:/sprint/list?code=" + backlog.getProjectCode();
 	}
 	
-	/**
-	 * 백로그 삭제
-	 * 
-	 * @method removeBacklog
+	/** 
+	 * 메소드 removeBacklog에 관한 문서화 주석
 	 * @param request 요청 정보
 	 * @param rttr redirect 객체를 전달하기 위한  RedirectAttributes 객체
 	 * @return String redirect 해 줄 경로
@@ -109,9 +105,7 @@ public class BacklogController {
 	}
 	
 	/**
-	 * 백로그 상세 조회
-	 * 
-	 * @method showBacklogDetail
+	 * 메소드 showBacklogDetail에 관한 문서화 주석
 	 * @param request 요청 정보
 	 * @return backlog 상세 조회할 백로그의 정보(DTO)
 	 * */
@@ -136,9 +130,7 @@ public class BacklogController {
 	}
 	
 	/**
-	 * 백로그 태스크화
-	 * 
-	 * @method registBacklogTasklize
+	 * 메소드 registBacklogTasklize에 관한 주석
 	 * @param request 요청 정보
 	 * @param rttr redirect 객체를 전달하기 위한  RedirectAttributes 객체
 	 * @param String redirect 해 줄 경로

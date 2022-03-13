@@ -12,9 +12,6 @@
  		<result property="version" column="BACKLOG_VERSION"/>
  		<result property="deleteStatus" column="BACKLOG_DELETE_STATUS"/>
  		<result property="writer" column="BACKLOG_WRITER"/>
- 		
- 		<!-- writer는 String으로 받아오기 때문에 association이 필요없을 거 같음 -->
- 		<!-- <association property="writer" resultMap="memberResultMap"/> -->
  	</resultMap>
  	
  	<select id="selectBacklogDetail" resultMap="generalBacklogResultMap">
