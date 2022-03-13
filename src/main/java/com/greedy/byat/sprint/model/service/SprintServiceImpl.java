@@ -17,9 +17,20 @@ import com.greedy.byat.task.model.dto.TaskDTO;
  * Class : SprintServiceImpl
  * Comment : SprintService를 상속바아 메소드들을 재정의한 클래스
  * History
- * 2021/02/17 (박상범) 처음 작성
+ * 2022/02/17 (박상범) 스프린트 목록 조회 관련 메소드 추가
+ * 2022/02/18 (박상범) 스프린트 목록 조회, 스프린트 생성 관련 메소드 추가
+ * 2022/02/19 (박상범) 스프린트 생성, 스프린트 상세 조회 / 수정 관련 메소드 추가
+ * 2022/02/20 (박상범) 스프린트 상세 조회 / 수정, 스프린트 삭제 관련 메소드 추가
+ * 2022/02/21 (박상범) 스프린트 수정, 스프린트 생성 관련 메소드 추가
+ * 2022/03/02 (박상범) 스프린트 시작 관련 메소드 추가
+ * 2022/03/03 (박상범) 스프린트 시작 관련 메소드 추가
+ * 2022/03/04 (박상범) 스프린트 시작, 스프린트 종료 관련 메소드 추가
+ * 2022/03/05 (박상범) 스프린트 시작, 스프린트 종료 관련 메소드 추가
+ * 2022/03/06 (박상범) 스프린트 생성, 스프린트 목록 조회 관련 메소드 추가
+ * 2022/03/07 (박상범) 스프린트 시작, 스프린트 종료 관련 메소드 추가
+ * 2022/03/07 (박상범) 스프린트 생성, 스프린트 수정 관련 메소드 추가
  * </pre>
- * @version 1.0.0
+ * @version 12
  * @author 박상범
  * @see SprintController.java, SprintServiceImpl.java, SprintMapper.java
  * */
@@ -33,13 +44,10 @@ public class SprintServiceImpl implements SprintService {
 		this.mapper = mapper;
 	}
 
-	
-	
-	
    /**
 	* 메소드 selectSprintList에 관한 문서화 주석
-	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
-	* @return : selectSprintList메소드의 결과값을 리턴합니다.
+	* @param int projectCode : SprintController에서 넘어온 값을 사용하기 위한 파라미터
+	* @return : selectSprintList메소드의 결과값을 리턴
 	*/
 	@Override
 	public List<SprintDTO> selectSprintList(int projectNo) {
@@ -51,8 +59,8 @@ public class SprintServiceImpl implements SprintService {
 	
 	/**
 	* 메소드 selectBacklogList에 관한 문서화 주석
-	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
-	* @return : selectBacklogList메소드의 결과값을 리턴합니다.
+	* @param int projectCode : SprintController에서 넘어온 값을 사용하기 위한 파라미터
+	* @return : selectBacklogList메소드의 결과값을 리턴
 	*/
 	@Override
 	public List<BacklogDTO> selectBacklogList(int projectCode) {
@@ -64,8 +72,8 @@ public class SprintServiceImpl implements SprintService {
 
 	/**
 	* 메소드 selectMemberRoleName에 관한 문서화 주석
-	* @param Map<String, Integer> map : SprintController에서 넘어온 값을 담기 위함입니다.
-	* @return : selectProjectMembersRoleNamee메소드의 결과값을 리턴합니다.
+	* @param Map<String, Integer> map : SprintController에서 넘어온 값을 사용하기 위한 파라미터
+	* @return : selectProjectMembersRoleNamee메소드의 결과값을 리턴
 	*/
 	@Override
 	public String selectMemberRoleName(Map<String, Integer> map) {
@@ -78,8 +86,8 @@ public class SprintServiceImpl implements SprintService {
 	
 	/**
 	* 메소드 registSprint에 관한 문서화 주석
-	* @param SprintDTO sprint : SprintDTO 자체를 파라미터로 사용하기 위함입니다.
-	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	* @param SprintDTO sprint : SprintDTO 자체를 사용하기 위한 파라미터
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴
 	*/
 	@Override
 	public String registSprint(SprintDTO sprint) {
@@ -112,7 +120,7 @@ public class SprintServiceImpl implements SprintService {
 
 	/**
 	* 메소드 modifySprint에 관한 문서화 주석
-	* @param SprintDTO sprint : SprintDTO 자체를 파라미터로 사용하기 위함입니다.
+	* @param SprintDTO sprint : SprintDTO 자체를 사용하기 위한 파라미터
 	*/
 	@Override
 	public void modifySprint(SprintDTO sprint) {
@@ -142,8 +150,8 @@ public class SprintServiceImpl implements SprintService {
 	
 	/**
 	* 메소드 selectSprint에 관한 문서화 주석
-	* @param int sprintCode : SprintController에서 넘어온 값을 담기 위함입니다.
-	* @return : selectSprint메소드의 결과값을 리턴합니다.
+	* @param int sprintCode : SprintController에서 넘어온 값을 사용하기 위한 파라미터
+	* @return : selectSprint메소드의 결과값을 리턴
 	*/
 	@Override
 	public SprintDTO selectSprint(int sprintCode) {
@@ -155,7 +163,7 @@ public class SprintServiceImpl implements SprintService {
 	
 	/**
 	* 메소드 removeSprint에 관한 문서화 주석
-	* @param Map<String, Integer> map : SprintController에서 넘어온 값을 담기 위함입니다.
+	* @param Map<String, Integer> map : SprintController에서 넘어온 값을 사용하기 위한 파라미터
 	*/
 	@Override
 	public void removeSprint(Map<String, Integer> map) {
@@ -205,8 +213,8 @@ public class SprintServiceImpl implements SprintService {
 
 	/**
 	* 메소드 selectProjectProgress에 관한 문서화 주석
-	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
-	* @return : selectProjectProgress메소드의 결과값을 리턴합니다.
+	* @param int projectCode : SprintController에서 넘어온 값을 사용하기 위한 파라미터
+	* @return : selectProjectProgress메소드의 결과값을 리턴
 	*/
 	@Override
 	public String selectProjectProgress(int projectCode) {
@@ -218,8 +226,8 @@ public class SprintServiceImpl implements SprintService {
 
 	/**
 	* 메소드 startSprint에 관한 문서화 주석
-	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
-	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	* @param int projectCode : SprintController에서 넘어온 값을 사용하기 위한 파라미터
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴
 	*/
 	@Override
 	public String startSprint(Map<String, Integer> map) {
@@ -283,7 +291,6 @@ public class SprintServiceImpl implements SprintService {
 									int result2 = mapper.insertTaskProgressHistory(task);
 									
 									if(result1 > 0 && result2 > 0) {
-										
 										cnt++;
 									}
 								}
@@ -335,8 +342,8 @@ public class SprintServiceImpl implements SprintService {
 
 	/**
 	* 메소드 endSprint에 관한 문서화 주석
-	* @param int projectCode : SprintController에서 넘어온 값을 담기 위함입니다.
-	* @return : SprintController에서 addFlashAttribute할 message를 리턴합니다.
+	* @param int projectCode : SprintController에서 넘어온 값을 사용하기 위한 파라미터
+	* @return : SprintController에서 addFlashAttribute할 message를 리턴
 	*/
 	@Override
 	public String endSprint(Map<String, Integer> map) {
@@ -350,7 +357,7 @@ public class SprintServiceImpl implements SprintService {
 		/* 스프린트가 진행중인지 확인하는 if*/
 		if(sprintProgressResult > 0) {
 			
-			/* 스프린트의 모든 태스크 코드를 가져온다.*/
+			/* 스프린트의 모든 태스크 코드를 가져옵니다.*/
 			List<TaskDTO> taskCodeList = mapper.selectSprintTaskCodeList(map);
 			
 			TaskDTO task = new TaskDTO();
@@ -363,7 +370,7 @@ public class SprintServiceImpl implements SprintService {
 				task = taskCodeList.get(i);
 				task.setMemberNo(map.get("memberNo"));
 				
-				/* 백로그로 생성된 태스크이면서 진행상태가 진행중이라면 태스크의 진행상태를 미완료로 바꾸고 백로그의 진행상태도 미완료로 바꾼다.*/
+				/* 백로그로 생성된 태스크이면서 진행상태가 진행중이라면 태스크의 진행상태를 미완료로 바꾸고 백로그의 진행상태도 미완료로 바꿉니다.*/
 				if("진행중".equals(task.getProgress()) && task.getBacklogCode() > 0) {
 					
 					int result1 = mapper.updateTaskProgress2(task);
@@ -374,7 +381,7 @@ public class SprintServiceImpl implements SprintService {
 						cnt++;
 					}
 					
-				/* 백로그로 생성된 태스크이면서 진행상태가 완료라면 백로그의 진행상태도 완료로 바꿔준다.*/
+				/* 백로그로 생성된 태스크이면서 진행상태가 완료라면 백로그의 진행상태도 완료로 바꿔줍니다.*/
 				} else if("완료".equals(task.getProgress()) && task.getBacklogCode() > 0) {
 					
 					int result1 = mapper.updateBacklogProgress2(task);
@@ -385,7 +392,7 @@ public class SprintServiceImpl implements SprintService {
 						cnt++;
 					}
 					
-				/* 긴급 태스크로 생성된 태스크이면서 진행상태가 진행중이라면 태스크는 미완료로 바꾸고 백로그는 진행상태가 미완료인채로 다시 생성된다.*/
+				/* 긴급 태스크로 생성된 태스크이면서 진행상태가 진행중이라면 태스크는 미완료로 바꾸고 백로그는 진행상태가 미완료인채로 다시 생성됩니다.*/
 				} else if("진행중".equals(task.getProgress()) && 0 >= task.getBacklogCode()) {
 					
 					int result1 = mapper.updateTaskProgress3(task);
@@ -410,15 +417,15 @@ public class SprintServiceImpl implements SprintService {
 			
 			if(cnt == taskCodeList.size()) {
 				
-				/* 스프린트 코드를 가져온다.*/
+				/* 스프린트 코드를 가져옵니다.*/
 				int sprintCode = mapper.selectSprintCode(map);
 				
 				map.put("sprintCode", sprintCode);
 				
-				/* 회고록을 생성한다. */
+				/* 회고록을 생성합니다. */
 				int result1 = mapper.insertRetrospective(sprintCode);
 				
-				/* 스프린트 알림을 생성해야 하기때문에 스프린트 구성원리스트를 가져온다. */
+				/* 스프린트 알림을 생성해야 하기때문에 스프린트 구성원리스트를 가져옵니다. */
 				List<Integer> sprintMemberList = mapper.selectSprintMemberList2(map);
 				
 				int result2 = 0;
@@ -427,7 +434,7 @@ public class SprintServiceImpl implements SprintService {
 					
 					map.put("memberNo", sprintMemberList.get(j));
 					
-					/* 스프린트 구성원별로 알림을 생성한다. */
+					/* 스프린트 구성원별로 알림을 생성합니다. */
 					result2 += mapper.insertEndSprintNotice(map);
 				}
 				
@@ -442,13 +449,13 @@ public class SprintServiceImpl implements SprintService {
 					if(result6 > 0 && result7 > 0) {
 						message = "스프린트를 종료합니다.";
 					} else {
-						message = "스프린트 종료 실패3";
+						message = "스프린트 종료 실패";
 					}
 				} else {
-					message = "스프린트 종료 실패2";
+					message = "스프린트 종료 실패";
 				}
 			} else {
-				message = "스프린트 종료 실패1";
+				message = "스프린트 종료 실패";
 			}
 		} else {
 			message = "스프린트가 진행중이지 않습니다.";

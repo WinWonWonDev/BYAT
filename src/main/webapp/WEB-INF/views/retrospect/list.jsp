@@ -228,6 +228,10 @@
 		
 		$registBtn[i].onclick = function() {
 			
+			console.log("zzzzzz");
+			console.log($comment[i].value);
+			console.log($retrospectCode[i].value);
+			
 			$.ajax({
 				url: "/byat/retrospect/regist",
 				type: "post",

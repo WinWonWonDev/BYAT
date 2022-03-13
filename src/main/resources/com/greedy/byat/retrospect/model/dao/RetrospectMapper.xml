@@ -24,7 +24,7 @@
  	</resultMap>
  	
  	<select id="selectRetrospectList" resultMap="retrospectResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.RetrospectMapper#selectProjectMembersRoleNamee() */
  			   A.RETROSPECTIVE_CODE
  			 , A.SPRINT_CODE
  			 , B.SPRINT_TITLE
@@ -36,7 +36,7 @@
  	</select>
  	
  	<select id="selectRetrospectCommentList" resultMap="retrospectCommentResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.RetrospectMapper#selectRetrospectCommentList() */
  		       A.RETROSPECTIVE_COMMENT_NO
  			 , A.MEMBER_NO
  			 , B.MEMBER_NAME
@@ -53,7 +53,7 @@
  	</select>
  	
  	<insert id="insertRetrospectComment">
- 		INSERT
+ 		INSERT /* com.greedy.byat.member.model.dao.RetrospectMapper#insertRetrospectComment() */
  		  INTO TBL_RETROSPECTIVE_COMMENT A
  		(
  		  A.RETROSPECTIVE_COMMENT_NO
@@ -80,7 +80,7 @@
  	</insert>
  	
  	<select id="selectRetrospectCommentList2" resultMap="retrospectCommentResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.RetrospectMapper#selectRetrospectCommentList2() */
  			   A.RETROSPECTIVE_COMMENT_NO
  			 , A.RETROSPECTIVE_CODE
  			 , A.MEMBER_NO
@@ -96,14 +96,14 @@
  	</select>
  	
  	<update id="deleteRetrospectComment">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.member.model.dao.RetrospectMapper#deleteRetrospectComment() */
  		       TBL_RETROSPECTIVE_COMMENT A
  		   SET A.RETROSPECTIVE_DELETE_STATUS = 'Y'
  		 WHERE A.RETROSPECTIVE_COMMENT_NO = #{ retrospectiveCommentNo }
  	</update>
  	
  	<select id="selectRetrospectCommentList3" resultMap="retrospectCommentResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.member.model.dao.RetrospectMapper#selectRetrospectCommentList3() */
  			   A.RETROSPECTIVE_COMMENT_NO
  			 , A.RETROSPECTIVE_CODE
  			 , A.MEMBER_NO

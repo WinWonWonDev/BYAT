@@ -30,9 +30,20 @@ import com.greedy.byat.sprint.model.service.SprintService;
 * Class : SprintController
 * Comment : Sprint관련 메소드를 모아놓은 Controller입니다.
 * History
-* 2022/02/17 박상범  처음 작성
+* 2022/02/17 (박상범) 스프린트 목록 조회 관련 메소드 추가
+* 2022/02/18 (박상범) 스프린트 목록 조회, 스프린트 생성 관련 메소드 추가
+* 2022/02/19 (박상범) 스프린트 생성, 스프린트 상세 조회 / 수정 관련 메소드 추가
+* 2022/02/20 (박상범) 스프린트 상세 조회 / 수정, 스프린트 삭제 관련 메소드 추가
+* 2022/02/21 (박상범) 스프린트 수정, 스프린트 생성 관련 메소드 추가
+* 2022/03/02 (박상범) 스프린트 시작 관련 메소드 추가
+* 2022/03/03 (박상범) 스프린트 시작 관련 메소드 추가
+* 2022/03/04 (박상범) 스프린트 시작, 스프린트 종료 관련 메소드 추가
+* 2022/03/05 (박상범) 스프린트 시작, 스프린트 종료 관련 메소드 추가
+* 2022/03/06 (박상범) 스프린트 생성, 스프린트 목록 조회 관련 메소드 추가
+* 2022/03/07 (박상범) 스프린트 시작, 스프린트 종료 관련 메소드 추가
+* 2022/03/07 (박상범) 스프린트 생성, 스프린트 수정 관련 메소드 추가
 * </pre>
-* @version 1.0.0
+* @version 12
 * @author 박상범
 * @see SprintDTO.java, SprintService.java, SprintServiceImpl.java, SprintMapper.java 
 */
@@ -50,9 +61,9 @@ public class SprintController {
 	
    /**
 	* 메소드 selectAllList에 관한 문서화 주석
-	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다.
-	* @param ModelAndView mv : sprintService의 메소드의 결과 값과 반환 경로를 담기 위함입니다.
-	* @return : sprintService메소드의 결과 값과 반환경로를 담은 mv를 return 합니다. 
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터
+	* @param ModelAndView mv : sprintService의 메소드의 결과 값과 반환 경로를 담기 위한 파라미터
+	* @return : sprintService메소드의 결과 값과 반환경로를 담은 mv를 return
 	*/
 	@GetMapping("/list")
 	public ModelAndView selectAllList(HttpServletRequest request, ModelAndView mv) {
@@ -81,10 +92,10 @@ public class SprintController {
 
    /**
 	* 메소드 registSprint에 관한 문서화 주석
-	* @param SprintDTO sprint : SprintDTO 자체를 파라미터로 사용하기 위함입니다.
-	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다. 
-	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
-	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect 합니다.
+	* @param SprintDTO sprint : SprintDTO 자체를 사용하기 위한 파라미터로
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위한 파라미터
+	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect
 	*/
 	@PostMapping("/regist")
 	public String registSprint(@ModelAttribute SprintDTO sprint, HttpServletRequest request, RedirectAttributes rttr) {
@@ -105,8 +116,8 @@ public class SprintController {
 	
    /**
 	* 메소드 selectSprintDetail에 관한 문서화 주석
-	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다. 
-	* @return : 비동기 방식으로 Json형태로 sprintService메소드의 결과 값을 리턴합니다.
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터
+	* @return : 비동기 방식으로 Json형태로 sprintService메소드의 결과 값을 리턴
 	*/
 	@GetMapping(value = "/detail", produces = "application/json; charset=UTF-8")
 	@ResponseBody
@@ -129,9 +140,9 @@ public class SprintController {
 	
    /**
 	* 메소드 modifySprint에 관한 문서화 주석
-	* @param SprintDTO sprint : SprintDTO 자체를 파라미터로 사용하기 위함입니다.
-	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
-	* @return : @ModelAttribute SprintDTO로 받은 sprint에서  getProjectCode()를 사용하여 /sprint/list로 redirect 합니다.
+	* @param SprintDTO sprint : SprintDTO 자체를 사용하기 위한 파라미터
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위한 파라미터
+	* @return : @ModelAttribute SprintDTO로 받은 sprint에서  getProjectCode()를 사용하여 /sprint/list로 redirect
 	*/
 	@PostMapping("/modify")
 	public String modifySprint(@ModelAttribute SprintDTO sprint, RedirectAttributes rttr) {
@@ -145,9 +156,9 @@ public class SprintController {
 	
    /**
 	* 메소드 removeSprint에 관한 문서화 주석
-	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다. 
-	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
-	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect 합니다.
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위한 파라미터
+	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect
 	*/
 	@GetMapping("/remove")
 	public String removeSprint(HttpServletRequest request, RedirectAttributes rttr) {
@@ -169,9 +180,9 @@ public class SprintController {
 	
    /**
 	* 메소드 startSprint에 관한 문서화 주석
-	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다. 
-	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
-	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect 합니다.
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위한 파라미터
+	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect
 	*/
 	@GetMapping("/start")
 	public String startSprint(HttpServletRequest request, RedirectAttributes rttr) {
@@ -192,9 +203,9 @@ public class SprintController {
 	
    /**
 	* 메소드 endSprint에 관한 문서화 주석
-	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터를 전달받기 위함입니다. 
-	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위함입니다.
-	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect 합니다.
+	* @param HttpServletRequest request : 요청에 의해 넘어온 파라미터
+	* @param RedirectAttributes rttr : addFlashAttribute로 메시지를 1회 출력하기 위한 파라미터
+	* @return : request로 받은 projectCode를 사용하여 /sprint/list로 redirect
 	*/
 	@GetMapping("/end")
 	public String endSprint(HttpServletRequest request, RedirectAttributes rttr) {
