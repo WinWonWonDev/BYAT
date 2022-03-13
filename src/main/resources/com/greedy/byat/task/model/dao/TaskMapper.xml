@@ -395,15 +395,17 @@
  	</insert>
  	
  	<select id="selectTaskMembers" resultMap="taskMembersResultMap">
- 		SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectTaskMembers() */
- 			   C.MEMBER_ID
- 			 , C.MEMBER_NAME
- 			 , B.PERMIT_NAME
- 		  FROM TBL_TASK_MEMBERS A
- 		  JOIN TBL_MEMBER C ON (A.MEMBER_NO = C.MEMBER_NO)
- 		  JOIN TBL_PERMIT B ON (B.PERMIT_CODE = C.PERMIT_CODE)
- 		 WHERE A.TASK_CODE = #{ taskCode }
- 		   AND A.TASK_PARTICIPATION_YN = 'Y'
+       SELECT /* com.greedy.byat.member.model.dao.TaskMapper#selectTaskMembers() */
+               C.MEMBER_NAME
+             , C.MEMBER_ID
+             , D.ROLE_NAME 
+          FROM TBL_TASK_MEMBERS A
+          JOIN TBL_PROJECT_MEMBERS B ON (A.MEMBER_NO = B.MEMBER_NO)
+          JOIN TBL_MEMBER C ON(B.MEMBER_NO = C.MEMBER_NO)
+          JOIN TBL_ROLE D ON (D.MEMBER_NO = B.MEMBER_NO AND B.PROJECT_CODE = D.PROJECT_CODE)
+          JOIN TBL_TASK E ON(A.TASK_CODE = E.TASK_CODE AND E.PROJECT_CODE = B.PROJECT_CODE)
+         WHERE A.TASK_CODE = #{ taskCode }
+           AND A.TASK_PARTICIPATION_YN = 'Y'
  	</select>
  	
  	<update id="updateTask">
