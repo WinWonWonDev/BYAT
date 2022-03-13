@@ -12,9 +12,6 @@
  		<result property="version" column="BACKLOG_VERSION"/>
  		<result property="deleteStatus" column="BACKLOG_DELETE_STATUS"/>
  		<result property="writer" column="BACKLOG_WRITER"/>
- 		
- 		<!-- writer는 String으로 받아오기 때문에 association이 필요없을 거 같음 -->
- 		<!-- <association property="writer" resultMap="memberResultMap"/> -->
  	</resultMap>
  	
  	<select id="selectBacklogDetail" resultMap="generalBacklogResultMap">
@@ -69,7 +66,7 @@
  	</delete>
  	
  	<select id="checkSprintProgress" parameterType="hashmap" resultType="_int">
-        SELECT
+        SELECT /* com.greedy.byat.backlog.model.dao.BacklogMapper#checkSprintProgress() */
                COUNT(*)
           FROM TBL_SPRINT
          WHERE PROJECT_CODE = #{ projectCode }
@@ -78,7 +75,7 @@
  	</select>
  	
  	<insert id="insertBacklogTasklize" parameterType="hashmap">
-        INSERT
+        INSERT /* com.greedy.byat.backlog.model.dao.BacklogMapper#insertBacklogTasklize() */
           INTO TBL_TASK A
         (
           A.TASK_CODE

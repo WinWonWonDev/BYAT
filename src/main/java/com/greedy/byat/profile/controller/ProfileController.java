@@ -25,6 +25,18 @@ import com.greedy.byat.profile.model.service.ProfileService;
 
 import net.coobird.thumbnailator.Thumbnails;
 
+/**
+ * <pre>
+ * Class : ProfileController
+ * Comment : "/profile/*" 요청을 처리하는 Controller
+ * History
+ * 2021/03/03 (황인수) 처음 작성함
+ * 2021/03/04 (황인수) MemberMapper 와 겹치는 부분 수정
+ * </pre>
+ * @version 2
+ * @author 황인수
+ * @see ProfileService, ProfileServiceImpl, MemberMapper, BCryptPasswordEncoder, MemberDTO, AttachmentDTO
+ * */
 @Controller
 @RequestMapping("/profile")
 @SessionAttributes("loginMember")
@@ -40,6 +52,12 @@ public class ProfileController {
 		this.passwordEncoder = passwordEncoder;
 	}
 	
+	/**
+	 * 메소드 goProfile에 관한 문서화 주석
+	 * @param model 세션의 값을 꺼내오기 위한 Model 객체
+	 * @param session 세션에 값을 넣어주기 위한 HttpSession 객체
+	 * @return url 이동해 줄 jsp의 경로
+	 * */
 	@RequestMapping("/mypage")
 	public String goProfile(Model model, HttpSession session) {
 		
@@ -54,7 +72,14 @@ public class ProfileController {
 		
 		return "/member/profile";
 	}
-
+	
+	/** 
+	 * 메소드 modifyProfile에 관한 문서화 주석
+	 * @param member 수정하려는 멤버의 정보
+	 * @param request 요청 정보
+	 * @param rttr redirect 객체를 전달하기 위한 RedirectAttributes 객체
+	 * @return url redirect 해 줄 경로
+	 * */
 	@PostMapping(value="/modify", produces = "application/json; charset=UTF-8")
 	public String modifyProfile(@ModelAttribute MemberDTO member, HttpServletRequest request, RedirectAttributes rttr, Model model) {
 		
@@ -79,6 +104,13 @@ public class ProfileController {
 		return "redirect:/profile/mypage";
 	}
 	
+	/**
+	 * 메소드 modifyPassword에 관한 문서화 주석
+	 * @param member 변경하려는 멤버의 정보
+	 * @param request 요청 정보
+	 * @param rttr redirect 객체를 전달하기 위한 RedirectAttributes 객체
+	 * @return url redirect 해 줄 경로
+	 * */
 	@PostMapping("/modifypwd")
 	public String modifyPassword(@ModelAttribute MemberDTO member, HttpServletRequest request, RedirectAttributes rttr, Model model) {
 		
@@ -127,7 +159,7 @@ public class ProfileController {
 		File thumbnailDirectory = new File(thumbnailPath);
 
 		if(!uploadedImg.isEmpty()) {
-			/* 파일 경로가 존재하지 않는 경우 경로 디렉토리 생성 */
+			
 			if(!uploadDirectory.exists() || !thumbnailDirectory.exists()) {
 
 				System.out.println("업로드 디렉토리 생성 : " + uploadDirectory.mkdirs());
@@ -147,20 +179,16 @@ public class ProfileController {
 					attachment.setOrgName(orgName);
 					attachment.setSavedName(savedName);
 					attachment.setPath(fileUploadPath);
-
-					/* thumbnail로 변환할 사이즈 지정 */
+					
 					int width = 50;
 					int height = 55;
 
-					/* thumbnail로 변환 */
 					Thumbnails.of(uploadDirectory + "/" + savedName).forceSize(width, height)
 					.toFile(thumbnailDirectory + "/thumbnail_" + savedName);
 
-					/*  웹서버에 접근 가능한 경로 형태의 thumbnail 저장 경로 지정 */
 					attachment.setThumbnailPath("/resources/upload/thumbnail/thumbnail_" + savedName);
 				}
 
-				/* 해당하는 멤버의 식별자 삽입 */
 				attachment.setMemberNo(((MemberDTO) model.getAttribute("loginMember")).getNo());
 
 				message = profileService.registAttachment(attachment);
@@ -170,7 +198,6 @@ public class ProfileController {
 			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();
 
-				/* Exception 발생 시 파일 삭제 */
 				File deleteFile = new File(uploadDirectory + "/" + attachment.getSavedName());
 				boolean isDeleted1 = deleteFile.delete();
 

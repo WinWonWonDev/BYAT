@@ -15,6 +15,19 @@ import org.springframework.web.servlet.ModelAndViewDefiningException;
 import com.greedy.byat.common.filter.model.service.MenuService;
 import com.greedy.byat.member.model.dto.MemberDTO;
 
+/**
+ * <pre>
+ * Class : AuthLoginInterceptor
+ * Comment : 각 Controller에 들어오는 요청을 가로채 로그인 및 권한 검증을 수행하는 Interceptor
+ * History
+ * 2021/03/08 (황인수) 처음 작성함
+ * 2021/03/09 (황인수) postHandle 부분 보완
+ * 2021/03/10 (황인수) postHandle DB 연결 성공
+ * </pre>
+ * @author 황인수
+ * @version 3
+ * @see MenuService,MenuServiceImpl, MenuMapper, MemberDTO
+ * */
 public class AuthLoginInterceptor implements HandlerInterceptor {
 	
 	private final MenuService menuService;
