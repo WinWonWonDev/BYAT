@@ -113,7 +113,6 @@ public class BacklogController {
 	@ResponseBody
 	public String showBacklogDetail(HttpServletRequest request) {
 		
-		int projectCode = Integer.parseInt(request.getParameter("projectCode"));
 		int backlogCode = Integer.parseInt(request.getParameter("backlogCode"));
 		
 		Gson gson = new GsonBuilder()
