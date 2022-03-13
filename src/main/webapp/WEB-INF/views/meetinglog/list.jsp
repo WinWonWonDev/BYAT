@@ -397,15 +397,6 @@
 			<div class="meetinglogListName">회의록 :  <c:out value="${projectName}" /></div>
 			<div class="searchMeetinglog">
 				<div class="search-area">
-					<form id="loginForm" action="${ pageContext.servletContext.contextPath}/meetinglog/list" method="Post">
-						<select id="searchCondition" name="searchCondition">
-							<option value="title" ${requestScope.select} }>제목</option>
-							<option value="content">내용</option>
-							<option value="writer">작성자</option>
-						</select>
-						<input type="search">
-						<button type="submit" id="searchValue" name="searchValue" value="<c:out value="${ requestScope.selectCriteria.searchValue }"/>">검색</button>
-					</form>
 				</div>
 			</div>
 		</div>
@@ -535,6 +526,7 @@
 
 		document.getElementById("meetingLogCloseBtn").onclick = function() {
 	        document.getElementById("meetinglogCreateModal").style.display="none";
+			document.getElementById("titleError").style.display="none";
 	    }
 		
 		document.getElementById("meetingLogDetailCloseBtn").onclick = function() {
@@ -542,9 +534,11 @@
 	    }
 		
 		document.getElementById("meetingLogCreateBtn").onclick = function(){
-
-			if(document.getElementById("meetingLogTitle").value.trim() ==""){
+			$meetingLogTitleInput = document.getElementById("meetingLogTitle");
+			/*생성 모달창 공백시 예외처리*/
+			if($meetingLogTitleInput.value.trim() ==""){
 				document.getElementById("titleError").style.display="block";
+				console.log("예외");
 
 			}else{
 				document.getElementById("createProjectForm").submit();
@@ -555,6 +549,7 @@
 		
 		document.getElementById("meetingLogDetailDeleteBtn").onclick=function(){
 			document.getElementById("delete_modal").style.display="block";
+			document.getElementById("DetailTitleError").style.display="none";
 		}
 		
 		document.getElementById("delete_modal_ok_btn").onclick=function(){
@@ -567,15 +562,22 @@
 	
 		
 		document.getElementById("meetingLogDetailCreateBtn").onclick = function(){
+			$meetingLogDetailTitleInput = document.getElementById("meetingLogDetailTitle");
+			/*상세&수정 모달창 공백시 예외처리*/
+			if($meetingLogDetailTitleInput.value.trim() ==""){
+				document.getElementById("DetailTitleError").style.display="block";
+			}else{
+				console.log("디데일전송");
+				document.getElementById("updateProjectForm").submit();
+				document.getElementById("DetailTitleError").style.display="none";
 
-			document.getElementById("updateProjectForm").submit();
+			}
 
 		}
 		  // 상세 조회
 		   $(document).ready(function(){
 			for(let i = 0; i < $meetinglogBox.length; i++){
 				$meetinglogBox[i].onclick = function() {
-					console.log($meetinglogCode[i].value);
 		     		$.ajax({
 		   	  			url: "/byat/meetinglog/detail",
 		   	  			type: "post",
