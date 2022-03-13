@@ -26,7 +26,7 @@ import com.greedy.byat.member.model.dto.MemberDTO;
  * Comment : "/backlog/*" 요청을 처리하는 Controller
  * History
  * 2021/02/18 (황인수) 처음 작성함
- * 2021/02/21 (황인수) 프론트 연결 시 오류 부분 수정
+ * 2021/20/21 (황인수) 프론트 연결 시 오류 부분 수정
  * 2021/03/04 (황인수) 백로그 태스크화 구현 메서드 작성
  * </pre>
  * @author 황인수
