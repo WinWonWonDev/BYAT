@@ -35,7 +35,7 @@
 
 	<resultMap type="TaskMembersDTO" id="taskMembersResultMap">
 		<id property="memberName" column="MEMBER_NAME"/>
-		<result property="permitName" column="PERMIT_NAME"/>
+		<result property="roleName" column="ROLE_NAME"/>
 		<result property="memberId" column="MEMBER_ID"/>
 	</resultMap>
  	

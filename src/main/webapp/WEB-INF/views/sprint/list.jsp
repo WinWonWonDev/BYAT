@@ -2141,7 +2141,7 @@
 					const $tr = $("<tr>");
 					const $memberId = $("<td id='taskMembersId'>").text(data[i].memberId);
 					const $memberName = $("<td style='border-left: 2px solid black; border-right:2px solid black;'>").text(data[i].memberName);
-					const $permitName = $("<td id='taskMembersPermit'>").text(data[i].permitName);
+					const $permitName = $("<td id='taskMembersPermit'>").text(data[i].roleName);
 					
 					$tr.append($memberId);
 					$tr.append($memberName);
