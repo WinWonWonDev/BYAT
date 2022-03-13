@@ -16,7 +16,7 @@ import com.greedy.byat.task.model.dto.TaskDTO;
  * Comment : BacklogService를 상속받아 method들을 재정의한 Class
  * History
  * 2021/02/17 (황인수) 처음 작성함
- * 2021/20/21 (황인수) 프론트 연결 시 오류 부분 수정
+ * 2021/02/21 (황인수) 프론트 연결 시 오류 부분 수정
  * 2021/03/04 (황인수) 백로그 태스크화 구현 메서드 작성
  * 2021/03/06 (황인수) 백로그 태스크화  조건 메서드 보완
  * </pre>
