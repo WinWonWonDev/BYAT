@@ -168,6 +168,7 @@
 		margin-left: 9px;
 		width: 150px;	
 		float: left;
+		margin-bottom: 5px;
 	}
 	#regist-comment {
 		cursor: pointer;
@@ -219,10 +220,13 @@
 	const $registBtn = document.querySelectorAll("#regist-comment");
 	const $retrospectCode = document.querySelectorAll("#retrospectCode");
 	const $comment = document.querySelectorAll("#comment-body");
+	let $commentBox = document.querySelectorAll("#comment-box");
 	
 	console.log($registBtn);
 	console.log($retrospectCode);
 	console.log($comment);
+	console.log($commentBox);
+	console.log($commentBox[0]);
 	
 	for(let i = 0; i < $registBtn.length; i++) {
 		
@@ -241,18 +245,36 @@
 				success: function(data, status, xhr){
 					console.table(data);
 					
-					const $commentBox = $("#comment-box");
-					$commentBox.html("");
+					console.log($commentBox[i].children);
+						
+					while( $commentBox[i].hasChildNodes() ) {
+						
+						$commentBox[i].removeChild($commentBox[i].firstChild );
+						
+					}
 					
 					for(let j = 0; j < data.length; j++){
 						
-						const $nameH6 = $("<h6 class='commentMemberName'>").text(data[j].memberName);
-						const $commentH6 = $("<h6 class='commentDescription'>").text("-" + data[j].body).css("margin-bottom","5px;");
-						const $deleteButton = $("<button type='button' id='deleteComment'>").val(data[j].no);
+						$nameH6 = document.createElement('h6');
+						$nameH6.setAttribute('class', 'commentMemberName');
+						$nameH6.innerHTML = data[j].memberName;
 						
-						$commentBox.append($nameH6);
-						$commentBox.append($commentH6);
-						$commentBox.append($deleteButton);
+						$commentH6 = document.createElement('h6');
+						$commentH6.setAttribute('class', 'commentDescription');
+						$commentH6.innerHTML = data[j].body;
+						
+						$deleteButton = document.createElement('button');
+						$deleteButton.setAttribute('type', 'button');
+						$deleteButton.setAttribute('id', 'deleteComment');
+						$deleteButton.setAttribute('value', data[j].no);
+						
+						/* const $nameH6 = $("<h6 class='commentMemberName'>").text(data[j].memberName);
+						const $commentH6 = $("<h6 class='commentDescription'>").text("-" + data[j].body);
+						const $deleteButton = $("<button type='button' id='deleteComment'>").val(data[j].no); */
+						
+						$commentBox[i].append($nameH6);
+						$commentBox[i].append($commentH6);
+						$commentBox[i].append($deleteButton);
 					}
 					
 				},
@@ -265,41 +287,57 @@
 		
 	}
 	
-	$(document).ready(function() {
-		
-		$(document).on("click", "#deleteComment", function(event) {
-
-			const $commentNo = $(this).val();
+		$(document).ready(function() {
 			
-			$.ajax({
-				url: "/byat/retrospect/remove",
-				type: "get",
-				async: false,
-				data: { "no": $commentNo },
-				success: function(data, status, xhr){
-					console.table(data);
-					
-					const $commentBox = $("#comment-box");
-					$commentBox.html("");
-					
-					for(let j = 0; j < data.length; j++){
+			$(document).on("click", "#deleteComment", function(event) {
+	
+				const $commentNo = $(this).val();
+				
+				const deleteParent = $(this).parent('div');
+				
+				$.ajax({
+					url: "/byat/retrospect/remove",
+					type: "get",
+					async: false,
+					data: { "no": $commentNo },
+					success: function(data, status, xhr){
+						console.table(data);
 						
-						const $nameH6 = $("<h6 class='commentMemberName'>").text(data[j].memberName);
-						const $commentH6 = $("<h6 class='commentDescription'>").text("-" + data[j].body).css("margin-bottom","5px;");
-						const $deleteButton = $("<button type='button' id='deleteComment'>").val(data[j].no);
+						console.log(deleteParent);
 						
-						$commentBox.append($nameH6);
-						$commentBox.append($commentH6);
-						$commentBox.append($deleteButton);
+						while( deleteParent[0].hasChildNodes() ) {
+							
+							deleteParent[0].removeChild(deleteParent[0].firstChild );
+							
+						}
+						
+						for(let j = 0; j < data.length; j++){
+							
+							$nameH6 = document.createElement('h6');
+							$nameH6.setAttribute('class', 'commentMemberName');
+							$nameH6.innerHTML = data[j].memberName;
+							
+							$commentH6 = document.createElement('h6');
+							$commentH6.setAttribute('class', 'commentDescription');
+							$commentH6.innerHTML = data[j].body;
+							
+							$deleteButton = document.createElement('button');
+							$deleteButton.setAttribute('type', 'button');
+							$deleteButton.setAttribute('id', 'deleteComment');
+							$deleteButton.setAttribute('value', data[j].no);
+							
+							deleteParent[0].append($nameH6);
+							deleteParent[0].append($commentH6);
+							deleteParent[0].append($deleteButton);
+						
+						}
+					},
+					error: function(xhr, status, error){
+						console.log(xhr);
 					}
-				},
-				error: function(xhr, status, error){
-					console.log(xhr);
-				}
+				});
 			});
 		});
-	});
-	
 	
 	</script>
 </body>
