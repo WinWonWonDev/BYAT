@@ -651,6 +651,7 @@
 		 						  FROM TBL_SPRINT B
 		 						 WHERE B.PROJECT_CODE = #{ projectCode}
 		 						   AND B.SPRINT_PROGRESS IN ('진행전','진행중'))
+		 ORDER BY 1
 	</select>
 	
 	<update id="updateTaskProgress" parameterType="hashmap">
