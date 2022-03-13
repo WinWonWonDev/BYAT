@@ -22,6 +22,7 @@ import com.greedy.byat.mytask.model.dto.MyTaskDTO;
 import com.greedy.byat.mytask.model.dto.ToDoListDTO;
 import com.greedy.byat.task.model.dto.TaskDTO;
 import com.greedy.byat.mytask.model.service.MyTaskService;
+import com.greedy.byat.project.model.dto.ProjectMembersDTO;
 
 /** 
 * <pre>
@@ -55,9 +56,9 @@ public class MyTaskController {
 	
 	/**
 	 * 메소드 selectMytask에 관한 문서화 주석
-	 * @param request 뷰에서  Session에 담겨있는 MemberDTO 값을 받아오기 위해 사용합니다.
-	 * @param model Model을 통하여 뷰에게 프로젝트 상태 배열,  MyTask안에 담긴 ProjectDTO, ToDoListDTO, TaskDTO 값을 넘겨주기위해 사용합니다. 
-	 * @return : mytask/mytask.jsp 주소로 이동하기 위해 값을 넘겨줍니다.
+	 * @param request 뷰에서  Session에 담겨있는 MemberDTO 값을 받아오기 위해 사용
+	 * @param model Model을 통하여 view에게 MyTaskDTO값을 넘겨주기위해 사용
+	 * @return : /mytask/mytask URL로 이동
 	 */
 	@GetMapping("/list")
 	public String selectMytask(HttpServletRequest request, Model model) {
@@ -185,7 +186,19 @@ public class MyTaskController {
 		
 		return result;
 	}
-	
+	/**
+     * 메소드 selectMembersModal에 관한 문서화 주석
+	 * @param projectCode : 구성원 을 조회하기 위해 프로젝트 코드
+	 * @return : projectMembers : 조회한 프로젝트 구성원 정
+	 */
+    @PostMapping("/selectmembermodal")
+    @ResponseBody
+    public List<ProjectMembersDTO> selectMembersModal(int projectCode){
+    	
+        List<ProjectMembersDTO> projectMembers = mytaskService.selectMemberModal(projectCode);
+        
+        return projectMembers;
+    }
 }
 
 
