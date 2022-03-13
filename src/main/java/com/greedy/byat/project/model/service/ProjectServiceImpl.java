@@ -30,9 +30,33 @@ import com.greedy.byat.project.model.dto.ProjectDTO;
 import com.greedy.byat.project.model.dto.ProjectMembersDTO;
 import com.greedy.byat.sprint.model.dto.SprintDTO;
 
+/**
+ * <pre>
+ * Class : ProjectServiceImpl
+ * Comment : ProjectService의 메소드들을 실제로 처리하는 class 입니다.
+ * History
+ * 2022/02/17 (박인근) 처음 작성
+ * 2022/02/18 (박인근) 프로젝트 목록 조회, 생성 관련 메소드 추가
+ * 2022/02/19 (박인근) 프로젝트 조회, 수정 관련 메소드 추가
+ * 2022/02/20 (박인근) 프로젝트 조회, 수정 관련 메소드 수정
+ * 2022/02/21 (박인근) 프로젝트 구성원 추가 관련 메소드 추가
+ * 2022/02/22 (박인근) 프로젝트 구성원 목록 조회 관련 메소드 추가
+ * 2022/02/23 (박인근) 프로젝트 구성원 추가 취소 메소드, 구성원 제외 관련 메소드 추가
+ * 2022/02/24 (박인근) 프로젝트 구성원 추가 시 검색 오류 코드 수정
+ * 2022/02/25 (박인근) 프로젝트 버전 히스토리, 변경 이력 관련 코드 추가
+ * 2022/02/28 (박인근) 프로젝트 일정 생성 관련 코드 추가
+ * 2022/03/03 (박인근) 프로젝트 구성원 추가시 탈퇴 여부 체크, 구성원 제외 시 진행중이 스프린트 여부 체크 관련 코드 추가
+ * 2022/03/04 (박인근) 프로젝트 진행상태 자동 변경 코드 추가
+ * 2022/03/05 (박인근) 프로젝트 생성 알림 관련 코드 추가
+ * </pre>
+ * @version 13
+ * @author 박인근
+ * see ProjectController, ProjectDTO, ProjectMembersDTO, ProjectService, ProjectMapper.java, ProjectMapper.xml, NoticeDTO, MemberDTO, RoleDTO
+ * */
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
+	/** ProjectMapper의 메소드들을 호출하기 위해 사용하는 전역변수로 변경 불가능하도록 final로 선언 */
 	private final ProjectMapper mapper;
 
 	@Autowired
@@ -40,6 +64,12 @@ public class ProjectServiceImpl implements ProjectService {
 		this.mapper = mapper;
 	}
 
+	/**
+	 * 메소드 selectProjectList에 관한 문서화 주석
+	 * @ param member session 정보를 담은 member의 프로젝트를 조회하기 위한 값이 담겨 있는 파라미터
+	 * @ return session 에 담긴 멤버가 속한 project의 List를 반환
+	 * @ exception 날짜에 따라 프로젝트의 진행도가 바뀌기 때문에 상태 변경 이력 테이블에 값을 넣을 때 처리하는 예외
+	 * */
 	@Override
 	public List<ProjectDTO> selectProjectList(MemberDTO member) throws ProjectProgressHistoryRegistException {
 
@@ -125,7 +155,12 @@ public class ProjectServiceImpl implements ProjectService {
 			
 		return projectList;
 	}
-
+	
+	/**
+	 * 메소드 insertProject에 관한 문서화 주석
+	 * @ param project 전달받은 ProjectDTO 값을 사용하기 위한 파라미터
+	 * @ exception 프로젝트 생성 실패 예외, 프로젝트 버전 히스토리 생성 실패 예외, 상태 변경 이력 생성 실패 예외, 멤버 변경 이력 생성 실패 예외, 멤버 일정 생성 실패 예외, 멤버 알림 생성 실패 예외시 처리하는 예외
+	 * */
 	@Override
 	public void insertProject(ProjectDTO project) throws ProjectRegistException, ProjectVersionHistoryRegistException, ProjectProgressHistoryRegistException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException, NoticeInsertException {
 
@@ -199,6 +234,12 @@ public class ProjectServiceImpl implements ProjectService {
 
 	}
 
+	/**
+	 * 메소드 deleteProject에 관한 문서화 주석
+	 * @ param code 삭제할 project의 식별 번호인 파라미터
+	 * @ param member project를 삭제한 멤버의 정보를 담은 파라미터
+	 * @ exception 프로젝트 삭제 실패 예외, 프로젝트 버전 히스토리 생성 실패 예외, 멤버 알림 생성 실패 예외시 처리하는 예외
+	 * */
 	@Override
 	public void deleteProject(int code, MemberDTO member) throws ProjectRemoveException, ProjectVersionHistoryRegistException, NoticeInsertException {
 
@@ -250,6 +291,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 	}
 
+	/**
+	 * 메소드 selectProjectDetail에 관한 문서화 주석
+	 * @ param code 상세 조회할 project의 식별 번호인 파라미터
+	 * @ return 상세 조회한 project의 정보를 담은 projectDTO 반환
+	 * */
 	@Override
 	public ProjectDTO selectProjectDetail(int code) {
 
@@ -270,6 +316,12 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectDetail;
 	}
 
+	/**
+	 * 메소드 updateProject에 관한 문서화 주석
+	 * @ param project project를 변경할 값이 담겨있는 파라미터
+	 * @ param member project를 수정한 멤버의 정보를 담고 있는 파라미터
+	 * @ exception 프로젝트 수정 실패 예외, 프로젝트 버전 히스토리 생성 실패 예외, 멤버 알림 생성 실패 예외, 멤버 일정 변경 실패 예외시 처리하는 예외
+	 * */
 	@Override
 	public void updateProject(ProjectDTO project, MemberDTO member) throws ProjectModifyException, ProjectVersionHistoryRegistException, NoticeInsertException, ProjectModifyCalendarException {
 
@@ -336,6 +388,13 @@ public class ProjectServiceImpl implements ProjectService {
 
 	}
 
+	/**
+	 * 메소드 searchAddMemberList에 관한 문서화 주석
+	 * @ param searchMember 사용자가 입력한 값에 대한 파라미터
+	 * @ param projectMembersList 기존의 project 멤버 값을 담고 있는 파라미터
+	 * @ param selectMembers 사용자가 이미 구성원으로 추가하려고 선택한 멤버의 정보를 담고 있는 파라미터
+	 * @ return 이미 구성원이 아니며 선택되지 않은 멤버의 정보를 담은 MemberDTO의 List 반환
+	 * */
 	@Override
 	public List<MemberDTO> searchAddMemberList(String searchMember, String[] projectMembersList,
 			String[] selectMembers) {
@@ -389,6 +448,12 @@ public class ProjectServiceImpl implements ProjectService {
 		return searchMemberList;
 	}
 
+	/**
+	 * 메소드 insertProjectMember에 관한 문서화 주석
+	 * @ param registMember 구성원으로 등록할 멤버의 정보를 담고 있는 파라미터
+	 * @ return 어떤 project에 구성원으로 추가됐는지 알려주기 위해 프로젝트의 제목을 반환
+	 * @ exception 프로젝트의 구성원 추가 실패 예외, 프로젝트 구성원 변경 이력 생성 실패 예외, 프로젝트 구성원 일정 생성 실패 예외
+	 * */
 	@Override
 	public String insertProjectMember(ProjectMembersDTO registMember) throws ProjectRegistMemberException, ProjectMemberHistoryRegistException, CalendatRegistProjectScheduleException {
 
@@ -476,6 +541,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 	}
 
+	/**
+	 * 메소드 selectProjectMemberList에 관한 문서화 주석
+	 * @ param code 선택한 project의 멤버 목록을 조회하기 위한 project의 식별 번호인 파라미터
+	 * @ return project의 멤버들 정보를 담은 projectMembersDTO List를 반환
+	 * */
 	@Override
 	public List<ProjectMembersDTO> selectProjectMemberList(int code) {
 		
@@ -486,6 +556,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectMemberList;
 	}
 
+	/**
+	 * 메소드 removeProjectMembers에 관한 문서화 주석
+	 * @ param removeMember 프로젝트 구성원에서 제외할 멤버의 정보를 담고 있는 파라미터
+	 * @ exception 프로젝트의 구성원 제외 실패 예외, 프로젝트 구성원 변경 이력 생성 실패 예외
+	 * */
 	@Override
 	public void deleteProjectMembers(ProjectMembersDTO removeMember) throws ProjectMemberRemoveException, ProjectMemberHistoryRegistException {
 		
@@ -511,6 +586,11 @@ public class ProjectServiceImpl implements ProjectService {
 		
 	}
 
+	/**
+	 * 메소드 updateProjectMemberRole에 관한 문서화 주석
+	 * @ param members project 내 역할을 변경한 멤버들의 정보를 담은 목록 파라미터
+	 * @ exception 프로젝트 구성원의 역할 변경 실패 예외, 프로젝트의 PM 변경 실패 예외, 프로젝트의 구성원 변경 이력 생성 실패 예외
+	 * */
 	@Override
 	public void updateProjectMemberRole(List<ProjectMembersDTO> members) throws ProjectMemberModifyRoleException, ProjectWriterChangeException, ProjectMemberHistoryRegistException {
 		
@@ -563,6 +643,12 @@ public class ProjectServiceImpl implements ProjectService {
 		
 	}
 
+	/**
+	 * 메소드 selectSprintProceedingCount에 관한 문서화 주석
+	 * @ param code project의 진행중인 스프린트를 조회하기 위한 project의 식별 변호인 파라미터
+	 * @ param no project의 진행중인 스프린트를 조회하기 위한 로그인한 멤버의 식별 번호인 파라미터
+	 * @ return 진행중인 sprint의 갯수를 반환
+	 * */
 	@Override
 	public int selectSprintProceedingCount(int code, int no) {
 		

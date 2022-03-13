@@ -64,7 +64,7 @@
  	</resultMap>
  	
  	<select id="selectSprintList" resultMap="sprintResultMap" parameterType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.issue.model.dao.IssueMapper#selectSprintList() */
  		       A.SPRINT_CODE
  		     , A.SPRINT_TITLE
  		     , A.SPRINT_START_DATE
@@ -82,7 +82,7 @@
  	</select>
  	
  	<select id="selectIssueList" resultMap="issueResultMap" parameterType="SprintDTO">
- 		SELECT
+ 		SELECT /* com.greedy.byat.issue.model.dao.IssueMapper#selectIssueList() */
 		       A.ISSUE_CODE
 		     , A.ISSUE_TITLE
 		     , A.ISSUE_BODY
@@ -101,14 +101,14 @@
  	</select>
  	
  	<update id="updateIssueStatus" parameterType="IssueDTO">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.issue.model.dao.IssueMapper#updateIssueStatus() */
  		       TBL_ISSUE A
  		   SET A.ISSUE_PROGRESS = #{ progress }
  		 WHERE A.ISSUE_CODE = #{ code }
  	</update>
  	
  	<insert id="insertIssueProgressHistory" parameterType="IssueDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertIssueProgressHistory() */
  		  INTO TBL_ISSUE_PROGRESS_HISTORY A
  		(
  		  A.ISSUE_PROGRESS_HISTORY_NO
@@ -128,7 +128,7 @@
  	</insert>
  	
  	<select id="selectIssueMemberList" resultMap="issueMembersResultMap" parameterType="_int">
-		SELECT 
+		SELECT /* com.greedy.byat.issue.model.dao.IssueMapper#selectIssueMemberList() */
 		       A.ISSUE_CODE
 		     , A.MEMBER_NO
 		     , B.MEMBER_ID
@@ -142,7 +142,7 @@
  	</select>
  	
  	<select id="selectSprintMembers" parameterType="_int" resultMap="sprintMembersResultMap">
-		SELECT
+		SELECT /* com.greedy.byat.issue.model.dao.IssueMapper#selectSprintMembers() */
 		       A.MEMBER_NO
 		     , A.PROJECT_CODE
 		     , A.SPRINT_CODE
@@ -156,7 +156,7 @@
  	</select>
  	
  	<select id="selectIssue" parameterType="_int" resultMap="issueResultMap">
- 		SELECT
+ 		SELECT /* com.greedy.byat.issue.model.dao.IssueMapper#selectIssue() */
  		       A.ISSUE_CODE
  		     , A.ISSUE_TITLE
  		     , A.ISSUE_BODY
@@ -172,7 +172,7 @@
  	</select>
  	
  	<update id="updateIssue" parameterType="IssueDTO">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.issue.model.dao.IssueMapper#updateIssue() */
  		       TBL_ISSUE A
  		   SET A.ISSUE_TITLE = #{ title }
  		     , A.ISSUE_BODY = #{ body }
@@ -181,7 +181,7 @@
  	</update>
  	
  	<insert id="insertIssueVersionHistory" parameterType="IssueDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertIssueVersionHistory() */
  		  INTO TBL_ISSUE_VERSION_HISTORY A
  		(
  		  A.ISSUE_VERSION_HISTORY_NO
@@ -208,7 +208,7 @@
  	</insert>
  	
  	<insert id="insertIssueMember" parameterType="IssueMembersDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertIssueMember() */
  		  INTO TBL_ISSUE_MEMBERS A
  		(
  		  A.ISSUE_CODE
@@ -226,7 +226,7 @@
  	</insert>
  	
  	<insert id="insertIssueMembersHistory" parameterType="IssueMembersDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertIssueMembersHistory() */
  		  INTO TBL_ISSUE_MEMBERS_HISTORY A
  		(
  		  A.ISSUE_CODE
@@ -249,7 +249,7 @@
  	</insert>
  	
  	<select id="checkBeforeIssueMember" resultType="_int" parameterType="IssueMembersDTO">
- 		SELECT
+ 		SELECT /* com.greedy.byat.issue.model.dao.IssueMapper#checkBeforeIssueMember() */
  		       COUNT(A.MEMBER_NO)
  		  FROM TBL_ISSUE_MEMBERS A
  		 WHERE A.ISSUE_CODE = #{ code }
@@ -257,7 +257,7 @@
  	</select>
  	
  	<update id="updateIssueMember" parameterType="IssueMembersDTO">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.issue.model.dao.IssueMapper#updateIssueMember() */
  		       TBL_ISSUE_MEMBERS A
  		   SET A.ISSUE_PARTICIPATION_YN = 'Y'
  		 WHERE A.ISSUE_CODE = #{ code }
@@ -265,7 +265,7 @@
  	</update>
  	
  	<update id="deleteIssueMember" parameterType="IssueMembersDTO">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.issue.model.dao.IssueMapper#deleteIssueMember() */
  		       TBL_ISSUE_MEMBERS A
  		   SET A.ISSUE_PARTICIPATION_YN = 'N'
  		 WHERE A.ISSUE_CODE = #{ code }
@@ -273,7 +273,7 @@
  	</update>
  	
  	<update id="deleteIssue" parameterType="_int">
-		UPDATE
+		UPDATE /* com.greedy.byat.issue.model.dao.IssueMapper#deleteIssue() */
 		       TBL_ISSUE A
 		   SET A.ISSUE_DELETE_STATUS = 'Y'
 		     , A.ISSUE_VERSION = (SELECT
@@ -285,14 +285,14 @@
  	</update>
  	
  	<select id="selectProjectTitle" parameterType="_int" resultType="java.lang.String">
- 		SELECT
+ 		SELECT /* com.greedy.byat.issue.model.dao.IssueMapper#selectProjectTitle() */
  		       A.PROJECT_TITLE
  		  FROM TBL_PROJECT A
  		 WHERE A.PROJECT_CODE = #{ projectCode }
  	</select>
  	
  	<insert id="insertNoticeIssue" parameterType="NoticeDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertNoticeIssue() */
  		  INTO TBL_NOTICE A
  		(
  		  A.NOTICE_CODE
@@ -328,7 +328,7 @@
  	</insert>
  	
  	<select id="selectSprintCode" resultType="_int">
- 		SELECT
+ 		SELECT /* com.greedy.byat.issue.model.dao.IssueMapper#selectSprintCode() */
  		       A.SPRINT_CODE
  		  FROM TBL_SPRINT A
  		 WHERE A.PROJECT_CODE = #{ code }
@@ -337,7 +337,7 @@
  	</select>
  	
  	<insert id="registIssue" parameterType="IssueDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#registIssue() */
  		  INTO TBL_ISSUE A
  		(
  		  A.ISSUE_CODE
@@ -367,7 +367,7 @@
  	</insert>
  	
  	<insert id="insertFirstIssueMember" parameterType="IssueMembersDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertFirstIssueMember() */
  		  INTO TBL_ISSUE_MEMBERS A
  		(
  		  A.ISSUE_CODE
@@ -385,7 +385,7 @@
  	</insert>
  	
  	<insert id="insertIssueFirstVersionHistory" parameterType="IssueDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertIssueFirstVersionHistory() */
  		  INTO TBL_ISSUE_VERSION_HISTORY A
  		(
  		  A.ISSUE_VERSION_HISTORY_NO
@@ -412,7 +412,7 @@
  	</insert>
  	
  	<insert id="insertIssueFirstProgressHistory" parameterType="IssueDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertIssueFirstProgressHistory() */
  		  INTO TBL_ISSUE_PROGRESS_HISTORY A
  		(
  		  A.ISSUE_PROGRESS_HISTORY_NO
@@ -432,7 +432,7 @@
  	</insert>
  	
  	<insert id="insertNoticeIssueFirst" parameterType="NoticeDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertNoticeIssueFirst() */
  		  INTO TBL_NOTICE A
  		(
  		  A.NOTICE_CODE
@@ -468,7 +468,7 @@
  	</insert>
  	
  	<insert id="insertIssueFirstMembersHistory" parameterType="IssueMembersDTO">
- 		INSERT
+ 		INSERT /* com.greedy.byat.issue.model.dao.IssueMapper#insertIssueFirstMembersHistory() */
  		  INTO TBL_ISSUE_MEMBERS_HISTORY A
  		(
  		  A.ISSUE_CODE

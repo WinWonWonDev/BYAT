@@ -31,7 +31,7 @@
  	</resultMap>
 
 	<select id="selectNoticeList" resultMap="noticeResultMap">
-		SELECT
+		SELECT /* com.greedy.byat.notice.model.dao.NoticeMapper#selectNoticeList() */
 		       A.NOTICE_CODE
 		     , A.NOTICE_BODY
 		     , A.NOTICE_URL
@@ -52,7 +52,7 @@
 	</select>
 	
 	<select id="selectNoticeSetting" resultMap="noticeSettingResultMap">
-		SELECT
+		SELECT /* com.greedy.byat.notice.model.dao.NoticeMapper#selectNoticeSetting() */
 		       A.PROJECT_NOTIFICATION_SETTING
 		     , A.SPRINT_NOTIFICATION_SETTING
 		     , A.BACKLOG_NOTIFICATION_SETTING
@@ -64,7 +64,7 @@
 	</select>
 	
 	<update id="updateNoticeStatus" parameterType="NoticeDTO">
-		UPDATE
+		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#updateNoticeStatus() */
 		       TBL_NOTICE A
 		   SET A.NOTICE_STATUS = 'Y'
 		 WHERE A.NOTICE_CODE = #{ code }
@@ -72,7 +72,7 @@
 	</update>
 	
 	<update id="deleteConfirmNotice" parameterType="_int">
-		UPDATE
+		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#deleteConfirmNotice() */
 		       TBL_NOTICE A
 		   SET A.NOTICE_STATUS = 'REMOVE'
 		 WHERE A.MEMBER_NO = #{ no }
@@ -80,7 +80,7 @@
 	</update>
 	
 	<update id="updateNoticeSetting" parameterType="NoticeSettingDTO">
-		UPDATE
+		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#updateNoticeSetting() */
 		       TBL_NOTIFICATION_BY_MEMBER A
 		   <if test="projectSetting != null">
 		   SET A.PROJECT_NOTIFICATION_SETTING = #{ projectSetting }
@@ -104,7 +104,7 @@
 	</update>
  	
  	<update id="updateNoticeStatusChange" parameterType="NoticeDTO">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#updateNoticeStatusChange() */
  		       TBL_NOTICE A
  		   <if test='"Y".equals(status)'>
  		   SET A.NOTICE_STATUS = 'N'
@@ -117,7 +117,7 @@
  	</update>
  	
  	<update id="deleteNotice" parameterType="NoticeDTO">
- 		UPDATE
+ 		UPDATE /* com.greedy.byat.notice.model.dao.NoticeMapper#deleteNotice() */
  		       TBL_NOTICE A
  		   SET A.NOTICE_STATUS = 'REMOVE'
  		 WHERE A.NOTICE_CODE = #{ code }
