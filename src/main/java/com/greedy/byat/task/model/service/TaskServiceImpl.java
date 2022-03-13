@@ -88,7 +88,7 @@ public class TaskServiceImpl implements TaskService {
 			/* 태스크 상태변경 이력 생성 결과 */
 			int result3 = mapper.insertTaskProgressHistory(task);
 			
-			if(!(result1 > 0) && !(result2 > 0) && !(result3 > 0)) {
+			if((result1 > 0) && (result2 > 0) && (result3 > 0)) {
 				message = "태스크를 생성하였습니다.";
 			} else {
 				message = "태스크 생성 실패";
